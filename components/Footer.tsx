@@ -6,9 +6,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="flex flex-col items-center bg-main-color text-text-color p-4 mt-auto">
       {/* Main Text */}
-      <p className="text-body sm:text-header-3 text-center">
-        Thanks for visiting Shane`s Games!
-      </p>
+      <p className="text-center">Thanks for visiting Shane`s Games!</p>
 
       {/* Social Icons */}
       <div className="flex space-x-4 mt-2 mb-4">

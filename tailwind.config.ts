@@ -2,8 +2,8 @@ import type { Config } from "tailwindcss";
 
 export default {
   content: [
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -17,16 +17,23 @@ export default {
         "link-color-dark": "#007aa3",
       },
       spacing: {
-        "18": "4.5rem",
+        "common-ml": "2rem",
+        "text-mb": "1rem",
+        "common-padding": "1.5rem",
       },
       fontSize: {
-        "header-1": "3rem",
-        "header-2": "2.25rem",
+        // Default font sizes
+        "header-1": "2.8rem",
+        "header-2": "1.9rem",
         "header-3": "1.875rem",
         subheading: "1.5rem",
-        body: "1rem",
-        caption: "0.875rem",
-        small: "0.75rem",
+        body: "1.25rem",
+        small: "1rem",
+        // Mobile font sizes
+        "header-1-sm": "1.9rem",
+        "header-2-sm": "1.3rem",
+        "header-3-sm": "1.15rem",
+        "body-sm": "1rem",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

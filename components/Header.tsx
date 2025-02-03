@@ -9,18 +9,15 @@ const Header: React.FC = () => {
       {/* Left Section: Logo & Title */}
       <Link href="/" passHref>
         <div className="flex items-center space-x-3 cursor-pointer transform transition-transform duration-0 hover:scale-105">
-          {/* Logo Image */}
           <Image
-            src="/webps/Mars-circle-logo-small.webp"
+            src="/webps/mars-circle-logo-small.webp"
             alt="Logo"
             width={40}
             height={40}
             className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
           />
           <div>
-            {/* Main Title */}
             <h1 className="text-header-2 font-bold">Shanes Games</h1>
-            {/* Subheading */}
             <p className="text-caption">Black Hole Reject</p>
           </div>
         </div>
