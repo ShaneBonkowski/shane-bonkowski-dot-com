@@ -15,19 +15,18 @@ export default {
         "hover-color": "#555555b0",
         "link-color": "#69daff",
         "link-color-dark": "#007aa3",
+        "info-banner-background-color": "rgba(62, 62, 62, 1.00)",
       },
       spacing: {
         "common-ml": "2rem",
-        "text-mb": "1rem",
         "common-padding": "1.5rem",
       },
       fontSize: {
         // Default font sizes
         "header-1": "2.8rem",
         "header-2": "1.9rem",
-        "header-3": "1.875rem",
-        subheading: "1.5rem",
-        body: "1.25rem",
+        "header-3": "1.475rem",
+        body: "1rem",
         small: "1rem",
         // Mobile font sizes
         "header-1-sm": "1.9rem",

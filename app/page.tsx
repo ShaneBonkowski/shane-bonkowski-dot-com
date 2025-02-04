@@ -1,10 +1,7 @@
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="p-8">
-      {/* Home Title */}
-      <h1 className="text-header-1 text-text-color font-bold mb-4">
-        Welcome to My Website
-      </h1>
+    <div className="ml-common-ml mr-common-ml p-common-padding text-left">
+      <h1>Welcome to My Website</h1>
     </div>
   );
 }

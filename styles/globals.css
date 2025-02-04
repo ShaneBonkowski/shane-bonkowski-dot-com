@@ -11,59 +11,74 @@ body {
 }
 
 @layer base {
-  a {
+  /* NOTE: NextJS Link element is used for local navigation instead  */
+  /* of using a elements. This allows for automatic preloading for example. */
+  /* Apply the .link class to all NextJS Link elements. */
+  a,
+  .link {
     color: theme("colors.link-color");
   }
 
-  a:hover {
+  a:hover,
+  .link:hover {
     text-decoration: underline;
+    cursor: pointer;
+    text-decoration-color: currentColor;
   }
 
   /* i.e. on click */
-  a:active {
+  a:active,
+  .link:active {
     text-decoration: underline;
+    cursor: pointer;
   }
 
   h1 {
     font-size: theme("fontSize.header-1");
+    font-weight: bold;
     line-height: 1.2;
-    margin-bottom: theme("spacing.text-mb");
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
     color: theme("colors.text-color");
   }
 
   h2 {
     font-size: theme("fontSize.header-2");
     line-height: 1.3;
-    margin-bottom: theme("spacing.text-mb");
+    margin-top: 1.5rem;
+    margin-bottom: 1.25rem;
     color: theme("colors.text-color");
   }
 
   h3 {
     font-size: theme("fontSize.header-3");
     line-height: 1.4;
-    margin-bottom: theme("spacing.text-mb");
-    color: theme("colors.text-color");
-  }
-
-  .subheading {
-    font-size: theme("fontSize.subheading");
-    line-height: 1.4;
-    margin-bottom: theme("spacing.text-mb");
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     color: theme("colors.text-color");
   }
 
   p,
-  .body-text {
+  .body-text,
+  li {
     font-size: theme("fontSize.body");
     line-height: 1.6;
-    margin-bottom: theme("spacing.text-mb");
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     color: theme("colors.text-color");
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5rem;
+    list-style-position: inside;
   }
 
   .small {
     font-size: theme("fontSize.small");
     line-height: 1.4;
-    margin-bottom: theme("spacing.text-mb");
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     color: theme("colors.text-color");
   }
 
@@ -81,12 +96,25 @@ body {
       font-size: theme("fontSize.header-3-sm");
     }
 
-    .subheading {
+    p,
+    .body-text,
+    li {
       font-size: theme("fontSize.body-sm");
     }
+  }
+}
 
-    .body-text {
-      font-size: theme("fontSize.body-sm");
-    }
+@layer components {
+  .shanes-games-logo {
+    @apply flex items-center space-x-4 transition-transform duration-0 hover:scale-105;
+  }
+
+  .header-btn {
+    @apply px-3 py-1 sm:px-4 sm:py-2 bg-button-color rounded hover:bg-secondary-color text-small text-text-color;
+  }
+
+  .header-btn:hover,
+  .header-btn:active {
+    text-decoration: none;
   }
 }
