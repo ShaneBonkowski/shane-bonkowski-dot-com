@@ -1,6 +1,6 @@
-import { ContentItemProps } from "@/types/Content";
+import { PageContentItemProps } from "@/types/Content";
 
-export const aboutData: ContentItemProps[] = [
+export const aboutData: PageContentItemProps[] = [
   { type: "h1", text: "Shane Bonkowski" },
   {
     type: "h2",

@@ -1,10 +1,10 @@
 import { privacyPolicyData } from "@/data/privacy-policy-data";
-import ContentLoader from "@/components/ContentLoader";
+import PageContentLoader from "@/components/PageContentLoader";
 
 const PrivacyPolicyPage: React.FC = () => {
   return (
     <div>
-      <ContentLoader contentData={privacyPolicyData} />
+      <PageContentLoader contentData={privacyPolicyData} />
     </div>
   );
 };

@@ -9,11 +9,11 @@ import { ContentBoxProps } from "@/types/Content";
 const getIcon = (contentType: string) => {
   switch (contentType) {
     case "games":
-      return <FaGamepad className="text-text-color text-2xl" />;
+      return <FaGamepad className="text-primary-text-color text-2xl" />;
     case "writing":
-      return <FaPenNib className="text-text-color text-2xl" />;
+      return <FaPenNib className="text-primary-text-color text-2xl" />;
     case "art":
-      return <FaPaintBrush className="text-text-color text-2xl" />;
+      return <FaPaintBrush className="text-primary-text-color text-2xl" />;
     default:
       return null;
   }
@@ -31,7 +31,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="flex items-stretch w-content-box-w mx-auto bg-button-color text-text-color rounded-lg overflow-hidden mb-6">
+    <div className="flex items-stretch w-content-box-w mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden mb-6">
       {/* Image on the Left */}
       <Link
         href={linkUrl}
@@ -68,8 +68,8 @@ const ContentBox: React.FC<ContentBoxProps> = ({
             <h3
               className={`font-bold m-0 ${
                 isHovered
-                  ? "text-text-color underline decoration-white"
-                  : "text-text-color no-underline"
+                  ? "text-primary-text-color underline decoration-white"
+                  : "text-primary-text-color no-underline"
               }`}
             >
               {title}
@@ -78,7 +78,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-text-secondary-color leading-relaxed">
+        <p className="text-secondary-text-color leading-relaxed">
           {description}
         </p>
       </div>

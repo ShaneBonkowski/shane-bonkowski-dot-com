@@ -52,7 +52,7 @@ const CookieAgreement: React.FC = () => {
 
   return (
     isVisible && (
-      <div className="fixed bottom-0 left-0 right-0 bg-info-banner-background-color text-body text-text-color p-4 flex justify-between items-center z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-info-banner-bkg-color text-body text-primary-text-color p-4 flex justify-between items-center z-50">
         <p className="flex-1">
           This website uses cookies to ensure you get the best experience. By
           continuing to use this site, you accept our use of cookies.{" "}
@@ -63,13 +63,13 @@ const CookieAgreement: React.FC = () => {
         <div className="flex space-x-4">
           <button
             onClick={enableCookies}
-            className="bg-button-color px-4 py-2 rounded hover:bg-hover-color"
+            className="bg-button-color px-4 py-2 rounded hover:bg-secondary-hover-color"
           >
             Enable Cookies
           </button>
           <button
             onClick={disableCookies}
-            className="bg-button-color px-4 py-2 rounded hover:bg-hover-color"
+            className="bg-button-color px-4 py-2 rounded hover:bg-secondary-hover-color"
           >
             Disable Cookies
           </button>

@@ -1,6 +1,6 @@
-import { ContentItemProps } from "@/types/Content";
+import { PageContentItemProps } from "@/types/Content";
 
-export const privacyPolicyData: ContentItemProps[] = [
+export const privacyPolicyData: PageContentItemProps[] = [
   {
     type: "h1",
     text: "Privacy Policy",

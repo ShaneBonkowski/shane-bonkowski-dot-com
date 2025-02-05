@@ -1,10 +1,10 @@
 import { cookiePolicyData } from "@/data/cookie-policy-data";
-import ContentLoader from "@/components/ContentLoader";
+import PageContentLoader from "@/components/PageContentLoader";
 
 const CookiePolicyPage: React.FC = () => {
   return (
     <div>
-      <ContentLoader contentData={cookiePolicyData} />
+      <PageContentLoader contentData={cookiePolicyData} />
     </div>
   );
 };

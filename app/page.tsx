@@ -23,7 +23,7 @@ export default function HomePage() {
             <ContentBox key={index} {...box} />
           ))
         ) : (
-          <p className="text-text-secondary-color text-center">
+          <p className="text-secondary-text-color text-center">
             No results found.
           </p>
         )}

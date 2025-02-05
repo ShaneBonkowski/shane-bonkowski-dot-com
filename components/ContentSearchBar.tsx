@@ -54,7 +54,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
           e.key === "Enter" &&
           setSearchTerm((e.target as HTMLInputElement).value)
         }
-        className="p-2 flex-grow bg-secondary-color text-text-color rounded-md focus:outline-none placeholder-text-text-secondary-color"
+        className="p-2 flex-grow bg-secondary-color text-primary-text-color rounded-md focus:outline-none placeholder-text-secondary-text-color"
       />
     </div>
   );

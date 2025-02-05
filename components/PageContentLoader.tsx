@@ -1,9 +1,11 @@
 import React from "react";
-import { ContentLoaderProps } from "@/types/Content";
+import { PageContentLoaderProps } from "@/types/Content";
 
-const ContentLoader: React.FC<ContentLoaderProps> = ({ contentData }) => {
+const PageContentLoader: React.FC<PageContentLoaderProps> = ({
+  contentData,
+}) => {
   return (
-    <div className="ml-common-ml mr-common-ml p-common-padding text-left">
+    <div className="ml-common-ml mr-common-ml p-common-p text-left">
       {contentData.map((item, index) => {
         switch (item.type) {
           case "h1":
@@ -40,4 +42,4 @@ const ContentLoader: React.FC<ContentLoaderProps> = ({ contentData }) => {
   );
 };
 
-export default ContentLoader;
+export default PageContentLoader;

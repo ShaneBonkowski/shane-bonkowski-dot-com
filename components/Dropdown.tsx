@@ -32,7 +32,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     <div className="relative" ref={dropdownRef}>
       {/* Selected Value */}
       <button
-        className="p-2 bg-secondary-color text-text-color rounded-md w-32 flex justify-between items-center cursor-pointer hover:bg-secondary-color-hover"
+        className="p-2 bg-secondary-color text-primary-text-color rounded-md w-32 flex justify-between items-center cursor-pointer hover:bg-secondary-hover-color"
         onClick={() => setIsOpen(!isOpen)}
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
@@ -49,7 +49,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 setSelected(option.value);
                 setIsOpen(false);
               }}
-              className="cursor-pointer hover:bg-secondary-color-hover w-full block p-2"
+              className="cursor-pointer hover:bg-secondary-hover-color w-full block p-2"
             >
               {option.label}
             </li>

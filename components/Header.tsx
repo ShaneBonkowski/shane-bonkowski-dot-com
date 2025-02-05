@@ -5,7 +5,7 @@ import { FaGithub } from "react-icons/fa";
 
 const Header: React.FC = () => {
   return (
-    <header className="flex justify-between items-center p-common-padding">
+    <header className="flex justify-between items-center p-common-p">
       {/* Left Section: Logo & Title */}
       <Link href="/" passHref className="link no-underline hover:no-underline">
         <div className="shanes-games-logo">
@@ -18,7 +18,7 @@ const Header: React.FC = () => {
           />
           <div>
             <h1 className="text-header-2 text-right m-0">SHANES GAMES</h1>
-            <p className="text-text-secondary-color text-right m-0">
+            <p className="text-secondary-text-color text-right m-0">
               Black Hole Reject
             </p>
           </div>

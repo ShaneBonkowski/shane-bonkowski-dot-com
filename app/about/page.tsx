@@ -1,10 +1,10 @@
 import { aboutData } from "@/data/about-data";
-import ContentLoader from "@/components/ContentLoader";
+import PageContentLoader from "@/components/PageContentLoader";
 
 const AboutPage: React.FC = () => {
   return (
     <div>
-      <ContentLoader contentData={aboutData} />
+      <PageContentLoader contentData={aboutData} />
     </div>
   );
 };

@@ -8,20 +8,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        "main-color": "#000000",
+        "primary-color": "#000000",
         "secondary-color": "#454545",
-        "secondary-color-hover": "#555555",
+        "secondary-hover-color": "#555555",
         "button-color": "#282828",
-        "text-color": "#FFFFFF",
-        "text-secondary-color": "#9CA3AF",
-        "hover-color": "#555555b0",
+        "primary-text-color": "#FFFFFF",
+        "secondary-text-color": "#9CA3AF",
         "link-color": "#69daff",
-        "link-color-dark": "#007aa3",
-        "info-banner-background-color": "rgba(62, 62, 62, 1.00)",
+        "info-banner-bkg-color": "rgba(62, 62, 62, 1.00)",
       },
       spacing: {
         "common-ml": "2rem",
-        "common-padding": "1.5rem",
+        "common-p": "1.5rem",
       },
       width: {
         "content-box-w": "64rem",
