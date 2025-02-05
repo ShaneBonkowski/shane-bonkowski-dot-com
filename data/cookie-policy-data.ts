@@ -1,6 +1,6 @@
-import { ContentItem } from "components/ContentLoader";
+import { ContentItemProps } from "@/types/Content";
 
-export const cookiePolicyData: ContentItem[] = [
+export const cookiePolicyData: ContentItemProps[] = [
   {
     type: "h1",
     text: "Cookie Policy",

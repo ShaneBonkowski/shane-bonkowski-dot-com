@@ -10,8 +10,10 @@ export default {
       colors: {
         "main-color": "#000000",
         "secondary-color": "#454545",
+        "secondary-color-hover": "#555555",
         "button-color": "#282828",
         "text-color": "#FFFFFF",
+        "text-secondary-color": "#9CA3AF",
         "hover-color": "#555555b0",
         "link-color": "#69daff",
         "link-color-dark": "#007aa3",
@@ -20,6 +22,12 @@ export default {
       spacing: {
         "common-ml": "2rem",
         "common-padding": "1.5rem",
+      },
+      width: {
+        "content-box-w": "64rem",
+      },
+      height: {
+        "content-box-content-h": "30vh",
       },
       fontSize: {
         // Default font sizes

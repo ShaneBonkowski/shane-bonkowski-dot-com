@@ -1,5 +1,5 @@
-import { aboutData } from "data/about-data";
-import ContentLoader from "components/ContentLoader";
+import { aboutData } from "@/data/about-data";
+import ContentLoader from "@/components/ContentLoader";
 
 const AboutPage: React.FC = () => {
   return (

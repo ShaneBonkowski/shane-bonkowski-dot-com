@@ -11,6 +11,11 @@ body {
 }
 
 @layer base {
+  /* Ensure every element uses the same font */
+  * {
+    @apply font-sans;
+  }
+
   /* NOTE: NextJS Link element is used for local navigation instead  */
   /* of using a elements. This allows for automatic preloading for example. */
   /* Apply the .link class to all NextJS Link elements. */

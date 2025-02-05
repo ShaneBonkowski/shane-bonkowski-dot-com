@@ -1,14 +1,5 @@
 import React from "react";
-
-export interface ContentItem {
-  type: "h1" | "h2" | "h3" | "paragraph" | "list";
-  text?: string;
-  items?: string[];
-}
-
-interface ContentLoaderProps {
-  contentData: ContentItem[];
-}
+import { ContentLoaderProps } from "@/types/Content";
 
 const ContentLoader: React.FC<ContentLoaderProps> = ({ contentData }) => {
   return (

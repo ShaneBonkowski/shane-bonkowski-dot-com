@@ -1,5 +1,5 @@
-import { cookiePolicyData } from "data/cookie-policy-data";
-import ContentLoader from "components/ContentLoader";
+import { cookiePolicyData } from "@/data/cookie-policy-data";
+import ContentLoader from "@/components/ContentLoader";
 
 const CookiePolicyPage: React.FC = () => {
   return (

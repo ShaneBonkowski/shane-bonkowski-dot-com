@@ -17,8 +17,8 @@ const Header: React.FC = () => {
             className="w-12 h-12 sm:w-16 sm:h-16"
           />
           <div>
-            <h1 className="text-header-2 text-right m-0">Shanes Games</h1>
-            <p className="text-secondary-color text-right m-0">
+            <h1 className="text-header-2 text-right m-0">SHANES GAMES</h1>
+            <p className="text-text-secondary-color text-right m-0">
               Black Hole Reject
             </p>
           </div>

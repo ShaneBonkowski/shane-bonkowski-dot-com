@@ -1,6 +1,6 @@
-import { ContentItem } from "components/ContentLoader";
+import { ContentItemProps } from "@/types/Content";
 
-export const privacyPolicyData: ContentItem[] = [
+export const privacyPolicyData: ContentItemProps[] = [
   {
     type: "h1",
     text: "Privacy Policy",
@@ -336,11 +336,11 @@ export const privacyPolicyData: ContentItem[] = [
   },
   {
     type: "paragraph",
-    text: "You may opt-out of certain Google Analytics features through your mobile device settings, such as your device advertising settings or by following the instructions provided by Google in their Privacy Policy: <a href='https://policies.google.com/privacy' target='_blank'>Google Privacy Policies</a>",
+    text: "You may opt-out of certain Google Analytics features through your mobile device settings, such as your device advertising settings or by following the instructions provided by Google in their Privacy Policy: <a href='https://policies.google.com/privacy' target='_blank' rel='noopener noreferrer'>Google Privacy Policies</a>",
   },
   {
     type: "paragraph",
-    text: "For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page: <a href='https://policies.google.com/privacy' target='_blank'>Google Privacy Policies</a>",
+    text: "For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page: <a href='https://policies.google.com/privacy' target='_blank' rel='noopener noreferrer'>Google Privacy Policies</a>",
   },
   {
     type: "h2",
@@ -360,7 +360,7 @@ export const privacyPolicyData: ContentItem[] = [
   },
   {
     type: "paragraph",
-    text: "You may opt out of the use of the DoubleClick Cookie for interest-based advertising by visiting the Google Ads Settings web page: <a href='https://www.google.com/ads/preferences/' target='_blank'>Google Ads Preferences</a>",
+    text: "You may opt out of the use of the DoubleClick Cookie for interest-based advertising by visiting the Google Ads Settings web page: <a href='https://www.google.com/ads/preferences/' target='_blank' rel='noopener noreferrer'>Google Ads Preferences</a>",
   },
   {
     type: "h3",
@@ -372,11 +372,11 @@ export const privacyPolicyData: ContentItem[] = [
   },
   {
     type: "paragraph",
-    text: "You can opt-out from the AdMob by Google service by following the instructions described by Google: <a href='https://support.google.com/ads/answer/2662922?hl=en' target='_blank'>AdMob Opt Out</a>",
+    text: "You can opt-out from the AdMob by Google service by following the instructions described by Google: <a href='https://support.google.com/ads/answer/2662922?hl=en' target='_blank' rel='noopener noreferrer'>AdMob Opt Out</a>",
   },
   {
     type: "paragraph",
-    text: 'For more information on how Google uses the collected information, please visit the "How Google uses data when you use our partners sites or app" page: <a href="https://policies.google.com/technologies/partner-sites" target="_blank">Google Partner Sites Policies</a> or visit the Privacy Policy of Google: <a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policies</a>',
+    text: 'For more information on how Google uses the collected information, please visit the "How Google uses data when you use our partners sites or app" page: <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">Google Partner Sites Policies</a> or visit the Privacy Policy of Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policies</a>',
   },
   {
     type: "h2",

@@ -1,6 +1,6 @@
-import { ContentItem } from "components/ContentLoader";
+import { ContentItemProps } from "@/types/Content";
 
-export const aboutData: ContentItem[] = [
+export const aboutData: ContentItemProps[] = [
   { type: "h1", text: "Shane Bonkowski" },
   {
     type: "h2",
@@ -12,10 +12,10 @@ export const aboutData: ContentItem[] = [
   },
   {
     type: "paragraph",
-    text: "Everything on this website is open source and available on my <a href='https://github.com/ShaneBonkowski' target='_blank'>GitHub</a>. Feel free to use my code as a starting point to create your own content.",
+    text: "Everything on this website is open source and available on my <a href='https://github.com/ShaneBonkowski' target='_blank rel='noopener noreferrer'>GitHub</a>. Feel free to use my code as a starting point to create your own content.",
   },
   {
     type: "paragraph",
-    text: "Shanes Games embodies the recreational side of me. If you'd like to learn more about my professional background, visit my <a href='https://www.linkedin.com/in/shanebonkowski/' target='_blank'>LinkedIn</a> profile. I'm always eager to collaborate, exchange ideas, and make new connections!",
+    text: "Shanes Games embodies the recreational side of me. If you'd like to learn more about my professional background, visit my <a href='https://www.linkedin.com/in/shanebonkowski/' target='_blank' rel='noopener noreferrer'>LinkedIn</a> profile. I'm always eager to collaborate, exchange ideas, and make new connections!",
   },
 ];

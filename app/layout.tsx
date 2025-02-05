@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
-import Header from "components/Header";
-import Footer from "components/Footer";
-import CookieAgreement from "components/CookieAgreement";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import CookieAgreement from "@/components/CookieAgreement";
 
 export const metadata = {
   metadataBase: new URL("https://shanebonkowski.com"),
