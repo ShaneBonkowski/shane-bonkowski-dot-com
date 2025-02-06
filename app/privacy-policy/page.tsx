@@ -1,12 +1,10 @@
 import { privacyPolicyData } from "@/data/privacy-policy-data";
 import PageContentLoader from "@/components/PageContentLoader";
 
-const PrivacyPolicyPage: React.FC = () => {
+export default function PrivacyPolicyPage() {
   return (
     <div>
       <PageContentLoader contentData={privacyPolicyData} />
     </div>
   );
-};
-
-export default PrivacyPolicyPage;
+}
