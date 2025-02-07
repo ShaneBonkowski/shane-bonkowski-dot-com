@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import ContentSearchBar from "@/components/ContentSearchBar";
-import { contentBoxData } from "@/data/content-box-data";
-import ContentBox from "@/components/ContentBox";
-import { ContentBoxProps } from "@/types/Content";
+import ContentSearchBar from "@/components/layout/ContentSearchBar";
+import { contentBoxData } from "@/data/main/content-box-data";
+import ContentBox from "@/components/layout/ContentBox";
+import { ContentBoxProps } from "@/types/layout/Content";
 
-export default function HomePage() {
+export default function Home() {
   const [filteredContent, setFilteredContent] =
     useState<ContentBoxProps[]>(contentBoxData);
 
