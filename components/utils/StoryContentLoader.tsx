@@ -57,18 +57,18 @@ const StoryContentLoader: React.FC<StoryProps> = ({
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-common-p text-left">
+    <div className="max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left">
       {/* Story Header */}
       <h1 className="text-center">{title}</h1>
       <h3 className="italic text-center">{subtitle}</h3>
 
       {/* Story Image */}
-      <div className="my-8">
+      <div className="my-8 w-3/4 h-3/4 sm:w-1/2 sm:h-1/2 mx-auto">
         <Image
           src={imageUrl}
           alt={title}
-          width={355}
-          height={300}
+          width={500}
+          height={422}
           className="object-contain mx-auto"
         />
       </div>

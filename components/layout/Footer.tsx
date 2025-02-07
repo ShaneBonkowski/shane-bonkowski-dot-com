@@ -4,12 +4,12 @@ import { FaHome, FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="flex flex-col items-center bg-primary-color p-common-p mt-auto">
+    <footer className="flex flex-col items-center bg-primary-color p-common-p sm:p-common-p-sm mt-auto">
       {/* Main Text */}
       <p className="text-center">Thanks for visiting Shanes Games!</p>
 
       {/* Social Icons */}
-      <div className="flex space-x-4 sm:space-x-4 mt-0 mb-0">
+      <div className="flex space-x-4 mt-0 mb-0">
         <Link href="/" className="link">
           <div className="text-primary-text-color hover:text-secondary-text-color cursor-pointer">
             <FaHome size={24} />

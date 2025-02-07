@@ -55,8 +55,8 @@ const CookieAgreement: React.FC = () => {
   return (
     isVisible && (
       <YesNoBox
-        yesButtonText="Enable Cookies"
-        noButtonText="Disable Cookies"
+        yesButtonText="Enable"
+        noButtonText="Disable"
         onYes={enableCookies}
         onNo={disableCookies}
       >
@@ -64,8 +64,9 @@ const CookieAgreement: React.FC = () => {
           This website uses cookies to ensure you get the best experience. By
           continuing to use this site, you accept our use of cookies.{" "}
           <Link href="/main/cookie-policy" className="link">
-            Learn more about our cookie policy here.
+            See our cookie policy for more information
           </Link>
+          .
         </p>
       </YesNoBox>
     )

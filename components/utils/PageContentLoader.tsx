@@ -5,7 +5,7 @@ const PageContentLoader: React.FC<PageContentLoaderProps> = ({
   contentData,
 }) => {
   return (
-    <div className="ml-common-ml mr-common-ml p-common-p text-left">
+    <div className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left">
       {contentData.map((item, index) => {
         switch (item.type) {
           case "h1":

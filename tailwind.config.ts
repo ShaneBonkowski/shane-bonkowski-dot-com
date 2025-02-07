@@ -4,7 +4,7 @@ export default {
   content: [
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./styles/**/*.{css}",
+    "./styles/**/*.css",
   ],
   theme: {
     extend: {
@@ -21,25 +21,42 @@ export default {
       spacing: {
         "common-ml": "2rem",
         "common-p": "1.5rem",
+        "common-p-sm": "1.5rem",
       },
       width: {
-        "content-box-w": "64rem",
+        "content-box-w": "90vw",
+        "content-box-w-sm": "80vw",
+        "content-box-dropdown-h": "8rem",
+        "content-box-dropdown-h-sm": "15rem",
+        "content-box-dropdown-w": "20vw",
+        "content-box-dropdown-w-sm": "12vw",
+        "header-btn-h": "7rem",
       },
       height: {
-        "content-box-content-h": "30vh",
+        "content-box-content-h": "15vh",
+        "content-box-content-h-sm": "35vh",
       },
       fontSize: {
-        // Default font sizes
-        "header-1": "2.8rem",
-        "header-2": "1.9rem",
-        "header-3": "1.475rem",
-        body: "1rem",
-        small: "1rem",
         // Mobile font sizes
-        "header-1-sm": "1.9rem",
-        "header-2-sm": "1.3rem",
-        "header-3-sm": "1.15rem",
+        "header-1": "1.9rem",
+        "header-2": "1.3rem",
+        "header-3": "1rem",
+        body: "0.8rem",
+        small: "0.6rem",
+        "logo-title": "0.7rem",
+        "logo-subtitle": "0.55rem",
+        "content-box-title": "0.8rem",
+        "content-box-subtitle": "0.7rem",
+        // Computer font sizes
+        "header-1-sm": "2.8rem",
+        "header-2-sm": "1.9rem",
+        "header-3-sm": "1.475rem",
         "body-sm": "1rem",
+        "small-sm": "1rem",
+        "logo-title-sm": "1.3rem",
+        "logo-subtitle-sm": "1rem",
+        "content-box-title-sm": "1.3rem",
+        "content-box-subtitle-sm": "1.1rem",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

@@ -70,7 +70,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
         onYes={handleYes}
         onNo={handleNo}
       >
-        <p>Would you like to pick up where you left off?</p>
+        <p>Pick up where you left off?</p>
       </YesNoBox>
     )
   );

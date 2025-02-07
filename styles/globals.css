@@ -91,8 +91,8 @@ body {
     @apply border-t border-primary-text-color my-8;
   }
 
-  /* Mobile font sizes */
-  @media (max-width: 639px) {
+  /* Computer font sizes */
+  @media (min-width: 768px) {
     h1 {
       font-size: theme("fontSize.header-1-sm");
     }
@@ -119,7 +119,7 @@ body {
   }
 
   .header-btn {
-    @apply px-3 py-1 sm:px-4 sm:py-2 bg-button-color rounded hover:bg-secondary-color text-small text-primary-text-color;
+    @apply px-3 py-1 sm:px-4 sm:py-2 bg-button-color rounded hover:bg-secondary-color text-primary-text-color;
   }
 
   .header-btn:hover,
