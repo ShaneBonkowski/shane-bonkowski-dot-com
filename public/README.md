@@ -1,3 +1,3 @@
 ## Public static assets
 
-This is where all static assets in the project live. These are assets that do NOT need to be processed, meaning no source code, or JavaScript files for example. These will get bundled and shipped with the website when it is deployed.
+This directory is used to store all static assets for the project. These assets do not require any processing and are directly served by the web server. Examples of static assets include images, fonts, icons, and other files that are not part of the source code or JavaScript files.

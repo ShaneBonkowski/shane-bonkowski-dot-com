@@ -1,13 +1,15 @@
-## React Component Naming Conventions
+## React Components
 
-### File names
+This directory is used to organize all the React components in the project. It follows specific naming conventions to maintain consistency and readability.
+
+### File Naming Conventions
 
 Use PascalCase for React component file names.
 
 Example: `AboutMe.tsx`
 Incorrect: `aboutMe.tsx`, `about-me.tsx`
 
-### Function names
+### Function Naming Conventions
 
 Use PascalCase for React component function names.
 
