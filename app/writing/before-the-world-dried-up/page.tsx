@@ -1,5 +1,6 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { beforeTheWorldDriedUpData } from "@/data/writing/before-the-world-dried-up-data";
+import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
 
 export const metadata = {
   title: beforeTheWorldDriedUpData.title,
@@ -17,5 +18,13 @@ export const metadata = {
 };
 
 export default function BeforeTheWorldDriedUp() {
-  return <StoryContentLoader {...beforeTheWorldDriedUpData} />;
+  return (
+    <div>
+      <ResumeScrollProgress
+        pageName={beforeTheWorldDriedUpData.title}
+        threshold={200}
+      />
+      <StoryContentLoader {...beforeTheWorldDriedUpData} />
+    </div>
+  );
 }

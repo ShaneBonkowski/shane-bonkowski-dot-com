@@ -1,5 +1,6 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { theLoversData } from "@/data/writing/the-lovers-data";
+import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
 
 export const metadata = {
   title: theLoversData.title,
@@ -17,5 +18,10 @@ export const metadata = {
 };
 
 export default function TheLovers() {
-  return <StoryContentLoader {...theLoversData} />;
+  return (
+    <div>
+      <ResumeScrollProgress pageName={theLoversData.title} threshold={200} />
+      <StoryContentLoader {...theLoversData} />
+    </div>
+  );
 }

@@ -1,5 +1,6 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { deathData } from "@/data/writing/death-data";
+import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
 
 export const metadata = {
   title: deathData.title,
@@ -17,5 +18,10 @@ export const metadata = {
 };
 
 export default function Death() {
-  return <StoryContentLoader {...deathData} />;
+  return (
+    <div>
+      <ResumeScrollProgress pageName={deathData.title} threshold={200} />
+      <StoryContentLoader {...deathData} />
+    </div>
+  );
 }

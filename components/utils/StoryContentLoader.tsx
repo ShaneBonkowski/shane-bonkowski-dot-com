@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { StoryProps, StoryContentProps } from "@/types/layout/Story";
+import { StoryProps, StoryContentProps } from "@/types/Story";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
 const avgWPMReading = 238;

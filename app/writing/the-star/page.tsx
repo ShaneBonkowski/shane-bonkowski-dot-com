@@ -1,5 +1,6 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { theStarData } from "@/data/writing/the-star-data";
+import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
 
 export const metadata = {
   title: theStarData.title,
@@ -17,5 +18,10 @@ export const metadata = {
 };
 
 export default function TheStar() {
-  return <StoryContentLoader {...theStarData} />;
+  return (
+    <div>
+      <ResumeScrollProgress pageName={theStarData.title} threshold={200} />
+      <StoryContentLoader {...theStarData} />
+    </div>
+  );
 }

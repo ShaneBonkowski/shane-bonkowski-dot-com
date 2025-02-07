@@ -1,5 +1,5 @@
 import React from "react";
-import { PageContentLoaderProps } from "@/types/layout/Content";
+import { PageContentLoaderProps } from "@/types/Content";
 
 const PageContentLoader: React.FC<PageContentLoaderProps> = ({
   contentData,

@@ -1,5 +1,6 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { theSunData } from "@/data/writing/the-sun-data";
+import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
 
 export const metadata = {
   title: theSunData.title,
@@ -17,5 +18,10 @@ export const metadata = {
 };
 
 export default function TheSun() {
-  return <StoryContentLoader {...theSunData} />;
+  return (
+    <div>
+      <ResumeScrollProgress pageName={theSunData.title} threshold={200} />
+      <StoryContentLoader {...theSunData} />
+    </div>
+  );
 }

@@ -1,4 +1,4 @@
-import { StoryProps } from "@/types/layout/Story";
+import { StoryProps } from "@/types/Story";
 
 export const theMoonData: StoryProps = {
   title: "The Moon",

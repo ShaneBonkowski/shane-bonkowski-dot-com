@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
+import YesNoBox from "@/components/ui/YesNoBox";
+
 const CookieAgreement: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
@@ -52,29 +54,20 @@ const CookieAgreement: React.FC = () => {
 
   return (
     isVisible && (
-      <div className="fixed bottom-0 left-0 right-0 bg-info-banner-bkg-color text-body text-primary-text-color p-4 flex justify-between items-center z-50">
-        <p className="flex-1">
+      <YesNoBox
+        yesButtonText="Enable Cookies"
+        noButtonText="Disable Cookies"
+        onYes={enableCookies}
+        onNo={disableCookies}
+      >
+        <p>
           This website uses cookies to ensure you get the best experience. By
           continuing to use this site, you accept our use of cookies.{" "}
-          <Link href="/cookie-policy" className="link">
+          <Link href="/main/cookie-policy" className="link">
             Learn more about our cookie policy here.
           </Link>
         </p>
-        <div className="flex space-x-4">
-          <button
-            onClick={enableCookies}
-            className="bg-button-color px-4 py-2 rounded hover:bg-secondary-hover-color"
-          >
-            Enable Cookies
-          </button>
-          <button
-            onClick={disableCookies}
-            className="bg-button-color px-4 py-2 rounded hover:bg-secondary-hover-color"
-          >
-            Disable Cookies
-          </button>
-        </div>
-      </div>
+      </YesNoBox>
     )
   );
 };

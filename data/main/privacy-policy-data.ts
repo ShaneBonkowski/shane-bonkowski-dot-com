@@ -1,4 +1,4 @@
-import { PageContentItemProps } from "@/types/layout/Content";
+import { PageContentItemProps } from "@/types/Content";
 
 export const privacyPolicyData: PageContentItemProps[] = [
   {
@@ -178,7 +178,7 @@ export const privacyPolicyData: PageContentItemProps[] = [
   },
   {
     type: "paragraph",
-    text: "For more information about the cookies we use and your choices regarding cookies, please visit our <a href='/cookie-policy'>Cookies Policy</a> or the Cookies section of our Privacy Policy.",
+    text: "For more information about the cookies we use and your choices regarding cookies, please visit our <a href='/main/cookie-policy'>Cookies Policy</a> or the Cookies section of our Privacy Policy.",
   },
   {
     type: "h2",

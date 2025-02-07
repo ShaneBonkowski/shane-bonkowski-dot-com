@@ -27,7 +27,7 @@ const Header: React.FC = () => {
 
       {/* Right Section: Navigation Buttons */}
       <nav className="flex space-x-2 sm:space-x-4">
-        <Link href="/about" className="link">
+        <Link href="/main/about" className="link">
           <button className="header-btn">About Me</button>
         </Link>
 

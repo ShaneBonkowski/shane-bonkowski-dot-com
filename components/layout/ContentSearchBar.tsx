@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ContentSearchBarProps } from "@/types/layout/Content";
+import { ContentSearchBarProps } from "@/types/Content";
 import Dropdown from "@/components/ui/Dropdown";
 
 const contentTypeOptions = [

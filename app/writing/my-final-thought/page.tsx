@@ -1,5 +1,6 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { myFinalThoughtData } from "@/data/writing/my-final-thought-data";
+import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
 
 export const metadata = {
   title: myFinalThoughtData.title,
@@ -17,5 +18,13 @@ export const metadata = {
 };
 
 export default function myFinalThought() {
-  return <StoryContentLoader {...myFinalThoughtData} />;
+  return (
+    <div>
+      <ResumeScrollProgress
+        pageName={myFinalThoughtData.title}
+        threshold={200}
+      />
+      <StoryContentLoader {...myFinalThoughtData} />
+    </div>
+  );
 }
