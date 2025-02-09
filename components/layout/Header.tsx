@@ -6,7 +6,11 @@ const Header: React.FC = () => {
   return (
     <header className="flex justify-between items-center p-common-p sm:p-common-p-sm">
       {/* Left Section: Logo & Title */}
-      <Link href="/" passHref className="link no-underline hover:no-underline">
+      <Link
+        href="/"
+        passHref
+        className="link no-underline hover:no-underline active:no-underline"
+      >
         <div className="shanes-games-logo space-x-1 sm:space-x-3">
           <Image
             src="/webps/mars-circle-logo-small.webp"

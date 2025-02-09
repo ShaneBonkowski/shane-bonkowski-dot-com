@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
       {/* Social Icons */}
       <div className="flex space-x-4 mt-0 mb-0">
         <Link href="/" className="link">
-          <div className="text-primary-text-color hover:text-secondary-text-color cursor-pointer">
+          <div className="text-primary-text-color hover:text-secondary-text-color active:text-secondary-text-color cursor-pointer">
             <FaHome size={24} />
           </div>
         </Link>
@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
           href="https://github.com/ShaneBonkowski"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary-text-color hover:text-secondary-text-color"
+          className="text-primary-text-color hover:text-secondary-text-color active:text-secondary-text-color"
         >
           <FaGithub size={24} />
         </a>
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
           href="https://www.linkedin.com/in/shanebonkowski/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary-text-color hover:text-secondary-text-color"
+          className="text-primary-text-color hover:text-secondary-text-color active:text-secondary-text-color"
         >
           <FaLinkedin size={24} />
         </a>
@@ -36,9 +36,9 @@ const Footer: React.FC = () => {
       {/* Privacy Policy Link */}
       <Link
         href="/main/privacy-policy"
-        className="link hover:text-secondary-hover-color"
+        className="link hover:text-secondary-hover-color active:text-secondary-hover-color"
       >
-        <p className="text-secondary-text-color hover:text-secondary-hover-color">
+        <p className="text-secondary-text-color hover:text-secondary-hover-color active:text-secondary-hover-color">
           Privacy Policy
         </p>
       </Link>

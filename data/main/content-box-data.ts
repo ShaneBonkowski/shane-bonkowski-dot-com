@@ -54,24 +54,35 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: true,
   },
   {
-    imageUrl: "/webps/I-am-immortal.webp",
-    linkUrl: "/writing/I-am-immortal",
-    title: "I am Immortal",
+    imageUrl: "/webps/the-lovers.webp",
+    linkUrl: "/writing/the-lovers",
+    title: "The Lovers",
     description:
-      "If you ask me, I’m at least 13.8 billion years old. Born in the aftermath of the Big Bang. My life began the same way it will end: Scattered across Infinity.",
+      "Deep within the hidden corridors of Genesis Labs, two scientists are developing what may go down as mankind’s final invention.",
     searchTags:
-      "life, death, universe, immortal, live, forever, spooky, eerie, sci-fi, science, fiction",
+      "Love, Lovers, Bible, Adam, Eve, Universe, Nova, Lux, Mammon, Barachiel, Dr, Dr., Doctor, Scientist, AI, Artificial, Intelligence",
     contentType: "writing",
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/before-the-world-dried-up.webp",
-    linkUrl: "/writing/before-the-world-dried-up",
-    title: "Before the World Dried Up",
+    imageUrl: "/webps/death.webp",
+    linkUrl: "/writing/death",
+    title: "Death",
     description:
-      "They ask me why I plan on sticking around this place. Why I haven't jumped ship with the rest of them. I let out a sigh as I gaze off across the lifeless desertscape.",
+      "A man sits alone at a rundown bar after a long day of work, his soulless eyes projecting a heavy, lingering despair. Deep in the mind of the troubled man, a war is brewing.",
     searchTags:
-      "earth, world, universe, boat, water, ocean, existential, spooky, eerie, sci-fi, science, fiction",
+      "Tarot, Death, Revelation, Card, Revelations, Bible, Space, Goddess, God, Horse",
+    contentType: "writing",
+    openInNewTab: false,
+  },
+  {
+    imageUrl: "/webps/the-star.webp",
+    linkUrl: "/writing/the-star",
+    title: "The Star",
+    description:
+      "She was the healer. The silent observer. The glue that held it all together until the very end. Great fires would rage and she would drag the ocean down from the heavens.",
+    searchTags:
+      "Tarot, Stars, Star, Card, Shimmer, Glitter, Space, Goddess, God",
     contentType: "writing",
     openInNewTab: false,
   },
@@ -97,28 +108,6 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/the-star.webp",
-    linkUrl: "/writing/the-star",
-    title: "The Star",
-    description:
-      "She was the healer. The silent observer. The glue that held it all together until the very end. Great fires would rage and she would drag the ocean down from the heavens.",
-    searchTags:
-      "Tarot, Stars, Star, Card, Shimmer, Glitter, Space, Goddess, God",
-    contentType: "writing",
-    openInNewTab: false,
-  },
-  {
-    imageUrl: "/webps/death.webp",
-    linkUrl: "/writing/death",
-    title: "Death",
-    description:
-      "A man sits alone at a rundown bar after a long day of work, his soulless eyes projecting a heavy, lingering despair. Deep in the mind of the troubled man, a war is brewing.",
-    searchTags:
-      "Tarot, Death, Revelation, Card, Revelations, Bible, Space, Goddess, God, Horse",
-    contentType: "writing",
-    openInNewTab: false,
-  },
-  {
     imageUrl: "/webps/my-final-thought.webp",
     linkUrl: "/writing/my-final-thought",
     title: "My Final Thought",
@@ -129,13 +118,24 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/the-lovers.webp",
-    linkUrl: "/writing/the-lovers",
-    title: "The Lovers",
+    imageUrl: "/webps/I-am-immortal.webp",
+    linkUrl: "/writing/I-am-immortal",
+    title: "I am Immortal",
     description:
-      "Deep within the hidden corridors of Genesis Labs, two scientists are developing what may go down as mankind’s final invention.",
+      "If you ask me, I’m at least 13.8 billion years old. Born in the aftermath of the Big Bang. My life began the same way it will end: Scattered across Infinity.",
     searchTags:
-      "Love, Lovers, Bible, Adam, Eve, Universe, Nova, Lux, Mammon, Barachiel, Dr, Dr., Doctor, Scientist, AI, Artificial, Intelligence",
+      "life, death, universe, immortal, live, forever, spooky, eerie, sci-fi, science, fiction",
+    contentType: "writing",
+    openInNewTab: false,
+  },
+  {
+    imageUrl: "/webps/before-the-world-dried-up.webp",
+    linkUrl: "/writing/before-the-world-dried-up",
+    title: "Before the World Dried Up",
+    description:
+      "They ask me why I plan on sticking around this place. Why I haven't jumped ship with the rest of them. I let out a sigh as I gaze off across the lifeless desertscape.",
+    searchTags:
+      "earth, world, universe, boat, water, ocean, existential, spooky, eerie, sci-fi, science, fiction",
     contentType: "writing",
     openInNewTab: false,
   },
