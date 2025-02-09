@@ -1,27 +1,28 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { deathData } from "@/data/writing/death-data";
 import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
+import Head from "next/head";
 
-export const metadata = {
-  title: deathData.title,
-  description: "A short story by Shane Bonkowski.",
-  openGraph: {
-    title: deathData.title,
-    description: "A short story by Shane Bonkowski.",
-    images: [
-      {
-        url: deathData.imageUrl,
-        alt: deathData.title,
-      },
-    ],
-  },
-};
+const storyData = deathData;
 
 export default function Death() {
   return (
-    <div>
-      <ResumeScrollProgress pageName={deathData.title} threshold={200} />
-      <StoryContentLoader {...deathData} />
-    </div>
+    <>
+      <Head>
+        <title>{storyData.title}</title>
+        <meta name="description" content="A short story by Shane Bonkowski." />
+        <meta property="og:title" content={storyData.title} />
+        <meta
+          property="og:description"
+          content="A short story by Shane Bonkowski."
+        />
+        <meta property="og:image" content={storyData.imageUrl} />
+        <meta property="og:image:alt" content={storyData.title} />
+      </Head>
+      <div>
+        <ResumeScrollProgress pageName={storyData.title} threshold={200} />
+        <StoryContentLoader {...storyData} />
+      </div>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { StoryProps } from "@/types/Story";
+import { StoryProps } from "@/components/utils/StoryContentLoader";
 
 export const iAmImmortalData: StoryProps = {
   title: "I am Immortal",

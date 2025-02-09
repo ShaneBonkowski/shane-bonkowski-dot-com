@@ -2,8 +2,12 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import YesNoBox from "@/components/ui/YesNoBox";
-import { ResumeScrollProgressProps } from "@/types/ResumeScrollProgress";
 import { debounce } from "@/utils/debounce";
+
+export interface ResumeScrollProgressProps {
+  pageName: string;
+  threshold: number;
+}
 
 const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
   pageName,

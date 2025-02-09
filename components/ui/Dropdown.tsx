@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { DropdownProps } from "@/types/Dropdown";
+
+export interface DropdownProps {
+  options: { value: string; label: string }[];
+  selected: string;
+  setSelected: (value: string) => void;
+}
 
 const Dropdown: React.FC<DropdownProps> = ({
   options,

@@ -1,4 +1,4 @@
-import { ContentBoxProps } from "@/types/Content";
+import { ContentBoxProps } from "@/components/layout/ContentSearchBar";
 
 export const contentBoxData: ContentBoxProps[] = [
   //   {

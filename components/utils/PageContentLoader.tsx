@@ -1,5 +1,14 @@
 import React from "react";
-import { PageContentLoaderProps } from "@/types/Content";
+
+export interface PageContentItemProps {
+  type: "h1" | "h2" | "h3" | "paragraph" | "list";
+  text?: string;
+  items?: string[];
+}
+
+export interface PageContentLoaderProps {
+  contentData: PageContentItemProps[];
+}
 
 const PageContentLoader: React.FC<PageContentLoaderProps> = ({
   contentData,

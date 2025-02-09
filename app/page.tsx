@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ContentSearchBar from "@/components/layout/ContentSearchBar";
 import { contentBoxData } from "@/data/main/content-box-data";
 import ContentBox from "@/components/layout/ContentBox";
-import { ContentBoxProps } from "@/types/Content";
+import { ContentBoxProps } from "@/components/layout/ContentSearchBar";
 
 export default function Home() {
   const [filteredContent, setFilteredContent] =

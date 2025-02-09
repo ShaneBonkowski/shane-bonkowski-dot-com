@@ -1,4 +1,4 @@
-import { PageContentItemProps } from "@/types/Content";
+import { PageContentItemProps } from "@/components/utils/PageContentLoader";
 
 export const privacyPolicyData: PageContentItemProps[] = [
   {

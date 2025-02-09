@@ -1,30 +1,28 @@
 import StoryContentLoader from "@/components/utils/StoryContentLoader";
 import { myFinalThoughtData } from "@/data/writing/my-final-thought-data";
 import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
+import Head from "next/head";
 
-export const metadata = {
-  title: myFinalThoughtData.title,
-  description: "A short story by Shane Bonkowski.",
-  openGraph: {
-    title: myFinalThoughtData.title,
-    description: "A short story by Shane Bonkowski.",
-    images: [
-      {
-        url: myFinalThoughtData.imageUrl,
-        alt: myFinalThoughtData.title,
-      },
-    ],
-  },
-};
+const storyData = myFinalThoughtData;
 
-export default function myFinalThought() {
+export default function MyFinalThought() {
   return (
-    <div>
-      <ResumeScrollProgress
-        pageName={myFinalThoughtData.title}
-        threshold={200}
-      />
-      <StoryContentLoader {...myFinalThoughtData} />
-    </div>
+    <>
+      <Head>
+        <title>{storyData.title}</title>
+        <meta name="description" content="A short story by Shane Bonkowski." />
+        <meta property="og:title" content={storyData.title} />
+        <meta
+          property="og:description"
+          content="A short story by Shane Bonkowski."
+        />
+        <meta property="og:image" content={storyData.imageUrl} />
+        <meta property="og:image:alt" content={storyData.title} />
+      </Head>
+      <div>
+        <ResumeScrollProgress pageName={storyData.title} threshold={200} />
+        <StoryContentLoader {...storyData} />
+      </div>
+    </>
   );
 }
