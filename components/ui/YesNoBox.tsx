@@ -1,5 +1,4 @@
 import React from "react";
-
 import { YesNoBoxProps } from "@/types/YesNoBox";
 
 const YesNoBox: React.FC<YesNoBoxProps> = ({
@@ -8,21 +7,30 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
   noButtonText,
   onYes,
   onNo,
+  bottomRight = false,
 }) => {
   return (
-    <div className="fixed flex justify-center items-center gap-4 bottom-0 left-0 right-0 bg-info-banner-bkg-color text-body text-primary-text-color p-common-p sm:p-common-p-sm z-50">
-      <div className="flex flex-col">
-        <div className="flex">{children}</div>
-        <div className="flex justify-center space-x-2">
+    <div
+      className={`fixed ${
+        bottomRight ? "bottom-0 right-0" : "bottom-0 left-0 right-0"
+      } bg-info-banner-bkg-color text-body text-primary-text-color p-common-p sm:p-common-p-sm z-50 ${
+        bottomRight ? "w-full sm:w-auto" : "w-full"
+      }`}
+    >
+      <div
+        className={`flex flex-col gap-x-4 sm:flex-row justify-between items-center`}
+      >
+        <div>{children}</div>
+        <div className="flex justify-center sm:justify-end space-x-2">
           <button
             onClick={onYes}
-            className="bg-button-color px-4 py-2 rounded hover:bg-secondary-hover-color"
+            className="bg-button-color text-body px-6 py-2 rounded hover:bg-secondary-hover-color"
           >
             {yesButtonText}
           </button>
           <button
             onClick={onNo}
-            className="bg-button-color px-4 py-2 rounded hover:bg-secondary-hover-color"
+            className="bg-button-color text-body px-6 py-2 rounded hover:bg-secondary-hover-color"
           >
             {noButtonText}
           </button>

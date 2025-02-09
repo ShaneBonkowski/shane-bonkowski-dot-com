@@ -4,4 +4,5 @@ export interface YesNoBoxProps {
   noButtonText: string;
   onYes: () => void;
   onNo: () => void;
+  bottomRight?: boolean;
 }

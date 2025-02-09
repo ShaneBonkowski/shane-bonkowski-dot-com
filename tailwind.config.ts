@@ -16,7 +16,7 @@ export default {
         "primary-text-color": "#FFFFFF",
         "secondary-text-color": "#9CA3AF",
         "link-color": "#69daff",
-        "info-banner-bkg-color": "rgba(62, 62, 62, 1.00)",
+        "info-banner-bkg-color": "rgba(62, 62, 62, 0.95)",
       },
       spacing: {
         "common-ml": "2rem",

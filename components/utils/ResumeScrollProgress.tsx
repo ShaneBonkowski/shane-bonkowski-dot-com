@@ -69,8 +69,9 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
         noButtonText="No"
         onYes={handleYes}
         onNo={handleNo}
+        bottomRight={true}
       >
-        <p>Pick up where you left off?</p>
+        <p className="text-left py-2 my-0">Pick up where you left off?</p>
       </YesNoBox>
     )
   );
