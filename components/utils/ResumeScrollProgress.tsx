@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import YesNoBox from "@/components/ui/YesNoBox";
-import { debounce } from "@/utils/debounce";
+import { debounce } from "@/src/utils/debounce";
 
 export interface ResumeScrollProgressProps {
   pageName: string;

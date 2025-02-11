@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { flipTileData } from "@/data/games/flip-tile-data";
+import styles from "@/styles/games/flip-tile.module.css";
 
 const gameData = flipTileData;
 
@@ -13,18 +14,24 @@ const FlipTile = () => {
       if (typeof window !== "undefined" && window.Phaser) {
         try {
           const { default: FlipTileScene } = await import(
-            "@/app/games/flip-tile/scenes/flip-tile-scene"
+            "@/src/games/flip-tile/scenes/flip-tile-scene"
           );
 
           const config: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
-            width: 800,
-            height: 600,
+            width: window.innerWidth,
+            height: window.innerHeight,
+            transparent: true,
+            scale: {
+              mode: Phaser.Scale.RESIZE,
+              autoCenter: Phaser.Scale.CENTER_BOTH,
+            },
             scene: FlipTileScene,
             parent: "phaser-game",
           };
 
-          new window.Phaser.Game(config);
+          const game = new window.Phaser.Game(config);
+          game.canvas.classList.add(styles.canvas);
         } catch (error) {
           console.error("Failed to load Game Scene:", error);
         }
@@ -41,6 +48,28 @@ const FlipTile = () => {
       console.error("Failed to load Phaser script");
     };
     document.head.appendChild(script);
+
+    // Update body size on window resize
+    function updateBodySize() {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight =
+        window.innerHeight > document.documentElement.clientHeight
+          ? document.documentElement.clientHeight
+          : window.innerHeight;
+
+      document.body.style.width = `${viewportWidth}px`;
+      document.body.style.height = `${viewportHeight}px`;
+    }
+
+    updateBodySize();
+    window.addEventListener("resize", updateBodySize);
+    window.addEventListener("orientationchange", updateBodySize);
+
+    return () => {
+      // Cleanup event listeners on component unmount
+      window.removeEventListener("resize", updateBodySize);
+      window.removeEventListener("orientationchange", updateBodySize);
+    };
   }, []);
 
   return (
