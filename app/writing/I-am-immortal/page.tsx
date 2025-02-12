@@ -1,6 +1,6 @@
-import StoryContentLoader from "@/components/utils/StoryContentLoader";
-import { iAmImmortalData } from "@/data/writing/I-am-immortal-data";
-import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
+import StoryContentLoader from "@/src/components/StoryContentLoader";
+import { iAmImmortalData } from "@/src/data/writing/I-am-immortal-data";
+import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import Head from "next/head";
 
 const storyData = iAmImmortalData;

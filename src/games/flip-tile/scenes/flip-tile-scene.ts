@@ -1,15 +1,17 @@
 import {
   instantiateTiles,
+  checkIfTileGridSolved,
+  tilesToTilespaceMatrix,
+} from "@/src/games/flip-tile/tile-utils.ts";
+import {
   TilePatternAttrs,
   sharedTileAttrs,
   difficulty,
-  checkIfTileGridSolved,
-  tilesToTilespaceMatrix,
   tileGridEventNames,
   scoring,
-} from "@/src/games/flip-tile/tile-utils.js";
+} from "@/src/games/flip-tile/tile-constants.ts";
+import { Tile } from "@/src/games/flip-tile/tile.ts";
 import { SeededRandom } from "@/src/utils/seedable-random.ts";
-import { uiVars } from "./init-ui.js";
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d.ts";
 import { genericGameEventNames } from "@/src/utils/game-scene-2d.ts";
 
@@ -22,7 +24,7 @@ export const intendedNewTileAttrs = {
   difficultyLevel: difficulty.EASY,
 };
 
-export const tiles = [];
+export const tiles: Tile[][] = [];
 
 // Export so other scripts can access this
 export class MainGameScene extends Generic2DGameScene {
@@ -41,9 +43,9 @@ export class MainGameScene extends Generic2DGameScene {
 
   preload() {
     // Preload assets if needed
-    this.load.image("Tile Blue", "./webps/Flip-Tile-Blue.webp");
-    this.load.image("Tile Red", "./webps/Flip-Tile-Red.webp");
-    this.load.image("Tile Green", "./webps/Flip-Tile-Green.webp");
+    this.load.image("tile-blue", "/webps/flip-tile-blue.webp");
+    this.load.image("tile-red", "/webps/flip-tile-red.webp");
+    this.load.image("tile-green", "/webps/flip-tile-green.webp");
   }
 
   create() {
@@ -58,12 +60,12 @@ export class MainGameScene extends Generic2DGameScene {
     this.newTilePattern(true); // first time calling this
   }
 
-  update(time: number, delta: number) {
+  update() {
     if (this.gameStarted) {
       // Handle the graphic updates
       for (let row = 0; row < tiles.length; row++) {
         for (let col = 0; col < tiles[row].length; col++) {
-          let tile = tiles[row][col];
+          const tile = tiles[row][col];
           tile.updateGraphic();
         }
       }
@@ -85,7 +87,7 @@ export class MainGameScene extends Generic2DGameScene {
     // Play celebration anim for all tiles
     for (let row = 0; row < tiles.length; row++) {
       for (let col = 0; col < tiles[row].length; col++) {
-        let tile = tiles[row][col];
+        const tile = tiles[row][col];
 
         // Make sure tile exists
         if (tile) {
@@ -111,7 +113,9 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   resetRevealSolutionToggle() {
-    const toggleInput = document.querySelector(".flip-tile-sol-toggle-input");
+    const toggleInput = document.getElementById(
+      "sol-toggle-input"
+    ) as HTMLInputElement;
 
     if (toggleInput) {
       toggleInput.checked = false;
@@ -145,10 +149,10 @@ export class MainGameScene extends Generic2DGameScene {
     this.destroyAllTiles();
 
     // Update to a new tile pattern in a grid as a Promise (so that we can run this async)
-    for (let i = 1; i <= uiVars.numCheckboxes; i++) {
-      let className = `.flip-tile-toggle-input-${i}`;
-      const checkbox = document.querySelector(className);
-      if (checkbox.checked) {
+    for (let i = 1; i <= 3; i++) {
+      const id = `input-box-${i}`;
+      const checkbox = document.getElementById(id) as HTMLInputElement;
+      if (checkbox && checkbox.checked) {
         if (i == 1) {
           this.updateIntendedDifficuly(difficulty.EASY);
         } else if (i == 2) {
@@ -156,7 +160,7 @@ export class MainGameScene extends Generic2DGameScene {
         } else if (i == 3) {
           this.updateIntendedDifficuly(difficulty.EXPERT);
         } else {
-          this.updateIntendedDifficuly(TilePatternAttrs.difficulty);
+          this.updateIntendedDifficuly(TilePatternAttrs.difficultyLevel);
         }
       }
     }
@@ -221,13 +225,13 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   nextPuzzleIfSolved() {
-    let solved = checkIfTileGridSolved(tilesToTilespaceMatrix(tiles));
+    const solved = checkIfTileGridSolved(tilesToTilespaceMatrix(tiles));
 
     if (solved) {
       // Play celebration anim for all tiles
       for (let row = 0; row < tiles.length; row++) {
         for (let col = 0; col < tiles[row].length; col++) {
-          let tile = tiles[row][col];
+          const tile = tiles[row][col];
 
           // Make sure tile exists
           if (tile) {
@@ -238,8 +242,9 @@ export class MainGameScene extends Generic2DGameScene {
 
       // Update score..
       // Only give score if solution is not revealed
-      const toggleInput = document.querySelector(".flip-tile-sol-toggle-input");
-
+      const toggleInput = document.getElementById(
+        "sol-toggle-input"
+      ) as HTMLInputElement;
       if (
         toggleInput &&
         !toggleInput.checked &&
@@ -259,9 +264,9 @@ export class MainGameScene extends Generic2DGameScene {
 
       // After x seconds, reveal the next puzzle
       setTimeout(
-        function () {
+        () => {
           this.newTilePattern();
-        }.bind(this),
+        },
         sharedTileAttrs.solvedTimer * 1.1 * 1000 // slightly longer than tile celebration anim
       );
     }
@@ -269,44 +274,32 @@ export class MainGameScene extends Generic2DGameScene {
 
   subscribeToEvents() {
     // Event listener for ui menu open / closed
-    document.addEventListener(
-      genericGameEventNames.uiMenuOpen,
-      function (event) {
-        if (this.uiMenuOpen == false) {
-          this.uiMenuOpen = true;
-        }
-      }.bind(this)
-    ); // Bind 'this' to refer to the class instance
-    document.addEventListener(
-      genericGameEventNames.uiMenuClosed,
-      function (event) {
-        if (this.uiMenuOpen == true) {
-          this.uiMenuOpen = false;
-        }
-      }.bind(this)
-    ); // Bind 'this' to refer to the class instance
+    document.addEventListener(genericGameEventNames.uiMenuOpen, () => {
+      if (this.uiMenuOpen == false) {
+        this.uiMenuOpen = true;
+      }
+    });
+    document.addEventListener(genericGameEventNames.uiMenuClosed, () => {
+      if (this.uiMenuOpen == true) {
+        this.uiMenuOpen = false;
+      }
+    });
 
     // When we ask to change the tile grid, spawn a new tile pattern
-    document.addEventListener(
-      tileGridEventNames.onTilegridChange,
-      function (event) {
-        this.newTilePattern();
-      }.bind(this)
-    );
+    document.addEventListener(tileGridEventNames.onTilegridChange, () => {
+      this.newTilePattern();
+    });
 
     // When we ask to change the tile grid, spawn a new tile pattern
-    document.addEventListener(
-      tileGridEventNames.onTilegridReset,
-      function (event) {
-        this.resetCurrentTilePattern();
-      }.bind(this)
-    );
+    document.addEventListener(tileGridEventNames.onTilegridReset, () => {
+      this.resetCurrentTilePattern();
+    });
   }
 
   setUpWindowResizeHandling() {
     // Observe window resizing with ResizeObserver since it
     // is good for snappy changes
-    const resizeObserver = new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver(() => {
       this.handleWindowResize();
     });
     resizeObserver.observe(document.documentElement);
@@ -325,7 +318,7 @@ export class MainGameScene extends Generic2DGameScene {
     // Handle tiles for window resize
     for (let row = 0; row < tiles.length; row++) {
       for (let col = 0; col < tiles[row].length; col++) {
-        let tile = tiles[row][col];
+        const tile = tiles[row][col];
 
         // Make sure tile exists
         if (tile) {

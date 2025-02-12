@@ -1,6 +1,6 @@
-import StoryContentLoader from "@/components/utils/StoryContentLoader";
-import { theMoonData } from "@/data/writing/the-moon-data";
-import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
+import StoryContentLoader from "@/src/components/StoryContentLoader";
+import { theMoonData } from "@/src/data/writing/the-moon-data";
+import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import Head from "next/head";
 
 const storyData = theMoonData;

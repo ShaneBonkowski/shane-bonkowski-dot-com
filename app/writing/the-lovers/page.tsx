@@ -1,6 +1,6 @@
-import StoryContentLoader from "@/components/utils/StoryContentLoader";
-import { theLoversData } from "@/data/writing/the-lovers-data";
-import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
+import StoryContentLoader from "@/src/components/StoryContentLoader";
+import { theLoversData } from "@/src/data/writing/the-lovers-data";
+import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import Head from "next/head";
 
 const storyData = theLoversData;

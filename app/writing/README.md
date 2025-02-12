@@ -1,6 +1,6 @@
 ## Creating a new `writing` page
 
-### 1. Create a new data file to store the story contents in `/data/writing`.
+### 1. Create a new data file to store the story contents in `/src/data/writing`.
 
 - Duplicate one of the existing `*-data.ts` files.
 - Rename it to `{story-name}-data.ts`.
@@ -21,6 +21,6 @@
 - Store this image in `/public/pngs`.
 - Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
 
-### 4. Create a content box for the story in `/data/main/content-box-data.ts`.
+### 4. Create a content box for the story in `/src/data/main/content-box-data.ts`.
 
 - Fill in the data accordinly, updating the link to the image page, title, description, etc.

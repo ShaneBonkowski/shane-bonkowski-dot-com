@@ -1,14 +1,20 @@
-import "@/styles/globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import CookieAgreement from "@/components/layout/CookieAgreement";
+"use client";
+
+import "@/src/styles/globals.css";
+import Header from "@/src/components/Header";
+import Footer from "@/src/components/Footer";
+import CookieAgreement from "@/src/components/CookieAgreement";
 import Head from "next/head";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isGamesPath = pathname.startsWith("/games");
+
   return (
     <html lang="en">
       <Head>
@@ -30,8 +36,8 @@ export default function RootLayout({
       <body className="flex flex-col min-h-full">
         <Header />
         <main className="flex-grow">{children}</main>
-        <CookieAgreement />
-        <Footer />
+        {!isGamesPath && <CookieAgreement />}
+        {!isGamesPath && <Footer />}
       </body>
     </html>
   );

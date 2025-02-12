@@ -2,9 +2,9 @@ import type { Config } from "tailwindcss";
 
 export default {
   content: [
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./styles/**/*.css",
+    "./src/styles/**/*.css",
   ],
   theme: {
     extend: {
@@ -22,6 +22,12 @@ export default {
         "common-ml": "2rem",
         "common-p": "1.5rem",
         "common-p-sm": "1.5rem",
+        "flip-tile-small-mx": "6vw",
+        "flip-tile-med-mx": "12vw",
+        "flip-tile-tiny-mb": "6vw",
+        "flip-tile-low-mb": "13vh",
+        "flip-tile-med-mb": "23vh",
+        "flip-tile-high-mb": "30vh",
       },
       width: {
         "content-box-w": "90vw",

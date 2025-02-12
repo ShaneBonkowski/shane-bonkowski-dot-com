@@ -1,5 +1,5 @@
-import { privacyPolicyData } from "@/data/main/privacy-policy-data";
-import PageContentLoader from "@/components/utils/PageContentLoader";
+import { privacyPolicyData } from "@/src/data/main/privacy-policy-data";
+import PageContentLoader from "@/src/components/PageContentLoader";
 
 export default function PrivacyPolicy() {
   return (

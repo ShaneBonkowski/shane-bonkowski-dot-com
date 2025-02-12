@@ -1,6 +1,6 @@
-import StoryContentLoader from "@/components/utils/StoryContentLoader";
-import { theSunData } from "@/data/writing/the-sun-data";
-import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
+import StoryContentLoader from "@/src/components/StoryContentLoader";
+import { theSunData } from "@/src/data/writing/the-sun-data";
+import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import Head from "next/head";
 
 const storyData = theSunData;

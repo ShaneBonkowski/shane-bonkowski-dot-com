@@ -1,6 +1,6 @@
-import StoryContentLoader from "@/components/utils/StoryContentLoader";
-import { beforeTheWorldDriedUpData } from "@/data/writing/before-the-world-dried-up-data";
-import ResumeScrollProgress from "@/components/utils/ResumeScrollProgress";
+import StoryContentLoader from "@/src/components/StoryContentLoader";
+import { beforeTheWorldDriedUpData } from "@/src/data/writing/before-the-world-dried-up-data";
+import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import Head from "next/head";
 
 const storyData = beforeTheWorldDriedUpData;

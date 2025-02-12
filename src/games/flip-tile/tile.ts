@@ -4,13 +4,16 @@ import {
   tileStates,
   sharedTileAttrs,
   TilePatternAttrs,
-  updateAllTilesText,
   tileGridEventNames,
-} from "@/src/games/flip-tile/tile-utils.ts";
-import { tiles } from "@/src/games/flip-tile/scenes/flip-tile-scene.ts";
+} from "@/src/games/flip-tile/tile-constants.ts";
+import { updateAllTilesText } from "@/src/games/flip-tile/tile-utils.ts";
+import {
+  tiles,
+  MainGameScene,
+} from "@/src/games/flip-tile/scenes/flip-tile-scene.ts";
 
 export class Tile extends GameObject {
-  public scene: Phaser.Scene;
+  public scene: MainGameScene;
   public tileSpaceCoord: Vec2;
   public gridSize: number;
   public tileState: number;
@@ -19,7 +22,7 @@ export class Tile extends GameObject {
   public animationPlaying: boolean;
 
   constructor(
-    scene: Phaser.Scene,
+    scene: MainGameScene,
     tileSpaceX: number,
     tileSpaceY: number,
     gridSize: number,
@@ -62,9 +65,9 @@ export class Tile extends GameObject {
   initTile() {
     this.size = this.calculateTileSize();
     this.graphic = this.scene.add.sprite(0, 0, "Tile Red"); // init, will be changed in updateTileColor
-    this.graphic.setInteractive(); // make it so this graphic can be clicked on etc.
+    this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
     this.updateTileColor();
-    this.graphic.setOrigin(0.5, 0.5); // Set the anchor point to the center
+    this.graphic!.setOrigin(0.5, 0.5); // Set the anchor point to the center
 
     // TODO: add particles or something when new is spawned in
     // ...
@@ -79,8 +82,8 @@ export class Tile extends GameObject {
       "1",
       { fontFamily: "Arial", fontSize: 40, color: "#FFFFFF" } // init text size here, but in reality it is updated in updateTextSize()
     );
-    this.text.setOrigin(-0.2, 0.7); // Origin on the top right corner of the text
-    this.text.setDepth(10); // Ensure the text appears on top of the graphic
+    this.text!.setOrigin(-0.2, 0.7); // Origin on the top right corner of the text
+    this.text!.setDepth(10); // Ensure the text appears on top of the graphic
 
     this.updateTextPos();
     this.updateTextSize();
@@ -139,11 +142,11 @@ export class Tile extends GameObject {
   updateTileColor() {
     // Color
     if (this.tileState === tileStates.RED) {
-      this.graphic!.setTexture("Tile Red");
+      this.graphic!.setTexture("tile-red");
     } else if (this.tileState === tileStates.BLUE) {
-      this.graphic!.setTexture("Tile Blue");
+      this.graphic!.setTexture("tile-blue");
     } else if (this.tileState === tileStates.GREEN) {
-      this.graphic!.setTexture("Tile Green");
+      this.graphic!.setTexture("tile-green");
     } else {
       console.log(`ERROR: tileState ${this.tileState} is not an expected one`);
     }
@@ -195,7 +198,7 @@ export class Tile extends GameObject {
       duration: duration / 2, // /2 since yoyo doubles the time
       ease: "Sine.easeInOut",
       yoyo: true, // Return to original scale and rotation after the animation
-      onUpdate: (tween, target) => {
+      onUpdate: (target: Phaser.GameObjects.Sprite) => {
         // Ensures that the size variable reflects the scale as it changes with the tween
         this.size = target.displayWidth; // Assuming width == height
       },

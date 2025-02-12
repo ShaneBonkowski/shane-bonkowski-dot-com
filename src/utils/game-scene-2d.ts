@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from "@/public/js/phaser.min.js";
 
 export const genericGameEventNames = {
   uiMenuOpen: "uiMenuOpen",

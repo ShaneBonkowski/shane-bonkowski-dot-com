@@ -1,5 +1,3 @@
-import Phaser from "phaser";
-
 let currentMessage: Phaser.GameObjects.Text | null = null;
 let resizeObserver: ResizeObserver | null = null;
 
