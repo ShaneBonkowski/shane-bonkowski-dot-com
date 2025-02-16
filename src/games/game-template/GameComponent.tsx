@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import InitUI from "@/src/games/game-template/InitUI";
 import styles from "@/src/styles/games/flip-tile.module.css";
 
 const GameComponent = () => {
@@ -49,7 +48,6 @@ const GameComponent = () => {
   return (
     <div className="w-full h-full">
       <div id="phaser-game" className="w-full h-full"></div>
-      <InitUI />
     </div>
   );
 };
