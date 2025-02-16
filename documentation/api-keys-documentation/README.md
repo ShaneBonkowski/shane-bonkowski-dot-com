@@ -4,15 +4,18 @@ This document outlines the websites where API keys are utilized and where they a
 
 ## Google Analytics API
 
-- **Where to Find Tracking ID**: Search "tracking ID" on Google Analytics. This may also be called "Measurement ID".
+- **Uses:** Tracking users on the website.
+- **How to generate/find:** Search "tracking ID" on Google Analytics. This may also be called "Measurement ID".
 - **Storage Location**: GitHub > settings > secrets > actions > `GA_TRACKING_ID`
 
 ## GitHub API
 
-- **Where to Find**: Created once in GitHub Developer Settings > Personal Access Tokens
+- **Uses:** Interacting with GitHub, specifically during the deployment process.
+- **How to generate/find:** Created once in GitHub Developer Settings > Personal Access Tokens
 - **Storage Location**: GitHub > settings > secrets > actions > `GH_TOKEN`
 
-## Google Service Accounts
+## Firebase Service Account
 
-- **Where to Find**: Google Cloud Console > IAM & Admin > Service Accounts
+- **Uses:** Interacting with Google Firebase when deploying the website.
+- **How to generate/find:** Call `firebase init hosting` when instantiating a project.
 - **Storage Location**: GitHub > settings > secrets > actions > `FIREBASE_SERVICE_ACCOUNT_BLACK_HOLE_REJECT`
