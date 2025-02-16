@@ -58,10 +58,10 @@ jobs:
       - name: <DEBUG> List Contents of webps Folder After Build
         run: ls -la out/webps
 
-      - name: Deploy Site + Functions to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BLACK_HOLE_REJECT }}
-          channelId: live
-          projectId: black-hole-reject
+      - name: Set up Firebase Service Account
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_BLACK_HOLE_REJECT }}" > "${HOME}/firebase-service-account.json"
+          firebase auth:login --token "$(cat ${HOME}/firebase-service-account.json | jq -r .token)"
+
+      - name: Deploy Site to Firebase Hosting
+        run: firebase deploy --only hosting --project black-hole-reject --token "$(cat ${HOME}/firebase-service-account.json | jq -r .token)"
