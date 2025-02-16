@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-image: url("/webps/sky-starry-blurred-dark.webp");
+  background-image: url("/webps/sky-starry-bkg.webp");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

@@ -13,7 +13,7 @@ const Header: React.FC = () => {
       >
         <div className="shanes-games-logo space-x-1 sm:space-x-3">
           <Image
-            src="/webps/mars-circle-logo-small.webp"
+            src="/webps/mars-logo-small.webp"
             alt="Logo"
             width={120}
             height={120}
