@@ -54,8 +54,6 @@ const ContentBox: React.FC<ContentBoxProps> = ({
           } cursor-pointer`}
           onPointerEnter={() => setIsHovered(true)}
           onPointerLeave={() => setIsHovered(false)}
-          // Google Firebase does not support optimizations
-          unoptimized={true}
         />
       </Link>
 
