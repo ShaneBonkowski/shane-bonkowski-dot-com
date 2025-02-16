@@ -36,13 +36,13 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="flex items-stretch w-content-box-w sm:content-box-w-sm mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden">
+    <div className="flex flex-col sm:flex-row items-stretch w-content-box-w sm:content-box-w-sm mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden">
       {/* Image on the Left */}
       <Link
         href={linkUrl}
         target={openInNewTab ? "_blank" : "_self"}
         rel="noopener noreferrer"
-        className="link w-1/2 sm:w-1/5 h-content-box-content-h sm:h-content-box-content-h-sm"
+        className="link flex-shrink-0 w-full sm:content-box-img-w h-{50vw} sm:h-content-box-content-h-sm"
       >
         <Image
           src={imageUrl}
@@ -50,7 +50,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
           width={500}
           height={422}
           className={`w-full h-full object-cover transform transition-transform duration-0 ${
-            isHovered ? "scale-110" : "scale-100"
+            isHovered ? "scale-105" : "scale-100"
           } cursor-pointer`}
           onPointerEnter={() => setIsHovered(true)}
           onPointerLeave={() => setIsHovered(false)}
@@ -58,7 +58,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
       </Link>
 
       {/* Content Box on the Right */}
-      <div className="flex flex-col items-start justify-center w-4/5 h-content-box-content-h sm:h-content-box-content-h-sm p-3 sm:p-5 space-y-2 sm:space-y-3">
+      <div className="flex flex-col flex-grow my-3 sm:my-0 items-start justify-center h-auto sm:h-content-box-content-h-sm p-3 sm:p-5 space-y-2 sm:space-y-3">
         {/* Icon + Title */}
         <div className="flex items-center space-x-2 sm:space-x-3">
           {getIcon(contentType)}

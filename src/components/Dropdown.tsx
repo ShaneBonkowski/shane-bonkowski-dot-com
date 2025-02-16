@@ -35,12 +35,12 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div
-      className="relative h-content-box-dropdown-h sm:h-content-box-dropdown-h"
+      className="relative w-content-box-dropdown-w sm:w-content-box-dropdown-w-sm h-content-box-dropdown-h sm:h-content-box-dropdown-h"
       ref={dropdownRef}
     >
       {/* Selected Value */}
       <button
-        className="p-2 bg-secondary-color text-small sm:text-small-sm text-primary-text-color rounded-sm w-content-box-dropdown-w sm:w-content-box-dropdown-w-sm flex justify-between items-center cursor-pointer hover:bg-secondary-hover-color active:bg-secondary-hover-color"
+        className="w-full p-2 bg-secondary-color text-small sm:text-small-sm text-primary-text-color rounded-sm flex justify-between items-center cursor-pointer hover:bg-secondary-hover-color active:bg-secondary-hover-color"
         onClick={() => setIsOpen(!isOpen)}
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
@@ -49,7 +49,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       {/* Dropdown List */}
       {isOpen && (
-        <ul className="absolute p-2 text-small sm:text-small-sm list-none mt-1 w-content-box-dropdown-w sm:w-content-box-dropdown-w-sm bg-secondary-color rounded-sm shadow-lg overflow-hidden z-50">
+        <ul className="w-full absolute p-2 list-none mt-1 bg-secondary-color rounded-sm shadow-lg overflow-hidden z-50">
           {options.map((option) => (
             <li
               key={option.value}
@@ -57,7 +57,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 setSelected(option.value);
                 setIsOpen(false);
               }}
-              className="cursor-pointer hover:bg-secondary-hover-color active:bg-secondary-hover-color w-full block p-2"
+              className="text-small sm:text-small-sm cursor-pointer hover:bg-secondary-hover-color active:bg-secondary-hover-color w-full block p-2"
             >
               {option.label}
             </li>
