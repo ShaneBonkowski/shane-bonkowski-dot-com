@@ -1,37 +1,6 @@
 import { ContentBoxProps } from "@/src/components/ContentSearchBar";
 
 export const contentBoxData: ContentBoxProps[] = [
-  //   {
-  //     imageUrl: "/game-of-life.webp",
-  //     linkUrl: "/games/game-of-life",
-  //     title: "Conway's Game of Life",
-  //     description:
-  //       "Experience the emergent world of cellular automata. Classic Conway's Game of Life with advanced customization options to create your own.",
-  //     searchTags:
-  //       "conway, conways, conway's, game, of, life, cell, cellular, automata",
-  //     contentType: "games",
-  //     openInNewTab: false,
-  //   },
-  //   {
-  //     imageUrl: "/better-boids.webp",
-  //     linkUrl: "/games/better-boids",
-  //     title: "Better Boids",
-  //     description:
-  //       "A unique twist to the classic Boids algorithm. Player controlled Boid, predator-prey relationships, customizable toggles & more.",
-  //     searchTags: "birds, bird, boid, flying, simulation",
-  //     contentType: "games",
-  //     openInNewTab: false,
-  //   },
-  //   {
-  //     imageUrl: "/games/flip-tile.webp",
-  //     linkUrl: "/games/flip-tile",
-  //     title: "Flip Tile",
-  //     description:
-  //       "Classic 'lights out' style puzzle game. Flipping one tile causes neighboring tiles to flip as well. Match them all to advance further!",
-  //     searchTags: "flip, flop, tile, matrix",
-  //     contentType: "games",
-  //     openInNewTab: false,
-  //   },
   {
     imageUrl: "/webps/save-our-solar-system.webp",
     linkUrl:
