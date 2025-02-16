@@ -1,18 +1,24 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d.ts";
 
-// Export so other scripts can access this
 export class MainGameScene extends Generic2DGameScene {
   constructor() {
     super("MainGameScene");
   }
 
   preload() {
-    // Preload assets if needed
-    // this.load.image("image-name", "/webps/image-name.webp");
+    // this.load.image("placeholder", "/webps/mars-logo-large.webp");
   }
 
   create() {
-    // Create the game scene here
+    // const { width, height } = this.game.config;
+    // // Placeholder image and text
+    // this.add.image(Number(width) / 2, Number(height) / 2, "placeholder");
+    // this.add
+    //   .text(Number(width) / 2, Number(height) / 2 + 100, "Test Scene", {
+    //     fontSize: "32px",
+    //     color: "#ffffff",
+    //   })
+    //   .setOrigin(0.5);
   }
 
   update() {

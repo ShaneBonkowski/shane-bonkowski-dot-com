@@ -7,19 +7,14 @@ export const genericGameEventNames = {
 
 export class Generic2DGameScene extends Phaser.Scene {
   public gameStarted: boolean;
-  public isInteracting: boolean;
   public uiMenuOpen: boolean;
   public paused: boolean;
 
-  /**
-   * Create a new Generic2DGameScene instance.
-   */
   constructor(sceneName: string = "Generic2DGameScene") {
     // Inherit all Phaser scene attrs
     super({ key: sceneName });
 
     this.gameStarted = false;
-    this.isInteracting = false; // is the player actively interacting with the game?
     this.uiMenuOpen = false;
     this.paused = false;
 
