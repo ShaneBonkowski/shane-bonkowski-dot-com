@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 
 export interface StoryContentProps {
   content: string;
@@ -78,7 +77,7 @@ const StoryContentLoader: React.FC<StoryProps> = ({
 
       {/* Story Image */}
       <div className="my-8 w-3/4 h-3/4 sm:w-1/2 sm:h-1/2 mx-auto">
-        <Image
+        <img
           src={imageUrl}
           alt={title}
           width={500}

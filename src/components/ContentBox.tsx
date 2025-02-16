@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
 import Link from "next/link";
 import { FaGamepad, FaPenNib, FaPaintBrush } from "react-icons/fa";
@@ -44,7 +43,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         rel="noopener noreferrer"
         className="link w-1/2 sm:w-1/5 h-content-box-content-h sm:h-content-box-content-h-sm"
       >
-        <Image
+        <img
           src={imageUrl}
           alt={title}
           width={500}
