@@ -87,7 +87,7 @@ body {
   }
 
   /* Computer font sizes */
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     h1 {
       font-size: theme("fontSize.header-1-sm");
     }
@@ -113,13 +113,15 @@ body {
     @apply flex items-center space-x-4 transition-transform duration-0 hover:scale-105 active:scale-105;
   }
 
-  .header-btn {
-    @apply px-3 py-1 sm:px-4 sm:py-2 bg-button-color rounded hover:bg-secondary-hover-color active:bg-secondary-hover-color text-primary-text-color;
+  .content-box-img-w {
+    @apply w-content-box-dropdown-w;
   }
 
-  .header-btn:hover,
-  .header-btn:active {
-    text-decoration: none;
+  /* Computer sizes */
+  @media (min-width: 640px) {
+    .content-box-img-w {
+      @apply w-content-box-dropdown-w-sm;
+    }
   }
 }
 
