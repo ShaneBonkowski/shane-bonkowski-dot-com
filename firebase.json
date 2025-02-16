@@ -1,6 +1,12 @@
 {
   "hosting": {
-    "public": "deploy",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    "public": "out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
