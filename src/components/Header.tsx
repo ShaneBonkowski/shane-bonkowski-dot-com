@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
+import MarsLogoImage from "@public/webps/mars-circle-logo-small.webp";
 
 const Header: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ const Header: React.FC = () => {
       >
         <div className="shanes-games-logo space-x-1 sm:space-x-3">
           <Image
-            src="/webps/mars-circle-logo-small.webp"
+            src={MarsLogoImage}
             alt="Logo"
             width={120}
             height={120}
