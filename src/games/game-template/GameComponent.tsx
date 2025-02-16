@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import InitUI from "@/src/games/flip-tile/InitUI.tsx";
+import InitUI from "@/src/games/game-template/InitUI";
 import styles from "@/src/styles/games/flip-tile.module.css";
 
 const GameComponent = () => {
@@ -10,7 +10,7 @@ const GameComponent = () => {
       if (typeof window !== "undefined" && window.Phaser) {
         try {
           const { MainGameScene } = await import(
-            "@/src/games/flip-tile/scenes/flip-tile-scene.ts"
+            "@/src/games/game-template/scenes/game-template-scene"
           );
 
           const config: Phaser.Types.Core.GameConfig = {

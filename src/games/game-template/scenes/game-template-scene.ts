@@ -2,15 +2,15 @@ import {
   instantiateTiles,
   checkIfTileGridSolved,
   tilesToTilespaceMatrix,
-} from "@/src/games/flip-tile/tile-utils.ts";
+} from "@/src/games/game-template/tile-utils";
 import {
   TilePatternAttrs,
   sharedTileAttrs,
   difficulty,
   tileGridEventNames,
   scoring,
-} from "@/src/games/flip-tile/tile-constants.ts";
-import { Tile } from "@/src/games/flip-tile/tile.ts";
+} from "@/src/games/game-template/tile-constants";
+import { Tile } from "@/src/games/game-template/tile";
 import { SeededRandom } from "@/src/utils/seedable-random.ts";
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d.ts";
 import { genericGameEventNames } from "@/src/utils/game-scene-2d.ts";

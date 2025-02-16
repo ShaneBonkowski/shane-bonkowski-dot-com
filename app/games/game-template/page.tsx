@@ -3,7 +3,7 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { flipTileData } from "@/src/data/games/flip-tile-data";
-import GameComponent from "@/src/games/flip-tile/GameComponent.tsx";
+import GameComponent from "@/src/games/game-template/GameComponent";
 
 const gameData = flipTileData;
 

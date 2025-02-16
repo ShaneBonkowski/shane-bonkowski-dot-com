@@ -1,0 +1,67 @@
+name: Deploy website to Firebase on merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Run Autoprefixer on css files for better browser compatibility
+        run: npx autoprefixer --input '**/*.css' --autoprefixer.browsers '> 1%, last 2 versions, Firefox ESR'
+
+      - name: Remove Unnecessary Files From Build
+        run: |
+          rm -rf .git*
+          rm -rf .github 
+          rm -rf README*
+          rm -rf LICENSE*
+          rm -rf ./*/*.md
+          rm -rf ./*/*.png # We use the webp for images, not pngs!
+          rm -rf **/*.py 
+          rm -rf **/*.pyc
+          rm -rf .DS_Store # Remove macOS specific hidden files
+          rm -rf package.json
+          rm -rf node_modules # Remove node_modules directory
+          rm -rf .next # Remove Next.js build artifacts
+          rm -rf coverage # Remove coverage reports
+          rm -rf tests # Remove test files
+          rm -rf **/*.test.js # Remove test files
+          rm -rf **/*.spec.js # Remove spec files
+          rm -rf **/*.config.js # Remove configuration files
+          rm -rf **/*.config.ts # Remove TypeScript configuration files
+          rm -rf **/*.log # Remove log files
+
+      - name: Create Deploy Directory
+        run: mkdir deploy
+
+      - name: Copy Files to Deploy Directory
+        run: rsync -av * deploy/
+
+      - name: Navigate to Deploy Directory
+        run: cd deploy
+
+      - name: Build and Export Next.js Application
+        run: |
+          npm install
+          npm run build
+          npm run export
+        env:
+          NEXT_PUBLIC_GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
+
+      - name: Deploy Site + Functions to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: black-hole-reject
