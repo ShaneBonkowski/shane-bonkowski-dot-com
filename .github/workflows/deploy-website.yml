@@ -30,7 +30,6 @@ jobs:
           rm -rf **/*.py 
           rm -rf **/*.pyc
           rm -rf .DS_Store # Remove macOS specific hidden files
-          rm -rf package.json
           rm -rf node_modules # Remove node_modules directory
           rm -rf .next # Remove Next.js build artifacts
           rm -rf coverage # Remove coverage reports
