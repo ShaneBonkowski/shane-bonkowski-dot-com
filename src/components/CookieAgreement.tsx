@@ -46,10 +46,6 @@ const CookieAgreement: React.FC = () => {
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-
-    // Reload the page to ensure changes take effect and Google Analytics
-    // can be re-initialized with the latest changes to localStorage.cookiesEnabled.
-    window.location.reload();
   };
 
   return (

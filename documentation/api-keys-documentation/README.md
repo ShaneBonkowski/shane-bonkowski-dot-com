@@ -19,3 +19,9 @@ This document outlines the websites where API keys are utilized and where they a
 - **Uses:** Interacting with Google Firebase when deploying the website.
 - **How to generate/find:** Call `firebase init hosting` when instantiating a project.
 - **Storage Location**: GitHub > settings > secrets > actions > `FIREBASE_SERVICE_ACCOUNT_BLACK_HOLE_REJECT`
+
+## Firebase Token
+
+- **Uses:** Interacting with Google Firebase when deploying the website.
+- **How to generate/find:** Call `firebase login:ci` when instantiating a project.
+- **Storage Location**: GitHub > settings > secrets > actions > `FIREBASE_TOKEN`
