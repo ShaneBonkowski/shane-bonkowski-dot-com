@@ -84,6 +84,8 @@ const StoryContentLoader: React.FC<StoryProps> = ({
           width={500}
           height={422}
           className="object-contain mx-auto"
+          // Google Firebase does not support optimizations
+          unoptimized={true}
         />
       </div>
 

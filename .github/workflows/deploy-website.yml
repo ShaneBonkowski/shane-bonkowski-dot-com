@@ -16,9 +16,6 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Run Autoprefixer on css files for better browser compatibility
-        run: npx autoprefixer --input '**/*.css' --autoprefixer.browsers '> 1%, last 2 versions, Firefox ESR'
-
       - name: Remove Unnecessary Files From Build
         run: |
           rm -rf .git*

@@ -18,6 +18,8 @@ const Header: React.FC = () => {
             width={120}
             height={120}
             className="w-8 h-8 sm:w-14 sm:h-14"
+            // Google Firebase does not support optimizations
+            unoptimized={true}
           />
           <div>
             <h1 className="text-logo-title sm:text-logo-title-sm text-right m-0">

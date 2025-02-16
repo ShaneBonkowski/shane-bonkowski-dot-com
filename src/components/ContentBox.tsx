@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
 import Image from "next/image";
+import React, { useState } from "react";
 import Link from "next/link";
 import { FaGamepad, FaPenNib, FaPaintBrush } from "react-icons/fa";
 import { ContentBoxProps } from "@/src/components/ContentSearchBar";
@@ -54,6 +54,8 @@ const ContentBox: React.FC<ContentBoxProps> = ({
           } cursor-pointer`}
           onPointerEnter={() => setIsHovered(true)}
           onPointerLeave={() => setIsHovered(false)}
+          // Google Firebase does not support optimizations
+          unoptimized={true}
         />
       </Link>
 
