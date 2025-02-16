@@ -30,20 +30,19 @@ jobs:
           rm -rf .github 
           rm -rf README*
           rm -rf LICENSE*
-          rm -rf ./*/*.md
-          rm -rf ./*/*.png # We use the webp for images, not pngs!
+          rm -rf **/*.md
+          rm -rf **/*.png # We use the webp for images, not pngs!
           rm -rf **/*.py 
           rm -rf **/*.pyc
-          rm -rf .DS_Store # Remove macOS specific hidden files
-          rm -rf node_modules # Remove node_modules directory
-          rm -rf .next # Remove Next.js build artifacts
-          rm -rf coverage # Remove coverage reports
-          rm -rf tests # Remove test files
-          rm -rf **/*.test.js # Remove test files
-          rm -rf **/*.spec.js # Remove spec files
-          rm -rf **/*.config.js # Remove configuration files
-          rm -rf **/*.config.ts # Remove TypeScript configuration files
-          rm -rf **/*.log # Remove log files
+          rm -rf .DS_Store 
+          rm -rf node_modules 
+          rm -rf .next 
+          rm -rf coverage 
+          rm -rf **/*.test.js 
+          rm -rf **/*.spec.js 
+          rm -rf **/*.config.js 
+          rm -rf **/*.config.ts 
+          rm -rf **/*.log
 
       - name: <DEBUG> List Contents of webps Folder After Cleanup
         run: ls -la public/webps
