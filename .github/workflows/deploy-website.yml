@@ -53,7 +53,6 @@ jobs:
         run: |
           npm install
           npm run build
-          npm run export
         env:
           NEXT_PUBLIC_GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
 
