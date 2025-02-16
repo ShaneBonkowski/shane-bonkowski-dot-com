@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
-import MarsLogoImage from "@public/webps/mars-circle-logo-small.webp";
+import MarsLogoImage from "@/public/webps/mars-circle-logo-small.webp";
 
 const Header: React.FC = () => {
   return (
