@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import styles from "@/src/styles/games/flip-tile.module.css";
 
 const GameComponent = () => {
   useEffect(() => {
@@ -25,8 +24,7 @@ const GameComponent = () => {
             parent: "phaser-game",
           };
 
-          const game = new window.Phaser.Game(config);
-          game.canvas.classList.add(styles.canvas);
+          new window.Phaser.Game(config);
         } catch (error) {
           console.error("Failed to load Game Scene:", error);
         }
