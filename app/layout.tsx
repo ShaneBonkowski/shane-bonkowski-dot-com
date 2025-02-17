@@ -30,7 +30,11 @@ export default function RootLayout({
           content="Games, art, writing, and more by Shane Bonkowski."
         />
         <meta property="og:url" content="https://shanebonkowski.com" />
-        <meta property="og:image" content="/webps/mars-logo-large.webp" />
+        <meta
+          property="og:image"
+          // Open graph needs absolute url!
+          content="https://shanebonkowski.com/webps/mars-logo-large.webp"
+        />
         <meta property="og:image:alt" content="Shanes Games Logo" />
         <meta property="og:type" content="website" />
       </Head>

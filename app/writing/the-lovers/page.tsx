@@ -16,7 +16,11 @@ export default function TheLovers() {
           property="og:description"
           content="A short story by Shane Bonkowski."
         />
-        <meta property="og:image" content={storyData.imageUrl} />
+        <meta
+          property="og:image"
+          // Open graph needs absolute url!
+          content={`https://shanebonkowski.com${storyData.imageUrl}`}
+        />
         <meta property="og:image:alt" content={storyData.title} />
       </Head>
       <div>
