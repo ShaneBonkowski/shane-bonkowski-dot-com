@@ -51,6 +51,8 @@ jobs:
         run: |
           npm install
           npm run build
+        env:
+          NEXT_PUBLIC_GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
 
       - name: <DEBUG> List Contents of webps Folder After Build
         run: ls -la out/webps

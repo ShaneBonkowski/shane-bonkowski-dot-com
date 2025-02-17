@@ -7,7 +7,6 @@ This documentation outlines how API keys are utilized for Shane's Games, and whe
 **Uses/description:**
 
 - Tracking user activity (view count, duration, etc.) on the website.
-- Add this to Google Firebase (or whichever webhost I am using) so that it can be safely injected while hosting the website without revealing it to users in the source code.
 
 **How to generate/find:**
 
@@ -16,7 +15,6 @@ This documentation outlines how API keys are utilized for Shane's Games, and whe
 **Storage Location:**
 
 - GitHub > settings > secrets > actions > `GA_TRACKING_ID`.
-- Google Firebase > Project > Project settings > Integrations > Google Analytics.
 
 ## GitHub API
 
