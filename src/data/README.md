@@ -1,6 +1,6 @@
 ## Data
 
-This directory is used to store all the data that need to be processed, such as JSON files, JavaScript files, and other data formats. This directory primarily contains the content for various pages of the application, including the writing pages, the about me page, and other text-heavy pages.
+This directory is used to store all the data that need to be processed to create the pages on the website. This directory primarily contains the content for various pages of the application, including the writing pages, the about me page, and other text-heavy pages, as well as the metadata for the games.
 
 ### Contents
 

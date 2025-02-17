@@ -1,4 +1,4 @@
-import { Generic2DGameScene } from "@/src/utils/game-scene-2d.ts";
+import { Generic2DGameScene } from "@/src/games/utils/game-scene-2d";
 
 export class MainGameScene extends Generic2DGameScene {
   constructor() {

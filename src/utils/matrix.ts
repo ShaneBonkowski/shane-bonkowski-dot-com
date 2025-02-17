@@ -1,4 +1,4 @@
-import { moduloArith } from "@/src/utils/mod.ts";
+import { moduloArith } from "@/src/utils/mod";
 
 /**
  * Creates a 2D array with the specified number of rows and columns.

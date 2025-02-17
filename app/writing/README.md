@@ -6,12 +6,12 @@
 - Rename it to `{story-name}-data.ts`.
 - Rename the existing data variable to `{storyName}Data`.
 - Replace the title, date, etc.
-- Within the `body` field, each paragraph or group of paragraphs can be assgined to the `content` field, and styled using the `fontStyle` and `textAlign` fields.
+- The `body` field contains a list of "paragraph" elements. Each paragraph or similar group of paragraphs can be assigned to `content`, and styled using `fontStyle` and `textAlign`.
 
 ### 2. Create the story `page`.
 
-- Duplicate one of the existing stories in `/app/writing`
-- Rename the duplicated story to `{story-name}`.
+- Duplicate one of the existing stories in `/app/writing`.
+- Rename the duplicated story directory to `{story-name}`.
 - Update the `{storyName}Data` variable to the one created in step 1, and update all references to that data variable in the file accordingly.
 - Update the function name to `{StoryName}`.
 

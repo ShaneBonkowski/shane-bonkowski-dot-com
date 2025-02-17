@@ -1,5 +1,5 @@
-import { RigidBody2D } from "@/src/utils/rigid-body-2d.ts";
-import { PhysicsBody2D } from "@/src/utils/physics-body-2d.ts";
+import { RigidBody2D } from "@/src/games/utils/rigid-body-2d";
+import { PhysicsBody2D } from "@/src/games/utils/physics-body-2d";
 
 /**
  * Class representing a game object.
@@ -68,7 +68,11 @@ export class GameObject {
     return GameObject.instances.find((instance) => instance.id === id) || null;
   }
 
-  updateGraphic(newColor = null) {
+  /**
+   * Update the graphic for the GameObject.
+   * @param {number|null} newColor - The new color to set for the graphic.
+   */
+  updateGraphic(newColor: number | null = null) {
     if (this.graphic != null) {
       // Set graphic to be where the physics body is located
       if (this.physicsBody2D != null) {
@@ -86,6 +90,9 @@ export class GameObject {
     }
   }
 
+  /**
+   * Disable the GameObject.
+   */
   disable() {
     this.disabled = true;
     if (this.graphic != null) {
@@ -93,6 +100,9 @@ export class GameObject {
     }
   }
 
+  /**
+   * Enable the GameObject.
+   */
   enable() {
     this.disabled = false;
     if (this.graphic != null) {

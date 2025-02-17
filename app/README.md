@@ -1,13 +1,20 @@
 ## Next.js App
 
-This directory is used to organize the main application files and components for the Next.js application. It follows specific naming conventions to maintain consistency and readability, ensuring that the codebase remains organized and easy to navigate.
+This directory organizes the main files and components for the Next.js application (Next.js App Router). It follows specific naming conventions to maintain consistency and readability, ensuring the codebase remains organized and easy to navigate.
 
 ### File Naming Conventions
 
-Use kebab-case for page/app file names in the `app/` directory.
+All app pages must be named `page.tsx`, placed within a directory named after the page (e.g., `app/about/page.tsx`).
 
-Example: `about-me.tsx`  
-Incorrect: `AboutMe.tsx`, `about_me.tsx`
+### React Components
+
+Use PascalCase for all React components, such as the main function that exports the contents of the page.
+
+Example:
+
+```js
+export default function About() { ... }
+```
 
 ### Function Naming Conventions
 
