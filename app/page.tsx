@@ -11,13 +11,13 @@ export default function Home() {
     useState<ContentBoxProps[]>(contentBoxData);
 
   return (
-    <div className="mt-3 sm:mt-4">
+    <div className="mt-3 sm:mt-4" id="content-search-bar-and-boxes">
       <ContentSearchBar
         contentData={contentBoxData}
         setFilteredContent={setFilteredContent}
       />
 
-      <div className="grid mt-6 sm:mt-8 gap-6 sm:gap-8">
+      <div className="grid mt-6 sm:mt-8 gap-6 sm:gap-8" id="content-boxes">
         {filteredContent.length > 0 ? (
           filteredContent.map((box, index) => (
             <ContentBox key={index} {...box} />

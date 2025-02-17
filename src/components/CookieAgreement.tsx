@@ -36,17 +36,15 @@ const CookieAgreement: React.FC = () => {
   // localStorage.cookiesEnabled.
   const disableTracking = () => {
     // Remove existing tracking scripts (e.g., Google Analytics)
-    document
-      .querySelectorAll('script[src^="https://www.google-analytics.com"]')
-      .forEach((script) => {
-        script.remove();
-      });
+    const gaScript = document.getElementById("google-analytics");
+    if (gaScript) {
+      gaScript.remove();
+    }
 
     // Remove all existing cookies
     document.cookie.split(";").forEach(function (c) {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      const cookieName = c.split("=")[0].trim();
+      document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
     });
   };
 
@@ -58,6 +56,7 @@ const CookieAgreement: React.FC = () => {
         noButtonText="Disable"
         onYes={enableCookies}
         onNo={disableCookies}
+        id="cookie-agreement"
       >
         <p className="text-left">
           This website uses cookies to ensure you get the best experience. By

@@ -14,7 +14,10 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="flex justify-between items-center p-common-p sm:p-common-p-sm z-50">
+    <header
+      className="flex justify-between items-center p-common-p sm:p-common-p-sm z-50"
+      id="header"
+    >
       {/* Left Section: Logo & Title */}
       <Link
         href="/"

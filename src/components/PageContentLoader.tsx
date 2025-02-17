@@ -14,7 +14,10 @@ const PageContentLoader: React.FC<PageContentLoaderProps> = ({
   contentData,
 }) => {
   return (
-    <div className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left">
+    <div
+      className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+      id="page-content-loader"
+    >
       {contentData.map((item, index) => {
         switch (item.type) {
           case "h1":

@@ -43,13 +43,17 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch w-content-box-w sm:content-box-w-sm mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden">
+    <div
+      className="flex flex-col sm:flex-row items-stretch w-content-box-w sm:content-box-w-sm mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden"
+      id={`content-box-${title.replace(/\s+/g, "-").toLowerCase()}`}
+    >
       {/* Image on the Left */}
       <Link
         href={linkUrl}
         target={openInNewTab ? "_blank" : "_self"}
         rel="noopener noreferrer"
         className="link flex-shrink-0 w-full sm:content-box-img-w h-{50vw} sm:h-content-box-content-h-sm"
+        id="content-box-image-link"
       >
         <Image
           src={imageUrl}
@@ -65,9 +69,15 @@ const ContentBox: React.FC<ContentBoxProps> = ({
       </Link>
 
       {/* Content Box on the Right */}
-      <div className="flex flex-col flex-grow my-3 sm:my-0 items-start justify-center h-auto sm:h-content-box-content-h-sm p-3 sm:p-5 space-y-2 sm:space-y-3">
+      <div
+        className="flex flex-col flex-grow my-3 sm:my-0 items-start justify-center h-auto sm:h-content-box-content-h-sm p-3 sm:p-5 space-y-2 sm:space-y-3"
+        id="content-box-description-container"
+      >
         {/* Icon + Title */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
+        <div
+          className="flex items-center space-x-2 sm:space-x-3"
+          id="content-box-title-container"
+        >
           {getIcon(contentType)}
           <Link
             href={linkUrl}

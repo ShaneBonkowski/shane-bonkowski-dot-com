@@ -9,6 +9,7 @@ export interface YesNoBoxProps {
   noButtonText: string;
   onYes: () => void;
   onNo: () => void;
+  id?: string;
   bottomRight?: boolean;
 }
 
@@ -18,6 +19,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
   noButtonText,
   onYes,
   onNo,
+  id = "yes-no-box",
   bottomRight = false,
 }) => {
   /* Only allow hover on hover-supported devices */
@@ -34,6 +36,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
       } bg-info-banner-bkg-color text-body text-primary-text-color p-common-p sm:p-common-p-sm z-50 ${
         bottomRight ? "w-full sm:w-auto" : "w-full"
       }`}
+      id={id}
     >
       <div
         className={`flex flex-col gap-x-4 sm:flex-row justify-between items-center`}
