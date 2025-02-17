@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { useEffect, useState } from "react";
 
 export interface YesNoBoxProps {
   children: React.ReactNode;
@@ -17,6 +20,13 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
   onNo,
   bottomRight = false,
 }) => {
+  /* Only allow hover on hover-supported devices */
+  const [isHoverable, setIsHoverable] = useState(false);
+
+  useEffect(() => {
+    setIsHoverable(window.matchMedia("(hover: hover)").matches);
+  }, []);
+
   return (
     <div
       className={`fixed ${
@@ -32,13 +42,17 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
         <div className="flex justify-center sm:justify-end space-x-2">
           <button
             onClick={onYes}
-            className="bg-button-color text-body px-6 py-2 rounded hover:bg-secondary-hover-color active:bg-secondary-hover-color"
+            className={`bg-button-color text-body px-6 py-2 rounded ${
+              isHoverable ? "hover:bg-secondary-hover-color" : ""
+            } active:bg-secondary-hover-color`}
           >
             {yesButtonText}
           </button>
           <button
             onClick={onNo}
-            className="bg-button-color text-body px-6 py-2 rounded hover:bg-secondary-hover-color active:bg-secondary-hover-color"
+            className={`bg-button-color text-body px-6 py-2 rounded ${
+              isHoverable ? "hover:bg-secondary-hover-color" : ""
+            } active:bg-secondary-hover-color`}
           >
             {noButtonText}
           </button>

@@ -24,13 +24,21 @@ body {
     color: theme("colors.link-color");
   }
 
-  a:hover,
-  .link:hover,
   a:active,
   .link:active {
     text-decoration: underline;
     cursor: pointer;
     text-decoration-color: currentColor;
+  }
+
+  /* Only allow hover on hover-supported devices */
+  @media (hover: hover) {
+    a:hover,
+    .link:hover {
+      text-decoration: underline;
+      cursor: pointer;
+      text-decoration-color: currentColor;
+    }
   }
 
   h1 {
@@ -110,7 +118,14 @@ body {
 
 @layer components {
   .shanes-games-logo {
-    @apply flex items-center space-x-4 transition-transform duration-0 hover:scale-105 active:scale-105;
+    @apply flex items-center space-x-4 transition-transform duration-0 active:scale-105;
+  }
+
+  /* Only allow hover on hover-supported devices */
+  @media (hover: hover) {
+    .shanes-games-logo:hover {
+      @apply hover:scale-105;
+    }
   }
 
   .content-box-img-w {

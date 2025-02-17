@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaGamepad, FaPenNib, FaPaintBrush } from "react-icons/fa";
@@ -35,6 +35,13 @@ const ContentBox: React.FC<ContentBoxProps> = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  /* Only allow hover on hover-supported devices */
+  const [isHoverable, setIsHoverable] = useState(false);
+
+  useEffect(() => {
+    setIsHoverable(window.matchMedia("(hover: hover)").matches);
+  }, []);
+
   return (
     <div className="flex flex-col sm:flex-row items-stretch w-content-box-w sm:content-box-w-sm mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden">
       {/* Image on the Left */}
@@ -50,10 +57,10 @@ const ContentBox: React.FC<ContentBoxProps> = ({
           width={500}
           height={422}
           className={`w-full h-full object-cover transform transition-transform duration-0 ${
-            isHovered ? "scale-105" : "scale-100"
+            isHoverable && isHovered ? "scale-105" : "scale-100"
           } cursor-pointer`}
-          onPointerEnter={() => setIsHovered(true)}
-          onPointerLeave={() => setIsHovered(false)}
+          onPointerEnter={() => isHoverable && setIsHovered(true)}
+          onPointerLeave={() => isHoverable && setIsHovered(false)}
         />
       </Link>
 
@@ -67,15 +74,15 @@ const ContentBox: React.FC<ContentBoxProps> = ({
             target={openInNewTab ? "_blank" : "_self"}
             rel="noopener noreferrer"
             className="link"
-            onPointerEnter={() => setIsHovered(true)}
-            onPointerLeave={() => setIsHovered(false)}
+            onPointerEnter={() => isHoverable && setIsHovered(true)}
+            onPointerLeave={() => isHoverable && setIsHovered(false)}
           >
             <h3
               className={`font-bold m-0 text-content-box-title sm:text-content-box-title-sm ${
-                isHovered
+                isHoverable && isHovered
                   ? "text-primary-text-color underline decoration-white"
                   : "text-primary-text-color no-underline"
-              }`}
+              } active:decoration-white active:underline`}
             >
               {title}
             </h3>
