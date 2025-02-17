@@ -58,20 +58,18 @@ const Footer: React.FC = () => {
         href="/main/privacy-policy"
         className={`link text-secondary-text-color ${
           isHoverable && isHovered
-            ? "text-secondary-hover-color underline decoration-secondary-hover-color"
+            ? "underline decoration-secondary-text-color"
             : "no-underline"
-        }
-      active:text-secondary-hover-color`}
+        } active:underline active:decoration-secondary-text-color`}
         onPointerEnter={() => isHoverable && setIsHovered(true)}
         onPointerLeave={() => isHoverable && setIsHovered(false)}
       >
         <p
           className={`text-secondary-text-color ${
             isHoverable && isHovered
-              ? "text-secondary-hover-color underline decoration-secondary-hover-color"
+              ? "underline decoration-secondary-text-color"
               : "no-underline"
-          }
-        active:text-secondary-hover-color`}
+          } active:underline active:decoration-secondary-text-color`}
         >
           Privacy Policy
         </p>
