@@ -30,7 +30,11 @@ export const metadata = {
 };
 
 const GameTemplate = () => {
-  return <GameComponent />;
+  return (
+    <div id={gameData.title}>
+      <GameComponent />
+    </div>
+  );
 };
 
 export default dynamic(() => Promise.resolve(GameTemplate));

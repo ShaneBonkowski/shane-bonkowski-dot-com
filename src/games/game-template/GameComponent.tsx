@@ -44,8 +44,8 @@ const GameComponent = () => {
   }, []);
 
   return (
-    <div className="w-full h-full">
-      <div id="phaser-game" className="w-full h-full"></div>
+    <div className="w-full h-full" id="game-container">
+      <div className="w-full h-full" id="phaser-game"></div>
     </div>
   );
 };

@@ -41,11 +41,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-full">
-        <Header />
-        <main className="flex-grow">{children}</main>
-        <CookieAgreement />
-        <Footer />
+      <head>
         {process.env.NEXT_PUBLIC_GA_TRACKING_ID && (
           <>
             <Script
@@ -68,6 +64,14 @@ export default function RootLayout({
             />
           </>
         )}
+      </head>
+      <body className="flex flex-col min-h-full" id="website-body">
+        <Header />
+        <main className="flex-grow" id="website-main-content">
+          {children}
+        </main>
+        <CookieAgreement />
+        <Footer />
       </body>
     </html>
   );

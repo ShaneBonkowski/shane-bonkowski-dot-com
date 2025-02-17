@@ -71,7 +71,10 @@ const StoryContentLoader: React.FC<StoryProps> = ({
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left">
+    <div
+      className="max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left"
+      id="story-content-loader"
+    >
       {/* Story Header */}
       <h1 className="text-center">{title}</h1>
       <h3 className="italic text-center">{subtitle}</h3>

@@ -44,6 +44,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     <div
       className="relative w-content-box-dropdown-w sm:w-content-box-dropdown-w-sm h-content-box-dropdown-h sm:h-content-box-dropdown-h"
       ref={dropdownRef}
+      id="dropdown"
     >
       {/* Selected Value */}
       <button

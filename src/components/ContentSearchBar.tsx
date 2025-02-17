@@ -51,7 +51,10 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
   }, [searchTerm, searchContentType, contentData, setFilteredContent]);
 
   return (
-    <div className="flex text-small sm:text-small-sm items-center w-content-box-w sm:content-box-w-sm mx-auto space-x-3 bg-button-color p-2 sm:p-3 rounded-lg">
+    <div
+      className="flex text-small sm:text-small-sm items-center w-content-box-w sm:content-box-w-sm mx-auto space-x-3 bg-button-color p-2 sm:p-3 rounded-lg"
+      id="content-search-bar"
+    >
       {/* Dropdown for Content Type */}
       <Dropdown
         options={contentTypeOptions}
