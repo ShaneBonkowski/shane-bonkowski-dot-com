@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-
+import { usePathname } from "next/navigation";
 import YesNoBox from "@/src/components/YesNoBox";
 
 const CookieAgreement: React.FC = () => {
+  const pathname = usePathname();
+  const isGamesPath = pathname.startsWith("/games");
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   // Hide the popup if cookie consent is already given
@@ -49,6 +51,7 @@ const CookieAgreement: React.FC = () => {
   };
 
   return (
+    !isGamesPath &&
     isVisible && (
       <YesNoBox
         yesButtonText="Enable"

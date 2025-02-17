@@ -1,48 +1,43 @@
-"use client";
+// NOTE: to self, cannot make this "use client", since it will break metadata export.
+// Do NOT use "use client"
 
 import "@/src/styles/globals.css";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import CookieAgreement from "@/src/components/CookieAgreement";
-import Head from "next/head";
 import Script from "next/script";
-import { usePathname } from "next/navigation";
+
+// NOTE: Need to keep metadata, since the <meta> tags are not supported with app router
+export const metadata = {
+  title: "Shanes Games",
+  description: "Games, art, writing, and more by Shane Bonkowski.",
+  openGraph: {
+    title: "Shanes Games",
+    description: "Games, art, writing, and more by Shane Bonkowski.",
+    url: "https://shanebonkowski.com",
+    images: [
+      {
+        // Open graph needs absolute url!
+        url: "https://shanebonkowski.com/webps/mars-logo-large.webp",
+        alt: "Shanes Games Logo",
+      },
+    ],
+    type: "website",
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isGamesPath = pathname.startsWith("/games");
-
   return (
     <html lang="en">
-      <Head>
-        <title>Shanes Games</title>
-        <meta
-          name="description"
-          content="Games, art, writing, and more by Shane Bonkowski."
-        />
-        <meta property="og:title" content="Shanes Games" />
-        <meta
-          property="og:description"
-          content="Games, art, writing, and more by Shane Bonkowski."
-        />
-        <meta property="og:url" content="https://shanebonkowski.com" />
-        <meta
-          property="og:image"
-          // Open graph needs absolute url!
-          content="https://shanebonkowski.com/webps/mars-logo-large.webp"
-        />
-        <meta property="og:image:alt" content="Shanes Games Logo" />
-        <meta property="og:type" content="website" />
-      </Head>
       <body className="flex flex-col min-h-full">
         <Header />
         <main className="flex-grow">{children}</main>
-        {!isGamesPath && <CookieAgreement />}
-        {!isGamesPath && <Footer />}
+        <CookieAgreement />
+        <Footer />
         {process.env.NEXT_PUBLIC_GA_TRACKING_ID && (
           <>
             <Script

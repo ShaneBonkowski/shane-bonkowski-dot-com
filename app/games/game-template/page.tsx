@@ -1,30 +1,28 @@
-"use client";
-
-import Head from "next/head";
 import dynamic from "next/dynamic";
 import { gameTemplateData } from "@/src/data/games/game-template-data";
 import GameComponent from "@/src/games/game-template/GameComponent";
 
 const gameData = gameTemplateData;
 
-const GameTemplate = () => {
-  return (
-    <>
-      <Head>
-        <title>{gameData.title}</title>
-        <meta name="description" content={gameData.description} />
-        <meta property="og:title" content={gameData.title} />
-        <meta property="og:description" content={gameData.description} />
-        <meta
-          property="og:image"
-          // Open graph needs absolute url!
-          content={`https://shanebonkowski.com${gameData.imageUrl}`}
-        />
-        <meta property="og:image:alt" content={gameData.imageAlt} />
-      </Head>
-      <GameComponent />
-    </>
-  );
+export const metadata = {
+  title: gameData.title,
+  description: gameData.description,
+  openGraph: {
+    title: gameData.title,
+    description: gameData.description,
+    url: "https://shanebonkowski.com",
+    images: [
+      {
+        url: `https://shanebonkowski.com${gameData.imageUrl}`,
+        alt: gameData.imageAlt,
+      },
+    ],
+    type: "website",
+  },
 };
 
-export default dynamic(() => Promise.resolve(GameTemplate), { ssr: false });
+const GameTemplate = () => {
+  return <GameComponent />;
+};
+
+export default dynamic(() => Promise.resolve(GameTemplate));
