@@ -19,6 +19,14 @@ export const metadata = {
     ],
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@ShaneBonkowski",
+    title: storyData.title,
+    description: "A short story by Shane Bonkowski.",
+    image: `https://shanebonkowski.com${storyData.imageUrl}`,
+    imageAlt: "A short story by Shane Bonkowski.",
+  },
 };
 
 export default function Death() {
