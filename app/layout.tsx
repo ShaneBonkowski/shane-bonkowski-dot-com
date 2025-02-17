@@ -24,6 +24,14 @@ export const metadata = {
     ],
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@ShaneBonkowski",
+    title: "Shanes Games",
+    description: "Games, art, writing, and more by Shane Bonkowski.",
+    image: `https://shanebonkowski.com/webps/mars-logo-large.webp`,
+    imageAlt: "Shanes Games Logo",
+  },
 };
 
 export default function RootLayout({
