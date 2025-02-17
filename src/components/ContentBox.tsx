@@ -92,7 +92,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
                 isHoverable && isHovered
                   ? "text-primary-text-color underline decoration-white"
                   : "text-primary-text-color no-underline"
-              } active:decoration-white active:underline`}
+              } active:decoration-white active:underline overflow-hidden break-words`}
             >
               {title}
             </h3>
@@ -100,7 +100,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed">
+        <p className="text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed overflow-hidden break-words">
           {description}
         </p>
       </div>
