@@ -16,6 +16,13 @@ const Dropdown: React.FC<DropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  /* Only allow hover on hover-supported devices */
+  const [isHoverable, setIsHoverable] = useState(false);
+
+  useEffect(() => {
+    setIsHoverable(window.matchMedia("(hover: hover)").matches);
+  }, []);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: PointerEvent) {
@@ -40,7 +47,9 @@ const Dropdown: React.FC<DropdownProps> = ({
     >
       {/* Selected Value */}
       <button
-        className="w-full p-2 bg-secondary-color text-small sm:text-small-sm text-primary-text-color rounded-sm flex justify-between items-center cursor-pointer hover:bg-secondary-hover-color active:bg-secondary-hover-color"
+        className={`w-full p-2 bg-secondary-color text-small sm:text-small-sm text-primary-text-color rounded-sm flex justify-between items-center cursor-pointer ${
+          isHoverable ? "hover:bg-secondary-hover-color" : ""
+        } active:bg-secondary-hover-color`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
@@ -57,7 +66,9 @@ const Dropdown: React.FC<DropdownProps> = ({
                 setSelected(option.value);
                 setIsOpen(false);
               }}
-              className="text-small sm:text-small-sm cursor-pointer hover:bg-secondary-hover-color active:bg-secondary-hover-color w-full block p-2"
+              className={`text-small sm:text-small-sm cursor-pointer ${
+                isHoverable ? "hover:bg-secondary-hover-color" : ""
+              } active:bg-secondary-hover-color w-full block p-2`}
             >
               {option.label}
             </li>
