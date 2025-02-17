@@ -6,6 +6,7 @@ import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import CookieAgreement from "@/src/components/CookieAgreement";
 import Script from "next/script";
+import Head from "next/head";
 
 // NOTE: Need to keep metadata, since the <meta> tags are not supported with app router
 export const metadata = {
@@ -41,18 +42,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* Add Google Analytics  */}
-      {process.env.NEXT_PUBLIC_GA_TRACKING_ID && (
-        <>
-          <Script
-            strategy="afterInteractive"
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
-          />
-          <Script
-            id="google-analytics"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+        ></meta>
+
+        {/* Add Google Analytics  */}
+        {process.env.NEXT_PUBLIC_GA_TRACKING_ID && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag('js', new Date());
@@ -60,10 +67,11 @@ export default function RootLayout({
                     page_path: window.location.pathname,
                   });
                 `,
-            }}
-          />
-        </>
-      )}
+              }}
+            />
+          </>
+        )}
+      </Head>
       {/* Add components to the body of the website */}
       <body className="flex flex-col min-h-full" id="website-body">
         <Header />
