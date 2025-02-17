@@ -35,12 +35,6 @@ const CookieAgreement: React.FC = () => {
   // Analytics knows to enable/disable tracking based on the state of
   // localStorage.cookiesEnabled.
   const disableTracking = () => {
-    // Remove existing tracking scripts (e.g., Google Analytics)
-    const gaScript = document.getElementById("google-analytics");
-    if (gaScript) {
-      gaScript.remove();
-    }
-
     // Remove all existing cookies
     document.cookie.split(";").forEach(function (c) {
       const cookieName = c.split("=")[0].trim();
