@@ -1,13 +1,13 @@
 # API Keys Documentation
 
-This document outlines the websites where API keys are utilized and where they are stored for reference. For reference, a lot of these API's rely on one another and interact with eachother in complex ways. See the `.github/workflows/README.md` for more details on how many of the API's are used during the build and deploy process.
+This documentation outlines how API keys are utilized for Shane's Games, and where they are stored for reference. Some of these APIs rely on one another and interact with eachother in complex ways. See the `.github/workflows/README.md` for more details on how the APIs are used during the build and deploy process.
 
 ## Google Analytics API
 
 **Uses/description:**
 
-- Tracking users on the website.
-- Add this to Google Firebase (or whichever hosting website I am using) so that it can be safely injected while hosting the website without revealing it to users in the source code.
+- Tracking user activity (view count, duration, etc.) on the website.
+- Add this to Google Firebase (or whichever webhost I am using) so that it can be safely injected while hosting the website without revealing it to users in the source code.
 
 **How to generate/find:**
 
@@ -16,7 +16,7 @@ This document outlines the websites where API keys are utilized and where they a
 **Storage Location:**
 
 - GitHub > settings > secrets > actions > `GA_TRACKING_ID`.
-- Project settings > Integrations > Google Analytics.
+- Google Firebase > Project > Project settings > Integrations > Google Analytics.
 
 ## GitHub API
 
@@ -54,7 +54,7 @@ This document outlines the websites where API keys are utilized and where they a
 
 **How to generate/find:**
 
-- Call `firebase login:ci` when instantiating a project.
+- Call `firebase login:ci`.
 
 **Storage Location:**
 

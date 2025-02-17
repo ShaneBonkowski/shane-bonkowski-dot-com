@@ -9,7 +9,7 @@ Use PascalCase for React component file names.
 Example: `AboutMe.tsx`
 Incorrect: `aboutMe.tsx`, `about-me.tsx`
 
-### Function Naming Conventions
+### Main React Component Function Naming Conventions
 
 Use PascalCase for React component function names.
 
@@ -29,4 +29,8 @@ export default function aboutMe() { ... }
 
 Use camelCase for non-component functions inside React components.
 
-Example: `fetchUserData()`
+Example:
+
+```tsx
+function fetchUserData() { ... }
+```
