@@ -15,7 +15,11 @@ const GameTemplate = () => {
         <meta name="description" content={gameData.description} />
         <meta property="og:title" content={gameData.title} />
         <meta property="og:description" content={gameData.description} />
-        <meta property="og:image" content={gameData.imageUrl} />
+        <meta
+          property="og:image"
+          // Open graph needs absolute url!
+          content={`https://shanebonkowski.com${gameData.imageUrl}`}
+        />
         <meta property="og:image:alt" content={gameData.imageAlt} />
       </Head>
       <GameComponent />
