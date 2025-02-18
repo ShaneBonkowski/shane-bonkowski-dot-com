@@ -1,6 +1,6 @@
-import { PageContentItemProps } from "@/src/components/PageContentLoader";
+import { ContentDataProps } from "@/src/types/data-props";
 
-export const privacyPolicyData: PageContentItemProps[] = [
+export const privacyPolicyData: ContentDataProps[] = [
   {
     type: "h1",
     text: "Privacy Policy",

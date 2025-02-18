@@ -1,6 +1,6 @@
-import { StoryProps } from "@/src/components/StoryContentLoader";
+import { StoryDataProps } from "@/src/types/data-props";
 
-export const deathData: StoryProps = {
+export const deathData: StoryDataProps = {
   title: "Death",
   subtitle: "Shane Bonkowski",
   date: "September 10, 2024",

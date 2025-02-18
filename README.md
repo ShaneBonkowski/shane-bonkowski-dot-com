@@ -1,6 +1,6 @@
 # Shane's Games (aka shane-bonkowski-dot-com)
 
-This is a collection of content created by Shane Bonkowski for [shanebonkowski.com](https://shanebonkowski.com/), from writing, to art, to games and more.
+This is a collection of source code and content created by Shane Bonkowski for [shanebonkowski.com](https://shanebonkowski.com/), from writing, to art, to games and more.
 
 Bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
@@ -25,9 +25,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The website is currently hosted on `Google Firebase`. See the .github/workflows README for more information on how the deployments are automated with GitHub actions.
 
 ## Style Guidelines
 

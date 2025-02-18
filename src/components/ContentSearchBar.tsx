@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Dropdown from "@/src/components/Dropdown";
+import { ContentBoxProps } from "@/src/types/content-props";
 
 const contentTypeOptions = [
   { value: "all", label: "All" },
@@ -10,17 +11,7 @@ const contentTypeOptions = [
   { value: "art", label: "Art" },
 ];
 
-export interface ContentBoxProps {
-  imageUrl: string;
-  linkUrl: string;
-  title: string;
-  description: string;
-  searchTags: string;
-  contentType: "games" | "writing" | "art";
-  openInNewTab: boolean;
-}
-
-export interface ContentSearchBarProps {
+interface ContentSearchBarProps {
   contentData: ContentBoxProps[];
   setFilteredContent: (filtered: ContentBoxProps[]) => void;
 }

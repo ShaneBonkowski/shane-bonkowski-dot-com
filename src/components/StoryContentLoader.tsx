@@ -2,26 +2,12 @@
 
 import React from "react";
 import Image from "next/image";
-
-export interface StoryContentProps {
-  content: string;
-  fontStyle: "normal" | "italic" | "bold";
-  textAlign: "left" | "center" | "right" | "justify";
-  splitParagraphs?: boolean;
-}
-
-export interface StoryProps {
-  title: string;
-  subtitle: string;
-  date: string;
-  imageUrl: string;
-  body: StoryContentProps[];
-}
+import { StoryDataProps, StoryDataContentProps } from "@/src/types/data-props";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
 const avgWPMReading = 238;
 
-const StoryContentLoader: React.FC<StoryProps> = ({
+const StoryContentLoader: React.FC<StoryDataProps> = ({
   title,
   subtitle,
   date,
@@ -35,7 +21,7 @@ const StoryContentLoader: React.FC<StoryProps> = ({
   const totalReadDurationMinutes =
     Math.ceil(totalWordCount / avgWPMReading) + 1;
 
-  function renderParagraph(paragraph: StoryContentProps, pIndex: number) {
+  function renderParagraph(paragraph: StoryDataContentProps, pIndex: number) {
     if (paragraph.splitParagraphs) {
       // If splitParagraphs is true, split by newline into separate <p> tags
       return paragraph.content

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 const GameComponent = () => {
   useEffect(() => {
     const loadPhaser = async () => {
-      if (typeof window !== "undefined" && window.Phaser) {
+      if (window.Phaser) {
         try {
           const { MainGameScene } = await import(
             "@/src/games/game-template/scenes/game-template-scene"

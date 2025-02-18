@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import YesNoBox from "@/src/components/YesNoBox";
 import { debounce } from "@/src/utils/debounce";
 
-export interface ResumeScrollProgressProps {
+interface ResumeScrollProgressProps {
   pageName: string;
   threshold: number;
 }

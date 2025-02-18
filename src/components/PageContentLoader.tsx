@@ -1,16 +1,7 @@
 import React from "react";
+import { ContentDataProps } from "@/src/types/data-props";
 
-export interface PageContentItemProps {
-  type: "h1" | "h2" | "h3" | "paragraph" | "list";
-  text?: string;
-  items?: string[];
-}
-
-export interface PageContentLoaderProps {
-  contentData: PageContentItemProps[];
-}
-
-const PageContentLoader: React.FC<PageContentLoaderProps> = ({
+const PageContentLoader: React.FC<{ contentData: ContentDataProps[] }> = ({
   contentData,
 }) => {
   return (

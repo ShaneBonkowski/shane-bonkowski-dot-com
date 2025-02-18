@@ -1,6 +1,6 @@
-import { PageContentItemProps } from "@/src/components/PageContentLoader";
+import { ContentDataProps } from "@/src/types/data-props";
 
-export const aboutData: PageContentItemProps[] = [
+export const aboutData: ContentDataProps[] = [
   { type: "h1", text: "Shane Bonkowski" },
   {
     type: "h2",
