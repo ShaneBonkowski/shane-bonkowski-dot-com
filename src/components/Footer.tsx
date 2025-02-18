@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
   return (
     !isGamesPath && (
       <footer
-        className="flex flex-col items-center bg-primary-color p-common-p sm:p-common-p-sm mt-auto"
+        className="flex flex-col items-center p-common-p sm:p-common-p-sm mt-auto"
         id="footer"
       >
         {/* Main Text */}

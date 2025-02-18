@@ -3,14 +3,20 @@
 @tailwind utilities;
 
 body {
+  margin: 0;
+  padding: 0;
+  position: relative;
   /* Black background so that if the image doesn't load, it doesn't look bad. */
   /* The starry background image is mostly black anyways */
   background-color: black;
   background-image: url("/webps/sky-starry-bkg.webp");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background-size: 100% auto;
+  /* Shift up a lil to fix the rendering bug seen on phone with 1px thick line */
+  background-position: center calc(100% - 4px);
+  background-repeat: repeat-y;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @layer base {
