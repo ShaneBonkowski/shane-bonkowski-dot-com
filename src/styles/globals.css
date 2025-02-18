@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 body {
+  /* Black background so that if the image doesn't load, it doesn't look bad. */
+  /* The starry background image is mostly black anyways */
+  background-color: black;
   background-image: url("/webps/sky-starry-bkg.webp");
   background-size: cover;
   background-position: center;
