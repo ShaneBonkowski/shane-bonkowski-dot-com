@@ -33,7 +33,7 @@ export default {
         "content-box-dropdown-h": "8rem",
         "content-box-dropdown-h-sm": "15rem",
         "content-box-dropdown-w": "30%",
-        "content-box-dropdown-w-sm": "27%",
+        "content-box-dropdown-w-sm": "20%",
         "header-btn-h": "7rem",
       },
       fontSize: {
