@@ -25,7 +25,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Deployment
 
-The website is currently hosted on `Google Firebase`. See the .github/workflows README for more information on how the deployments are automated with GitHub actions.
+The website is currently hosted on [Google Firebase](https://firebase.google.com/). See the .github/workflows README for more information on how the deployments are automated with GitHub actions.
 
 ## Style Guidelines
 
