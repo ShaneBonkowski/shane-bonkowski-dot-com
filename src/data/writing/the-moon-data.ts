@@ -1,6 +1,6 @@
-import { StoryProps } from "@/src/components/StoryContentLoader";
+import { StoryDataProps } from "@/src/types/data-props";
 
-export const theMoonData: StoryProps = {
+export const theMoonData: StoryDataProps = {
   title: "The Moon",
   subtitle: "Shane Bonkowski",
   date: "July 13, 2024",

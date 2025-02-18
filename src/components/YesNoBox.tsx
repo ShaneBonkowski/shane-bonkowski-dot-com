@@ -3,7 +3,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 
-export interface YesNoBoxProps {
+interface YesNoBoxProps {
   children: React.ReactNode;
   yesButtonText: string;
   noButtonText: string;

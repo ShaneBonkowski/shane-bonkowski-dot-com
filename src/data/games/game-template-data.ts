@@ -1,4 +1,4 @@
-import { GameDataProps } from "@/src/data/games/game-data";
+import { GameDataProps } from "@/src/types/data-props";
 
 export const gameTemplateData: GameDataProps = {
   title: "Game Template",

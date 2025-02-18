@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 
-export interface DropdownProps {
+interface DropdownProps {
   options: { value: string; label: string }[];
   selected: string;
   setSelected: (value: string) => void;

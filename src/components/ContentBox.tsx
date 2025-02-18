@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaGamepad, FaPenNib, FaPaintBrush } from "react-icons/fa";
-import { ContentBoxProps } from "@/src/components/ContentSearchBar";
+import { ContentBoxProps } from "@/src/types/content-props";
 
 const getIcon = (contentType: string) => {
   switch (contentType) {
