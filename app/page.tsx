@@ -17,13 +17,17 @@ export default function Home() {
         setFilteredContent={setFilteredContent}
       />
 
-      <div className="grid mt-6 sm:mt-8 gap-6 sm:gap-8" id="content-boxes">
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-6 sm:m-8 gap-6 sm:gap-8"
+        id="content-boxes"
+      >
         {filteredContent.length > 0 ? (
           filteredContent.map((box, index) => (
             <ContentBox key={index} {...box} />
           ))
         ) : (
-          <p className="text-small sm:text-small-sm text-secondary-text-color text-center">
+          // Make the message span all columns so that it is centered!
+          <p className="col-span-1 sm:col-span-2 lg:col-span-3 text-small sm:text-small-sm text-secondary-text-color text-center">
             No results found.
           </p>
         )}
