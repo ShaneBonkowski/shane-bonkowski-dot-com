@@ -44,7 +44,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
 
   return (
     <div
-      className="flex flex-col sm:flex-row items-stretch w-content-box-w sm:content-box-w-sm mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden"
+      className="flex flex-col items-stretch mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden"
       id={`content-box-${title.replace(/\s+/g, "-").toLowerCase()}`}
     >
       {/* Image on the Left */}
@@ -52,7 +52,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         href={linkUrl}
         target={openInNewTab ? "_blank" : "_self"}
         rel="noopener noreferrer"
-        className="link flex-shrink-0 w-full sm:content-box-img-w h-{50vw} sm:h-content-box-content-h-sm"
+        className="link flex-shrink-0"
         id="content-box-image-link"
       >
         <Image
@@ -70,7 +70,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
 
       {/* Content Box on the Right */}
       <div
-        className="flex flex-col flex-grow my-3 sm:my-0 items-start justify-center h-auto sm:h-content-box-content-h-sm p-3 sm:p-5 space-y-2 sm:space-y-3"
+        className="flex flex-col flex-grow items-start justify-start my-3 h-auto p-3 sm:p-5 space-y-2 sm:space-y-3"
         id="content-box-description-container"
       >
         {/* Icon + Title */}
@@ -92,7 +92,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
                 isHoverable && isHovered
                   ? "text-primary-text-color underline decoration-white"
                   : "text-primary-text-color no-underline"
-              } active:decoration-white active:underline overflow-hidden break-words`}
+              } active:decoration-white active:underline`}
             >
               {title}
             </h3>
@@ -100,7 +100,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed overflow-hidden break-words">
+        <p className="text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed">
           {description}
         </p>
       </div>

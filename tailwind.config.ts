@@ -30,17 +30,11 @@ export default {
         "flip-tile-high-mb": "30vh",
       },
       width: {
-        "content-box-w": "90vw",
-        "content-box-w-sm": "80vw",
         "content-box-dropdown-h": "8rem",
         "content-box-dropdown-h-sm": "15rem",
         "content-box-dropdown-w": "30%",
         "content-box-dropdown-w-sm": "27%",
         "header-btn-h": "7rem",
-      },
-      height: {
-        "content-box-content-h": "40vw",
-        "content-box-content-h-sm": "20vw",
       },
       fontSize: {
         // Mobile font sizes
@@ -61,8 +55,8 @@ export default {
         "small-sm": "1rem",
         "logo-title-sm": "1.3rem",
         "logo-subtitle-sm": "1rem",
-        "content-box-title-sm": "1.3rem",
-        "content-box-subtitle-sm": "1.1rem",
+        "content-box-title-sm": "1.1rem",
+        "content-box-subtitle-sm": "0.9rem",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
