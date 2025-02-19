@@ -5,6 +5,8 @@ export const beforeTheWorldDriedUpData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "June 20, 2024",
   imageUrl: "/webps/before-the-world-dried-up.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `It was a year so far in the distant future that they decided to stop counting altogether. Whether they lost count or it simply didn't matter anymore remains a mystery. Two distant cosmic archaeologists, armed with the goal of tracking the origins of man, find themselves in a long-forgotten corner of some long since forgotten galaxy.

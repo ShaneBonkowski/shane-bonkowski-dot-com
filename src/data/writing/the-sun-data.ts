@@ -5,6 +5,8 @@ export const theSunData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "August 25, 2024",
   imageUrl: "/webps/the-sun.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `To my firstborn,

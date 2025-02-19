@@ -23,5 +23,8 @@ export interface StoryDataProps {
   subtitle: string;
   date: string;
   imageUrl: string;
+  imageWidth: number;
+  imageHeight: number;
+  artContent?: boolean;
   body: StoryDataContentProps[];
 }

@@ -5,6 +5,8 @@ export const deathData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "September 10, 2024",
   imageUrl: "/webps/death.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `A man sits alone at a rundown bar after a long day of work, his soulless eyes projecting a heavy, lingering despair. Deep in the mind of the troubled man, a war is brewing. His mind aches with a pulsing hatred. He can’t shake the terrible thoughts. He dreams of torture and damnation. Eternal fires that rage and sear to the bone those unlucky enough to cross his path. Thoughts of the purest, most vile forms of evil imaginable. He orders a glass of absinthe, the green liquor swirling like a portal to another world, its bitterness masking his underlying torment. 

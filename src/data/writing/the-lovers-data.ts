@@ -5,6 +5,8 @@ export const theLoversData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "January 11, 2025",
   imageUrl: "/webps/the-lovers.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `Deep within the hidden corridors of Genesis Labs, two scientists are developing what may go down as mankind’s final invention. Here, Dr. Mammon, the intense visionary, and Dr. Barachiel, the calculated engineer, have architected a realm not of steel or flesh but of light and code.

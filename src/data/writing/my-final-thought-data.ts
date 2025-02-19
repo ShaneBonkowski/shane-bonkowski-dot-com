@@ -5,6 +5,8 @@ export const myFinalThoughtData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "December 8, 2024",
   imageUrl: "/webps/my-final-thought.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `As I sit here and watch the unforgiving grains of sand trickle down from my hourglass, there is nothing left to do but ponder. 
