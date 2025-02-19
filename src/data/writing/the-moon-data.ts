@@ -5,6 +5,8 @@ export const theMoonData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "July 13, 2024",
   imageUrl: "/webps/the-moon.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `Step by step, I trudge on through the long night. My body aches and my bones tremble under the weight of her gaze, a constant reminder of my imprisonment. There is no backward, only forward. It's all I've ever known. 

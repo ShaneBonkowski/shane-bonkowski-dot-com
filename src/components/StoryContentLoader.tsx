@@ -12,6 +12,9 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
   subtitle,
   date,
   imageUrl,
+  imageWidth = 500,
+  imageHeight = 422,
+  artContent = false,
   body,
 }) => {
   // Calculate total word count from all paragraphs
@@ -58,34 +61,51 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
 
   return (
     <div
-      className="max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left"
+      className="flex flex-col max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left"
       id="story-content-loader"
     >
-      {/* Story Header */}
-      <h1 className="text-center">{title}</h1>
-      <h3 className="italic text-center">{subtitle}</h3>
+      {/* Header */}
+      <h1 className="text-center my-2">{title}</h1>
+      <h3 className="italic text-center my-2">{subtitle}</h3>
 
-      {/* Story Image */}
-      <div className="my-8 w-3/4 h-3/4 sm:w-1/2 sm:h-1/2 mx-auto">
+      {/* Image */}
+      <div
+        className={`my-8 mx-auto ${
+          artContent === true
+            ? "h-auto w-full"
+            : "w-3/4 h-3/4 sm:w-1/2 sm:h-1/2"
+        }`}
+      >
         <Image
           src={imageUrl}
           alt={title}
-          width={500}
-          height={422}
+          width={imageWidth}
+          height={imageHeight}
           className="object-contain mx-auto"
         />
       </div>
 
       {/* Read Duration */}
-      <p className="text-center">{totalReadDurationMinutes} minute read</p>
-      <hr />
+      {!artContent && (
+        <>
+          <p className="text-center my-2">
+            {totalReadDurationMinutes} minute read
+          </p>
+          <hr />
+        </>
+      )}
 
-      {/* Story Body */}
-      <div className="mt-6 space-y-4">
-        {body.map((paragraph, index) => renderParagraph(paragraph, index))}
-      </div>
+      {/* Body */}
+      {!artContent && (
+        <>
+          <div>
+            {body.map((paragraph, index) => renderParagraph(paragraph, index))}
+          </div>
+          <hr />
+        </>
+      )}
 
-      <hr />
+      {/* Date */}
       <p className="text-center text-secondary-text-color">{date}</p>
     </div>
   );

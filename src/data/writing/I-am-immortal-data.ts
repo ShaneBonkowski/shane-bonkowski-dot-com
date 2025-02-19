@@ -5,6 +5,8 @@ export const iAmImmortalData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "March 16, 2024",
   imageUrl: "/webps/I-am-immortal.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `If you ask me, I’m at least 13.8 billion years old. Born in the aftermath of the Big Bang. My life began the same way it will end:`,

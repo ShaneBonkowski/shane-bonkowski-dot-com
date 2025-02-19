@@ -5,6 +5,8 @@ export const theStarData: StoryDataProps = {
   subtitle: "Shane Bonkowski",
   date: "August 12, 2024",
   imageUrl: "/webps/the-star.webp",
+  imageWidth: 500,
+  imageHeight: 422,
   body: [
     {
       content: `She was the healer. The silent observer. The glue that held it all together until the very end. Great fires would rage and she would drag the ocean down from the heavens. In times of famine, she would summon wilted crops from their eternal slumber and breathe life back into the fields. The ground would shake with thunderous roars, and she would rip the tectonic plates back together. 
