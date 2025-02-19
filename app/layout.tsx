@@ -73,7 +73,7 @@ export default function RootLayout({
         )}
       </Head>
       {/* Add components to the body of the website */}
-      <body className="flex flex-col min-h-full" id="website-body">
+      <body className="flex flex-col min-h-screen" id="website-body">
         <Header />
         <main className="flex-grow" id="website-main-content">
           {children}
