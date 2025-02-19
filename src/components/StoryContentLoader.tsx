@@ -25,6 +25,10 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
     Math.ceil(totalWordCount / avgWPMReading) + 1;
 
   function renderParagraph(paragraph: StoryDataContentProps, pIndex: number) {
+    // No margin top on first index, no margin bottom on the last
+    const isFirst = pIndex === 0;
+    const isLast = pIndex === body.length - 1;
+
     if (paragraph.splitParagraphs) {
       // If splitParagraphs is true, split by newline into separate <p> tags
       return paragraph.content
@@ -36,7 +40,7 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
               paragraph.textAlign === "justify"
                 ? "text-justify hyphens-auto"
                 : `text-${paragraph.textAlign}`
-            }`}
+            } ${isFirst ? "mt-0" : ""} ${isLast ? "mb-0" : ""}`}
             style={{ fontStyle: paragraph.fontStyle }}
             dangerouslySetInnerHTML={{ __html: paraContent }}
           />
@@ -51,7 +55,7 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
             paragraph.textAlign === "justify"
               ? "text-justify hyphens-auto"
               : `text-${paragraph.textAlign}`
-          }`}
+          } ${isFirst ? "mt-0" : ""} ${isLast ? "mb-0" : ""}`}
           style={{ fontStyle: paragraph.fontStyle }}
           dangerouslySetInnerHTML={{ __html: contentWithBr }}
         />
@@ -88,7 +92,7 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
       {/* Read Duration */}
       {!artContent && (
         <>
-          <p className="text-center my-2">
+          <p className="text-center mt-0 mb-0">
             {totalReadDurationMinutes} minute read
           </p>
           <hr />
@@ -106,7 +110,7 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
       )}
 
       {/* Date */}
-      <p className="text-center text-secondary-text-color">{date}</p>
+      <p className="text-center text-secondary-text-color mt-0">{date}</p>
     </div>
   );
 };
