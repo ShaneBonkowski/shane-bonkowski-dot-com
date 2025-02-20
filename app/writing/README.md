@@ -18,6 +18,7 @@
 ### 3. Create a cover image for the story.
 
 - Create a 500x422 .png image that will be the cover image for the story.
+- Use [image_resize.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_resize.py) to resize to 500x422 if needed.
 - Store this image in `/public/pngs`.
 - Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
 

@@ -108,4 +108,14 @@ export const contentBoxData: ContentBoxProps[] = [
     contentType: "writing",
     openInNewTab: false,
   },
+  {
+    imageUrl: "/webps/strange-love-cover-art.webp",
+    linkUrl: "/art/strange-love",
+    title: "Strange Love",
+    description:
+      "Bone of my bones, flesh of my flesh. A piece of me, now a piece of you.",
+    searchTags: "art, scifi, science, fiction, strange, love, heart",
+    contentType: "art",
+    openInNewTab: false,
+  },
 ];
