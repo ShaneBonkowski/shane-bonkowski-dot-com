@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { StoryDataProps, StoryDataContentProps } from "@/src/types/data-props";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
@@ -64,38 +63,9 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
     }
   }
 
-  const useResponsiveImageSize = (artContent: boolean) => {
-    const [size, setSize] = useState<{ width?: string; height?: string }>({});
-
-    useEffect(() => {
-      // If not art content, we don't need to resize the image
-      if (!artContent) return;
-
-      const updateSize = () => {
-        const thinnerWidth = window.innerWidth < window.innerHeight;
-        // We want w-[90%] for phone so that the image doesnt extend past its box,
-        // but we want sm:h-[90vh] for the computer so that the image is large and
-        // the box can extend in height as needed.
-        setSize(
-          thinnerWidth
-            ? { width: "90%", height: "auto" } // Phones/vertical (Use % to avoid overflow of container)
-            : { width: "auto", height: "90vh" } // Desktops/landscape (maximize height, so use vh)
-        );
-      };
-
-      updateSize();
-      window.addEventListener("resize", updateSize);
-      return () => window.removeEventListener("resize", updateSize);
-    }, [artContent]);
-
-    return size;
-  };
-
   return (
     <div
-      className={`flex flex-col ${
-        artContent ? "" : "max-w-3xl"
-      } mx-auto p-common-p sm:p-common-p-sm text-left`}
+      className={`flex flex-col max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left`}
       id="story-content-loader"
     >
       {/* Header */}
@@ -103,10 +73,11 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
       <h3 className="italic text-center my-2">{subtitle}</h3>
 
       {/* Image */}
+      {/* NOTE: mb-0 on artwork with body text since there is no date to serve as a buffer */}
       <div
         className={`my-8 mx-auto flex justify-center ${
-          artContent ? "h-auto" : "w-3/4 h-3/4 sm:w-1/2 sm:h-1/2"
-        }`}
+          artContent ? "max-h-[90vh] w-auto" : "w-3/4 h-3/4 sm:w-1/2 sm:h-1/2"
+        } ${artContent && body.length > 0 ? "mb-0" : ""}`}
       >
         <Image
           src={imageUrl}
@@ -114,7 +85,6 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
           width={imageWidth}
           height={imageHeight}
           className="object-contain"
-          style={useResponsiveImageSize(artContent)}
         />
       </div>
 
@@ -124,13 +94,13 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
           <p className="text-center mt-0 mb-0">
             {totalReadDurationMinutes} minute read
           </p>
-          <hr />
         </>
       )}
 
       {/* Body */}
-      {!artContent && (
+      {body.length > 0 && (
         <>
+          <hr />
           <div>
             {body.map((paragraph, index) => renderParagraph(paragraph, index))}
           </div>

@@ -12,7 +12,7 @@
 - Rename it to `{art-name}-data.ts`.
 - Rename the existing data variable to `{artName}Data`.
 - Replace the title, date, etc.
-- Make sure `artContent: true` and `body: []`.
+- Make sure `artContent: true` and `body: []` if there is no text desired to be added below the image.
 - Link to the **actual** art image that will be displayed on the page.
 - Make sure `width` and `height` match the size of the image.
 
