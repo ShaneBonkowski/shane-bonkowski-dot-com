@@ -1,7 +1,7 @@
 import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { artPlaceholderData } from "@/src/data/art/art-placeholder-data";
+import { strangeLoveData } from "@/src/data/art/strange-love-data";
 
-const imageData = artPlaceholderData;
+const imageData = strangeLoveData;
 
 export const metadata = {
   title: imageData.title,
@@ -28,7 +28,7 @@ export const metadata = {
   },
 };
 
-export default function ArtPlaceholder() {
+export default function StrangeLove() {
   return (
     <div id={imageData.title}>
       <StoryContentLoader {...imageData} />
