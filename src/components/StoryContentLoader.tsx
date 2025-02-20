@@ -73,6 +73,9 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
 
       const updateSize = () => {
         const thinnerWidth = window.innerWidth < window.innerHeight;
+        // We want w-[90%] for phone so that the image doesnt extend past its box,
+        // but we want sm:h-[90vh] for the computer so that the image is large and
+        // the box can extend in height as needed.
         setSize(
           thinnerWidth
             ? { width: "90%", height: "auto" } // Phones/vertical (Use % to avoid overflow of container)
@@ -101,9 +104,6 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
 
       {/* Image */}
       <div
-        // We want w-[90%] for phone so that the image doesnt extend past its box,
-        // but we want sm:h-[90vh] for the computer so that the image is large and
-        // the box can extend in height as needed.
         className={`my-8 mx-auto flex justify-center ${
           artContent ? "h-auto" : "w-3/4 h-3/4 sm:w-1/2 sm:h-1/2"
         }`}
