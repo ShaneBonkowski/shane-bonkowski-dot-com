@@ -48,9 +48,14 @@ const Dropdown: React.FC<DropdownProps> = ({
     >
       {/* Selected Value */}
       <button
-        className={`w-full p-2 bg-secondary-color text-small sm:text-small-sm text-primary-text-color rounded-sm flex justify-between items-center cursor-pointer ${
-          isHoverable ? "hover:bg-secondary-hover-color" : ""
-        } active:bg-secondary-hover-color`}
+        className={`
+          w-full p-2 bg-secondary-color-light dark:bg-secondary-color 
+          text-small sm:text-small-sm text-primary-text-color-light dark:text-primary-text-color rounded-sm 
+          flex justify-between items-center cursor-pointer ${
+            isHoverable
+              ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
+              : ""
+          } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
@@ -59,7 +64,12 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       {/* Dropdown List */}
       {isOpen && (
-        <ul className="w-full absolute p-2 list-none mt-1 bg-secondary-color rounded-sm shadow-lg overflow-hidden z-50">
+        <ul
+          className="
+        w-full absolute p-2 list-none mt-1 bg-secondary-color-light dark:bg-secondary-color 
+        rounded-sm shadow-lg overflow-hidden z-50
+        "
+        >
           {options.map((option) => (
             <li
               key={option.value}
@@ -68,8 +78,10 @@ const Dropdown: React.FC<DropdownProps> = ({
                 setIsOpen(false);
               }}
               className={`text-small sm:text-small-sm cursor-pointer ${
-                isHoverable ? "hover:bg-secondary-hover-color" : ""
-              } active:bg-secondary-hover-color w-full block p-2`}
+                isHoverable
+                  ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
+                  : ""
+              } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color w-full block p-2`}
             >
               {option.label}
             </li>

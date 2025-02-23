@@ -41,7 +41,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    // Add the dark class to the html so we can toggle light and dark mode
+    <html lang="en" className="dark">
       <Head>
         <meta
           name="viewport"

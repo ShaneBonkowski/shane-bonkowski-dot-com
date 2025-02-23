@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: "class",
   content: [
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,14 +10,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        "primary-color": "#000000",
-        "secondary-color": "#454545",
-        "secondary-hover-color": "#555555",
-        "button-color": "#282828",
-        "primary-text-color": "#FFFFFF",
-        "secondary-text-color": "#9CA3AF",
-        "link-color": "#69daff",
+        // Dark mode (default)
+        "primary-color": "rgba(0, 0, 0, 1)",
+        "secondary-color": "rgba(69, 69, 69, 1)",
+        "secondary-hover-color": "rgba(85, 85, 85, 1)",
+        "button-color": "rgba(40, 40, 40, 1)",
+        "primary-text-color": "rgba(255, 255, 255, 1)",
+        "secondary-text-color": "rgba(156, 163, 175, 1)",
+        "link-color": "rgba(105, 218, 255, 1)",
         "info-banner-bkg-color": "rgba(62, 62, 62, 0.95)",
+        // Light mode
+        "primary-color-light": "rgb(255, 255, 255)",
+        "secondary-color-light": "rgb(190, 190, 190)",
+        "secondary-hover-color-light": "rgb(171, 171, 171)",
+        "button-color-light": "rgb(228, 228, 228)",
+        "primary-text-color-light": "rgba(0, 0, 0, 1)",
+        "secondary-text-color-light": "rgb(108, 108, 108)",
+        "link-color-light": "rgb(53, 116, 218)",
+        "info-banner-bkg-color-light": "rgba(208, 208, 208, 0.95)",
       },
       spacing: {
         "common-ml": "2rem",

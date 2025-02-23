@@ -33,7 +33,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
     <div
       className={`fixed ${
         bottomRight ? "bottom-0 right-0" : "bottom-0 left-0 right-0"
-      } bg-info-banner-bkg-color text-body text-primary-text-color p-common-p sm:p-common-p-sm z-50 ${
+      } bg-info-banner-bkg-color-light dark:bg-info-banner-bkg-color text-body text-primary-text-color-light dark:text-primary-text-color p-common-p sm:p-common-p-sm z-50 ${
         bottomRight ? "w-full sm:w-auto" : "w-full"
       }`}
       id={id}
@@ -45,17 +45,21 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
         <div className="flex justify-center sm:justify-end space-x-2">
           <button
             onClick={onYes}
-            className={`bg-button-color text-body px-6 py-2 rounded ${
-              isHoverable ? "hover:bg-secondary-hover-color" : ""
-            } active:bg-secondary-hover-color`}
+            className={`bg-button-color-light dark:bg-button-color text-body px-6 py-2 rounded ${
+              isHoverable
+                ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
+                : ""
+            } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
           >
             {yesButtonText}
           </button>
           <button
             onClick={onNo}
-            className={`bg-button-color text-body px-6 py-2 rounded ${
-              isHoverable ? "hover:bg-secondary-hover-color" : ""
-            } active:bg-secondary-hover-color`}
+            className={`bg-button-color-light dark:bg-button-color text-body px-6 py-2 rounded ${
+              isHoverable
+                ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
+                : ""
+            } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
           >
             {noButtonText}
           </button>

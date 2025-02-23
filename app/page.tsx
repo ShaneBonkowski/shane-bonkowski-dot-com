@@ -27,7 +27,7 @@ export default function Home() {
           ))
         ) : (
           // Make the message span all columns so that it is centered!
-          <p className="col-span-1 sm:col-span-2 lg:col-span-3 text-small sm:text-small-sm text-secondary-text-color text-center">
+          <p className="col-span-1 sm:col-span-2 lg:col-span-3 text-small sm:text-small-sm text-secondary-text-color-light dark:text-secondary-text-color text-center">
             No results found.
           </p>
         )}
