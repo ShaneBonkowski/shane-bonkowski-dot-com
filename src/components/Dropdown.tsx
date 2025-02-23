@@ -59,7 +59,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
-        <span className="ml-2">{isOpen ? "►" : "▼"}</span>
+        <span className="ml-2">{isOpen ? "▲" : "▼"}</span>
       </button>
 
       {/* Dropdown List */}
