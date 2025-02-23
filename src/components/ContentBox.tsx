@@ -10,15 +10,15 @@ const getIcon = (contentType: string) => {
   switch (contentType) {
     case "games":
       return (
-        <FaGamepad className="text-primary-text-color text-1xl sm:text-2xl" />
+        <FaGamepad className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
       );
     case "writing":
       return (
-        <FaPenNib className="text-primary-text-color text-1xl sm:text-2xl" />
+        <FaPenNib className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
       );
     case "art":
       return (
-        <FaPaintBrush className="text-primary-text-color text-1xl sm:text-2xl" />
+        <FaPaintBrush className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
       );
     default:
       return null;
@@ -44,7 +44,9 @@ const ContentBox: React.FC<ContentBoxProps> = ({
 
   return (
     <div
-      className="flex flex-col items-stretch mx-auto bg-button-color text-primary-text-color rounded-lg overflow-hidden"
+      className="
+      flex flex-col items-stretch mx-auto bg-button-color-light dark:bg-button-color 
+      text-primary-text-color-light dark:text-primary-text-color rounded-lg overflow-hidden"
       id={`content-box-${title.replace(/\s+/g, "-").toLowerCase()}`}
     >
       {/* Image on the Left */}
@@ -90,9 +92,9 @@ const ContentBox: React.FC<ContentBoxProps> = ({
             <h3
               className={`font-bold m-0 text-content-box-title sm:text-content-box-title-sm ${
                 isHoverable && isHovered
-                  ? "text-primary-text-color underline decoration-white"
-                  : "text-primary-text-color no-underline"
-              } active:decoration-white active:underline`}
+                  ? "text-primary-text-color-light dark:text-primary-text-color underline decoration-inherit"
+                  : "text-primary-text-color-light dark:text-primary-text-color no-underline"
+              } active:decoration-inherit active:underline`}
             >
               {title}
             </h3>
@@ -100,7 +102,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed">
+        <p className="text-secondary-text-color-light dark:text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed">
           {description}
         </p>
       </div>

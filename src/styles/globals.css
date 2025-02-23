@@ -6,10 +6,7 @@ body {
   margin: 0;
   padding: 0;
   position: relative;
-  /* Black background so that if the image doesn't load, it doesn't look bad. */
-  /* The starry background image is mostly black anyways */
-  background-color: black;
-  background-image: url("/webps/sky-starry-bkg.webp");
+  background-color: theme("colors.primary-color-light");
   background-size: 100% auto;
   /* Shift up a lil to fix the rendering bug seen on phone with 1px thick line */
   background-position: center calc(100% - 4px);
@@ -17,6 +14,12 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Only have the starry sky on dark mode! */
+.dark body {
+  background-color: theme("colors.primary-color");
+  background-image: url("/webps/sky-starry-bkg.webp");
 }
 
 @layer base {
@@ -30,6 +33,11 @@ body {
   /* Apply the .link class to all NextJS Link elements. */
   a,
   .link {
+    color: theme("colors.link-color-light");
+  }
+
+  .dark a,
+  .dark .link {
     color: theme("colors.link-color");
   }
 
@@ -56,6 +64,10 @@ body {
     line-height: 1.2;
     margin-top: 2rem;
     margin-bottom: 1.5rem;
+    color: theme("colors.primary-text-color-light");
+  }
+
+  .dark h1 {
     color: theme("colors.primary-text-color");
   }
 
@@ -64,6 +76,10 @@ body {
     line-height: 1.3;
     margin-top: 1.5rem;
     margin-bottom: 1.25rem;
+    color: theme("colors.primary-text-color-light");
+  }
+
+  .dark h2 {
     color: theme("colors.primary-text-color");
   }
 
@@ -72,6 +88,10 @@ body {
     line-height: 1.4;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    color: theme("colors.primary-text-color-light");
+  }
+
+  .dark h3 {
     color: theme("colors.primary-text-color");
   }
 
@@ -82,6 +102,12 @@ body {
     line-height: 1.6;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    color: theme("colors.primary-text-color-light");
+  }
+
+  .dark p,
+  .dark .body-text,
+  .dark li {
     color: theme("colors.primary-text-color");
   }
 
@@ -96,11 +122,15 @@ body {
     line-height: 1.4;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    color: theme("colors.primary-text-color-light");
+  }
+
+  .dark .small {
     color: theme("colors.primary-text-color");
   }
 
   hr {
-    @apply border-t border-primary-text-color my-8;
+    @apply border-t border-primary-text-color-light dark:border-primary-text-color my-8;
   }
 
   /* Computer font sizes */

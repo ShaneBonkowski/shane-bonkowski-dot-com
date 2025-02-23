@@ -2,16 +2,41 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { FaHome, FaGithub, FaInfoCircle } from "react-icons/fa";
+import { FaHome, FaGithub, FaInfoCircle, FaMoon, FaSun } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
 const Header: React.FC = () => {
   /* Only allow hover on hover-supported devices */
   const [isHoverable, setIsHoverable] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
+
+    // Check for saved user preference for theme
+    const theme = localStorage.getItem("theme");
+    // If no preference, assume dark since thats the default
+    if (theme === "dark" || !theme) {
+      if (!document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.add("dark");
+      }
+      setIsDarkMode(true);
+    } else {
+      if (document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.remove("dark");
+      }
+      setIsDarkMode(false);
+    }
   }, []);
+
+  const toggleDarkMode = () => {
+    document.documentElement.classList.toggle("dark");
+    const newTheme = document.documentElement.classList.contains("dark")
+      ? "dark"
+      : "light";
+    localStorage.setItem("theme", newTheme);
+    setIsDarkMode(newTheme === "dark");
+  };
 
   return (
     <header
@@ -38,7 +63,7 @@ const Header: React.FC = () => {
             <h1 className="text-logo-title sm:text-logo-title-sm text-right m-0">
               SHANES GAMES
             </h1>
-            <p className="text-logo-subtitle sm:text-logo-subtitle-sm text-secondary-text-color text-right m-0">
+            <p className="text-logo-subtitle sm:text-logo-subtitle-sm text-secondary-text-color-light dark:text-secondary-text-color text-right m-0">
               Black Hole Reject
             </p>
           </div>
@@ -47,11 +72,25 @@ const Header: React.FC = () => {
 
       {/* Right Section: Navigation Buttons */}
       <nav className="flex space-x-4 sm:space-x-5 h-header-btn-h">
+        <button
+          onClick={toggleDarkMode}
+          className={`text-primary-text-color-light dark:text-primary-text-color ${
+            isHoverable
+              ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
+              : ""
+          } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
+          aria-label="Toggle Dark Mode"
+        >
+          {isDarkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
+        </button>
+
         <Link href="/main/about" className="link">
           <div
-            className={`text-primary-text-color ${
-              isHoverable ? "hover:text-secondary-text-color" : ""
-            } active:text-secondary-text-color cursor-pointer`}
+            className={`text-primary-text-color-light dark:text-primary-text-color ${
+              isHoverable
+                ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
+                : ""
+            } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
           >
             <FaInfoCircle size={24} />
           </div>
@@ -61,18 +100,22 @@ const Header: React.FC = () => {
           href="https://github.com/ShaneBonkowski"
           target="_blank"
           rel="noopener noreferrer"
-          className={`text-primary-text-color ${
-            isHoverable ? "hover:text-secondary-text-color" : ""
-          } active:text-secondary-text-color`}
+          className={`text-primary-text-color-light dark:text-primary-text-color ${
+            isHoverable
+              ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
+              : ""
+          } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
         >
           <FaGithub size={24} />
         </a>
 
         <Link href="/" className="link">
           <div
-            className={`text-primary-text-color ${
-              isHoverable ? "hover:text-secondary-text-color" : ""
-            } active:text-secondary-text-color cursor-pointer`}
+            className={`text-primary-text-color-light dark:text-primary-text-color ${
+              isHoverable
+                ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
+                : ""
+            } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
           >
             <FaHome size={24} />
           </div>

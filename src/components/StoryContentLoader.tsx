@@ -109,7 +109,9 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
       )}
 
       {/* Date */}
-      <p className="text-center text-secondary-text-color mt-0">{date}</p>
+      <p className="text-center text-secondary-text-color-light dark:text-secondary-text-color mt-0">
+        {date}
+      </p>
     </div>
   );
 };
