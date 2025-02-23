@@ -44,8 +44,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
   return (
     <div
       className="
-      flex text-small sm:text-small-sm items-center mx-6 sm:mx-8 space-x-3 
-      bg-button-color-light dark:bg-button-color p-2 sm:p-3 rounded-lg"
+      flex text-small sm:text-small-sm items-center mx-6 sm:mx-8 space-x-2 rounded-lg"
       id="content-search-bar"
     >
       {/* Dropdown for Content Type */}
@@ -65,9 +64,9 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
           setSearchTerm((e.target as HTMLInputElement).value)
         }
         className="
-        p-2 text-small sm:text-small-sm flex-grow bg-secondary-color-light dark:bg-secondary-color 
+        p-2 text-small sm:text-small-sm flex-grow bg-button-color-light dark:bg-button-color  
         text-primary-text-color-light dark:text-primary-text-color rounded-sm focus:outline-none 
-        placeholder:text-secondary-color dark:placeholder:text-secondary-text-color
+        placeholder:text-secondary-text-color-light dark:placeholder:text-secondary-text-color
         "
       />
     </div>

@@ -49,7 +49,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       {/* Selected Value */}
       <button
         className={`
-          w-full p-2 bg-secondary-color-light dark:bg-secondary-color 
+          w-full p-2 bg-button-color-light dark:bg-button-color 
           text-small sm:text-small-sm text-primary-text-color-light dark:text-primary-text-color rounded-sm 
           flex justify-between items-center cursor-pointer ${
             isHoverable
@@ -59,14 +59,14 @@ const Dropdown: React.FC<DropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
-        <span className="ml-2">▼</span>
+        <span className="ml-2">{isOpen ? "►" : "▼"}</span>
       </button>
 
       {/* Dropdown List */}
       {isOpen && (
         <ul
           className="
-        w-full absolute p-2 list-none mt-1 bg-secondary-color-light dark:bg-secondary-color 
+        w-full absolute p-2 list-none mt-1 bg-button-color-light dark:bg-button-color 
         rounded-sm shadow-lg overflow-hidden z-50
         "
         >
