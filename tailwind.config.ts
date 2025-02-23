@@ -21,7 +21,7 @@ export default {
         "info-banner-bkg-color": "rgba(62, 62, 62, 0.95)",
         // Light mode
         "primary-color-light": "rgb(255, 255, 255)",
-        "secondary-color-light": "rgb(190, 190, 190)",
+        "secondary-color-light": "rgba(69, 69, 69, 1)",
         "secondary-hover-color-light": "rgb(171, 171, 171)",
         "button-color-light": "rgb(228, 228, 228)",
         "primary-text-color-light": "rgba(0, 0, 0, 1)",
