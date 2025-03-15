@@ -83,7 +83,9 @@ export class MainGameScene extends Generic2DGameScene {
     super.unsubscribeFromEvents();
 
     // Unsubscribe from events for this scene
-    this.resizeObserver.disconnect();
+    if (this.resizeObserver != null) {
+      this.resizeObserver.disconnect();
+    }
     window.removeEventListener("resize", this.handleWindowResize.bind(this));
     window.removeEventListener(
       "orientationchange",

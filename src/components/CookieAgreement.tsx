@@ -3,16 +3,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import YesNoBox from "@/src/components/YesNoBox";
+import useIsGamesPath from "@/src/hooks/useIsGamesPath";
 
 const CookieAgreement: React.FC = () => {
-  const [isGamesPath, setIsGamesPath] = useState(false);
+  const isGamesPath = useIsGamesPath();
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   // Hide the popup if cookie consent is already given
   useEffect(() => {
-    const pathname = window.location.pathname;
-    setIsGamesPath(pathname.startsWith("/games"));
-
     const cookieConsent = localStorage.getItem("cookieConsent");
     if (cookieConsent === "true") {
       setIsVisible(false);

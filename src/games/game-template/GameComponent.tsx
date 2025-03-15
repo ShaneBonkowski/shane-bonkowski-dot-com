@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 const GameComponent = () => {
   useEffect(() => {
+    let game: Phaser.Game | null = null;
+
     const loadPhaser = async () => {
       if (window.Phaser) {
         try {
@@ -24,7 +26,7 @@ const GameComponent = () => {
             parent: "phaser-game",
           };
 
-          new window.Phaser.Game(config);
+          game = new window.Phaser.Game(config);
         } catch (error) {
           console.error("Failed to load Game Scene:", error);
         }
@@ -41,6 +43,14 @@ const GameComponent = () => {
       console.error("Failed to load Phaser script");
     };
     document.head.appendChild(script);
+
+    // Cleanup function to destroy the Phaser game instance
+    return () => {
+      if (game) {
+        game.destroy(true);
+      }
+      document.head.removeChild(script);
+    };
   }, []);
 
   return <div className="w-full h-full" id="phaser-game"></div>;
