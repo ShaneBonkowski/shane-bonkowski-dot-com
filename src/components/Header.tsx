@@ -4,16 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaHome, FaGithub, FaInfoCircle, FaMoon, FaSun } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import useIsGamesPath from "@/src/hooks/useIsGamesPath";
 
 const Header: React.FC = () => {
   /* Only allow hover on hover-supported devices */
-  const [isGamesPath, setIsGamesPath] = useState(false);
+  const isGamesPath = useIsGamesPath();
   const [isHoverable, setIsHoverable] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const pathname = window.location.pathname;
-    setIsGamesPath(pathname.startsWith("/games"));
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
 
     // Check for saved user preference for theme
