@@ -12,7 +12,7 @@ export class GameObject {
   public name: string;
   public disabled: boolean;
   public size: number;
-  public graphic: Phaser.GameObjects.Sprite | null;
+  public graphic: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape | null;
   public physicsBody2D: PhysicsBody2D | null;
   public rigidBody2D: RigidBody2D | null;
 
@@ -81,11 +81,14 @@ export class GameObject {
       }
 
       if (newColor != null) {
-        this.graphic.setTint(newColor);
+        if (this.graphic instanceof Phaser.GameObjects.Sprite) {
+          this.graphic.setTint(newColor);
+        } else if (this.graphic instanceof Phaser.GameObjects.Shape) {
+          this.graphic.setFillStyle(newColor);
+        }
       }
 
       // Update size of graphic
-      //this.graphic.setScale(this.size);
       this.graphic.setDisplaySize(this.size, this.size);
     }
   }
@@ -108,5 +111,30 @@ export class GameObject {
     if (this.graphic != null) {
       this.graphic.setVisible(true);
     }
+  }
+
+  /**
+   * What to call when the game object is destroyed.
+   */
+  destroy() {
+    // Remove the graphic from the scene
+    if (this.graphic != null) {
+      this.graphic.destroy();
+    }
+
+    // Remove the physics body from the scene
+    if (this.physicsBody2D != null) {
+      this.physicsBody2D = null;
+    }
+
+    // Remove the rigid body from the scene
+    if (this.rigidBody2D != null) {
+      this.rigidBody2D = null;
+    }
+
+    // Remove this instance from the static array
+    GameObject.instances = GameObject.instances.filter(
+      (instance) => instance.id !== this.id
+    );
   }
 }

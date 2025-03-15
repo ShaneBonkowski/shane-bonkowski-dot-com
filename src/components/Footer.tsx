@@ -4,17 +4,17 @@ import React from "react";
 import Link from "next/link";
 import { FaHome, FaGithub, FaLinkedin } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 const Footer: React.FC = () => {
-  const pathname = usePathname();
-  const isGamesPath = pathname.startsWith("/games");
-  const [isHovered, setIsHovered] = useState(false);
+  const [isGamesPath, setIsGamesPath] = useState(false);
 
   /* Only allow hover on hover-supported devices */
+  const [isHovered, setIsHovered] = useState(false);
   const [isHoverable, setIsHoverable] = useState(false);
 
   useEffect(() => {
+    const pathname = window.location.pathname;
+    setIsGamesPath(pathname.startsWith("/games"));
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
   }, []);
 

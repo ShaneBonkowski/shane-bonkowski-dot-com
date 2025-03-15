@@ -6,7 +6,7 @@ export const genericGameEventNames = {
 };
 
 /**
- * Class representing a generic 2D game scene.
+ * Class representing a generic 2D game scene, which can be extended.
  */
 export class Generic2DGameScene extends Phaser.Scene {
   public gameStarted: boolean;
@@ -29,15 +29,53 @@ export class Generic2DGameScene extends Phaser.Scene {
     this.preventDefault = this.preventDefault.bind(this);
   }
 
+  preload(): void {
+    // Add preload logic
+    // ...
+  }
+
+  create(): void {
+    // Set it up to run shutdown() when the scene is shut down or destroyed
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.shutdown, this);
+    this.events.once(Phaser.Scenes.Events.DESTROY, this.shutdown, this);
+
+    this.subscribeToEvents();
+  }
+
+  subscribeToEvents() {
+    // Add event listeners for the scene
+    // ...
+  }
+
+  unsubscribeFromEvents() {
+    // Remove event listeners for the scene
+    // ...
+  }
+
+  update(time: number, delta: number): void {
+    // No-op to use the variables and avoid warnings...
+    // Remove these lines if time and delta ever get used.
+    void time;
+    void delta;
+
+    // Add update logic
+    // ...
+  }
+
+  shutdown(): void {
+    this.unsubscribeFromEvents();
+
+    // Add shutdown logic, such as cleaning up event listeners for the scene
+    // ...
+  }
+
   /**
    * Disable scrolling on the page
-   * @returns {void}
    */
   disableScroll(): void {
     document.addEventListener("touchmove", this.preventDefault, {
       passive: false,
     });
-
     document.addEventListener("mousewheel", this.preventDefault, {
       passive: false,
     });
@@ -45,7 +83,6 @@ export class Generic2DGameScene extends Phaser.Scene {
 
   /**
    * Enable scrolling on the page
-   * @returns {void}
    */
   enableScroll(): void {
     document.removeEventListener("touchmove", this.preventDefault);
@@ -54,35 +91,8 @@ export class Generic2DGameScene extends Phaser.Scene {
 
   /**
    * Prevent default behavior of events (used in this case for disabling scroll)
-   * @param {Event} event - The event to prevent default behavior for
-   * @returns {void}
    */
   preventDefault(event: Event): void {
     event.preventDefault();
-  }
-
-  /**
-   * Cleanup event listeners for the scene
-   * @returns {void}
-   */
-  private cleanupEventListeners(): void {
-    this.enableScroll();
-  }
-
-  /**
-   * Create the scene and add event listeners
-   * @returns {void}
-   */
-  create(): void {
-    this.events.once(
-      Phaser.Scenes.Events.SHUTDOWN,
-      this.cleanupEventListeners,
-      this
-    );
-    this.events.once(
-      Phaser.Scenes.Events.DESTROY,
-      this.cleanupEventListeners,
-      this
-    );
   }
 }
