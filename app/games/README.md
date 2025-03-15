@@ -24,3 +24,5 @@
 ### 4. Create a content box for the game in `/src/data/main/content-box-data.ts`.
 
 - Fill in the data accordinly, updating the link to the image page, title, description, etc.
+
+NOTE: If you are building your own game, you will also need to create the game logic. See the `src/games/README.md` for more information.

@@ -33,9 +33,8 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   contentType,
   openInNewTab,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   /* Only allow hover on hover-supported devices */
+  const [isHovered, setIsHovered] = useState(false);
   const [isHoverable, setIsHoverable] = useState(false);
 
   useEffect(() => {

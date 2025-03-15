@@ -7,15 +7,18 @@ import { useEffect, useState } from "react";
 
 const Header: React.FC = () => {
   /* Only allow hover on hover-supported devices */
+  const [isGamesPath, setIsGamesPath] = useState(false);
   const [isHoverable, setIsHoverable] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
+    const pathname = window.location.pathname;
+    setIsGamesPath(pathname.startsWith("/games"));
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
 
     // Check for saved user preference for theme
     const theme = localStorage.getItem("theme");
-    // If no preference, assume dark since thats the default
+    // If no preference, assume dark since that's the default
     if (theme === "dark" || !theme) {
       if (!document.documentElement.classList.contains("dark")) {
         document.documentElement.classList.add("dark");
@@ -40,7 +43,9 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className="flex justify-between items-center p-common-p sm:p-common-p-sm z-50"
+      className={`flex justify-between items-center p-common-p sm:p-common-p-sm z-50 ${
+        isGamesPath ? "absolute top-0 left-0 w-full" : ""
+      }`}
       id="header"
     >
       {/* Left Section: Logo & Title */}

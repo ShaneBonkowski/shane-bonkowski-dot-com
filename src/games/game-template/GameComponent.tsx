@@ -13,8 +13,8 @@ const GameComponent = () => {
 
           const config: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
-            width: window.innerWidth,
-            height: window.innerHeight,
+            width: "100%",
+            height: "100%",
             transparent: true,
             scale: {
               mode: Phaser.Scale.RESIZE,
@@ -43,11 +43,7 @@ const GameComponent = () => {
     document.head.appendChild(script);
   }, []);
 
-  return (
-    <div className="w-full h-full" id="game-container">
-      <div className="w-full h-full" id="phaser-game"></div>
-    </div>
-  );
+  return <div className="w-full h-full" id="phaser-game"></div>;
 };
 
 export default GameComponent;

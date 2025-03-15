@@ -31,7 +31,10 @@ export const metadata = {
 
 const GameTemplate = () => {
   return (
-    <div id={gameData.title}>
+    <div
+      id={gameData.title}
+      className="flex justify-center items-center w-full h-screen"
+    >
       <GameComponent />
     </div>
   );
