@@ -4,7 +4,7 @@ export const theLoversData: StoryDataProps = {
   title: "The Lovers",
   subtitle: "Shane Bonkowski",
   date: "January 11, 2025",
-  imageUrl: "/webps/the-lovers.webp",
+  imageUrl: "/webps/writing/the-lovers.webp",
   imageWidth: 500,
   imageHeight: 422,
   body: [

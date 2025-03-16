@@ -4,7 +4,7 @@ export const deathData: StoryDataProps = {
   title: "Death",
   subtitle: "Shane Bonkowski",
   date: "September 10, 2024",
-  imageUrl: "/webps/death.webp",
+  imageUrl: "/webps/writing/death.webp",
   imageWidth: 500,
   imageHeight: 422,
   body: [

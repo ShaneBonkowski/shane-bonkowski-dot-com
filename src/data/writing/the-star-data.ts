@@ -4,7 +4,7 @@ export const theStarData: StoryDataProps = {
   title: "The Star",
   subtitle: "Shane Bonkowski",
   date: "August 12, 2024",
-  imageUrl: "/webps/the-star.webp",
+  imageUrl: "/webps/writing/the-star.webp",
   imageWidth: 500,
   imageHeight: 422,
   body: [

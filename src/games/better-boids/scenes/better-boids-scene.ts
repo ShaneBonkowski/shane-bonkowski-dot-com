@@ -1,10 +1,10 @@
 import { Generic2DGameScene } from "@/src/games/utils/game-scene-2d";
-import { Ball } from "@/src/games/game-template/ball";
+import { Boid } from "@/src/games/better-boids/boid";
 import { Physics } from "@/src/games/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 
 export class MainGameScene extends Generic2DGameScene {
-  private balls: Ball[] = [];
+  public boids: Boid[] = [];
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -25,15 +25,6 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
-    // Create a ball and make it bounce around the
-    // screen using physics
-    const { width, height } = this.scale.gameSize;
-
-    this.maxBalls = 10;
-    for (let i = 0; i < 5; i++) {
-      this.createBall(width / 2, height / 2);
-    }
-
     this.lastKnownWindowSize = new Vec2(window.innerWidth, window.innerHeight);
 
     this.gameStarted = true;
@@ -50,15 +41,15 @@ export class MainGameScene extends Generic2DGameScene {
       ) {
         Physics.performPhysicsUpdate(time);
 
-        // Handle the ball physics
-        for (const ball of this.balls) {
-          ball.handlePhysics(delta);
+        // Handle the boid physics
+        for (const boid of this.boids) {
+          boid.handlePhysics(delta);
         }
       }
 
       // Graphics update will occur every frame
-      for (const ball of this.balls) {
-        ball.updateGraphic();
+      for (const boid of this.boids) {
+        boid.updateGraphic();
       }
     }
   }
@@ -72,8 +63,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Subscribe to events for this scene
     this.setUpWindowResizeHandling();
-
-    this.input.on("pointerdown", this.handlePointerDown, this);
   }
 
   /*
@@ -92,12 +81,10 @@ export class MainGameScene extends Generic2DGameScene {
       "orientationchange",
       this.handleWindowResize.bind(this)
     );
-
-    this.input.off("pointerdown", this.handlePointerDown, this);
   }
 
   setUpWindowResizeHandling() {
-    // Observe window resizing so we can adjust the ball's position
+    // Observe window resizing so we can adjust the boid's position
     // and size accordingly!
 
     // Observe window resizing with ResizeObserver since it is good for snappy changes
@@ -129,40 +116,25 @@ export class MainGameScene extends Generic2DGameScene {
         return;
       }
 
-      // Update positions of all balls based on new screen dimensions. We want to
-      // retain the general location of the ball, so we try to position it the
+      // Update positions of all boids based on new screen dimensions. We want to
+      // retain the general location of the boid, so we try to position it the
       // same screen % it was before on the new screen.
-      for (const ball of this.balls) {
+      for (const boid of this.boids) {
         // Calculate new position based on percentage of old position
         const new_x =
-          (ball.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
+          (boid.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
           screenWidth;
         const new_y =
-          (ball.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
+          (boid.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
           screenHeight;
 
-        // handle re-sizing etc. of ball
-        ball.handleWindowResize(new_x, new_y);
+        // handle re-sizing etc. of boid
+        boid.handleWindowResize(new_x, new_y);
       }
     }
 
     // Update lastKnownWindowSize to current screen dimensions
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-  }
-
-  handlePointerDown(pointer: Phaser.Input.Pointer) {
-    // Create a new ball at the pointer's position
-    this.createBall(pointer.x, pointer.y);
-  }
-
-  createBall(x: number, y: number) {
-    // Add new ball when click somewhere if we dont exceed max
-    if (this.balls.length >= this.maxBalls) {
-      return;
-    }
-
-    const ball = new Ball(this, x, y);
-    this.balls.push(ball);
   }
 
   /*
@@ -173,8 +145,8 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
-    for (const ball of this.balls) {
-      ball.destroy();
+    for (const boid of this.boids) {
+      boid.destroy();
     }
   }
 }

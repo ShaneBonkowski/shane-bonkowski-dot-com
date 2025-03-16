@@ -4,7 +4,7 @@ export const iAmImmortalData: StoryDataProps = {
   title: "I am Immortal",
   subtitle: "Shane Bonkowski",
   date: "March 16, 2024",
-  imageUrl: "/webps/I-am-immortal.webp",
+  imageUrl: "/webps/writing/I-am-immortal.webp",
   imageWidth: 500,
   imageHeight: 422,
   body: [

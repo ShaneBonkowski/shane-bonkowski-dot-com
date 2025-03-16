@@ -4,7 +4,7 @@ export const myFinalThoughtData: StoryDataProps = {
   title: "My Final Thought",
   subtitle: "Shane Bonkowski",
   date: "December 8, 2024",
-  imageUrl: "/webps/my-final-thought.webp",
+  imageUrl: "/webps/writing/my-final-thought.webp",
   imageWidth: 500,
   imageHeight: 422,
   body: [

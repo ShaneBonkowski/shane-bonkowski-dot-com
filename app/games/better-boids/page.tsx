@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
-import { gameTemplateData } from "@/src/data/games/game-template-data";
+import { betterBoidsData } from "@/src/data/games/better-boids-data";
 import GenericGameComponent from "@/src/components/GenericGameComponent";
 
-const gameData = gameTemplateData;
+const gameData = betterBoidsData;
 
 export const metadata = {
   title: gameData.title,
@@ -29,7 +29,7 @@ export const metadata = {
   },
 };
 
-const GameTemplate = () => {
+const BetterBoids = () => {
   return (
     <div
       id={gameData.title}
@@ -43,4 +43,4 @@ const GameTemplate = () => {
   );
 };
 
-export default dynamic(() => Promise.resolve(GameTemplate));
+export default dynamic(() => Promise.resolve(BetterBoids));

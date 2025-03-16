@@ -4,7 +4,7 @@ export const theMoonData: StoryDataProps = {
   title: "The Moon",
   subtitle: "Shane Bonkowski",
   date: "July 13, 2024",
-  imageUrl: "/webps/the-moon.webp",
+  imageUrl: "/webps/writing/the-moon.webp",
   imageWidth: 500,
   imageHeight: 422,
   body: [

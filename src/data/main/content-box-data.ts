@@ -2,7 +2,7 @@ import { ContentBoxProps } from "@/src/types/content-props";
 
 export const contentBoxData: ContentBoxProps[] = [
   {
-    imageUrl: "/webps/save-our-solar-system.webp",
+    imageUrl: "/webps/games/save-our-solar-system.webp",
     linkUrl:
       "https://store.steampowered.com/app/2061040/Save_Our_Solar_System/",
     title: "Save Our Solar System",
@@ -13,7 +13,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: true,
   },
   {
-    imageUrl: "/webps/abyssal-descent.webp",
+    imageUrl: "/webps/games/abyssal-descent.webp",
     linkUrl: "https://store.steampowered.com/app/2506740/Abyssal_Descent/",
     title: "Abyssal Descent",
     description:
@@ -23,7 +23,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: true,
   },
   {
-    imageUrl: "/webps/the-lovers.webp",
+    imageUrl: "/webps/writing/the-lovers.webp",
     linkUrl: "/writing/the-lovers",
     title: "The Lovers",
     description:
@@ -34,7 +34,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/death.webp",
+    imageUrl: "/webps/writing/death.webp",
     linkUrl: "/writing/death",
     title: "Death",
     description:
@@ -45,7 +45,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/the-star.webp",
+    imageUrl: "/webps/writing/the-star.webp",
     linkUrl: "/writing/the-star",
     title: "The Star",
     description:
@@ -56,7 +56,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/the-sun.webp",
+    imageUrl: "/webps/writing/the-sun.webp",
     linkUrl: "/writing/the-sun",
     title: "The Sun",
     description:
@@ -67,7 +67,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/the-moon.webp",
+    imageUrl: "/webps/writing/the-moon.webp",
     linkUrl: "/writing/the-moon",
     title: "The Moon",
     description:
@@ -77,7 +77,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/my-final-thought.webp",
+    imageUrl: "/webps/writing/my-final-thought.webp",
     linkUrl: "/writing/my-final-thought",
     title: "My Final Thought",
     description:
@@ -87,7 +87,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/I-am-immortal.webp",
+    imageUrl: "/webps/writing/I-am-immortal.webp",
     linkUrl: "/writing/I-am-immortal",
     title: "I am Immortal",
     description:
@@ -98,7 +98,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/before-the-world-dried-up.webp",
+    imageUrl: "/webps/writing/before-the-world-dried-up.webp",
     linkUrl: "/writing/before-the-world-dried-up",
     title: "Before the World Dried Up",
     description:
@@ -109,7 +109,7 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/strange-love-cover-art.webp",
+    imageUrl: "/webps/art/strange-love-cover-art.webp",
     linkUrl: "/art/strange-love",
     title: "Strange Love",
     description:

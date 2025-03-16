@@ -1,8 +1,9 @@
 export interface GameDataProps {
   title: string;
   description: string;
-  imageUrl: string;
+  logoImageUrl: string;
   imageAlt: string;
+  initialScene: string;
 }
 
 export interface ContentDataProps {

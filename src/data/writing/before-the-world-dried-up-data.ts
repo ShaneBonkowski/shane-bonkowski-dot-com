@@ -4,7 +4,7 @@ export const beforeTheWorldDriedUpData: StoryDataProps = {
   title: "Before the World Dried Up",
   subtitle: "Shane Bonkowski",
   date: "June 20, 2024",
-  imageUrl: "/webps/before-the-world-dried-up.webp",
+  imageUrl: "/webps/writing/before-the-world-dried-up.webp",
   imageWidth: 500,
   imageHeight: 422,
   body: [
