@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { gameTemplateData } from "@/src/data/games/game-template-data";
-import GenericGameComponent from "@/src/components/GenericGameComponent";
+import TemplateGameComponent from "@/src/games/game-template/TemplateGameComponent";
 
 const gameData = gameTemplateData;
 
@@ -35,10 +35,7 @@ const GameTemplate = () => {
       id={gameData.title}
       className="flex justify-center items-center w-full h-screen"
     >
-      <GenericGameComponent
-        gameTitle={gameData.title}
-        initialSceneName={gameData.initialScene}
-      />
+      <TemplateGameComponent />
     </div>
   );
 };

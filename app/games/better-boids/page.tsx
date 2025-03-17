@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { betterBoidsData } from "@/src/data/games/better-boids-data";
-import GenericGameComponent from "@/src/components/GenericGameComponent";
+import BoidsGameComponent from "@/src/games/better-boids/BoidsGameComponent";
 
 const gameData = betterBoidsData;
 
@@ -35,10 +35,7 @@ const BetterBoids = () => {
       id={gameData.title}
       className="flex justify-center items-center w-full h-screen"
     >
-      <GenericGameComponent
-        gameTitle={gameData.title}
-        initialSceneName={gameData.initialScene}
-      />
+      <BoidsGameComponent />
     </div>
   );
 };

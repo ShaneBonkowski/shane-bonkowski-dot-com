@@ -5,5 +5,4 @@ export const betterBoidsData: GameDataProps = {
   description: "A game by Shane Bonkowski.",
   logoImageUrl: "/webps/mars-logo-large.webp",
   imageAlt: "Better Boids",
-  initialScene: "MainGameScene",
 };

@@ -1,43 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
+import "@/src/games/better-boids/styles/better-boids.css";
 
-// NOTE: This is required because Webpack doesn't support dynamic imports
-// with variables, so we need to map game names to their paths here.
-const initialScenePathMap: { [key: string]: string } = {
-  // FORMAT -> Game Title: path/to/initial-scene
-  "Game Template": "@/src/games/game-template/scenes/game-template-scene",
-  "Better Boids": "@/src/games/better-boids/scenes/better-boids-scene",
-};
-
-interface GameComponentProps {
-  gameTitle: string;
-  initialSceneName: string;
-}
-
-const GenericGameComponent: React.FC<GameComponentProps> = ({
-  gameTitle,
-  initialSceneName,
-}) => {
+const BoidsGameComponent: React.FC = () => {
   useEffect(() => {
     let game: Phaser.Game | null = null;
+
+    // Add the background to the game
+    document.body.classList.add("game-background");
 
     const loadPhaser = async () => {
       if (window.Phaser) {
         try {
-          const resolvedPath = initialScenePathMap[gameTitle];
-          if (!resolvedPath) {
-            throw new Error(`Path for game ${gameTitle} not found in map.`);
-          }
-          console.log(`Attempting to load scene from path: ${resolvedPath}`);
-          const GameSceneModule = await import(resolvedPath);
-          console.log(`Successfully imported module:`, GameSceneModule);
-
-          const GameScene = GameSceneModule[initialSceneName];
-          if (!GameScene) {
-            throw new Error(`Scene ${initialSceneName} not found in module.`);
-          }
-          console.log(`Successfully loaded scene: ${initialSceneName}`);
+          const { BoidsGameScene } = await import(
+            "@/src/games/better-boids/scenes/better-boids-scene"
+          );
 
           const gameConfig: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
@@ -48,7 +26,7 @@ const GenericGameComponent: React.FC<GameComponentProps> = ({
               mode: Phaser.Scale.RESIZE,
               autoCenter: Phaser.Scale.CENTER_BOTH,
             },
-            scene: GameScene,
+            scene: BoidsGameScene,
             parent: "phaser-game",
           };
 
@@ -82,10 +60,13 @@ const GenericGameComponent: React.FC<GameComponentProps> = ({
         game.destroy(true);
       }
       document.head.removeChild(script);
+
+      // Remove the background from the game
+      document.body.classList.remove("game-background");
     };
-  }, [gameTitle, initialSceneName]);
+  }, []);
 
   return <div className="w-full h-full" id="phaser-game"></div>;
 };
 
-export default GenericGameComponent;
+export default BoidsGameComponent;

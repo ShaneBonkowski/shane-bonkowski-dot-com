@@ -3,7 +3,6 @@ export interface GameDataProps {
   description: string;
   logoImageUrl: string;
   imageAlt: string;
-  initialScene: string;
 }
 
 export interface ContentDataProps {

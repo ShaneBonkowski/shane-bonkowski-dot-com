@@ -3,13 +3,13 @@ import { Ball } from "@/src/games/game-template/ball";
 import { Physics } from "@/src/games/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 
-export class MainGameScene extends Generic2DGameScene {
+export class TemplateGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
-    // "MainGameScene" supplied as the name of the scene.
-    super("MainGameScene");
+    // "TemplateGameScene" supplied as the name of the scene.
+    super("TemplateGameScene");
 
     // Constructor logic for this scene
     // ...
@@ -134,15 +134,15 @@ export class MainGameScene extends Generic2DGameScene {
       // same screen % it was before on the new screen.
       for (const ball of this.balls) {
         // Calculate new position based on percentage of old position
-        const new_x =
+        const newX =
           (ball.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
           screenWidth;
-        const new_y =
+        const newY =
           (ball.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
           screenHeight;
 
         // handle re-sizing etc. of ball
-        ball.handleWindowResize(new_x, new_y);
+        ball.handleWindowResize(newX, newY);
       }
     }
 

@@ -5,5 +5,4 @@ export const gameTemplateData: GameDataProps = {
   description: "A game by Shane Bonkowski.",
   logoImageUrl: "/webps/mars-logo-large.webp",
   imageAlt: "Game Template",
-  initialScene: "MainGameScene",
 };
