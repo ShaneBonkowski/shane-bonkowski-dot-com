@@ -1,6 +1,6 @@
 import { Vec2 } from "@/src/utils/vector";
-import { Physics } from "@/src/games/utils/physics";
-import { GameObject } from "@/src/games/utils/game-object";
+import { Physics } from "@/src/utils/physics";
+import { GameObject } from "@/src/utils/game-object";
 
 /**
  * Class representing a 2D physics body.

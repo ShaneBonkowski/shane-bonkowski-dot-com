@@ -1,6 +1,6 @@
-import { Generic2DGameScene } from "@/src/games/utils/game-scene-2d";
+import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Ball } from "@/src/games/game-template/ball";
-import { Physics } from "@/src/games/utils/physics";
+import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 
 export class TemplateGameScene extends Generic2DGameScene {
@@ -86,6 +86,7 @@ export class TemplateGameScene extends Generic2DGameScene {
     // Unsubscribe from events for this scene
     if (this.resizeObserver != null) {
       this.resizeObserver.disconnect();
+      this.resizeObserver = null;
     }
     window.removeEventListener("resize", this.handleWindowResize.bind(this));
     window.removeEventListener(
@@ -116,12 +117,42 @@ export class TemplateGameScene extends Generic2DGameScene {
   }
 
   handleWindowResize() {
+    // Ensure the scene is fully initialized before handling resize
+    if (!this.isInitialized) {
+      console.warn("handleWindowResize called before scene initialization.");
+      return;
+    }
+
     // Get the new screen dimensions
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
 
-    // If not instantiated yet, set lastKnownWindowSize to current screen dimensions
-    if (this.lastKnownWindowSize != null) {
+    // Resize the canvas
+    try {
+      this.scale.resize(screenWidth, screenHeight);
+    } catch (error) {
+      console.error(
+        "Error during scale.resize (likely was called before phaser could initialize):",
+        error,
+        {
+          screenWidth,
+          screenHeight,
+          scale: this.scale,
+        }
+      );
+      return;
+    }
+
+    // Handle resizing of game objs
+    if (
+      !this.lastKnownWindowSize ||
+      this.lastKnownWindowSize.x == null ||
+      this.lastKnownWindowSize.y == null
+    ) {
+      console.warn(
+        "lastKnownWindowSize is not properly initialized. Skipping resize handling."
+      );
+    } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
         this.lastKnownWindowSize.y === screenHeight

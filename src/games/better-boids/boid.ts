@@ -1,4 +1,4 @@
-import { GameObject } from "@/src/games/utils/game-object";
+import { GameObject } from "@/src/utils/game-object";
 import { Vec2 } from "@/src/utils/vector";
 import { MoreMath } from "@/src/utils/more-math";
 import {
@@ -114,12 +114,9 @@ export class Boid extends GameObject {
       document.addEventListener(
         boidEventNames.pointerholdclick,
         () => {
-          // Enable leader boid if ui menu is closed
-          if (!this.scene.uiMenuOpen) {
-            // can only enable if leader is toggled on
-            if (BoidFactors.leaderBoidEnabled == true) {
-              this.enable();
-            }
+          // can only enable if leader is toggled on
+          if (BoidFactors.leaderBoidEnabled == true) {
+            this.enable();
           }
         },
         { capture: true }
@@ -144,6 +141,36 @@ export class Boid extends GameObject {
     }
   }
 
+  unsubscribeFromEvents() {
+    // Unsubscribe from the speed change event
+    document.removeEventListener(
+      boidEventNames.onSpeedChange,
+      this.updateBoidSpeed
+    );
+
+    // Unsubscribe from leader boid events if this is the main boid
+    if (this.mainBoid) {
+      // Remove pointer events
+      this.scene.input.off("pointerdown");
+      this.scene.input.off("pointermove");
+
+      // Remove custom events for leader boid visibility
+      document.removeEventListener(
+        boidEventNames.pointerholdclick,
+        this.enable,
+        {
+          capture: true,
+        }
+      );
+      document.removeEventListener("pointerup", this.disable, {
+        capture: true,
+      });
+      document.removeEventListener("pointercancel", this.disable, {
+        capture: true,
+      });
+    }
+  }
+
   calculateBoidSize() {
     // Calculate the boid size based on the screen width
     let boidSize = window.innerHeight * 0.15;
@@ -158,6 +185,13 @@ export class Boid extends GameObject {
   }
 
   handleWindowResize(newX: number, newY: number) {
+    if (newX == null || newY == null) {
+      console.warn(
+        "obj.handleWindowResize: newX or newY is null. Skipping resize handling."
+      );
+      return;
+    }
+
     // Reinitialize the boid and its graphic on resize
     this.updateBoidSize();
 
@@ -263,11 +297,7 @@ export class Boid extends GameObject {
         const distanceSquared = distObj.distanceSquared;
 
         // If otherBoid is the main boid and the player is interacting (aka pointer is down), have this boid follow the leader if within leader follow radius!
-        if (
-          otherBoid.mainBoid == true &&
-          this.scene.isInteracting &&
-          !this.scene.uiMenuOpen
-        ) {
+        if (otherBoid.mainBoid == true && this.scene.isInteracting) {
           if (
             distanceSquared <
             BoidFactors.leaderFollowRadius * BoidFactors.leaderFollowRadius
@@ -538,5 +568,12 @@ export class Boid extends GameObject {
     else if (collisionDirection === "bottom") {
       this.physicsBody2D!.position.y = edgeMargin + this.size / 2;
     }
+  }
+
+  destroy() {
+    super.destroy();
+
+    // Unsubscribe from events
+    this.unsubscribeFromEvents();
   }
 }

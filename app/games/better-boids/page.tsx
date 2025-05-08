@@ -30,14 +30,7 @@ export const metadata = {
 };
 
 const BetterBoids = () => {
-  return (
-    <div
-      id={gameData.title}
-      className="flex justify-center items-center w-full h-screen"
-    >
-      <BoidsGameComponent />
-    </div>
-  );
+  return <BoidsGameComponent id={gameData.title}></BoidsGameComponent>;
 };
 
 export default dynamic(() => Promise.resolve(BetterBoids));

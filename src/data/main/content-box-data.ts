@@ -23,6 +23,16 @@ export const contentBoxData: ContentBoxProps[] = [
     openInNewTab: true,
   },
   {
+    imageUrl: "/webps/games/better-boids-cover.webp",
+    linkUrl: "/games/better-boids",
+    title: "Better Boids",
+    description:
+      "A unique twist to the classic Boids algorithm. Player controlled Boid, predator-prey relationships, customizable toggles & more.",
+    searchTags: "birds, bird, boid, flying, simulation",
+    contentType: "games",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/writing/the-lovers.webp",
     linkUrl: "/writing/the-lovers",
     title: "The Lovers",

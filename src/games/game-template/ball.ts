@@ -1,8 +1,8 @@
-import { GameObject } from "@/src/games/utils/game-object";
+import { GameObject } from "@/src/utils/game-object";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec2 } from "@/src/utils/vector";
 import { TemplateGameScene } from "@/src/games/game-template/scenes/game-template-scene";
-import { rigidBody2DEventNames } from "@/src/games/utils/rigid-body-2d";
+import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
 
 export class Ball extends GameObject {
   private scene: TemplateGameScene;
@@ -87,6 +87,13 @@ export class Ball extends GameObject {
   }
 
   handleWindowResize(newX: number, newY: number) {
+    if (newX == null || newY == null) {
+      console.warn(
+        "obj.handleWindowResize: newX or newY is null. Skipping resize handling."
+      );
+      return;
+    }
+
     this.updateSize();
 
     this.physicsBody2D!.position.x = newX;

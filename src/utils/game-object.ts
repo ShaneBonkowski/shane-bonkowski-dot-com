@@ -1,5 +1,5 @@
-import { RigidBody2D } from "@/src/games/utils/rigid-body-2d";
-import { PhysicsBody2D } from "@/src/games/utils/physics-body-2d";
+import { RigidBody2D } from "@/src/utils/rigid-body-2d";
+import { PhysicsBody2D } from "@/src/utils/physics-body-2d";
 
 /**
  * Class representing a game object.

@@ -1,16 +1,10 @@
 import Phaser from "@/public/js/phaser.min.js";
 
-export const genericGameEventNames = {
-  uiMenuOpen: "uiMenuOpen",
-  uiMenuClosed: "uiMenuClosed",
-};
-
 /**
  * Class representing a generic 2D game scene, which can be extended.
  */
 export class Generic2DGameScene extends Phaser.Scene {
   public gameStarted: boolean;
-  public uiMenuOpen: boolean;
   public paused: boolean;
 
   /**
@@ -22,11 +16,12 @@ export class Generic2DGameScene extends Phaser.Scene {
     super({ key: sceneName });
 
     this.gameStarted = false;
-    this.uiMenuOpen = false;
     this.paused = false;
 
     // Bind "this" to refer to the scene for necessary functions
     this.preventDefault = this.preventDefault.bind(this);
+
+    this.isInitialized = true;
   }
 
   preload(): void {

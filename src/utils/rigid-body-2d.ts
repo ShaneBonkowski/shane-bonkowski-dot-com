@@ -1,5 +1,5 @@
 import { Vec2 } from "@/src/utils/vector";
-import { GameObject } from "@/src/games/utils/game-object";
+import { GameObject } from "@/src/utils/game-object";
 
 export const rigidBody2DEventNames = {
   bodyOnBodyCollision: "bodyOnBodyCollision",

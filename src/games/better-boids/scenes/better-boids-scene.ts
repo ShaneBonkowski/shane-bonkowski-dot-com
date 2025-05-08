@@ -1,13 +1,13 @@
-import { Generic2DGameScene } from "@/src/games/utils/game-scene-2d";
+import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Boid } from "@/src/games/better-boids/boid";
-import { Physics } from "@/src/games/utils/physics";
+import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 import {
   instantiateBoids,
   boidEventNames,
 } from "@/src/games/better-boids/boid-utils";
-import { rigidBody2DEventNames } from "@/src/games/utils/rigid-body-2d";
-import { GameObject } from "@/src/games/utils/game-object";
+import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
+import { GameObject } from "@/src/utils/game-object";
 
 // Used to determine if pointer is held down
 const holdThreshold: number = 0.1; // seconds
@@ -23,7 +23,7 @@ export class BoidsGameScene extends Generic2DGameScene {
     super("BoidsGameScene");
 
     // Constructor logic for this scene
-    // ...
+    this.lastKnownWindowSize = new Vec2(window.innerWidth, window.innerHeight);
   }
 
   preload() {
@@ -52,8 +52,6 @@ export class BoidsGameScene extends Generic2DGameScene {
 
   create() {
     super.create();
-
-    this.lastKnownWindowSize = new Vec2(window.innerWidth, window.innerHeight);
 
     // Spawn in x random boids as a Promise (so that we can run this async), and then
     // when that promise is fufilled, we can move on to other init logic
@@ -132,6 +130,7 @@ export class BoidsGameScene extends Generic2DGameScene {
     // Unsubscribe from events for this scene
     if (this.resizeObserver != null) {
       this.resizeObserver.disconnect();
+      this.resizeObserver = null;
     }
     window.removeEventListener("resize", this.handleWindowResize.bind(this));
     window.removeEventListener(
@@ -231,15 +230,42 @@ export class BoidsGameScene extends Generic2DGameScene {
   }
 
   handleWindowResize() {
+    // Ensure the scene is fully initialized before handling resize
+    if (!this.isInitialized) {
+      console.warn("handleWindowResize called before scene initialization.");
+      return;
+    }
+
     // Get the new screen dimensions
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
 
     // Resize the canvas
-    this.scale.resize(screenWidth, screenHeight);
+    try {
+      this.scale.resize(screenWidth, screenHeight);
+    } catch (error) {
+      console.error(
+        "Error during scale.resize (likely was called before phaser could initialize):",
+        error,
+        {
+          screenWidth,
+          screenHeight,
+          scale: this.scale,
+        }
+      );
+      return;
+    }
 
-    // If not instantiated yet, set lastKnownWindowSize to current screen dimensions
-    if (this.lastKnownWindowSize != null) {
+    // Handle resizing of game objs
+    if (
+      !this.lastKnownWindowSize ||
+      this.lastKnownWindowSize.x == null ||
+      this.lastKnownWindowSize.y == null
+    ) {
+      console.warn(
+        "lastKnownWindowSize is not properly initialized. Skipping resize handling."
+      );
+    } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
         this.lastKnownWindowSize.y === screenHeight

@@ -42,7 +42,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`flex justify-between items-center p-common-p sm:p-common-p-sm z-50 ${
+      className={`pointer-events-none flex justify-between items-center p-common-p sm:p-common-p-sm z-50 ${
         isGamesPath ? "absolute top-0 left-0 w-full" : ""
       }`}
       id="header"
@@ -51,7 +51,7 @@ const Header: React.FC = () => {
       <Link
         href="/"
         passHref
-        className={`link no-underline ${
+        className={`link pointer-events-auto no-underline ${
           isHoverable ? "hover:no-underline" : ""
         } active:no-underline`}
       >
@@ -75,7 +75,7 @@ const Header: React.FC = () => {
       </Link>
 
       {/* Right Section: Navigation Buttons */}
-      <nav className="flex space-x-4 sm:space-x-5 h-header-btn-h">
+      <nav className="pointer-events-auto flex space-x-4 sm:space-x-5 h-header-btn-h">
         <button
           onClick={toggleDarkMode}
           className={`text-primary-text-color-light dark:text-primary-text-color ${

@@ -30,14 +30,7 @@ export const metadata = {
 };
 
 const GameTemplate = () => {
-  return (
-    <div
-      id={gameData.title}
-      className="flex justify-center items-center w-full h-screen"
-    >
-      <TemplateGameComponent />
-    </div>
-  );
+  return <TemplateGameComponent id={gameData.title}></TemplateGameComponent>;
 };
 
 export default dynamic(() => Promise.resolve(GameTemplate));
