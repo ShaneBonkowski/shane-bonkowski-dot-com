@@ -21,9 +21,11 @@ interface BoidsGameComponentProps {
 // - Clean up the info button.
 // - Make it so that x button and styling on the info screen is consistent with rest of the website coloring sizing etc.
 // - Game screen should have a banner that is readable. Consider if we should be able to toggle light mode here.. Maybe we have a custom header for games with just shanes games in top left. Then coloring is specific color with no dark/light mode
-// - Need to find a way to generalize the loading behavior (or at least some of the complex parts of it) for the game components. Right now there is a lot of copy-paste when I make fixes.
+// - Need to find a way to generalize the loading behavior (or at least some of the complex parts of it) for the game components. Right now there is a lot of copy-paste when I make fixes (this is for loading in phaser etc.).
 // - Make sure all subscribe events are cleanly shut down! Every subscribe should have an unsubscribe. Also, search for all even listeners and make sure they eventually stop listening when shut down.
 //   Also, make sure shutdown logic for game objs etc. is intuitive. We need to guarentee that if someone adds an "unsubsribe" that it will get called automatically, or it is at least clear when they need to call it... such as the for loop to shut down boids.
+// - I think it would be nice to remove a lot of the "data" files. I'd rather directly define that data on the .tsx component file in-line so to speak.
+//   Dont want devs to have to jump around so much. Will have to update instructions if I do this in certain READMEs. Also will need to consider if there are good reasons for centralizing certain data..
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
