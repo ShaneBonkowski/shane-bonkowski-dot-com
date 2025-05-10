@@ -147,7 +147,7 @@ export class BoidsGameScene extends Generic2DGameScene {
     document.removeEventListener("pointerup", this.handleIsNotInteracting);
     document.removeEventListener("pointercancel", this.handleIsNotInteracting);
 
-    document.addEventListener("pointerdown", this.prolongedHoldCheck);
+    document.removeEventListener("pointerdown", this.prolongedHoldCheck);
   }
 
   prolongedHoldCheck() {

@@ -75,56 +75,58 @@ const Header: React.FC = () => {
       </Link>
 
       {/* Right Section: Navigation Buttons */}
-      <nav className="pointer-events-auto flex space-x-4 sm:space-x-5 h-header-btn-h">
-        <button
-          onClick={toggleDarkMode}
-          className={`text-primary-text-color-light dark:text-primary-text-color ${
-            isHoverable
-              ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
-              : ""
-          } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
-          aria-label="Toggle Dark Mode"
-        >
-          {isDarkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
-        </button>
-
-        <Link href="/main/about" className="link">
-          <div
+      {!isGamesPath && (
+        <nav className="pointer-events-auto flex space-x-4 sm:space-x-5 h-header-btn-h">
+          <button
+            onClick={toggleDarkMode}
             className={`text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
             } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
+            aria-label="Toggle Dark Mode"
           >
-            <FaInfoCircle size={24} />
-          </div>
-        </Link>
+            {isDarkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
+          </button>
 
-        <a
-          href="https://github.com/ShaneBonkowski"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`text-primary-text-color-light dark:text-primary-text-color ${
-            isHoverable
-              ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
-              : ""
-          } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
-        >
-          <FaGithub size={24} />
-        </a>
+          <Link href="/main/about" className="link">
+            <div
+              className={`text-primary-text-color-light dark:text-primary-text-color ${
+                isHoverable
+                  ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
+                  : ""
+              } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
+            >
+              <FaInfoCircle size={24} />
+            </div>
+          </Link>
 
-        <Link href="/" className="link">
-          <div
+          <a
+            href="https://github.com/ShaneBonkowski"
+            target="_blank"
+            rel="noopener noreferrer"
             className={`text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
-            } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
+            } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
           >
-            <FaHome size={24} />
-          </div>
-        </Link>
-      </nav>
+            <FaGithub size={24} />
+          </a>
+
+          <Link href="/" className="link">
+            <div
+              className={`text-primary-text-color-light dark:text-primary-text-color ${
+                isHoverable
+                  ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
+                  : ""
+              } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
+            >
+              <FaHome size={24} />
+            </div>
+          </Link>
+        </nav>
+      )}
     </header>
   );
 };

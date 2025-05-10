@@ -7,7 +7,7 @@ export const boidInfoData: ContentDataProps[] = [
   },
   {
     type: "paragraph",
-    text: 'The <a href="https://en.wikipedia.org/wiki/Boids">Boids algorithm</a>, devised by Craig Reynolds, mimics the flocking behavior seen in birds and other animals. In general, Boids follow three rules:',
+    text: 'The <a href="https://en.wikipedia.org/wiki/Boids" target="_blank" rel="noopener noreferrer">Boids algorithm</a>, devised by Craig Reynolds, mimics the flocking behavior seen in birds and other animals. In general, Boids follow three rules:',
   },
   {
     type: "list",

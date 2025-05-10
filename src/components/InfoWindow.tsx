@@ -3,6 +3,7 @@
 import React from "react";
 import PageContentLoader from "@/src/components/PageContentLoader";
 import { ContentDataProps } from "@/src/types/data-props";
+import { useEffect, useState } from "react";
 
 interface InfoWindowProps {
   isVisible: boolean;
@@ -15,6 +16,12 @@ const InfoWindow: React.FC<InfoWindowProps> = ({
   onClose,
   infoData,
 }) => {
+  const [isHoverable, setIsHoverable] = useState(false);
+
+  useEffect(() => {
+    setIsHoverable(window.matchMedia("(hover: hover)").matches);
+  }, []);
+
   if (!isVisible) return null;
 
   return (
@@ -24,7 +31,11 @@ const InfoWindow: React.FC<InfoWindowProps> = ({
     >
       {/* Close Button */}
       <button
-        className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors text-lg font-bold"
+        className={`absolute top-4 right-4 text-lg font-bold text-primary-text-color-light dark:text-primary-text-color ${
+          isHoverable
+            ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
+            : ""
+        } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
         onClick={onClose}
       >
         X
@@ -32,9 +43,6 @@ const InfoWindow: React.FC<InfoWindowProps> = ({
 
       {/* Content */}
       <PageContentLoader contentData={infoData} />
-      {/* <div className="flex flex-col items-start justify-start h-full ml-common-ml mr-common-ml sm:px-common-p-sm text-left">
-        <div className="space-y-4">{children}</div>
-      </div> */}
     </div>
   );
 };
