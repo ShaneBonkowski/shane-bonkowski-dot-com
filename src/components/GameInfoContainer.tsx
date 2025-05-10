@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import InfoButton from "@/src/components/InfoButton";
-import InfoWindow from "@/src/components/InfoWindow";
+import GameInfoWindow from "@/src/components/GameInfoWindow";
 import { ContentDataProps } from "@/src/types/data-props";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 
@@ -24,11 +24,11 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
   return (
     <>
       <InfoButton onClick={openInfoWindow} />
-      <InfoWindow
+      <GameInfoWindow
         isVisible={isVisible}
         onClose={closeInfoWindow}
         infoData={infoData}
-      ></InfoWindow>
+      ></GameInfoWindow>
     </>
   );
 };

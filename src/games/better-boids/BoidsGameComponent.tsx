@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import "@/src/games/better-boids/styles/better-boids.css";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
+import BoidsSettingsContainer from "@/src/games/better-boids/BoidsSettingsContainer";
 import { boidInfoData } from "@/src/games/better-boids/boid-info-data";
 import {
   loadPhaserScriptThenGame,
@@ -78,6 +79,7 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
       <div className="absolute inset-0" id={gameParentName}></div>
 
       {/* UI */}
+      <BoidsSettingsContainer></BoidsSettingsContainer>
       <GameInfoContainer infoData={boidInfoData}></GameInfoContainer>
     </div>
   );
