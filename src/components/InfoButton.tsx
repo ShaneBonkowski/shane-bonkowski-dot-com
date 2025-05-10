@@ -17,7 +17,7 @@ const InfoButton: React.FC<InfoButtonProps> = ({ onClick }) => {
 
   return (
     <button
-      className={`fixed bottom-4 right-4 flex items-center justify-center text-primary-text-color-light dark:text-primary-text-color ${
+      className={`fixed bottom-5 right-5 flex items-center justify-center text-primary-text-color-light dark:text-primary-text-color ${
         isHoverable
           ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
           : ""
@@ -25,7 +25,7 @@ const InfoButton: React.FC<InfoButtonProps> = ({ onClick }) => {
       id="info-button"
       onClick={onClick}
     >
-      <FaInfoCircle size={24} />
+      <FaInfoCircle size={30} />
       <span className="sr-only">Info</span>
     </button>
   );
