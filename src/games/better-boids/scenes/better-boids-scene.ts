@@ -253,6 +253,11 @@ export class BoidsGameScene extends Generic2DGameScene {
           scale: this.scale,
         }
       );
+
+      // Hot module reloading causes an annoying bug here, so we will just
+      // fully reload the page to fix it. This only happens in dev mode, so
+      // just adding this for now as an easy fix.
+      window.location.reload();
       return;
     }
 

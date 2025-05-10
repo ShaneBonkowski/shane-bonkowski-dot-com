@@ -10,14 +10,6 @@ interface BoidsGameComponentProps {
 }
 
 // FIXME/TODO:
-// - Hot Module Reloading is causing errors on the phaser games.
-//   Related to the fact that it tries to recreate the entire scene when
-//   the page loads in, and then tries to revert to the old state in some way.
-//   This leads to an issue where canvas's would be duplicated. I fixed the duplication,
-//   but I'm still getting some weird behavior with phaser scale etc. not being init'd on
-//   a hot reload. To test, go to menu and come back to the app quickly, it will
-//   hot reload and cause issues... I think the bug is because the resize observer is not cleanly shut down and told to stop listening.
-//   Might be related to the fact that like 3 different listeners exist for the resize.. maybe we should consolidate or at least make sure they all shut down.
 // - Clean up the info button.
 // - Make it so that x button and styling on the info screen is consistent with rest of the website coloring sizing etc.
 // - Game screen should have a banner that is readable. Consider if we should be able to toggle light mode here.. Maybe we have a custom header for games with just shanes games in top left. Then coloring is specific color with no dark/light mode
@@ -29,6 +21,7 @@ interface BoidsGameComponentProps {
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
+let isLoadingPhaser = false;
 
 const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
   useEffect(() => {
@@ -36,6 +29,13 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
     document.body.classList.add("game-background");
 
     const loadPhaser = async () => {
+      // Prevent loading Phaser multiple times (can happen since it is async)
+      if (isLoadingPhaser) {
+        console.warn("Phaser is already loading. Skipping duplicate call.");
+        return;
+      }
+      isLoadingPhaser = true;
+
       if (window.Phaser) {
         // Prevent creating multiple game instances
         if (game) {
