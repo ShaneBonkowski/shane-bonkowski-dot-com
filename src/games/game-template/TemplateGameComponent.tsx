@@ -2,6 +2,10 @@
 
 import { useEffect } from "react";
 import "@/src/games/game-template/styles/game-template.css";
+import {
+  loadPhaserScriptThenGame,
+  cleanupPhaserGame,
+} from "@/src/utils/phaser-loading";
 
 interface TemplateGameComponentProps {
   id: string;
@@ -9,97 +13,69 @@ interface TemplateGameComponentProps {
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
+let isLoadingPhaser = false;
+const gameParentName = "phaser-game";
 
 const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
   id,
 }) => {
   useEffect(() => {
-    // Add the background to the game
     document.body.classList.add("game-background");
 
-    const loadPhaser = async () => {
-      if (window.Phaser) {
-        // Prevent creating multiple game instances
-        if (game) {
-          console.warn(
-            "Phaser game instance already exists. Skipping creation."
-          );
-          return;
-        }
+    const loadPhaserGame = async () => {
+      if (!window.Phaser) {
+        console.error("Phaser module is not loaded yet, cannot load game.");
+        return;
+      }
 
-        try {
-          const { TemplateGameScene } = await import(
-            "@/src/games/game-template/scenes/game-template-scene"
-          );
+      if (isLoadingPhaser) {
+        console.warn("Phaser module already loading. Skipping duplicate call.");
+        return;
+      }
+      isLoadingPhaser = true;
 
-          const gameConfig: Phaser.Types.Core.GameConfig = {
-            type: Phaser.AUTO,
-            width: "100%",
-            height: "100%",
-            transparent: true,
-            scale: {
-              mode: Phaser.Scale.RESIZE,
-              autoCenter: Phaser.Scale.CENTER_BOTH,
-            },
-            scene: TemplateGameScene,
-            parent: "phaser-game",
-          };
+      if (game) {
+        console.warn("Game already exists. Skipping duplicate creation.");
+        return;
+      }
 
-          console.log(`Creating Phaser game with config:`, gameConfig);
-          game = new window.Phaser.Game(gameConfig);
-          console.log(`Phaser game created successfully.`);
-        } catch (error) {
-          console.error("Failed to load Game Scene:", error);
-        }
-      } else {
-        console.error("Phaser is not loaded");
+      try {
+        const { TemplateGameScene } = await import(
+          "@/src/games/game-template/scenes/game-template-scene"
+        );
+
+        const gameConfig: Phaser.Types.Core.GameConfig = {
+          type: Phaser.AUTO,
+          width: "100%",
+          height: "100%",
+          transparent: true,
+          scale: {
+            mode: Phaser.Scale.RESIZE,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+          },
+          scene: TemplateGameScene,
+          parent: gameParentName,
+        };
+
+        game = new window.Phaser.Game(gameConfig);
+        console.log(`Phaser game created successfully.`);
+      } catch (error) {
+        console.error("Failed to load Game Scene:", error);
       }
     };
 
-    // Wait for the Phaser library to load before starting the game
-    const existingScript = document.querySelector(
-      'script[src="/js/phaser.min.js"]'
-    );
-    let script: HTMLScriptElement | null = null;
+    loadPhaserScriptThenGame(loadPhaserGame);
 
-    if (!existingScript) {
-      script = document.createElement("script");
-      script.src = "/js/phaser.min.js";
-      script.onload = () => {
-        console.log("Phaser script loaded successfully.");
-        loadPhaser();
-      };
-      script.onerror = () => {
-        console.error("Failed to load Phaser script");
-      };
-      document.head.appendChild(script);
-    } else {
-      console.log("Phaser script already loaded.");
-      loadPhaser();
-    }
-
-    // Cleanup function to destroy the Phaser game instance
     return () => {
-      if (game) {
-        console.log("Destroying Phaser game instance.");
-        game.destroy(true);
-        game = null;
-      }
-      console.log("Phaser game instance destroyed.");
-
-      if (script && document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-      document.body.classList.remove("game-background");
+      cleanupPhaserGame(game);
+      game = null;
     };
   }, []);
 
   return (
     <div className="relative w-full h-full" id={id}>
       {/* Phaser Game Container */}
-      <div className="absolute inset-0" id="phaser-game"></div>
-
-      {/* Add UI etc. here... */}
+      <div className="absolute inset-0" id={gameParentName}></div>
     </div>
   );
 };

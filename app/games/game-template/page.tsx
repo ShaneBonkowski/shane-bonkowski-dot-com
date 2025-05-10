@@ -1,8 +1,13 @@
 import dynamic from "next/dynamic";
-import { gameTemplateData } from "@/src/data/games/game-template-data";
+import { GameDataProps } from "@/src/types/data-props";
 import TemplateGameComponent from "@/src/games/game-template/TemplateGameComponent";
 
-const gameData = gameTemplateData;
+const gameData: GameDataProps = {
+  title: "Game Template",
+  description: "A game by Shane Bonkowski.",
+  logoImageUrl: "/webps/mars-logo-large.webp",
+  imageAlt: "Game Template",
+};
 
 export const metadata = {
   title: gameData.title,

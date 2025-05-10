@@ -1,8 +1,13 @@
 import dynamic from "next/dynamic";
-import { betterBoidsData } from "@/src/data/games/better-boids-data";
+import { GameDataProps } from "@/src/types/data-props";
 import BoidsGameComponent from "@/src/games/better-boids/BoidsGameComponent";
 
-const gameData = betterBoidsData;
+const gameData: GameDataProps = {
+  title: "Better Boids",
+  description: "A game by Shane Bonkowski.",
+  logoImageUrl: "/webps/mars-logo-large.webp",
+  imageAlt: "Better Boids",
+};
 
 export const metadata = {
   title: gameData.title,
