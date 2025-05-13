@@ -23,7 +23,7 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
 
   return (
     <>
-      <InfoButton onClick={openInfoWindow} />
+      <InfoButton onPointerDown={openInfoWindow} />
       <GameInfoWindow
         isVisible={isVisible}
         onClose={closeInfoWindow}

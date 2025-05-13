@@ -25,7 +25,9 @@ const GameUiWindow: React.FC<GameUiWindowProps> = ({
       <CloseButton onClose={onClose} />
 
       {/* Window Content */}
-      <div className="p-4">{children}</div>
+      <div className="h-full p-4" id="window-children">
+        {children}
+      </div>
     </div>
   );
 };

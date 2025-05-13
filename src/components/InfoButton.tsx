@@ -5,13 +5,13 @@ import { FaInfoCircle } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 
 interface InfoButtonProps {
-  onClick: () => void;
+  onPointerDown: () => void;
 }
 
-const InfoButton: React.FC<InfoButtonProps> = ({ onClick }) => {
+const InfoButton: React.FC<InfoButtonProps> = ({ onPointerDown }) => {
   return (
     <GameIconButton
-      onClick={onClick}
+      onPointerDown={onPointerDown}
       icon={<FaInfoCircle size={30} />}
       ariaLabel="Info"
       className="fixed bottom-5 right-5"

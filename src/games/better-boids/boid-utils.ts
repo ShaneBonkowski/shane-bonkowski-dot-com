@@ -2,19 +2,6 @@ import { Boid } from "@/src/games/better-boids/boid";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { BoidsGameScene } from "@/src/games/better-boids/scenes/better-boids-scene";
 
-export const BoidFactors = {
-  speed: 0.6,
-  alignmentFactor: 0.3,
-  cohesionFactor: 0.054,
-  separationFactor: 0.935,
-  leaderFollowFactor: 5,
-  leaderFollowRadius: 1000,
-  predatorPreyFactor: 3,
-  flockSearchRadius: 90,
-  boidProtectedRadius: 20,
-  leaderBoidEnabled: true,
-};
-
 export const boidEventNames = {
   onSpeedChange: "onSpeedChange",
   pointerholdclick: "pointerholdclick",
@@ -22,12 +9,12 @@ export const boidEventNames = {
 
 const seededRandom = new SeededRandom(1234);
 
-export function instantiateBoids(
+export async function instantiateBoids(
   scene: BoidsGameScene,
   boidCount: number
 ): Promise<Boid[]> {
   // Allows for async behavior
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     void reject; // Unused variable
 
     const boids: Boid[] = [];

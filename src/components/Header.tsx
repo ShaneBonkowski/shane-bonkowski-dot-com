@@ -64,10 +64,20 @@ const Header: React.FC = () => {
             className="w-9 h-9 sm:w-14 sm:h-14"
           />
           <div>
-            <h1 className="text-logo-title sm:text-logo-title-sm text-right m-0">
+            <h1
+              className={`text-logo-title sm:text-logo-title-sm text-right m-0 ${
+                isGamesPath ? "text-outline-light dark:text-outline-dark" : ""
+              }`}
+            >
               SHANES GAMES
             </h1>
-            <p className="text-logo-subtitle sm:text-logo-subtitle-sm text-secondary-text-color-light dark:text-secondary-text-color text-right m-0">
+            <p
+              className={`text-logo-subtitle sm:text-logo-subtitle-sm text-right m-0 ${
+                isGamesPath
+                  ? "text-outline-light dark:text-outline-dark text-primary-text-color-light dark:text-primary-text-color"
+                  : "text-secondary-text-color-light dark:text-secondary-text-color"
+              }`}
+            >
               Black Hole Reject
             </p>
           </div>
@@ -78,7 +88,7 @@ const Header: React.FC = () => {
       {!isGamesPath && (
         <nav className="pointer-events-auto flex space-x-4 sm:space-x-5 h-header-btn-h">
           <button
-            onClick={toggleDarkMode}
+            onPointerDown={toggleDarkMode}
             className={`text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"

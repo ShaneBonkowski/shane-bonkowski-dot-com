@@ -1,14 +1,19 @@
 import { GameObject } from "@/src/utils/game-object";
 import { Vec2 } from "@/src/utils/vector";
 import { MoreMath } from "@/src/utils/more-math";
-import {
-  BoidFactors,
-  boidEventNames,
-} from "@/src/games/better-boids/boid-utils";
+import { boidEventNames } from "@/src/games/better-boids/boid-utils";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { BoidsGameScene } from "@/src/games/better-boids/scenes/better-boids-scene";
+import { boidSettings } from "@/src/games/better-boids/BoidsSettingsContainer";
 
 const seededRandom = new SeededRandom(1234);
+
+const BoidConstants = {
+  leaderFollowFactor: 5,
+  leaderFollowRadius: 1000,
+  predatorPreyFactor: 3,
+  boidProtectedRadius: 20,
+};
 
 export class Boid extends GameObject {
   public scene: BoidsGameScene;
@@ -115,7 +120,7 @@ export class Boid extends GameObject {
         boidEventNames.pointerholdclick,
         () => {
           // can only enable if leader is toggled on
-          if (BoidFactors.leaderBoidEnabled == true) {
+          if (boidSettings.leaderBoidEnabled.value == true) {
             this.enable();
           }
         },
@@ -227,12 +232,18 @@ export class Boid extends GameObject {
     // Cleans up velocity such if the provided value is not within min and max speed,
     // it is normalized and then set in magnitude to the speed limit it is at.
     const normalizedVelocity = Vec2.normalize(velocityDesired);
-    if (Vec2.magnitude(velocityDesired) > BoidFactors.speed) {
-      velocityDesired = Vec2.scale(normalizedVelocity, BoidFactors.speed);
+    if (Vec2.magnitude(velocityDesired) > boidSettings.speed.value) {
+      velocityDesired = Vec2.scale(
+        normalizedVelocity,
+        boidSettings.speed.value
+      );
     }
     // Min speed is defined at 10% max speed
-    else if (Vec2.magnitude(velocityDesired) < BoidFactors.speed * 0.1) {
-      velocityDesired = Vec2.scale(normalizedVelocity, BoidFactors.speed * 0.1);
+    else if (Vec2.magnitude(velocityDesired) < boidSettings.speed.value * 0.1) {
+      velocityDesired = Vec2.scale(
+        normalizedVelocity,
+        boidSettings.speed.value * 0.1
+      );
     }
 
     return velocityDesired;
@@ -300,7 +311,7 @@ export class Boid extends GameObject {
         if (otherBoid.mainBoid == true && this.scene.isInteracting) {
           if (
             distanceSquared <
-            BoidFactors.leaderFollowRadius * BoidFactors.leaderFollowRadius
+            BoidConstants.leaderFollowRadius * BoidConstants.leaderFollowRadius
           ) {
             followLeader = true;
             leaderPos = new Vec2(
@@ -315,7 +326,8 @@ export class Boid extends GameObject {
           // Update boid flock measurements if otherBoid is within search radius
           if (
             distanceSquared <
-            BoidFactors.flockSearchRadius * BoidFactors.flockSearchRadius
+            boidSettings.flockSearchRadius.value *
+              boidSettings.flockSearchRadius.value
           ) {
             const distance = Math.sqrt(distanceSquared);
             if (distance > 0) {
@@ -332,7 +344,7 @@ export class Boid extends GameObject {
               );
 
               // If any boids are within the protected radius of a boid, steer away from them
-              if (distance < BoidFactors.boidProtectedRadius) {
+              if (distance < BoidConstants.boidProtectedRadius) {
                 // By doing 0 - distance, this allows us to have this boid move away from other boid
                 separation = Vec2.add(
                   separation,
@@ -348,7 +360,8 @@ export class Boid extends GameObject {
         else if (this.boidType != otherBoid.boidType) {
           if (
             distanceSquared <
-            BoidFactors.flockSearchRadius * BoidFactors.flockSearchRadius
+            boidSettings.flockSearchRadius.value *
+              boidSettings.flockSearchRadius.value
           ) {
             opposingNeighborsCount += 1;
             opposingPositionSum = Vec2.add(
@@ -378,10 +391,10 @@ export class Boid extends GameObject {
       );
       desiredVelocity.x +=
         (avgVeloc.x - this.physicsBody2D!.velocity.x) *
-        BoidFactors.alignmentFactor;
+        boidSettings.alignmentFactor.value;
       desiredVelocity.y +=
         (avgVeloc.y - this.physicsBody2D!.velocity.y) *
-        BoidFactors.alignmentFactor;
+        boidSettings.alignmentFactor.value;
 
       // Cohesion: Steer toward average neighboring boid position (aka center of mass)
       let avgPos = new Vec2(0, 0);
@@ -397,15 +410,15 @@ export class Boid extends GameObject {
       desiredVelocity.x +=
         Math.abs(avgPos.x - this.physicsBody2D!.position.x) *
         directionObj.directionX *
-        BoidFactors.cohesionFactor;
+        boidSettings.cohesionFactor.value;
       desiredVelocity.y +=
         Math.abs(avgPos.y - this.physicsBody2D!.position.y) *
         directionObj.directionY *
-        BoidFactors.cohesionFactor;
+        boidSettings.cohesionFactor.value;
 
       // Separation: boids steer away from boids within their boidProtectedRadius
-      desiredVelocity.x += separation.x * BoidFactors.separationFactor;
-      desiredVelocity.y += separation.y * BoidFactors.separationFactor;
+      desiredVelocity.x += separation.x * boidSettings.separationFactor.value;
+      desiredVelocity.y += separation.y * boidSettings.separationFactor.value;
     }
 
     // Follow the leader if told to do so!
@@ -418,11 +431,11 @@ export class Boid extends GameObject {
       desiredVelocity.x +=
         Math.abs(leaderPos.x - this.physicsBody2D!.position.x) *
         directionObj.directionX *
-        BoidFactors.leaderFollowFactor;
+        BoidConstants.leaderFollowFactor;
       desiredVelocity.y +=
         Math.abs(leaderPos.y - this.physicsBody2D!.position.y) *
         directionObj.directionY *
-        BoidFactors.leaderFollowFactor;
+        BoidConstants.leaderFollowFactor;
     }
 
     // Perform opposing boid velocity updates
@@ -444,11 +457,11 @@ export class Boid extends GameObject {
         desiredVelocity.x +=
           Math.abs(opposingAvgPos.x - this.physicsBody2D!.position.x) *
           directionObj.directionX *
-          BoidFactors.predatorPreyFactor;
+          BoidConstants.predatorPreyFactor;
         desiredVelocity.y +=
           Math.abs(opposingAvgPos.y - this.physicsBody2D!.position.y) *
           directionObj.directionY *
-          BoidFactors.predatorPreyFactor;
+          BoidConstants.predatorPreyFactor;
       }
       // good boid runs away
       else if (this.boidType == "Good") {
@@ -456,12 +469,12 @@ export class Boid extends GameObject {
           -1 *
           Math.abs(opposingAvgPos.x - this.physicsBody2D!.position.x) *
           directionObj.directionX *
-          BoidFactors.predatorPreyFactor;
+          BoidConstants.predatorPreyFactor;
         desiredVelocity.y +=
           -1 *
           Math.abs(opposingAvgPos.y - this.physicsBody2D!.position.y) *
           directionObj.directionY *
-          BoidFactors.predatorPreyFactor;
+          BoidConstants.predatorPreyFactor;
       }
     }
 

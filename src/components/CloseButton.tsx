@@ -20,7 +20,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({ onClose }) => {
           ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
           : ""
       } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
-      onClick={onClose}
+      onPointerDown={onClose}
       aria-label="Close"
     >
       X

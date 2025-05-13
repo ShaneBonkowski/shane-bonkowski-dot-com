@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from "react";
 
 interface GameIconButtonProps {
-  onClick: () => void;
+  onPointerDown: () => void;
   icon: React.ReactNode;
   ariaLabel: string; // Accessibility label for the button
   className?: string; // Optional classes for styling
 }
 
 const GameIconButton: React.FC<GameIconButtonProps> = ({
-  onClick,
+  onPointerDown,
   icon,
   ariaLabel,
   className = "",
@@ -28,7 +28,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
           ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
           : ""
       } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer ${className}`}
-      onClick={onClick}
+      onPointerDown={onPointerDown}
       aria-label={ariaLabel}
     >
       {icon}
