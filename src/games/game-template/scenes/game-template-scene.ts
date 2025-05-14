@@ -2,6 +2,7 @@ import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Ball } from "@/src/games/game-template/ball";
 import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
+import { dispatchGameStartedEvent } from "@/src/events/game-events";
 
 export class TemplateGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
@@ -37,6 +38,7 @@ export class TemplateGameScene extends Generic2DGameScene {
     this.lastKnownWindowSize = new Vec2(window.innerWidth, window.innerHeight);
 
     this.gameStarted = true;
+    dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: Add game name here
   }
 
   update(time: number, delta: number) {

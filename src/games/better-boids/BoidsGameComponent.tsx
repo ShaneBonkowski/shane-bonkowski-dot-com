@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "@/src/games/better-boids/styles/better-boids.css";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import BoidsSettingsContainer from "@/src/games/better-boids/BoidsSettingsContainer";
@@ -9,6 +9,7 @@ import {
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import { ContentDataProps } from "@/src/types/data-props";
+import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 
 export const boidInfoData: ContentDataProps[] = [
   {
@@ -43,6 +44,13 @@ let isLoadingPhaser = false;
 const gameParentName = "phaser-game";
 
 const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleFadeOutComplete = () => {
+    // Hides the loading screen
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     document.body.classList.add("game-background");
 
@@ -98,6 +106,14 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
 
   return (
     <div className="relative w-full h-full" id={id}>
+      {/* Loading Screen */}
+      {isLoading && (
+        <GameLoadingScreen
+          coverImage="/webps/games/better-boids-cover.webp"
+          onFadeOutComplete={handleFadeOutComplete}
+        />
+      )}
+
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id={gameParentName}></div>
 

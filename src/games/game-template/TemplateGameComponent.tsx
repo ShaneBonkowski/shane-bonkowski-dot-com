@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "@/src/games/game-template/styles/game-template.css";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
+import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 
 interface TemplateGameComponentProps {
   id: string;
@@ -19,6 +20,13 @@ const gameParentName = "phaser-game";
 const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
   id,
 }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleFadeOutComplete = () => {
+    // Hides the loading screen
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     document.body.classList.add("game-background");
 
@@ -74,6 +82,14 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
 
   return (
     <div className="relative w-full h-full" id={id}>
+      {/* Loading Screen */}
+      {isLoading && (
+        <GameLoadingScreen
+          coverImage="/webps/games/better-boids-cover.webp"
+          onFadeOutComplete={handleFadeOutComplete}
+        />
+      )}
+
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id={gameParentName}></div>
     </div>

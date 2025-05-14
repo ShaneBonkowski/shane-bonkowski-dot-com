@@ -105,88 +105,96 @@ const BoidsSettingsContainer: React.FC = () => {
         className="fixed bottom-5 left-5"
       />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
-        <div
-          className="flex flex-col lg:flex-row h-full"
-          id="boids-settings-container"
-        >
-          {/* Description */}
-          <div
-            className="w-full lg:w-1/2 h-1/4 lg:h-full p-4 lg:p-8 flex-grow"
-            id="boids-settings-description"
-          >
-            {selectedSetting && (
-              <div className="h-full flex flex-col items-center">
-                <h1 className="text-center my-0">
-                  {boidSettings[selectedSetting as keyof typeof boidSettings]
-                    ?.title || "Select a setting"}
-                </h1>
-                <p className="text-center mb-2 lg:mb-8">
-                  {
-                    boidSettings[selectedSetting as keyof typeof boidSettings]
-                      ?.desc
-                  }
-                </p>
-                <div className="flex-grow w-full relative">
-                  <Image
-                    src={
-                      boidSettings[selectedSetting as keyof typeof boidSettings]
-                        ?.image
-                    }
-                    alt={selectedSetting || "Description Image"}
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-              </div>
-            )}
+        <div className="w-full h-full p-4" id="boids-settings-container">
+          {/* Top Section: Settings Info */}
+          <div className="p-2" id="boids-settings-description">
+            <div className="flex flex-col items-center">
+              <h1 className="text-center my-0">
+                {boidSettings[selectedSetting as keyof typeof boidSettings]
+                  ?.title || "Select a setting"}
+              </h1>
+              <p className="text-center mb-0">
+                {
+                  boidSettings[selectedSetting as keyof typeof boidSettings]
+                    ?.desc
+                }
+              </p>
+            </div>
           </div>
 
-          {/* Controls */}
+          {/* Bottom Section: Image and Controls */}
           <div
-            className="w-full lg:w-1/2 p-4 lg:p-8 flex flex-col gap-4 lg:flex-grow-0 lg:justify-center"
-            id="boids-settings-controls"
+            className="mt-4 landscape:sm:mt-8 flex flex-col landscape:sm:flex-row gap-4 landscape:sm:gap-8"
+            id="boids-settings-content"
           >
-            {Object.entries(boidSettings)
-              .filter(([key]) => boidSettings[key as keyof typeof boidSettings]) // Only include settings with a description
-              .map(([key, desc]) => {
-                return (
-                  <div key={key}>
-                    {desc?.type === "checkbox" ? (
-                      <div className="flex items-center gap-4">
-                        <label className="text-sm font-medium">
-                          {desc?.title}
-                        </label>
-                        <input
-                          type="checkbox"
-                          checked={desc.value as boolean}
-                          onChange={(e) =>
-                            handleCheckboxChange(key, e.target.checked)
-                          }
-                          onPointerDown={() => setSelectedSetting(key)}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <label className="block text-sm font-medium mb-2">
-                          {desc?.title}
-                        </label>
-                        <input
-                          type="range"
-                          min={desc?.lowerBound || 0}
-                          max={desc?.upperBound || 10}
-                          step={desc?.step || 1}
-                          value={desc.value as number}
-                          onChange={(e) =>
-                            handleSliderChange(key, parseFloat(e.target.value))
-                          }
-                          onPointerDown={() => setSelectedSetting(key)}
-                          className="w-full"
-                        />
-                      </>
-                    )}
-                  </div>
-                );
-              })}
+            {/* Image */}
+            <div
+              className="min-h-[30vh] p-4 landscape:sm:p-8 w-full landscape:sm:w-1/2 relative"
+              id="boids-settings-image"
+            >
+              <Image
+                src={
+                  boidSettings[selectedSetting as keyof typeof boidSettings]
+                    ?.image
+                }
+                alt={selectedSetting || "Description Image"}
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+
+            {/* Controls */}
+            <div
+              className="w-full landscape:sm:w-1/2 p-4 landscape:sm:p-8 flex flex-col gap-4"
+              id="boids-settings-controls"
+            >
+              {Object.entries(boidSettings)
+                .filter(
+                  ([key]) => boidSettings[key as keyof typeof boidSettings]
+                ) // Only include settings with a description
+                .map(([key, desc]) => {
+                  return (
+                    <div key={key}>
+                      {desc?.type === "checkbox" ? (
+                        <div className="flex items-center gap-4">
+                          <label className="text-sm font-medium">
+                            {desc?.title}
+                          </label>
+                          <input
+                            type="checkbox"
+                            checked={desc.value as boolean}
+                            onChange={(e) =>
+                              handleCheckboxChange(key, e.target.checked)
+                            }
+                            onPointerDown={() => setSelectedSetting(key)}
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <label className="block text-sm font-medium mb-2">
+                            {desc?.title}
+                          </label>
+                          <input
+                            type="range"
+                            min={desc?.lowerBound || 0}
+                            max={desc?.upperBound || 10}
+                            step={desc?.step || 1}
+                            value={desc.value as number}
+                            onChange={(e) =>
+                              handleSliderChange(
+                                key,
+                                parseFloat(e.target.value)
+                              )
+                            }
+                            onPointerDown={() => setSelectedSetting(key)}
+                            className="w-full"
+                          />
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </div>
       </GameUiWindow>

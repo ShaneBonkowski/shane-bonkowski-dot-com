@@ -25,3 +25,22 @@ export const dispatchMenuEvent = (
   });
   document.dispatchEvent(customEvent);
 };
+
+/**
+ * Dispatches a custom event for when a game starts.
+ *
+ * @param gameName - The name of the game (e.g. "Better Boids").
+ *
+ * @example
+ * dispatchGameStartedEvent("Better Boids");
+ * // This will create and dispatch a "gameStarted" event with the message:
+ * // "Better Boids Game Started"
+ */
+export const dispatchGameStartedEvent = (gameName: string) => {
+  const customEvent = new CustomEvent("gameStarted", {
+    detail: {
+      message: `${gameName} Game Started`,
+    },
+  });
+  document.dispatchEvent(customEvent);
+};

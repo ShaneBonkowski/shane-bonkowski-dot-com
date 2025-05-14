@@ -8,6 +8,7 @@ import {
 } from "@/src/games/better-boids/boid-utils";
 import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
 import { GameObject } from "@/src/utils/game-object";
+import { dispatchGameStartedEvent } from "@/src/events/game-events";
 
 // Used to determine if pointer is held down
 const holdThreshold: number = 0.1; // seconds
@@ -60,6 +61,7 @@ export class BoidsGameScene extends Generic2DGameScene {
 
       // After everything is loaded in, we can begin the game
       this.gameStarted = true;
+      dispatchGameStartedEvent("Better Boids");
     });
   }
 
