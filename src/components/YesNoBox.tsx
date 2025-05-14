@@ -44,7 +44,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
         <div>{children}</div>
         <div className="flex justify-center sm:justify-end space-x-2">
           <button
-            onClick={onYes}
+            onPointerDown={onYes}
             className={`bg-button-color-light dark:bg-button-color text-body px-6 py-2 rounded ${
               isHoverable
                 ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
@@ -54,7 +54,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
             {yesButtonText}
           </button>
           <button
-            onClick={onNo}
+            onPointerDown={onNo}
             className={`bg-button-color-light dark:bg-button-color text-body px-6 py-2 rounded ${
               isHoverable
                 ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"

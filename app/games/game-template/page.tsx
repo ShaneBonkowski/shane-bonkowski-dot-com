@@ -1,8 +1,13 @@
 import dynamic from "next/dynamic";
-import { gameTemplateData } from "@/src/data/games/game-template-data";
-import GameComponent from "@/src/games/game-template/GameComponent";
+import { GameDataProps } from "@/src/types/data-props";
+import TemplateGameComponent from "@/src/games/game-template/TemplateGameComponent";
 
-const gameData = gameTemplateData;
+const gameData: GameDataProps = {
+  title: "Game Template",
+  description: "A game by Shane Bonkowski.",
+  logoImageUrl: "/webps/mars-logo-large.webp",
+  imageAlt: "Game Template",
+};
 
 export const metadata = {
   title: gameData.title,
@@ -13,7 +18,7 @@ export const metadata = {
     url: "https://shanebonkowski.com",
     images: [
       {
-        url: `https://shanebonkowski.com${gameData.imageUrl}`,
+        url: `https://shanebonkowski.com${gameData.logoImageUrl}`,
         alt: gameData.imageAlt,
       },
     ],
@@ -24,20 +29,13 @@ export const metadata = {
     site: "@ShaneBonkowski",
     title: gameData.title,
     description: gameData.description,
-    image: `https://shanebonkowski.com${gameData.imageUrl}`,
+    image: `https://shanebonkowski.com${gameData.logoImageUrl}`,
     imageAlt: gameData.imageAlt,
   },
 };
 
 const GameTemplate = () => {
-  return (
-    <div
-      id={gameData.title}
-      className="flex justify-center items-center w-full h-screen"
-    >
-      <GameComponent />
-    </div>
-  );
+  return <TemplateGameComponent id={gameData.title}></TemplateGameComponent>;
 };
 
 export default dynamic(() => Promise.resolve(GameTemplate));

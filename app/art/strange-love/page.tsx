@@ -1,7 +1,23 @@
 import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { strangeLoveData } from "@/src/data/art/strange-love-data";
+import { StoryDataProps } from "@/src/types/data-props";
 
-const imageData = strangeLoveData;
+const imageData: StoryDataProps = {
+  title: "Strange Love",
+  subtitle: "Shane Bonkowski",
+  date: "April 6, 2022",
+  imageUrl: "/webps/art/strange-love.webp",
+  imageWidth: 1194,
+  imageHeight: 834,
+  artContent: true,
+  body: [
+    {
+      content:
+        "Bone of my bones, flesh of my flesh. A piece of me, now a piece of you.",
+      fontStyle: "italic",
+      textAlign: "center",
+    },
+  ],
+};
 
 export const metadata = {
   title: imageData.title,

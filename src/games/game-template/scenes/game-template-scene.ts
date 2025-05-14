@@ -1,15 +1,16 @@
-import { Generic2DGameScene } from "@/src/games/utils/game-scene-2d";
+import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Ball } from "@/src/games/game-template/ball";
-import { Physics } from "@/src/games/utils/physics";
+import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
+import { dispatchGameStartedEvent } from "@/src/events/game-events";
 
-export class MainGameScene extends Generic2DGameScene {
+export class TemplateGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
-    // "MainGameScene" supplied as the name of the scene.
-    super("MainGameScene");
+    // "TemplateGameScene" supplied as the name of the scene.
+    super("TemplateGameScene");
 
     // Constructor logic for this scene
     // ...
@@ -37,6 +38,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.lastKnownWindowSize = new Vec2(window.innerWidth, window.innerHeight);
 
     this.gameStarted = true;
+    dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: Add game name here
   }
 
   update(time: number, delta: number) {
@@ -72,6 +74,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Subscribe to events for this scene
     this.setUpWindowResizeHandling();
+
     this.input.on("pointerdown", this.handlePointerDown, this);
   }
 
@@ -85,12 +88,15 @@ export class MainGameScene extends Generic2DGameScene {
     // Unsubscribe from events for this scene
     if (this.resizeObserver != null) {
       this.resizeObserver.disconnect();
+      this.resizeObserver = null;
     }
     window.removeEventListener("resize", this.handleWindowResize.bind(this));
     window.removeEventListener(
       "orientationchange",
       this.handleWindowResize.bind(this)
     );
+
+    this.input.off("pointerdown", this.handlePointerDown, this);
   }
 
   setUpWindowResizeHandling() {
@@ -113,12 +119,42 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   handleWindowResize() {
+    // Ensure the scene is fully initialized before handling resize
+    if (!this.isInitialized) {
+      console.warn("handleWindowResize called before scene initialization.");
+      return;
+    }
+
     // Get the new screen dimensions
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
 
-    // If not instantiated yet, set lastKnownWindowSize to current screen dimensions
-    if (this.lastKnownWindowSize != null) {
+    // Resize the canvas
+    try {
+      this.scale.resize(screenWidth, screenHeight);
+    } catch (error) {
+      console.error(
+        "Error during scale.resize (likely was called before phaser could initialize):",
+        error,
+        {
+          screenWidth,
+          screenHeight,
+          scale: this.scale,
+        }
+      );
+      return;
+    }
+
+    // Handle resizing of game objs
+    if (
+      !this.lastKnownWindowSize ||
+      this.lastKnownWindowSize.x == null ||
+      this.lastKnownWindowSize.y == null
+    ) {
+      console.warn(
+        "lastKnownWindowSize is not properly initialized. Skipping resize handling."
+      );
+    } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
         this.lastKnownWindowSize.y === screenHeight
@@ -131,15 +167,15 @@ export class MainGameScene extends Generic2DGameScene {
       // same screen % it was before on the new screen.
       for (const ball of this.balls) {
         // Calculate new position based on percentage of old position
-        const new_x =
+        const newX =
           (ball.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
           screenWidth;
-        const new_y =
+        const newY =
           (ball.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
           screenHeight;
 
         // handle re-sizing etc. of ball
-        ball.handleWindowResize(new_x, new_y);
+        ball.handleWindowResize(newX, newY);
       }
     }
 

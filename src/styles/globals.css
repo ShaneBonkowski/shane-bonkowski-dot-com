@@ -111,6 +111,18 @@ body {
     color: theme("colors.primary-text-color");
   }
 
+  .label {
+    font-size: theme("fontSize.body");
+    line-height: 1.4;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: theme("colors.primary-text-color-light");
+  }
+
+  .dark .label {
+    color: theme("colors.primary-text-color");
+  }
+
   ul,
   ol {
     padding-left: 1.5rem;
@@ -152,6 +164,10 @@ body {
     li {
       font-size: theme("fontSize.body-sm");
     }
+
+    .label {
+      font-size: theme("fontSize.body-sm");
+    }
   }
 }
 
@@ -182,5 +198,13 @@ body {
 @layer utilities {
   .text-justify {
     text-align: justify;
+  }
+
+  .text-outline-light {
+    text-shadow: 0 0 2px #c6c6c6, 0 0 4px #c6c6c6, 0 0 6px #c6c6c6;
+  }
+
+  .text-outline-dark {
+    text-shadow: 0 0 2px #000, 0 0 4px #000, 0 0 6px #000;
   }
 }

@@ -56,7 +56,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
               : ""
           } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
-        onClick={() => setIsOpen(!isOpen)}
+        onPointerDown={() => setIsOpen(!isOpen)}
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
         <span className="ml-2">{isOpen ? "▲" : "▼"}</span>
@@ -73,7 +73,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           {options.map((option) => (
             <li
               key={option.value}
-              onClick={() => {
+              onPointerDown={() => {
                 setSelected(option.value);
                 setIsOpen(false);
               }}

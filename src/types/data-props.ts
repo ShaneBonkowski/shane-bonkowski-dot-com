@@ -1,7 +1,7 @@
 export interface GameDataProps {
   title: string;
   description: string;
-  imageUrl: string;
+  logoImageUrl: string;
   imageAlt: string;
 }
 

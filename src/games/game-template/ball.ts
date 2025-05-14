@@ -1,14 +1,14 @@
-import { GameObject } from "@/src/games/utils/game-object";
+import { GameObject } from "@/src/utils/game-object";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec2 } from "@/src/utils/vector";
-import { MainGameScene } from "@/src/games/game-template/scenes/game-template-scene";
-import { rigidBody2DEventNames } from "@/src/games/utils/rigid-body-2d";
+import { TemplateGameScene } from "@/src/games/game-template/scenes/game-template-scene";
+import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
 
 export class Ball extends GameObject {
-  private scene: MainGameScene;
+  private scene: TemplateGameScene;
   private random: SeededRandom;
 
-  constructor(scene: MainGameScene, spawnX: number, spawnY: number) {
+  constructor(scene: TemplateGameScene, spawnX: number, spawnY: number) {
     // Initialize GameObject with physics, and rigid body
     super("Ball", 0, true, true);
     this.updateSize(); // set the size here!, not in GameObject
@@ -86,11 +86,18 @@ export class Ball extends GameObject {
     return (r << 16) | (g << 8) | b;
   }
 
-  handleWindowResize(new_x: number, new_y: number) {
+  handleWindowResize(newX: number, newY: number) {
+    if (newX == null || newY == null) {
+      console.warn(
+        "obj.handleWindowResize: newX or newY is null. Skipping resize handling."
+      );
+      return;
+    }
+
     this.updateSize();
 
-    this.physicsBody2D!.position.x = new_x;
-    this.physicsBody2D!.position.y = new_y;
+    this.physicsBody2D!.position.x = newX;
+    this.physicsBody2D!.position.y = newY;
   }
 
   updateSize() {
