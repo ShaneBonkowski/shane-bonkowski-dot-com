@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
@@ -72,6 +72,7 @@ export const boidSettings = {
 
 const BoidsSettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [selectedSetting, setSelectedSetting] =
     useState<string>("alignmentFactor");
   const [, forceUpdate] = useState(0); // Dummy state to force re-renders
@@ -96,14 +97,29 @@ const BoidsSettingsContainer: React.FC = () => {
     forceUpdate((prev) => prev + 1); // Force a re-render
   };
 
+  useEffect(() => {
+    const handleUiMenuOpen = () => setIsButtonVisible(false);
+    const handleUiMenuClose = () => setIsButtonVisible(true);
+
+    document.addEventListener("uiMenuOpen", handleUiMenuOpen);
+    document.addEventListener("uiMenuClose", handleUiMenuClose);
+
+    return () => {
+      document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
+      document.removeEventListener("uiMenuClose", handleUiMenuClose);
+    };
+  }, []);
+
   return (
     <>
-      <GameIconButton
-        onPointerDown={openWindow}
-        icon={<FaCog size={30} />}
-        ariaLabel="Boid Settings"
-        className="fixed bottom-5 left-5"
-      />
+      {isButtonVisible && (
+        <GameIconButton
+          onPointerDown={openWindow}
+          icon={<FaCog size={30} />}
+          ariaLabel="Boid Settings"
+          className="fixed bottom-5 left-5"
+        />
+      )}
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         <div className="w-full h-full p-4" id="boids-settings-container">
           {/* Top Section: Settings Info */}
@@ -172,7 +188,7 @@ const BoidsSettingsContainer: React.FC = () => {
                       ) : (
                         <>
                           <label className="block text-sm font-medium mb-2">
-                            {desc?.title}
+                            {desc?.title}: {desc?.value}
                           </label>
                           <input
                             type="range"

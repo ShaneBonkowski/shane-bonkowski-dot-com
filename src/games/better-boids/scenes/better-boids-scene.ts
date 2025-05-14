@@ -25,6 +25,10 @@ export class BoidsGameScene extends Generic2DGameScene {
 
     // Constructor logic for this scene
     this.lastKnownWindowSize = new Vec2(window.innerWidth, window.innerHeight);
+
+    this.onUiMenuOpen = this.onUiMenuOpen.bind(this);
+    this.onUiMenuClose = this.onUiMenuClose.bind(this);
+    this.handleWindowResize = this.handleWindowResize.bind(this);
   }
 
   preload() {
@@ -53,6 +57,8 @@ export class BoidsGameScene extends Generic2DGameScene {
 
   create() {
     super.create();
+
+    this.uiMenuOpen = false;
 
     // Spawn in x random boids as a Promise (so that we can run this async), and then
     // when that promise is fufilled, we can move on to other init logic
@@ -120,6 +126,9 @@ export class BoidsGameScene extends Generic2DGameScene {
     document.addEventListener("pointerdown", this.prolongedHoldCheck, {
       capture: true,
     });
+
+    document.addEventListener("uiMenuOpen", this.onUiMenuOpen);
+    document.addEventListener("uiMenuClose", this.onUiMenuClose);
   }
 
   /*
@@ -134,11 +143,8 @@ export class BoidsGameScene extends Generic2DGameScene {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
-    window.removeEventListener("resize", this.handleWindowResize.bind(this));
-    window.removeEventListener(
-      "orientationchange",
-      this.handleWindowResize.bind(this)
-    );
+    window.removeEventListener("resize", this.handleWindowResize);
+    window.removeEventListener("orientationchange", this.handleWindowResize);
 
     document.removeEventListener(
       rigidBody2DEventNames.screenEdgeCollision,
@@ -150,6 +156,17 @@ export class BoidsGameScene extends Generic2DGameScene {
     document.removeEventListener("pointercancel", this.handleIsNotInteracting);
 
     document.removeEventListener("pointerdown", this.prolongedHoldCheck);
+
+    document.removeEventListener("uiMenuOpen", this.onUiMenuOpen);
+    document.removeEventListener("uiMenuClose", this.onUiMenuClose);
+  }
+
+  onUiMenuOpen() {
+    this.uiMenuOpen = true;
+  }
+
+  onUiMenuClose() {
+    this.uiMenuOpen = false;
   }
 
   prolongedHoldCheck() {
@@ -224,11 +241,8 @@ export class BoidsGameScene extends Generic2DGameScene {
 
     // Also checking for resize or orientation change to try to handle edge cases
     // that ResizeObserver misses!
-    window.addEventListener("resize", this.handleWindowResize.bind(this));
-    window.addEventListener(
-      "orientationchange",
-      this.handleWindowResize.bind(this)
-    );
+    window.addEventListener("resize", this.handleWindowResize);
+    window.addEventListener("orientationchange", this.handleWindowResize);
   }
 
   handleWindowResize() {

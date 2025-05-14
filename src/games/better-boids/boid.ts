@@ -120,7 +120,10 @@ export class Boid extends GameObject {
         boidEventNames.pointerholdclick,
         () => {
           // can only enable if leader is toggled on
-          if (boidSettings.leaderBoidEnabled.value == true) {
+          if (
+            boidSettings.leaderBoidEnabled.value == true &&
+            this.scene.uiMenuOpen == false
+          ) {
             this.enable();
           }
         },
