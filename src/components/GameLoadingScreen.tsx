@@ -25,13 +25,24 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
     }, 250);
 
     const handleGameStarted = () => {
-      // Once game is started, play fade-out animation after a small delay
-      setTimeout(() => {
+      console.log("gameStarted event received");
+
+      // Clear any existing timeouts to prevent multiple triggers
+      setIsFadingOut(false);
+
+      // Start fade-out animation
+      const fadeOutTimeout = setTimeout(() => {
         setIsFadingOut(true);
-        setTimeout(() => {
+        const fadeOutCompleteTimeout = setTimeout(() => {
           onFadeOutComplete();
         }, fadeDuration);
+
+        // Cleanup fade-out completion timeout
+        return () => clearTimeout(fadeOutCompleteTimeout);
       }, fadeDuration);
+
+      // Cleanup fade-out timeout
+      return () => clearTimeout(fadeOutTimeout);
     };
 
     document.addEventListener("gameStarted", handleGameStarted);
