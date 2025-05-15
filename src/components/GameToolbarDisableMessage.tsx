@@ -58,8 +58,9 @@ const GameToolbarDisableMessage: React.FC = () => {
       }`}
       style={{ zIndex: 1000 }}
     >
-      <p className="w-[65vw] text-center my-0 py-5">
-        If the toolbar is visible, disable it to prevent rendering bugs.
+      <p className="w-[65vw] text-center my-0 py-5 text-outline-light dark:text-outline-dark">
+        If toolbar is visible, it is strongly recommended to hide it and enter
+        fullscreen mode.
       </p>
     </div>
   );
