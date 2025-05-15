@@ -31,7 +31,12 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
       const scrollValue = parseInt(savedScrollProgress, 10);
       if (scrollValue > threshold) {
         setScrollProgress(scrollValue);
-        setIsVisible(true);
+
+        // Add a small delay before revealing.
+        // This is a hack b/c phones sometimes double click.
+        timeoutRef.current = setTimeout(() => {
+          setIsVisible(true);
+        }, 100);
       }
     }
 
