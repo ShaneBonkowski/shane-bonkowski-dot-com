@@ -35,7 +35,9 @@ export class TemplateGameScene extends Generic2DGameScene {
       this.createBall(width / 2, height / 2);
     }
 
-    this.lastKnownWindowSize = new Vec2(window.innerWidth, window.innerHeight);
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
 
     this.gameStarted = true;
     dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: Add game name here
@@ -126,8 +128,8 @@ export class TemplateGameScene extends Generic2DGameScene {
     }
 
     // Get the new screen dimensions
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
 
     // Resize the canvas
     try {
