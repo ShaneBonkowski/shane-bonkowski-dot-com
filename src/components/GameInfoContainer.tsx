@@ -14,7 +14,13 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openInfoWindow = () => {
-    setIsVisible(true);
+    // Add a small delay before revealing.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
     dispatchMenuEvent("Info", "open");
   };
 

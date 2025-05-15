@@ -79,7 +79,12 @@ const BoidsSettingsContainer: React.FC = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openWindow = () => {
-    setIsVisible(true);
+    // Add a small delay before revealing.
+    // This is a hack b/c phones sometimes double click.
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
     dispatchMenuEvent("Info", "open");
   };
 
