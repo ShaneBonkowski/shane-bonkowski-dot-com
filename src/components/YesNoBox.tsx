@@ -35,11 +35,11 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
         bottomRight ? "bottom-0 right-0" : "bottom-0 left-0 right-0"
       } bg-info-banner-bkg-color-light dark:bg-info-banner-bkg-color text-body text-primary-text-color-light dark:text-primary-text-color p-common-p sm:p-common-p-sm z-50 ${
         bottomRight ? "w-full sm:w-auto" : "w-full"
-      }`}
+      } pointer-events-none`}
       id={id}
     >
       <div
-        className={`flex flex-col gap-x-4 sm:flex-row justify-between items-center`}
+        className={`flex flex-col gap-x-4 sm:flex-row justify-between items-center pointer-events-auto`}
       >
         <div>{children}</div>
         <div className="flex justify-center sm:justify-end space-x-2">
@@ -49,7 +49,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
               isHoverable
                 ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
                 : ""
-            } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
+            } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color pointer-events-auto`}
           >
             {yesButtonText}
           </button>
@@ -59,7 +59,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
               isHoverable
                 ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
                 : ""
-            } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
+            } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color pointer-events-auto`}
           >
             {noButtonText}
           </button>
