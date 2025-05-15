@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "@/src/games/game-template/styles/game-template.css";
 import {
   loadPhaserScriptThenGame,
@@ -14,13 +14,13 @@ interface TemplateGameComponentProps {
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
-let isLoadingPhaser = false;
 const gameParentName = "phaser-game";
 
 const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
   id,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const isLoadingPhaser = useRef(false);
 
   const handleFadeOutComplete = () => {
     // Hides the loading screen
@@ -36,11 +36,11 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
         return;
       }
 
-      if (isLoadingPhaser) {
+      if (isLoadingPhaser.current) {
         console.warn("Phaser module already loading. Skipping duplicate call.");
         return;
       }
-      isLoadingPhaser = true;
+      isLoadingPhaser.current = true;
 
       if (game) {
         console.warn("Game already exists. Skipping duplicate creation.");
@@ -69,14 +69,16 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
         console.log(`Phaser game created successfully.`);
       } catch (error) {
         console.error("Failed to load Game Scene:", error);
+      } finally {
+        isLoadingPhaser.current = false; // Reset the loading flag
       }
     };
 
     loadPhaserScriptThenGame(loadPhaserGame);
 
     return () => {
-      cleanupPhaserGame(game);
-      game = null;
+      game = cleanupPhaserGame(game);
+      isLoadingPhaser.current = false; // Reset the loading flag
     };
   }, []);
 

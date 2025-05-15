@@ -26,10 +26,11 @@ export const loadPhaserScriptThenGame = (loadPhaserGame: () => void): void => {
   document.head.appendChild(script);
 };
 
-export const cleanupPhaserGame = (game: Phaser.Game | null): void => {
+export const cleanupPhaserGame = (game: Phaser.Game | null): null => {
   if (game) {
     console.log("Destroying Phaser game instance.");
     game.destroy(true);
+    game = null;
     console.log("Phaser game instance destroyed.");
   }
 
@@ -42,4 +43,7 @@ export const cleanupPhaserGame = (game: Phaser.Game | null): void => {
   }
 
   document.body.classList.remove("game-background");
+
+  // Return a "null'd" game instance to indicate that the game has been cleaned up
+  return game;
 };
