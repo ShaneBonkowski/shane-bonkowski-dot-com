@@ -18,7 +18,7 @@ const GameUiWindow: React.FC<GameUiWindowProps> = ({
 
   return (
     <div
-      className="overflow-y-auto p-4 fixed inset-0 bg-game-menu-bkg-color-light dark:bg-game-menu-bkg-color text-primary-text-color-light dark:text-primary-text-color z-50"
+      className="overflow-y-auto p-4 fixed h-full w-full bg-game-menu-bkg-color-light dark:bg-game-menu-bkg-color text-primary-text-color-light dark:text-primary-text-color z-50"
       id="game-ui-window"
     >
       {children}
