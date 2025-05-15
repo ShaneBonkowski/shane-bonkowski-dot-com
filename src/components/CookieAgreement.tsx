@@ -7,7 +7,7 @@ import useIsGamesPath from "@/src/hooks/useIsGamesPath";
 
 const CookieAgreement: React.FC = () => {
   const isGamesPath = useIsGamesPath();
-  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const enableCookies = () => {
@@ -46,11 +46,12 @@ const CookieAgreement: React.FC = () => {
     });
   };
 
-  // Hide the popup if cookie consent is already given
   useEffect(() => {
     const cookieConsent = localStorage.getItem("cookieConsent");
-    if (cookieConsent === "true") {
-      setIsVisible(false);
+
+    // Reveal the popup if cookie consent is not already given
+    if (cookieConsent !== "true" && cookieConsent !== "false") {
+      setIsVisible(true);
     }
 
     return () => {

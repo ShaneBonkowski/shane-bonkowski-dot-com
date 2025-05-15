@@ -15,8 +15,7 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
 
   const openInfoWindow = () => {
     // Add a small delay before revealing.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
+    // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
     }, 100);
