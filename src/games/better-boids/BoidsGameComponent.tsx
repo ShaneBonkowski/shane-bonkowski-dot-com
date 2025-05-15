@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "@/src/games/better-boids/styles/better-boids.css";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import BoidsSettingsContainer from "@/src/games/better-boids/BoidsSettingsContainer";
@@ -40,11 +40,11 @@ interface BoidsGameComponentProps {
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
-let isLoadingPhaser = false;
 const gameParentName = "phaser-game";
 
 const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const isLoadingPhaser = useRef(false);
 
   const handleFadeOutComplete = () => {
     // Hides the loading screen
@@ -60,11 +60,11 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
         return;
       }
 
-      if (isLoadingPhaser) {
+      if (isLoadingPhaser.current) {
         console.warn("Phaser module already loading. Skipping duplicate call.");
         return;
       }
-      isLoadingPhaser = true;
+      isLoadingPhaser.current = true;
 
       if (game) {
         console.warn("Game already exists. Skipping duplicate creation.");
@@ -93,14 +93,16 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
         console.log(`Phaser game created successfully.`);
       } catch (error) {
         console.error("Failed to load Game Scene:", error);
+      } finally {
+        isLoadingPhaser.current = false; // Reset the loading flag
       }
     };
 
     loadPhaserScriptThenGame(loadPhaserGame);
 
     return () => {
-      cleanupPhaserGame(game);
-      game = null;
+      game = cleanupPhaserGame(game);
+      isLoadingPhaser.current = false; // Reset the loading flag
     };
   }, []);
 
