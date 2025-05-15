@@ -260,11 +260,9 @@ export class BoidsGameScene extends Generic2DGameScene {
 
     // Resize the canvas
     try {
-      // Update parent to be correct inner width size
+      // Update parent to be correct inner width size, since
+      // the canvas resizes based on parent
       this.scale.setParentSize(screenWidth, screenHeight);
-
-      // Update the canvas size to be innter width
-      this.scale.resize(screenWidth, screenHeight);
     } catch (error) {
       console.error(
         "Error during scale.resize (likely was called before phaser could initialize):",
