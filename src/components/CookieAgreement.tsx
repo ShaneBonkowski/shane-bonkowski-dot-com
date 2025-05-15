@@ -8,7 +8,6 @@ import useIsGamesPath from "@/src/hooks/useIsGamesPath";
 const CookieAgreement: React.FC = () => {
   const isGamesPath = useIsGamesPath();
   const [isVisible, setIsVisible] = useState<boolean>(true);
-
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const enableCookies = () => {
@@ -57,6 +56,7 @@ const CookieAgreement: React.FC = () => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
     };
   }, []);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
@@ -76,6 +76,7 @@ const BoidsSettingsContainer: React.FC = () => {
   const [selectedSetting, setSelectedSetting] =
     useState<string>("alignmentFactor");
   const [, forceUpdate] = useState(0); // Dummy state to force re-renders
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openWindow = () => {
     setIsVisible(true);
@@ -83,7 +84,13 @@ const BoidsSettingsContainer: React.FC = () => {
   };
 
   const closeWindow = () => {
-    setIsVisible(false);
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(false);
+    }, 100);
+
     dispatchMenuEvent("Info", "close");
   };
 
@@ -107,6 +114,11 @@ const BoidsSettingsContainer: React.FC = () => {
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     };
   }, []);
 

@@ -17,6 +17,8 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const currentPageName = useRef(pageName);
 
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     // Code to call when the component loads in...
     // If the user has scrolled past a given threshold on a previous site visit,
@@ -54,16 +56,32 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     // Cleanup function to call when the component is unloaded...
     return () => {
       window.removeEventListener("scroll", handleScroll);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     };
   }, [pageName, threshold]);
 
   const handleYes = () => {
     window.scrollTo({ top: scrollProgress, behavior: "smooth" });
-    setIsVisible(false);
+
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(false);
+    }, 100);
   };
 
   const handleNo = () => {
-    setIsVisible(false);
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(false);
+    }, 100);
   };
 
   return (
