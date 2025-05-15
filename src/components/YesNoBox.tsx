@@ -25,18 +25,6 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
   /* Only allow hover on hover-supported devices */
   const [isHoverable, setIsHoverable] = useState(false);
 
-  const handleYesClick = (e: React.PointerEvent) => {
-    // prevent the click event from bubbling up to the parent element(s) and beyond
-    e.stopPropagation();
-    onYes();
-  };
-
-  const handleNoClick = (e: React.PointerEvent) => {
-    // prevent the click event from bubbling up to the parent element(s) and beyond
-    e.stopPropagation();
-    onNo();
-  };
-
   useEffect(() => {
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
   }, []);
@@ -56,7 +44,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
         <div>{children}</div>
         <div className="flex justify-center sm:justify-end space-x-2">
           <button
-            onPointerDown={handleYesClick}
+            onPointerDown={onYes}
             className={`bg-button-color-light dark:bg-button-color text-body px-6 py-2 rounded ${
               isHoverable
                 ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
@@ -66,7 +54,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
             {yesButtonText}
           </button>
           <button
-            onPointerDown={handleNoClick}
+            onPointerDown={onNo}
             className={`bg-button-color-light dark:bg-button-color text-body px-6 py-2 rounded ${
               isHoverable
                 ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
