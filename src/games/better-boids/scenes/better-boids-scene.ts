@@ -260,6 +260,10 @@ export class BoidsGameScene extends Generic2DGameScene {
 
     // Resize the canvas
     try {
+      // Update parent to be correct inner width size
+      this.scale.setParentSize(screenWidth, screenHeight);
+
+      // Update the canvas size to be innter width
       this.scale.resize(screenWidth, screenHeight);
     } catch (error) {
       console.error(
