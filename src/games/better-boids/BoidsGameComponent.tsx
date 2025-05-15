@@ -10,6 +10,7 @@ import {
 } from "@/src/utils/phaser-loading";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
+import ToolbarDisableMessage from "@/src/components/ToolbarDisableMessage";
 
 export const boidInfoData: ContentDataProps[] = [
   {
@@ -120,6 +121,7 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
       <div className="absolute inset-0" id={gameParentName}></div>
 
       {/* UI */}
+      <ToolbarDisableMessage></ToolbarDisableMessage>
       <BoidsSettingsContainer></BoidsSettingsContainer>
       <GameInfoContainer infoData={boidInfoData}></GameInfoContainer>
     </div>
