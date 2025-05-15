@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import InfoButton from "@/src/components/InfoButton";
 import GameInfoWindow from "@/src/components/GameInfoWindow";
 import { ContentDataProps } from "@/src/types/data-props";
@@ -11,6 +11,7 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openInfoWindow = () => {
     setIsVisible(true);
@@ -18,7 +19,13 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
   };
 
   const closeInfoWindow = () => {
-    setIsVisible(false);
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(false);
+    }, 100);
+
     dispatchMenuEvent("Info", "close");
   };
 
@@ -32,6 +39,11 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     };
   }, []);
 
