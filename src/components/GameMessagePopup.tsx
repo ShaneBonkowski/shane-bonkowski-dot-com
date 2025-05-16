@@ -11,23 +11,24 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({ message }) => {
   const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const delayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // When game starts, reveal the msg and then fade out the message after 5 seconds.
+  // Constants for timing
+  const DELAY = 2000; // 2 seconds before showing the message
+  const VISIBLE_DURATION = 5000; // Message stays visible for 5 seconds
+  const FADE_DURATION = 1000; // NOTE: ensure fade-out duration matches CSS (duration-1000)
+
   const handleGameStarted = () => {
-    // Add a 2-second delay before showing the message
     delayTimeoutRef.current = setTimeout(() => {
       setIsVisible(true);
 
-      // Start the timer to fade out the message
       timeoutRef.current = setTimeout(() => {
         setIsFading(true);
 
-        // Start the timer to hide the message after fade-out
         fadeTimeoutRef.current = setTimeout(() => {
-          setIsVisible(false); // Hide the message after fade
-          setIsFading(false); // Reset fading state
-        }, 1000); // Match the fade-out duration in CSS
-      }, 5000); // Message stays visible for 5 seconds before fading
-    }, 2000); // 2-second delay before showing the message
+          setIsVisible(false);
+          setIsFading(false);
+        }, FADE_DURATION);
+      }, VISIBLE_DURATION);
+    }, DELAY);
   };
 
   useEffect(() => {
@@ -50,7 +51,6 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({ message }) => {
     };
   }, []);
 
-  // Don't render anything if the message is not visible
   if (!isVisible) {
     return null;
   }
@@ -62,7 +62,10 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({ message }) => {
       }`}
       style={{ zIndex: 1000 }}
     >
-      <p className="w-[65vw] text-center my-0 py-5 text-outline-light dark:text-outline-dark">
+      <p
+        className="w-[65vw] text-center my-0 py-5 text-outline-light dark:text-outline-dark"
+        aria-live="assertive"
+      >
         {message}
       </p>
     </div>
