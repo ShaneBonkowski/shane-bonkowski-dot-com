@@ -71,8 +71,10 @@ const CookieAgreement: React.FC = () => {
         onYes={enableCookies}
         onNo={disableCookies}
         id="cookie-agreement"
+        aria-labelledby="cookie-agreement-title"
+        aria-describedby="cookie-agreement-description"
       >
-        <p className="text-left">
+        <p id="cookie-agreement-description" className="text-left">
           This website uses cookies to ensure you get the best experience. By
           continuing to use this site, you accept our use of cookies.{" "}
           <Link href="/main/cookie-policy" className="link">

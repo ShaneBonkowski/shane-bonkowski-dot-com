@@ -67,9 +67,13 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
     <div
       className={`flex flex-col max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left`}
       id="story-content-loader"
+      aria-labelledby="story-content-title"
+      aria-describedby="story-content-body"
     >
       {/* Header */}
-      <h1 className="text-center my-2">{title}</h1>
+      <h1 id="story-content-title" className="text-center my-2">
+        {title}
+      </h1>
       <h3 className="italic text-center my-2">{subtitle}</h3>
 
       {/* Image */}
@@ -101,7 +105,7 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
       {body.length > 0 && (
         <>
           <hr />
-          <div>
+          <div id="story-content-body">
             {body.map((paragraph, index) => renderParagraph(paragraph, index))}
           </div>
           <hr />

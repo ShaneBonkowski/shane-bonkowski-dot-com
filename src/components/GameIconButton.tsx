@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 interface GameIconButtonProps {
   onPointerDown: () => void;
   icon: React.ReactNode;
-  ariaLabel: string; // Accessibility label for the button
+  ariaLabel: string;
   className?: string; // Optional classes for styling
 }
 

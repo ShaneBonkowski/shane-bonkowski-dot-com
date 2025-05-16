@@ -17,7 +17,11 @@ const GameInfoWindow: React.FC<GameInfoWindowProps> = ({
   infoData,
 }) => {
   return (
-    <GameUiWindow isVisible={isVisible} onClose={onClose}>
+    <GameUiWindow
+      isVisible={isVisible}
+      onClose={onClose}
+      aria-label="Game information window"
+    >
       <PageContentLoader contentData={infoData} />
     </GameUiWindow>
   );

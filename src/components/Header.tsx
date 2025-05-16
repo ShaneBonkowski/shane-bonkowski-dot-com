@@ -60,6 +60,7 @@ const Header: React.FC = () => {
             isGamesPath ? "absolute top-0 left-0 w-full" : ""
           }`}
           id="header"
+          aria-label="Header"
         >
           {/* Left Section: Logo & Title */}
           <Link
@@ -68,8 +69,12 @@ const Header: React.FC = () => {
             className={`link pointer-events-auto no-underline ${
               isHoverable ? "hover:no-underline" : ""
             } active:no-underline`}
+            aria-label="Home"
           >
-            <div className="shanes-games-logo space-x-1 sm:space-x-3">
+            <div
+              className="shanes-games-logo space-x-1 sm:space-x-3"
+              aria-label="Logo and title"
+            >
               <Image
                 src="/webps/mars-logo-small.webp"
                 alt="Logo"
@@ -102,7 +107,10 @@ const Header: React.FC = () => {
 
           {/* Right Section: Navigation Buttons */}
           {!isGamesPath && (
-            <nav className="pointer-events-auto flex space-x-4 sm:space-x-5 h-header-btn-h">
+            <nav
+              className="pointer-events-auto flex space-x-4 sm:space-x-5 h-header-btn-h"
+              aria-label="Navigation"
+            >
               <button
                 onPointerDown={toggleDarkMode}
                 className={`text-primary-text-color-light dark:text-primary-text-color ${
@@ -115,7 +123,7 @@ const Header: React.FC = () => {
                 {isDarkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
               </button>
 
-              <Link href="/main/about" className="link">
+              <Link href="/main/about" className="link" aria-label="About">
                 <div
                   className={`text-primary-text-color-light dark:text-primary-text-color ${
                     isHoverable
@@ -136,11 +144,12 @@ const Header: React.FC = () => {
                     ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                     : ""
                 } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
+                aria-label="GitHub Profile"
               >
                 <FaGithub size={24} />
               </a>
 
-              <Link href="/" className="link">
+              <Link href="/" className="link" aria-label="Home">
                 <div
                   className={`text-primary-text-color-light dark:text-primary-text-color ${
                     isHoverable

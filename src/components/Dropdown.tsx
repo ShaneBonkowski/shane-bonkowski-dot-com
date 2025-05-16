@@ -45,11 +45,12 @@ const Dropdown: React.FC<DropdownProps> = ({
       className="relative w-content-box-dropdown-w sm:w-content-box-dropdown-w-sm h-content-box-dropdown-h sm:h-content-box-dropdown-h"
       ref={dropdownRef}
       id="dropdown"
+      aria-haspopup="listbox"
+      aria-expanded={isOpen}
     >
       {/* Selected Value */}
       <button
-        className={`
-          w-full p-2 bg-button-color-light dark:bg-button-color 
+        className={`w-full p-2 bg-button-color-light dark:bg-button-color 
           text-small sm:text-small-sm text-primary-text-color-light dark:text-primary-text-color rounded-sm 
           flex justify-between items-center cursor-pointer ${
             isHoverable
@@ -57,6 +58,8 @@ const Dropdown: React.FC<DropdownProps> = ({
               : ""
           } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
         onPointerDown={() => setIsOpen(!isOpen)}
+        aria-controls="dropdown-list"
+        aria-label="Select an option"
       >
         {options.find((option) => option.value === selected)?.label || "Select"}
         <span className="ml-2">{isOpen ? "▲" : "▼"}</span>
@@ -65,10 +68,10 @@ const Dropdown: React.FC<DropdownProps> = ({
       {/* Dropdown List */}
       {isOpen && (
         <ul
-          className="
-        w-full absolute p-2 list-none mt-1 bg-button-color-light dark:bg-button-color 
-        rounded-sm shadow-lg overflow-hidden z-50
-        "
+          id="dropdown-list"
+          className="w-full absolute p-2 list-none mt-1 bg-button-color-light dark:bg-button-color 
+        rounded-sm shadow-lg overflow-hidden z-50"
+          role="listbox"
         >
           {options.map((option) => (
             <li
@@ -82,6 +85,8 @@ const Dropdown: React.FC<DropdownProps> = ({
                   ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
                   : ""
               } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color w-full block p-2`}
+              role="option"
+              aria-selected={selected === option.value}
             >
               {option.label}
             </li>

@@ -54,11 +54,17 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
 
   return (
     <>
-      {isButtonVisible && <InfoButton onPointerDown={openInfoWindow} />}
+      {isButtonVisible && (
+        <InfoButton
+          onPointerDown={openInfoWindow}
+          aria-label="Open information window"
+        />
+      )}
       <GameInfoWindow
         isVisible={isVisible}
         onClose={closeInfoWindow}
         infoData={infoData}
+        aria-label="Game information window"
       ></GameInfoWindow>
     </>
   );
