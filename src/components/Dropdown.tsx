@@ -34,7 +34,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
         timeoutRef.current = setTimeout(() => {
           setIsOpen(false);
-        }, 100);
+        }, 150);
       }
     }
 
@@ -70,7 +70,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
           timeoutRef.current = setTimeout(() => {
             setIsOpen(!isOpen);
-          }, 100);
+          }, 150);
         }}
         aria-controls="dropdown-list"
         aria-label="Select an option"
@@ -95,7 +95,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
                 timeoutRef.current = setTimeout(() => {
                   setIsOpen(false);
-                }, 100);
+                }, 150);
               }}
               className={`text-small sm:text-small-sm cursor-pointer ${
                 isHoverable

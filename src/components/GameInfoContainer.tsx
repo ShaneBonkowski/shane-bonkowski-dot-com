@@ -18,7 +18,7 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
-    }, 100);
+    }, 150);
 
     dispatchMenuEvent("Info", "open");
   };
@@ -29,7 +29,7 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
-    }, 100);
+    }, 150);
 
     dispatchMenuEvent("Info", "close");
   };

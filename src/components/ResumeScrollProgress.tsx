@@ -36,7 +36,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
         // This is a hack b/c phones sometimes double click.
         timeoutRef.current = setTimeout(() => {
           setIsVisible(true);
-        }, 100);
+        }, 150);
       }
     }
 
@@ -77,7 +77,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
-    }, 100);
+    }, 150);
   };
 
   const handleNo = () => {
@@ -86,7 +86,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
-    }, 100);
+    }, 150);
   };
 
   return (

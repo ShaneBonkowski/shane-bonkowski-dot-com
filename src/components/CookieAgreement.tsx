@@ -19,7 +19,7 @@ const CookieAgreement: React.FC = () => {
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
-    }, 100);
+    }, 150);
   };
 
   const disableCookies = () => {
@@ -32,7 +32,7 @@ const CookieAgreement: React.FC = () => {
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
-    }, 100);
+    }, 150);
   };
 
   // GitHub actions has injection for each page that ensures that Google
