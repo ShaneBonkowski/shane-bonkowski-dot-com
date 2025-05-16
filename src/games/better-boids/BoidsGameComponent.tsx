@@ -10,7 +10,7 @@ import {
 } from "@/src/utils/phaser-loading";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
-import GameToolbarDisableMessage from "@/src/components/GameToolbarDisableMessage";
+import GameMessagePopup from "@/src/components/GameMessagePopup";
 
 export const boidInfoData: ContentDataProps[] = [
   {
@@ -121,7 +121,7 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
       <div className="absolute inset-0" id={gameParentName}></div>
 
       {/* UI */}
-      <GameToolbarDisableMessage></GameToolbarDisableMessage>
+      <GameMessagePopup message="For the best experience, hide the toolbar and switch to fullscreen mode."></GameMessagePopup>
       <BoidsSettingsContainer></BoidsSettingsContainer>
       <GameInfoContainer infoData={boidInfoData}></GameInfoContainer>
     </div>

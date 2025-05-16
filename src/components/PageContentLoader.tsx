@@ -8,6 +8,7 @@ const PageContentLoader: React.FC<{ contentData: ContentDataProps[] }> = ({
     <div
       className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
       id="page-content-loader"
+      aria-label="Page content loader"
     >
       {contentData.map((item, index) => {
         switch (item.type) {

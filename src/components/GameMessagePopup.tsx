@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const GameToolbarDisableMessage: React.FC = () => {
+interface GameMessagePopupProps {
+  message: string;
+}
+
+const GameMessagePopup: React.FC<GameMessagePopupProps> = ({ message }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isFading, setIsFading] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -53,16 +57,16 @@ const GameToolbarDisableMessage: React.FC = () => {
 
   return (
     <div
-      className={`fixed bottom-0 flex justify-center w-full transition-opacity duration-1000 ${
+      className={`pointer-events-none fixed bottom-0 flex justify-center w-full transition-opacity duration-1000 ${
         isFading ? "opacity-0" : "opacity-100"
       }`}
       style={{ zIndex: 1000 }}
     >
       <p className="w-[65vw] text-center my-0 py-5 text-outline-light dark:text-outline-dark">
-        For the best experience, hide the toolbar and switch to fullscreen mode.
+        {message}
       </p>
     </div>
   );
 };
 
-export default GameToolbarDisableMessage;
+export default GameMessagePopup;

@@ -98,8 +98,15 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
         onNo={handleNo}
         id="resume-scroll-progress"
         bottomRight={true}
+        aria-labelledby="resume-scroll-progress-title"
+        aria-describedby="resume-scroll-progress-description"
       >
-        <p className="text-left py-2 my-0">Pick up where you left off?</p>
+        <p
+          id="resume-scroll-progress-description"
+          className="text-left py-2 my-0"
+        >
+          Pick up where you left off?
+        </p>
       </YesNoBox>
     )
   );

@@ -47,6 +47,13 @@ const ContentBox: React.FC<ContentBoxProps> = ({
       flex flex-col items-stretch mx-auto bg-button-color-light dark:bg-button-color 
       text-primary-text-color-light dark:text-primary-text-color rounded-lg overflow-hidden"
       id={`content-box-${title.replace(/\s+/g, "-").toLowerCase()}`}
+      role="region"
+      aria-labelledby={`content-box-title-${title
+        .replace(/\s+/g, "-")
+        .toLowerCase()}`}
+      aria-describedby={`content-box-description-${title
+        .replace(/\s+/g, "-")
+        .toLowerCase()}`}
     >
       {/* Image on the Left */}
       <Link
@@ -55,10 +62,11 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         rel="noopener noreferrer"
         className="link flex-shrink-0"
         id="content-box-image-link"
+        aria-label={`View more about ${title}`}
       >
         <Image
           src={imageUrl}
-          alt={title}
+          alt={`Image for ${title}`}
           width={500}
           height={422}
           className={`w-full h-full object-cover transform transition-transform duration-0 ${
@@ -87,8 +95,14 @@ const ContentBox: React.FC<ContentBoxProps> = ({
             className="link"
             onPointerEnter={() => isHoverable && setIsHovered(true)}
             onPointerLeave={() => isHoverable && setIsHovered(false)}
+            aria-labelledby={`content-box-title-${title
+              .replace(/\s+/g, "-")
+              .toLowerCase()}`}
           >
             <h3
+              id={`content-box-title-${title
+                .replace(/\s+/g, "-")
+                .toLowerCase()}`}
               className={`font-bold m-0 text-content-box-title sm:text-content-box-title-sm ${
                 isHoverable && isHovered
                   ? "text-primary-text-color-light dark:text-primary-text-color underline decoration-inherit"
@@ -101,7 +115,12 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         </div>
 
         {/* Description */}
-        <p className="text-secondary-text-color-light dark:text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed">
+        <p
+          id={`content-box-description-${title
+            .replace(/\s+/g, "-")
+            .toLowerCase()}`}
+          className="text-secondary-text-color-light dark:text-secondary-text-color text-content-box-subtitle sm:text-content-box-subtitle-sm leading-relaxed"
+        >
           {description}
         </p>
       </div>

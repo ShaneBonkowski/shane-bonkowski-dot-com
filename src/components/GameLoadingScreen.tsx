@@ -13,6 +13,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [loadingDots, setLoadingDots] = useState("");
   const fadeDuration = 1000; // milliseconds
+  const fadeOutTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Animate the dots
@@ -27,22 +28,16 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
     const handleGameStarted = () => {
       console.log("gameStarted event received");
 
-      // Clear any existing timeouts to prevent multiple triggers
-      setIsFadingOut(false);
+      // Clear any existing timeout
+      if (fadeOutTimeoutRef.current) {
+        clearTimeout(fadeOutTimeoutRef.current);
+      }
 
       // Start fade-out animation
-      const fadeOutTimeout = setTimeout(() => {
-        setIsFadingOut(true);
-        const fadeOutCompleteTimeout = setTimeout(() => {
-          onFadeOutComplete();
-        }, fadeDuration);
-
-        // Cleanup fade-out completion timeout
-        return () => clearTimeout(fadeOutCompleteTimeout);
+      setIsFadingOut(true);
+      fadeOutTimeoutRef.current = setTimeout(() => {
+        onFadeOutComplete();
       }, fadeDuration);
-
-      // Cleanup fade-out timeout
-      return () => clearTimeout(fadeOutTimeout);
     };
 
     document.addEventListener("gameStarted", handleGameStarted);
@@ -50,6 +45,13 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
     return () => {
       clearInterval(interval);
       document.removeEventListener("gameStarted", handleGameStarted);
+
+      // Cleanup fade-out timeout
+      if (fadeOutTimeoutRef.current) {
+        clearTimeout(fadeOutTimeoutRef.current);
+      }
+
+      setIsFadingOut(false);
     };
   }, [onFadeOutComplete, fadeDuration]);
 
@@ -59,6 +61,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
         isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
       id="game-loading-screen"
+      aria-label="Game loading screen"
     >
       {/* Background Image */}
       <Image
@@ -68,6 +71,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
         fill
         priority
         id="game-loading-screen-background-image"
+        aria-hidden="true"
       />
 
       {/* Main Cover Image */}
@@ -88,6 +92,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       <p
         className="absolute text-left m-0 bottom-5 right-5 text-primary-text-color z-20"
         style={{ width: "10ch", textAlign: "left" }} // Fixed width for consistent alignment
+        aria-live="polite"
       >
         Loading{loadingDots}
       </p>
