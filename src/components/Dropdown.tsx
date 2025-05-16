@@ -15,6 +15,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   /* Only allow hover on hover-supported devices */
   const [isHoverable, setIsHoverable] = useState(false);
@@ -30,13 +31,21 @@ const Dropdown: React.FC<DropdownProps> = ({
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
+        timeoutRef.current = setTimeout(() => {
+          setIsOpen(false);
+        }, 100);
       }
     }
 
     document.addEventListener("pointerdown", handleClickOutside);
     return () => {
       document.removeEventListener("pointerdown", handleClickOutside);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     };
   }, []);
 
@@ -57,7 +66,12 @@ const Dropdown: React.FC<DropdownProps> = ({
               ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
               : ""
           } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
-        onPointerDown={() => setIsOpen(!isOpen)}
+        onPointerDown={() => {
+          // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
+          timeoutRef.current = setTimeout(() => {
+            setIsOpen(!isOpen);
+          }, 100);
+        }}
         aria-controls="dropdown-list"
         aria-label="Select an option"
       >
@@ -78,7 +92,10 @@ const Dropdown: React.FC<DropdownProps> = ({
               key={option.value}
               onPointerDown={() => {
                 setSelected(option.value);
-                setIsOpen(false);
+                // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
+                timeoutRef.current = setTimeout(() => {
+                  setIsOpen(false);
+                }, 100);
               }}
               className={`text-small sm:text-small-sm cursor-pointer ${
                 isHoverable
