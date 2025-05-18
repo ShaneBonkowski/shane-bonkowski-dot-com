@@ -258,29 +258,6 @@ export class BoidsGameScene extends Generic2DGameScene {
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
 
-    // Resize the canvas
-    try {
-      // Update parent to be correct inner width size, since
-      // the canvas resizes based on parent
-      this.scale.setParentSize(screenWidth, screenHeight);
-    } catch (error) {
-      console.error(
-        "Error during scale.resize (likely was called before phaser could initialize):",
-        error,
-        {
-          screenWidth,
-          screenHeight,
-          scale: this.scale,
-        }
-      );
-
-      // Hot module reloading causes an annoying bug here, so we will just
-      // fully reload the page to fix it. This only happens in dev mode, so
-      // just adding this for now as an easy fix.
-      window.location.reload();
-      return;
-    }
-
     // Handle resizing of game objs
     if (
       !this.lastKnownWindowSize ||
@@ -315,7 +292,7 @@ export class BoidsGameScene extends Generic2DGameScene {
           boid.handleWindowResize(newX, newY);
         } else {
           // Leader boid position does not change, since it should be where
-          // user's pointer is
+          // user's pointer is (still needs to update scale though)
           boid.handleWindowResize(
             boid.physicsBody2D!.position.x,
             boid.physicsBody2D!.position.y

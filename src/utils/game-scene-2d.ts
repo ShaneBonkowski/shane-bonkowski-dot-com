@@ -18,9 +18,6 @@ export class Generic2DGameScene extends Phaser.Scene {
     this.gameStarted = false;
     this.paused = false;
 
-    // Bind "this" to refer to the scene for necessary functions
-    this.preventDefault = this.preventDefault.bind(this);
-
     this.isInitialized = true;
   }
 
@@ -62,32 +59,5 @@ export class Generic2DGameScene extends Phaser.Scene {
 
     // Add shutdown logic, such as cleaning up event listeners for the scene
     // ...
-  }
-
-  /**
-   * Disable scrolling on the page
-   */
-  disableScroll(): void {
-    document.addEventListener("touchmove", this.preventDefault, {
-      passive: false,
-    });
-    document.addEventListener("mousewheel", this.preventDefault, {
-      passive: false,
-    });
-  }
-
-  /**
-   * Enable scrolling on the page
-   */
-  enableScroll(): void {
-    document.removeEventListener("touchmove", this.preventDefault);
-    document.removeEventListener("mousewheel", this.preventDefault);
-  }
-
-  /**
-   * Prevent default behavior of events (used in this case for disabling scroll)
-   */
-  preventDefault(event: Event): void {
-    event.preventDefault();
   }
 }
