@@ -131,24 +131,6 @@ export class TemplateGameScene extends Generic2DGameScene {
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
 
-    // Resize the canvas
-    try {
-      // Update parent to be correct inner width size, since
-      // the canvas resizes based on parent
-      this.scale.setParentSize(screenWidth, screenHeight);
-    } catch (error) {
-      console.error(
-        "Error during scale.resize (likely was called before phaser could initialize):",
-        error,
-        {
-          screenWidth,
-          screenHeight,
-          scale: this.scale,
-        }
-      );
-      return;
-    }
-
     // Handle resizing of game objs
     if (
       !this.lastKnownWindowSize ||
