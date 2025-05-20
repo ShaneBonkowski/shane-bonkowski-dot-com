@@ -1,14 +1,14 @@
 import { GameObject } from "@/src/utils/game-object";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec2 } from "@/src/utils/vector";
-import { TemplateGameScene } from "@/src/games/game-template/scenes/game-template-scene";
+import { MainGameScene } from "@/src/games/game-template/scenes/main-game-scene";
 import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
 
 export class Ball extends GameObject {
-  private scene: TemplateGameScene;
+  private scene: MainGameScene;
   private random: SeededRandom;
 
-  constructor(scene: TemplateGameScene, spawnX: number, spawnY: number) {
+  constructor(scene: MainGameScene, spawnX: number, spawnY: number) {
     // Initialize GameObject with physics, and rigid body
     super("Ball", 0, true, true);
     this.updateSize(); // set the size here!, not in GameObject

@@ -2,11 +2,10 @@
 
 ### 1. Create the game `page`.
 
-- Duplicate one of the existing games in `/app/games`.
+- Duplicate one of the existing games in `/app/games` (ideally `game-template`).
 - Rename the duplicated game directory to `{game-name}`.
-- Create/update the `{gameName}Data` variable.
+- Update the `gameData` variable.
 - Replace the title, description, etc.
-- Update the function name to `{GameName}`.
 
 ### 2. Create a cover image for the game.
 

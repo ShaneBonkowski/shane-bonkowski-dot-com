@@ -1,24 +1,18 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/game-template/styles/game-template.css";
+import "@/src/games/game-template/styles/game.css"; // FIXME: UPDATE THIS TO THE GAME-SPECIFIC CSS
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 
-interface TemplateGameComponentProps {
-  id: string;
-}
-
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
 const gameParentName = "phaser-game";
 
-const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
-  id,
-}) => {
+const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true);
   const isLoadingPhaser = useRef(false);
 
@@ -48,8 +42,9 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
       }
 
       try {
-        const { TemplateGameScene } = await import(
-          "@/src/games/game-template/scenes/game-template-scene"
+        // FIXME: UPDATE IMPORT PATH FOR THE GAME-SPECIFIC SCENE
+        const { MainGameScene } = await import(
+          "@/src/games/game-template/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -61,7 +56,7 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
             mode: Phaser.Scale.RESIZE,
             autoCenter: Phaser.Scale.CENTER_BOTH,
           },
-          scene: TemplateGameScene,
+          scene: MainGameScene,
           parent: gameParentName,
         };
 
@@ -87,7 +82,7 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/better-boids-cover.webp"
+          coverImage="/webps/games/better-boids-cover.webp" // FIXME: UPDATE THIS TO THE GAME-SPECIFIC COVER IMAGE
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}
@@ -98,4 +93,4 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
   );
 };
 
-export default TemplateGameComponent;
+export default GameComponent;

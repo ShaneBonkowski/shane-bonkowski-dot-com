@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/better-boids/styles/better-boids.css";
+import "@/src/games/better-boids/styles/game.css";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import BoidsSettingsContainer from "@/src/games/better-boids/BoidsSettingsContainer";
 import {
@@ -35,15 +35,11 @@ export const boidInfoData: ContentDataProps[] = [
   },
 ];
 
-interface BoidsGameComponentProps {
-  id: string;
-}
-
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
 const gameParentName = "phaser-game";
 
-const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
+const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true);
   const isLoadingPhaser = useRef(false);
 
@@ -73,8 +69,8 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
       }
 
       try {
-        const { BoidsGameScene } = await import(
-          "@/src/games/better-boids/scenes/better-boids-scene"
+        const { MainGameScene } = await import(
+          "@/src/games/better-boids/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -86,7 +82,7 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
             mode: Phaser.Scale.RESIZE,
             autoCenter: Phaser.Scale.CENTER_BOTH,
           },
-          scene: BoidsGameScene,
+          scene: MainGameScene,
           parent: gameParentName,
         };
 
@@ -128,4 +124,4 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
   );
 };
 
-export default BoidsGameComponent;
+export default GameComponent;

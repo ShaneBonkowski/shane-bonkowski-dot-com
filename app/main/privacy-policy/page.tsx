@@ -492,7 +492,7 @@ const privacyPolicyData: ContentDataProps[] = [
   },
 ];
 
-export default function PrivacyPolicy() {
+export default function Page() {
   return (
     <div id="privacy-policy">
       <PageContentLoader contentData={privacyPolicyData} />

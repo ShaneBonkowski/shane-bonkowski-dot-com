@@ -1,12 +1,12 @@
 import dynamic from "next/dynamic";
 import { GameDataProps } from "@/src/types/data-props";
-import GameComponent from "@/src/games/game-template/GameComponent"; // FIXME: UPDATE THIS
+import GameComponent from "@/src/games/flip-tile/GameComponent";
 
 const gameData: GameDataProps = {
-  title: "Game Template", // FIXME: UPDATE THIS
+  title: "Flip Tile",
   description: "A game by Shane Bonkowski.",
   logoImageUrl: "/webps/mars-logo-large.webp",
-  imageAlt: "Game Template", // FIXME: UPDATE THIS
+  imageAlt: "Flip Tile",
 };
 
 export const metadata = {

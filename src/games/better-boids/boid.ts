@@ -3,7 +3,7 @@ import { Vec2 } from "@/src/utils/vector";
 import { MoreMath } from "@/src/utils/more-math";
 import { boidEventNames } from "@/src/games/better-boids/boid-utils";
 import { SeededRandom } from "@/src/utils/seedable-random";
-import { BoidsGameScene } from "@/src/games/better-boids/scenes/better-boids-scene";
+import { MainGameScene } from "@/src/games/better-boids/scenes/main-game-scene";
 import { boidSettings } from "@/src/games/better-boids/BoidsSettingsContainer";
 
 const seededRandom = new SeededRandom(1234);
@@ -16,13 +16,13 @@ const BoidConstants = {
 };
 
 export class Boid extends GameObject {
-  public scene: BoidsGameScene;
+  public scene: MainGameScene;
   public mainBoid: boolean;
   public boidNumber: number;
   public boidType: string;
 
   constructor(
-    scene: BoidsGameScene,
+    scene: MainGameScene,
     spawnX: number,
     spawnY: number,
     leaderBoid: boolean,

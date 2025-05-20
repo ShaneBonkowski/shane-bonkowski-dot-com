@@ -1,6 +1,6 @@
 import { Boid } from "@/src/games/better-boids/boid";
 import { SeededRandom } from "@/src/utils/seedable-random";
-import { BoidsGameScene } from "@/src/games/better-boids/scenes/better-boids-scene";
+import { MainGameScene } from "@/src/games/better-boids/scenes/main-game-scene";
 
 export const boidEventNames = {
   onSpeedChange: "onSpeedChange",
@@ -10,7 +10,7 @@ export const boidEventNames = {
 const seededRandom = new SeededRandom(1234);
 
 export async function instantiateBoids(
-  scene: BoidsGameScene,
+  scene: MainGameScene,
   boidCount: number
 ): Promise<Boid[]> {
   // Allows for async behavior

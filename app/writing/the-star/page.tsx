@@ -137,7 +137,7 @@ export const metadata = {
   },
 };
 
-export default function TheStar() {
+export default function Page() {
   return (
     <div id={storyData.title}>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />

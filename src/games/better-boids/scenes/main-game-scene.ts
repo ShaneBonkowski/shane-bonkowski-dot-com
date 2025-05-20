@@ -15,13 +15,16 @@ const holdThreshold: number = 0.1; // seconds
 let pointerDownTime: number = 0;
 let holdTimer: NodeJS.Timeout | null = null;
 
-export class BoidsGameScene extends Generic2DGameScene {
+export class MainGameScene extends Generic2DGameScene {
   public boids: Boid[] = [];
+  private resizeObserver: ResizeObserver | null = null;
+  public lastKnownWindowSize: Vec2 | null = null;
+  public uiMenuOpen: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
-    // "BoidsGameScene" supplied as the name of the scene.
-    super("BoidsGameScene");
+    // "MainGameScene" supplied as the name of the scene.
+    super("MainGameScene");
 
     // Constructor logic for this scene
     const screenWidth = window.visualViewport?.width || window.innerWidth;
@@ -141,12 +144,7 @@ export class BoidsGameScene extends Generic2DGameScene {
     super.unsubscribeFromEvents();
 
     // Unsubscribe from events for this scene
-    if (this.resizeObserver != null) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    }
-    window.removeEventListener("resize", this.handleWindowResize);
-    window.removeEventListener("orientationchange", this.handleWindowResize);
+    this.tearDownWindowResizeHandling();
 
     document.removeEventListener(
       rigidBody2DEventNames.screenEdgeCollision,
@@ -232,19 +230,28 @@ export class BoidsGameScene extends Generic2DGameScene {
   }
 
   setUpWindowResizeHandling() {
-    // Observe window resizing so we can adjust the boid's position
+    // Observe window resizing so we can adjust the position
     // and size accordingly!
 
     // Observe window resizing with ResizeObserver since it is good for snappy changes
-    const resizeObserver = new ResizeObserver(() => {
+    this.resizeObserver = new ResizeObserver(() => {
       this.handleWindowResize();
     });
-    resizeObserver.observe(document.documentElement);
+    this.resizeObserver.observe(document.documentElement);
 
     // Also checking for resize or orientation change to try to handle edge cases
     // that ResizeObserver misses!
     window.addEventListener("resize", this.handleWindowResize);
     window.addEventListener("orientationchange", this.handleWindowResize);
+  }
+
+  tearDownWindowResizeHandling() {
+    if (this.resizeObserver != null) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    window.removeEventListener("resize", this.handleWindowResize);
+    window.removeEventListener("orientationchange", this.handleWindowResize);
   }
 
   handleWindowResize() {
