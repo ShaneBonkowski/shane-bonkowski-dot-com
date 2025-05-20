@@ -14,13 +14,22 @@ export class Tile extends GameObject {
   public scene: MainGameScene;
   public text: Phaser.GameObjects.Text | null;
   public tileSpaceCoord: Vec2;
+  public gridSize: number;
+  public tileState: number;
+  public animationPlaying: boolean;
 
-  constructor(scene, tileSpaceX, tileSpaceY, gridSize, tileState) {
+  constructor(
+    scene: MainGameScene,
+    tileSpaceX: number,
+    tileSpaceY: number,
+    gridSize: number,
+    tileState: number
+  ) {
     // Set some properties on the parent GameObject class
     super(
       "Tile",
       // init size just so its set, will reset to something else later
-      new Vec2(1, 1),
+      1,
       // physicsBody2D
       true,
       // rigidBody2D
@@ -40,9 +49,10 @@ export class Tile extends GameObject {
     this.animationPlaying = false;
 
     // Init at provided location, and centered
-    let spawnLoc = this.findTileLocFromTileSpace();
-    this.physicsBody2D.position.x = spawnLoc.x;
-    this.physicsBody2D.position.y = spawnLoc.y;
+    const spawnLoc = this.findTileLocFromTileSpace();
+
+    this.physicsBody2D!.position.x = spawnLoc.x;
+    this.physicsBody2D!.position.y = spawnLoc.y;
 
     this.addText();
 
@@ -53,25 +63,22 @@ export class Tile extends GameObject {
   initTile() {
     this.size = this.calculateTileSize();
     this.graphic = this.scene.add.sprite(0, 0, "Tile Red"); // init, will be changed in updateTileColor
-    this.graphic?.setInteractive(); // make it so this graphic can be clicked on etc.
+    this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
     this.updateTileColor();
-    this.graphic?.setOrigin(0.5, 0.5); // Set the anchor point to the center
-
-    // TODO: add particles or something when new is spawned in
-    // ...
+    this.graphic!.setOrigin(0.5, 0.5); // Set the anchor point to the center
   }
 
   addText() {
     // Add text to the top right corner of the graphic
     this.text = this.scene.add.text(
       // Position relative to graphic's top right corner
-      this.physicsBody2D.position.x + this.graphic?.displayWidth / 2,
-      this.physicsBody2D.position.y - this.graphic?.displayHeight / 2,
+      this.physicsBody2D!.position.x + this.graphic!.displayWidth / 2,
+      this.physicsBody2D!.position.y - this.graphic!.displayHeight / 2,
       "1",
       { fontFamily: "Arial", fontSize: 40, color: "#FFFFFF" } // init text size here, but in reality it is updated in updateTextSize()
     );
-    this.text?.setOrigin(-0.2, 0.7); // Origin on the top right corner of the text
-    this.text?.setDepth(10); // Ensure the text appears on top of the graphic
+    this.text!.setOrigin(-0.2, 0.7); // Origin on the top right corner of the text
+    this.text!.setDepth(10); // Ensure the text appears on top of the graphic
 
     this.updateTextPos();
     this.updateTextSize();
@@ -80,32 +87,32 @@ export class Tile extends GameObject {
 
   updateTextSize() {
     let fontSize = 30;
-    let isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // for phones change the font size
     if (window.innerWidth <= 600 || isPortrait) {
       fontSize = 24;
     }
-    this.text?.setFontSize(fontSize);
+    this.text!.setFontSize(fontSize);
   }
 
   updateTextPos() {
-    this.text?.setPosition(
-      this.physicsBody2D.position.x + this.graphic?.displayWidth / 2,
-      this.physicsBody2D.position.y - this.graphic?.displayHeight / 2
+    this.text!.setPosition(
+      this.physicsBody2D!.position.x + this.graphic!.displayWidth / 2,
+      this.physicsBody2D!.position.y - this.graphic!.displayHeight / 2
     );
   }
 
-  updateTextContent(textContent) {
-    this.text?.text = textContent;
+  updateTextContent(textContent: string) {
+    this.text!.text = textContent;
   }
 
   hideText() {
-    this.text?.setVisible(false);
+    this.text!.setVisible(false);
   }
 
   showText() {
-    this.text?.setVisible(true);
+    this.text!.setVisible(true);
 
     this.updateTextPos();
     this.updateTextSize();
@@ -116,11 +123,11 @@ export class Tile extends GameObject {
 
   destroy() {
     // Remove the sprite from the scene
-    this.graphic?.destroy();
+    this.graphic!.destroy();
     this.graphic = null;
 
     // Remove text from the scene
-    this.text?.destroy();
+    this.text!.destroy();
     this.text = null;
 
     // TODO: add particles or something when destroyed
@@ -130,11 +137,11 @@ export class Tile extends GameObject {
   updateTileColor() {
     // Color
     if (this.tileState === tileStates.RED) {
-      this.graphic?.setTexture("Tile Red");
+      (this.graphic as Phaser.GameObjects.Sprite).setTexture("Tile Red");
     } else if (this.tileState === tileStates.BLUE) {
-      this.graphic?.setTexture("Tile Blue");
+      (this.graphic as Phaser.GameObjects.Sprite).setTexture("Tile Blue");
     } else if (this.tileState === tileStates.GREEN) {
-      this.graphic?.setTexture("Tile Green");
+      (this.graphic as Phaser.GameObjects.Sprite).setTexture("Tile Green");
     } else {
       console.log(`ERROR: tileState ${this.tileState} is not an expected one`);
     }
@@ -160,7 +167,7 @@ export class Tile extends GameObject {
       onComplete: () => {
         // Can click after all animations are done
         this.animationPlaying = false;
-        let canEnable = this.scene.tryToEnableClick();
+        const canEnable = this.scene.tryToEnableClick();
 
         // If we are successful in enabling click,
         // then this is the last tile to play the animation.
@@ -186,14 +193,17 @@ export class Tile extends GameObject {
       duration: duration / 2, // /2 since yoyo doubles the time
       ease: "Sine.easeInOut",
       yoyo: true, // Return to original scale and rotation after the animation
-      onUpdate: (tween, target) => {
+      onUpdate: (
+        tween: Phaser.Tweens.Tween,
+        target: Phaser.GameObjects.Sprite
+      ) => {
         // Ensures that the size variable reflects the scale as it changes with the tween
         this.size = target.displayWidth; // Assuming width == height
       },
       onComplete: () => {
         // Can click after all animations are done
         this.animationPlaying = false;
-        let canEnable = this.scene.tryToEnableClick();
+        this.scene.tryToEnableClick();
       },
     });
   }
@@ -251,10 +261,10 @@ export class Tile extends GameObject {
     }
   }
 
-  findTileLocFromTileSpace() {
-    let centerX = window.innerWidth / 2;
-    let centerY = window.innerHeight / 2;
-    let tileSpacing = this.size * sharedTileAttrs.tileSpacingFactor;
+  findTileLocFromTileSpace(): Vec2 {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const tileSpacing = this.size * sharedTileAttrs.tileSpacingFactor;
 
     // Calculate the starting position for the top-left tile in the grid
     let startGridX, startGridY;
@@ -270,13 +280,13 @@ export class Tile extends GameObject {
     }
 
     // Calculate the position of the current tile in the grid
-    let tileX = startGridX + this.tileSpaceCoord.x * tileSpacing;
-    let tileY = startGridY + this.tileSpaceCoord.y * tileSpacing;
+    const tileX = startGridX + this.tileSpaceCoord.x * tileSpacing;
+    const tileY = startGridY + this.tileSpaceCoord.y * tileSpacing;
 
     return new Vec2(tileX, tileY);
   }
 
-  calculateTileSize() {
+  calculateTileSize(): number {
     // Calculate the tile size based on the screen width
     let tileSize = window.innerHeight * 0.15;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -294,9 +304,9 @@ export class Tile extends GameObject {
     this.size = this.calculateTileSize();
 
     // Init at provided location, and centered
-    let spawnLoc = this.findTileLocFromTileSpace();
-    this.physicsBody2D.position.x = spawnLoc.x;
-    this.physicsBody2D.position.y = spawnLoc.y;
+    const spawnLoc = this.findTileLocFromTileSpace();
+    this.physicsBody2D!.position.x = spawnLoc.x;
+    this.physicsBody2D!.position.y = spawnLoc.y;
 
     // Update text
     this.updateTextPos();
@@ -305,16 +315,16 @@ export class Tile extends GameObject {
 
   subscribeToEvents() {
     // Add an event listener for pointer down events using phaser's event system
-    this.graphic?.on("pointerdown", () => {
+    this.graphic!.on("pointerdown", () => {
       // updateTileState when the pointer clicks down on the tile
       this.updateTileState();
     });
 
     // Update mouse on hover
-    this.graphic?.on("pointerover", () => {
+    this.graphic!.on("pointerover", () => {
       this.scene.game.canvas.style.cursor = "pointer";
     });
-    this.graphic?.on("pointerout", () => {
+    this.graphic!.on("pointerout", () => {
       this.scene.game.canvas.style.cursor = "default";
     });
   }

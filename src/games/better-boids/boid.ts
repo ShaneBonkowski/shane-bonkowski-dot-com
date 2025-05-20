@@ -179,7 +179,7 @@ export class Boid extends GameObject {
     }
   }
 
-  calculateBoidSize() {
+  calculateBoidSize(): number {
     // Calculate the boid size based on the screen width
     let boidSize = window.innerHeight * 0.15;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -207,7 +207,7 @@ export class Boid extends GameObject {
     this.physicsBody2D!.position.y = newY;
   }
 
-  initVelocity() {
+  initVelocity(): Vec2 {
     // Set velocity in a random direction
     let velocityDesired = new Vec2(
       seededRandom.getRandomFloat(0.1, 1),
@@ -231,7 +231,7 @@ export class Boid extends GameObject {
     );
   }
 
-  clampVelocity(velocityDesired: Vec2) {
+  clampVelocity(velocityDesired: Vec2): Vec2 {
     // Cleans up velocity such if the provided value is not within min and max speed,
     // it is normalized and then set in magnitude to the speed limit it is at.
     const normalizedVelocity = Vec2.normalize(velocityDesired);
@@ -289,7 +289,7 @@ export class Boid extends GameObject {
     }
   }
 
-  handleBoidFlocking(boids: Boid[]) {
+  handleBoidFlocking(boids: Boid[]): Vec2 {
     // Initialize variables to compute the new velocity based on boid rules
     let velocSum = new Vec2(0, 0);
     let positionSum = new Vec2(0, 0);
@@ -487,7 +487,11 @@ export class Boid extends GameObject {
     return desiredVelocity;
   }
 
-  getBoidDistance(otherBoid: Boid) {
+  getBoidDistance(otherBoid: Boid): {
+    dx: number;
+    dy: number;
+    distanceSquared: number;
+  } {
     // Calculate distance between this boid and the other
     let dx =
       otherBoid.physicsBody2D!.position.x - this.physicsBody2D!.position.x;
@@ -526,7 +530,10 @@ export class Boid extends GameObject {
     };
   }
 
-  getMovementDirectionVectorThroughTorus(positionA: Vec2, positionB: Vec2) {
+  getMovementDirectionVectorThroughTorus(
+    positionA: Vec2,
+    positionB: Vec2
+  ): { directionX: number; directionY: number } {
     // Get the movement direction vector to go from point a to point b
     // taking into account the fact that boids live on a torus, so sometimes
     // the best (shortest) way to go is through the side of the screen

@@ -2,15 +2,26 @@ import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Vec2 } from "@/src/utils/vector";
 import { dispatchGameStartedEvent } from "@/src/events/game-events";
 import { Tile } from "@/src/games/flip-tile/tile";
+import { SeededRandom } from "@/src/utils/seedable-random";
+import {
+  difficulty,
+  scoring,
+  tileGridEventNames,
+  tilePatternAttrs,
+  instantiateTiles,
+  checkIfTileGridSolved,
+  tilesToTilespaceMatrix,
+  sharedTileAttrs,
+} from "@/src/games/flip-tile/tile-utils";
 
-export let tiles: Tile[] = [];
+export const tiles: Tile[][] = [];
 
 const unseededRandom = new SeededRandom();
 
 export const intendedNewTileAttrs = {
-  tileCount: 9, // initial values
-  seed: unseededRandom.getRandomInt(1, 10000), // UNSEEDED getRandomInt func
-  qtyStatesBeingUsed: 2, // init
+  tileCount: 9,
+  seed: unseededRandom.getRandomInt(1, 10000),
+  qtyStatesBeingUsed: 2,
   difficultyLevel: difficulty.EASY,
 };
 
@@ -61,7 +72,7 @@ export class MainGameScene extends Generic2DGameScene {
       // Handle the graphic updates
       for (let row = 0; row < tiles.length; row++) {
         for (let col = 0; col < tiles[row].length; col++) {
-          let tile = tiles[row][col];
+          const tile = tiles[row][col];
           tile.updateGraphic();
         }
       }
@@ -75,7 +86,7 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
-  tryToEnableClick() {
+  tryToEnableClick(): boolean {
     // Can only re-enable click if all tile's animations are done playing
     let canEnable = true;
     let finishedSearch = false;
@@ -83,9 +94,8 @@ export class MainGameScene extends Generic2DGameScene {
     // Play celebration anim for all tiles
     for (let row = 0; row < tiles.length; row++) {
       for (let col = 0; col < tiles[row].length; col++) {
-        let tile = tiles[row][col];
+        const tile = tiles[row][col];
 
-        // Make sure tile exists
         if (tile) {
           // if any tile's anim is playing, you cannot enable clicking
           if (tile.animationPlaying) {
@@ -125,8 +135,8 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Reset tile pattern in a grid as a Promise (so that we can run this async).
     // Do not change these parameters!! hence why they equals themselves
-    TilePatternAttrs.tileCount = TilePatternAttrs.tileCount;
-    TilePatternAttrs.seed = TilePatternAttrs.seed;
+    tilePatternAttrs.tileCount = tilePatternAttrs.tileCount;
+    tilePatternAttrs.seed = tilePatternAttrs.seed;
     instantiateTiles(this).then((tilesReturned) => {
       // Push new tiles into tiles array.
       // We destroy tiles before this, so its safe
@@ -144,7 +154,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Update to a new tile pattern in a grid as a Promise (so that we can run this async)
     for (let i = 1; i <= UI_VARS.numCheckboxes; i++) {
-      let className = `.flip-tile-toggle-input-${i}`;
+      const className = `.flip-tile-toggle-input-${i}`;
       const checkbox = document.querySelector(className);
       if (checkbox.checked) {
         if (i == 1) {
@@ -154,7 +164,7 @@ export class MainGameScene extends Generic2DGameScene {
         } else if (i == 3) {
           this.updateIntendedDifficuly(difficulty.EXPERT);
         } else {
-          this.updateIntendedDifficuly(TilePatternAttrs.difficulty);
+          this.updateIntendedDifficuly(tilePatternAttrs.difficultyLevel);
         }
       }
     }
@@ -201,11 +211,11 @@ export class MainGameScene extends Generic2DGameScene {
 
   updateActualTilePatternAttrs() {
     // Set actual to the intended values
-    TilePatternAttrs.qtyStatesBeingUsed =
+    tilePatternAttrs.qtyStatesBeingUsed =
       intendedNewTileAttrs.qtyStatesBeingUsed;
-    TilePatternAttrs.tileCount = intendedNewTileAttrs.tileCount;
-    TilePatternAttrs.seed = intendedNewTileAttrs.seed;
-    TilePatternAttrs.difficultyLevel = intendedNewTileAttrs.difficultyLevel;
+    tilePatternAttrs.tileCount = intendedNewTileAttrs.tileCount;
+    tilePatternAttrs.seed = intendedNewTileAttrs.seed;
+    tilePatternAttrs.difficultyLevel = intendedNewTileAttrs.difficultyLevel;
   }
 
   destroyAllTiles() {
@@ -219,15 +229,14 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   nextPuzzleIfSolved() {
-    let solved = checkIfTileGridSolved(tilesToTilespaceMatrix(tiles));
+    const solved = checkIfTileGridSolved(tilesToTilespaceMatrix(tiles));
 
     if (solved) {
       // Play celebration anim for all tiles
       for (let row = 0; row < tiles.length; row++) {
         for (let col = 0; col < tiles[row].length; col++) {
-          let tile = tiles[row][col];
+          const tile = tiles[row][col];
 
-          // Make sure tile exists
           if (tile) {
             tile.celebrateTileAnim();
           }
@@ -244,11 +253,11 @@ export class MainGameScene extends Generic2DGameScene {
         !this.revealedAtLeastOnceThisLevel
       ) {
         document.dispatchEvent(new Event(tileGridEventNames.onScoreChange));
-        if (TilePatternAttrs.difficultyLevel == difficulty.EASY) {
+        if (tilePatternAttrs.difficultyLevel == difficulty.EASY) {
           this.score += scoring.EASY;
-        } else if (TilePatternAttrs.difficultyLevel == difficulty.HARD) {
+        } else if (tilePatternAttrs.difficultyLevel == difficulty.HARD) {
           this.score += scoring.HARD;
-        } else if (TilePatternAttrs.difficultyLevel == difficulty.EXPERT) {
+        } else if (tilePatternAttrs.difficultyLevel == difficulty.EXPERT) {
           this.score += scoring.EXPERT;
         } else {
           console.log("ERROR: difficulty not listed");
@@ -256,12 +265,9 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // After x seconds, reveal the next puzzle
-      setTimeout(
-        function () {
-          this.newTilePattern();
-        }.bind(this),
-        sharedTileAttrs.solvedTimer * 1.1 * 1000 // slightly longer than tile celebration anim
-      );
+      setTimeout(() => {
+        this.newTilePattern();
+      }, sharedTileAttrs.solvedTimer * 1.1 * 1000); // slightly longer than tile celebration anim
     }
   }
 
@@ -319,11 +325,8 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Also checking for resize or orientation change to try to handle edge cases
     // that ResizeObserver misses!
-    window.addEventListener("resize", this.handleWindowResize.bind(this));
-    window.addEventListener(
-      "orientationchange",
-      this.handleWindowResize.bind(this)
-    );
+    window.addEventListener("resize", this.handleWindowResize);
+    window.addEventListener("orientationchange", this.handleWindowResize);
   }
 
   tearDownWindowResizeHandling() {
@@ -366,9 +369,8 @@ export class MainGameScene extends Generic2DGameScene {
       // Handle tiles for window resize
       for (let row = 0; row < tiles.length; row++) {
         for (let col = 0; col < tiles[row].length; col++) {
-          let tile = tiles[row][col];
+          const tile = tiles[row][col];
 
-          // Make sure tile exists
           if (tile) {
             tile.handleWindowResize();
           }
@@ -390,7 +392,7 @@ export class MainGameScene extends Generic2DGameScene {
     // Shutdown logic for this scene
     for (let row = 0; row < tiles.length; row++) {
       for (let col = 0; col < tiles[row].length; col++) {
-        let tile = tiles[row][col];
+        const tile = tiles[row][col];
 
         if (tile) {
           tile.destroy();

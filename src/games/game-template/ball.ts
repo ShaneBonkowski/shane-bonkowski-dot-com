@@ -105,7 +105,7 @@ export class Ball extends GameObject {
     this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
   }
 
-  calculateSize() {
+  calculateSize(): number {
     // Calculate the size based on the screen width
     let newSize = window.innerHeight * 0.07;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
