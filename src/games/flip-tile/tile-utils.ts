@@ -1,7 +1,7 @@
 import { Tile } from "@/src/games/flip-tile/tile";
 import { Matrix } from "@/src/utils/matrix";
 import { SeededRandom } from "@/src/utils/seedable-random";
-import { MainGameScene } from "./scenes/main-game-scene";
+import { MainGameScene } from "@/src/games/flip-tile/scenes/main-game-scene";
 
 const unseededRandom = new SeededRandom();
 

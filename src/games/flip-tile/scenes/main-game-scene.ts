@@ -156,15 +156,18 @@ export class MainGameScene extends Generic2DGameScene {
     for (let i = 1; i <= UI_VARS.numCheckboxes; i++) {
       const className = `.flip-tile-toggle-input-${i}`;
       const checkbox = document.querySelector(className);
-      if (checkbox.checked) {
-        if (i == 1) {
-          this.updateIntendedDifficuly(difficulty.EASY);
-        } else if (i == 2) {
-          this.updateIntendedDifficuly(difficulty.HARD);
-        } else if (i == 3) {
-          this.updateIntendedDifficuly(difficulty.EXPERT);
-        } else {
-          this.updateIntendedDifficuly(tilePatternAttrs.difficultyLevel);
+
+      if (checkbox) {
+        if (checkbox.checked) {
+          if (i == 1) {
+            this.updateIntendedDifficuly(difficulty.EASY);
+          } else if (i == 2) {
+            this.updateIntendedDifficuly(difficulty.HARD);
+          } else if (i == 3) {
+            this.updateIntendedDifficuly(difficulty.EXPERT);
+          } else {
+            this.updateIntendedDifficuly(tilePatternAttrs.difficultyLevel);
+          }
         }
       }
     }
