@@ -6,7 +6,6 @@ import { SeededRandom } from "@/src/utils/seedable-random";
 import {
   difficulty,
   scoring,
-  tileGridEventNames,
   tilePatternAttrs,
   instantiateTiles,
   checkIfTileGridSolved,
@@ -18,16 +17,13 @@ export const tiles: Tile[][] = [];
 
 const unseededRandom = new SeededRandom();
 
-export const intendedNewTileAttrs = {
-  tileCount: 9,
-  seed: unseededRandom.getRandomInt(1, 10000),
-  qtyStatesBeingUsed: 2,
-  difficultyLevel: difficulty.EASY,
-};
-
 export class MainGameScene extends Generic2DGameScene {
   private resizeObserver: ResizeObserver | null = null;
   public lastKnownWindowSize: Vec2 | null = null;
+  public canClickTile: boolean;
+  public disableClickID: number;
+  public score: number;
+  public revealedAtLeastOnceThisLevel: boolean;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -45,9 +41,9 @@ export class MainGameScene extends Generic2DGameScene {
     super.preload();
 
     // Preload logic for this scene
-    this.load.image("Tile Blue", "/webps/flip-tile-blue.webp");
-    this.load.image("Tile Red", "/webps/flip-tile-red.webp");
-    this.load.image("Tile Green", "/webps/flip-tile-green.webp");
+    this.load.image("Tile Blue", "/webps/games/flip-tile-blue.webp");
+    this.load.image("Tile Red", "/webps/games/flip-tile-red.webp");
+    this.load.image("Tile Green", "/webps/games/flip-tile-green.webp");
   }
 
   create() {
@@ -57,9 +53,8 @@ export class MainGameScene extends Generic2DGameScene {
     const screenHeight = window.visualViewport?.height || window.innerHeight;
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
 
-    // Spawn in tiles in a grid as a Promise (so that we can run this async), and then
-    // when that promise is fufilled, we can move on to other init logic
-    this.newTilePattern(true); // first time calling this
+    // Spawn in tiles in a grid
+    this.newTilePattern();
 
     this.gameStarted = true;
     dispatchGameStartedEvent("flip tile");
@@ -119,7 +114,9 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   resetRevealSolutionToggle() {
-    const toggleInput = document.querySelector(".flip-tile-sol-toggle-input");
+    const toggleInput = document.querySelector(
+      ".flip-tile-sol-toggle-input"
+    ) as HTMLInputElement;
 
     if (toggleInput) {
       toggleInput.checked = false;
@@ -148,32 +145,31 @@ export class MainGameScene extends Generic2DGameScene {
     this.resetRevealSolutionToggle();
   }
 
-  newTilePattern(firstTimeCalling = false) {
+  newTilePattern() {
     // Make sure no tiles exist to start
     this.destroyAllTiles();
 
     // Update to a new tile pattern in a grid as a Promise (so that we can run this async)
-    for (let i = 1; i <= UI_VARS.numCheckboxes; i++) {
+    for (let i = 1; i <= 3; i++) {
       const className = `.flip-tile-toggle-input-${i}`;
-      const checkbox = document.querySelector(className);
+      const checkbox = document.querySelector(className) as HTMLInputElement;
 
       if (checkbox) {
         if (checkbox.checked) {
           if (i == 1) {
-            this.updateIntendedDifficuly(difficulty.EASY);
+            this.updateDifficuly(difficulty.EASY);
           } else if (i == 2) {
-            this.updateIntendedDifficuly(difficulty.HARD);
+            this.updateDifficuly(difficulty.HARD);
           } else if (i == 3) {
-            this.updateIntendedDifficuly(difficulty.EXPERT);
+            this.updateDifficuly(difficulty.EXPERT);
           } else {
-            this.updateIntendedDifficuly(tilePatternAttrs.difficultyLevel);
+            this.updateDifficuly(tilePatternAttrs.difficultyLevel);
           }
         }
       }
     }
 
-    this.updateIntendedSeed();
-    this.updateActualTilePatternAttrs();
+    this.updateSeed();
 
     instantiateTiles(this).then((tilesReturned) => {
       // Push new tiles into tiles array.
@@ -182,43 +178,29 @@ export class MainGameScene extends Generic2DGameScene {
       tilesReturned.forEach((tile) => tiles.push(tile));
     });
 
-    if (firstTimeCalling) {
-      // After everything is loaded in, we can begin the game
-      this.gameStarted = true;
-    }
-
     // Reset solution revealed info for this level
     this.resetRevealSolutionToggle();
     this.revealedAtLeastOnceThisLevel = false;
   }
 
-  updateIntendedDifficuly(difficultyLevel = difficulty.HARD) {
-    intendedNewTileAttrs.difficultyLevel = difficultyLevel;
+  updateDifficuly(difficultyLevel = difficulty.HARD) {
+    tilePatternAttrs.difficultyLevel = difficultyLevel;
 
     // Assign qty states etc based on difficulty
     if (difficultyLevel == difficulty.EASY) {
-      intendedNewTileAttrs.qtyStatesBeingUsed = 2;
-      intendedNewTileAttrs.tileCount = 4;
+      tilePatternAttrs.qtyStatesBeingUsed = 2;
+      tilePatternAttrs.tileCount = 4;
     } else if (difficultyLevel == difficulty.HARD) {
-      intendedNewTileAttrs.qtyStatesBeingUsed = 2;
-      intendedNewTileAttrs.tileCount = 9;
+      tilePatternAttrs.qtyStatesBeingUsed = 2;
+      tilePatternAttrs.tileCount = 9;
     } else {
-      intendedNewTileAttrs.qtyStatesBeingUsed = 3;
-      intendedNewTileAttrs.tileCount = 9;
+      tilePatternAttrs.qtyStatesBeingUsed = 3;
+      tilePatternAttrs.tileCount = 9;
     }
   }
 
-  updateIntendedSeed(seedProvided = unseededRandom.getRandomInt(1, 100000)) {
-    intendedNewTileAttrs.seed = seedProvided;
-  }
-
-  updateActualTilePatternAttrs() {
-    // Set actual to the intended values
-    tilePatternAttrs.qtyStatesBeingUsed =
-      intendedNewTileAttrs.qtyStatesBeingUsed;
-    tilePatternAttrs.tileCount = intendedNewTileAttrs.tileCount;
-    tilePatternAttrs.seed = intendedNewTileAttrs.seed;
-    tilePatternAttrs.difficultyLevel = intendedNewTileAttrs.difficultyLevel;
+  updateSeed(seedProvided = unseededRandom.getRandomInt(1, 100000)) {
+    tilePatternAttrs.seed = seedProvided;
   }
 
   destroyAllTiles() {
@@ -248,14 +230,15 @@ export class MainGameScene extends Generic2DGameScene {
 
       // Update score..
       // Only give score if solution is not revealed
-      const toggleInput = document.querySelector(".flip-tile-sol-toggle-input");
+      const toggleInput = document.querySelector(
+        ".flip-tile-sol-toggle-input"
+      ) as HTMLInputElement;
 
       if (
         toggleInput &&
         !toggleInput.checked &&
         !this.revealedAtLeastOnceThisLevel
       ) {
-        document.dispatchEvent(new Event(tileGridEventNames.onScoreChange));
         if (tilePatternAttrs.difficultyLevel == difficulty.EASY) {
           this.score += scoring.EASY;
         } else if (tilePatternAttrs.difficultyLevel == difficulty.HARD) {
@@ -265,6 +248,10 @@ export class MainGameScene extends Generic2DGameScene {
         } else {
           console.log("ERROR: difficulty not listed");
         }
+
+        document.dispatchEvent(
+          new CustomEvent("scoreChange", { detail: { score: this.score } })
+        );
       }
 
       // After x seconds, reveal the next puzzle
@@ -284,15 +271,8 @@ export class MainGameScene extends Generic2DGameScene {
     // Subscribe to events for this scene
     this.setUpWindowResizeHandling();
 
-    document.addEventListener(
-      tileGridEventNames.onTilegridChange,
-      this.newTilePattern
-    );
-
-    document.addEventListener(
-      tileGridEventNames.onTilegridReset,
-      this.resetCurrentTilePattern
-    );
+    document.addEventListener("tilegridChange", this.newTilePattern);
+    document.addEventListener("tilegridReset", this.resetCurrentTilePattern);
   }
 
   /*
@@ -305,15 +285,8 @@ export class MainGameScene extends Generic2DGameScene {
     // Unsubscribe from events for this scene
     this.tearDownWindowResizeHandling();
 
-    document.removeEventListener(
-      tileGridEventNames.onTilegridChange,
-      this.newTilePattern
-    );
-
-    document.removeEventListener(
-      tileGridEventNames.onTilegridReset,
-      this.resetCurrentTilePattern
-    );
+    document.removeEventListener("tilegridChange", this.newTilePattern);
+    document.removeEventListener("tilegridReset", this.resetCurrentTilePattern);
   }
 
   setUpWindowResizeHandling() {

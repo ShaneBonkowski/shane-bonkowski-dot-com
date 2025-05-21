@@ -12,7 +12,7 @@ import { ContentDataProps } from "@/src/types/data-props";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import GameMessagePopup from "@/src/components/GameMessagePopup";
 
-export const boidInfoData: ContentDataProps[] = [
+export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
     text: "Better Boids",
@@ -119,7 +119,7 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
       {/* UI */}
       <GameMessagePopup message="For the best experience, hide the toolbar and switch to fullscreen mode."></GameMessagePopup>
       <BoidsSettingsContainer></BoidsSettingsContainer>
-      <GameInfoContainer infoData={boidInfoData}></GameInfoContainer>
+      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
     </div>
   );
 };

@@ -5,7 +5,6 @@ import {
   sharedTileAttrs,
   tilePatternAttrs,
   updateAllTilesText,
-  tileGridEventNames,
 } from "@/src/games/flip-tile/tile-utils";
 import { tiles } from "@/src/games/flip-tile/scenes/main-game-scene";
 import { MainGameScene } from "@/src/games/flip-tile/scenes/main-game-scene";
@@ -151,7 +150,7 @@ export class Tile extends GameObject {
   }
 
   playClickSpinAnim() {
-    document.dispatchEvent(new Event(tileGridEventNames.onTileSpin));
+    document.dispatchEvent(new Event("tileSpin"));
 
     // cannot click during animation
     this.scene.tryToDisableClick();

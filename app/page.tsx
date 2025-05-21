@@ -38,6 +38,16 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
+    imageUrl: "/webps/games/flip-tile-cover.webp",
+    linkUrl: "/games/flip-tile",
+    title: "Flip Tile",
+    description:
+      "Classic 'lights out' style puzzle game. Flipping one tile causes neighboring tiles to flip as well. Match them all to advance further!",
+    searchTags: "flip, flop, tile, matrix",
+    contentType: "games",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/writing/the-lovers.webp",
     linkUrl: "/writing/the-lovers",
     title: "The Lovers",
