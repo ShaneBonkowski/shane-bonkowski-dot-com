@@ -120,19 +120,6 @@ export class Tile extends GameObject {
     this.scene.revealedAtLeastOnceThisLevel = true;
   }
 
-  destroy() {
-    // Remove the sprite from the scene
-    this.graphic!.destroy();
-    this.graphic = null;
-
-    // Remove text from the scene
-    this.text!.destroy();
-    this.text = null;
-
-    // TODO: add particles or something when destroyed
-    // ...
-  }
-
   updateTileColor() {
     // Color
     if (this.tileState === tileStates.RED) {
@@ -150,7 +137,7 @@ export class Tile extends GameObject {
   }
 
   playClickSpinAnim() {
-    document.dispatchEvent(new Event("tileSpin"));
+    document.dispatchEvent(new CustomEvent("tileSpin"));
 
     // cannot click during animation
     this.scene.tryToDisableClick();
@@ -206,6 +193,10 @@ export class Tile extends GameObject {
       },
     });
   }
+
+  handleUpdateTileState = () => {
+    this.updateTileState();
+  };
 
   updateTileState(updateNeighbors = true) {
     // Only update tile state if this is a tile reacting to
@@ -312,19 +303,33 @@ export class Tile extends GameObject {
     this.updateTextSize();
   }
 
+  handlePointerOver = () => {
+    this.scene.game.canvas.style.cursor = "pointer";
+  };
+
+  handlePointerOut = () => {
+    this.scene.game.canvas.style.cursor = "default";
+  };
+
   subscribeToEvents() {
     // Add an event listener for pointer down events using phaser's event system
-    this.graphic!.on("pointerdown", () => {
-      // updateTileState when the pointer clicks down on the tile
-      this.updateTileState();
-    });
+    this.graphic!.on("pointerdown", this.handleUpdateTileState);
 
     // Update mouse on hover
-    this.graphic!.on("pointerover", () => {
-      this.scene.game.canvas.style.cursor = "pointer";
-    });
-    this.graphic!.on("pointerout", () => {
-      this.scene.game.canvas.style.cursor = "default";
-    });
+    this.graphic!.on("pointerover", this.handlePointerOver);
+    this.graphic!.on("pointerout", this.handlePointerOut);
+  }
+
+  unsubscribeFromEvents() {
+    this.graphic!.off("pointerdown", this.handleUpdateTileState);
+    this.graphic!.off("pointerover", this.handlePointerOver);
+    this.graphic!.off("pointerout", this.handlePointerOut);
+  }
+
+  destroy() {
+    super.destroy();
+
+    // Unsubscribe from events
+    this.unsubscribeFromEvents();
   }
 }

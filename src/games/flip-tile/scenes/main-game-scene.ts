@@ -23,6 +23,7 @@ export class MainGameScene extends Generic2DGameScene {
   public canClickTile: boolean;
   public disableClickID: number;
   public score: number;
+  public solutionRevealed: boolean;
   public revealedAtLeastOnceThisLevel: boolean;
 
   constructor() {
@@ -34,6 +35,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.canClickTile = true;
     this.disableClickID = 0;
     this.score = 0;
+    this.solutionRevealed = false;
     this.revealedAtLeastOnceThisLevel = false;
   }
 
@@ -114,16 +116,11 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   resetRevealSolutionToggle() {
-    const toggleInput = document.querySelector(
-      ".flip-tile-sol-toggle-input"
-    ) as HTMLInputElement;
-
-    if (toggleInput) {
-      toggleInput.checked = false;
-    }
+    // UI listens for this and manually resets it
+    document.dispatchEvent(new CustomEvent("overrideToggleSolutionOff"));
   }
 
-  resetCurrentTilePattern() {
+  handleResetTilePattern = () => {
     // Call a new tile pattern with the same seed in tile-utils
     // so that it resets back to the same tile pattern
 
@@ -143,32 +140,15 @@ export class MainGameScene extends Generic2DGameScene {
     console.log("reset");
 
     this.resetRevealSolutionToggle();
-  }
+  };
+
+  handleNewTilePattern = () => {
+    this.newTilePattern();
+  };
 
   newTilePattern() {
     // Make sure no tiles exist to start
     this.destroyAllTiles();
-
-    // Update to a new tile pattern in a grid as a Promise (so that we can run this async)
-    for (let i = 1; i <= 3; i++) {
-      const className = `.flip-tile-toggle-input-${i}`;
-      const checkbox = document.querySelector(className) as HTMLInputElement;
-
-      if (checkbox) {
-        if (checkbox.checked) {
-          if (i == 1) {
-            this.updateDifficuly(difficulty.EASY);
-          } else if (i == 2) {
-            this.updateDifficuly(difficulty.HARD);
-          } else if (i == 3) {
-            this.updateDifficuly(difficulty.EXPERT);
-          } else {
-            this.updateDifficuly(tilePatternAttrs.difficultyLevel);
-          }
-        }
-      }
-    }
-
     this.updateSeed();
 
     instantiateTiles(this).then((tilesReturned) => {
@@ -183,21 +163,33 @@ export class MainGameScene extends Generic2DGameScene {
     this.revealedAtLeastOnceThisLevel = false;
   }
 
-  updateDifficuly(difficultyLevel = difficulty.HARD) {
-    tilePatternAttrs.difficultyLevel = difficultyLevel;
-
-    // Assign qty states etc based on difficulty
-    if (difficultyLevel == difficulty.EASY) {
+  handleDifficultyChange = (event: Event) => {
+    const customEvent = event as CustomEvent<{ difficulty: string }>;
+    if (customEvent.detail.difficulty === "easy") {
+      tilePatternAttrs.difficultyLevel = difficulty.EASY;
       tilePatternAttrs.qtyStatesBeingUsed = 2;
       tilePatternAttrs.tileCount = 4;
-    } else if (difficultyLevel == difficulty.HARD) {
+    } else if (customEvent.detail.difficulty === "hard") {
+      tilePatternAttrs.difficultyLevel = difficulty.HARD;
       tilePatternAttrs.qtyStatesBeingUsed = 2;
       tilePatternAttrs.tileCount = 9;
-    } else {
+    } else if (customEvent.detail.difficulty === "expert") {
+      tilePatternAttrs.difficultyLevel = difficulty.EXPERT;
       tilePatternAttrs.qtyStatesBeingUsed = 3;
       tilePatternAttrs.tileCount = 9;
+    } else {
+      // Fall back to easy mode if not determined
+      console.error(
+        `Invalid difficulty level provided of ${customEvent.detail.difficulty}. Defaulting to easy mode.`
+      );
+      tilePatternAttrs.difficultyLevel = difficulty.EASY;
+      tilePatternAttrs.qtyStatesBeingUsed = 2;
+      tilePatternAttrs.tileCount = 4;
     }
-  }
+
+    // Then show a new tile pattern!
+    this.newTilePattern();
+  };
 
   updateSeed(seedProvided = unseededRandom.getRandomInt(1, 100000)) {
     tilePatternAttrs.seed = seedProvided;
@@ -230,15 +222,7 @@ export class MainGameScene extends Generic2DGameScene {
 
       // Update score..
       // Only give score if solution is not revealed
-      const toggleInput = document.querySelector(
-        ".flip-tile-sol-toggle-input"
-      ) as HTMLInputElement;
-
-      if (
-        toggleInput &&
-        !toggleInput.checked &&
-        !this.revealedAtLeastOnceThisLevel
-      ) {
+      if (!this.solutionRevealed && !this.revealedAtLeastOnceThisLevel) {
         if (tilePatternAttrs.difficultyLevel == difficulty.EASY) {
           this.score += scoring.EASY;
         } else if (tilePatternAttrs.difficultyLevel == difficulty.HARD) {
@@ -261,6 +245,16 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
+  handleToggleSolution = (event: Event) => {
+    const customEvent = event as CustomEvent<{ state: string }>;
+    if (customEvent.detail.state === "on") {
+      this.solutionRevealed = true;
+      this.revealedAtLeastOnceThisLevel = true;
+    } else {
+      this.solutionRevealed = false;
+    }
+  };
+
   /*
    * Note that this function is called in the create() method for GameScene2D,
    * so no need to call it! That is handled automatically.
@@ -271,8 +265,10 @@ export class MainGameScene extends Generic2DGameScene {
     // Subscribe to events for this scene
     this.setUpWindowResizeHandling();
 
-    document.addEventListener("tilegridChange", this.newTilePattern);
-    document.addEventListener("tilegridReset", this.resetCurrentTilePattern);
+    document.addEventListener("newTilePattern", this.handleNewTilePattern);
+    document.addEventListener("resetTilePattern", this.handleResetTilePattern);
+    document.addEventListener("difficultyChange", this.handleDifficultyChange);
+    document.addEventListener("toggleSolution", this.handleToggleSolution);
   }
 
   /*
@@ -285,8 +281,16 @@ export class MainGameScene extends Generic2DGameScene {
     // Unsubscribe from events for this scene
     this.tearDownWindowResizeHandling();
 
-    document.removeEventListener("tilegridChange", this.newTilePattern);
-    document.removeEventListener("tilegridReset", this.resetCurrentTilePattern);
+    document.removeEventListener("newTilePattern", this.handleNewTilePattern);
+    document.removeEventListener(
+      "resetTilePattern",
+      this.handleResetTilePattern
+    );
+    document.removeEventListener(
+      "difficultyChange",
+      this.handleDifficultyChange
+    );
+    document.removeEventListener("toggleSolution", this.handleToggleSolution);
   }
 
   setUpWindowResizeHandling() {
@@ -314,7 +318,7 @@ export class MainGameScene extends Generic2DGameScene {
     window.removeEventListener("orientationchange", this.handleWindowResize);
   }
 
-  handleWindowResize() {
+  handleWindowResize = () => {
     // Ensure the scene is fully initialized before handling resize
     if (!this.isInitialized) {
       console.warn("handleWindowResize called before scene initialization.");
@@ -356,7 +360,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Update lastKnownWindowSize to current screen dimensions
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-  }
+  };
 
   /*
    * Note that this function is called by GameScene2D during shutdown,

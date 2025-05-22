@@ -2,7 +2,6 @@ import { GameObject } from "@/src/utils/game-object";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec2 } from "@/src/utils/vector";
 import { MainGameScene } from "@/src/games/game-template/scenes/main-game-scene";
-import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
 
 export class Ball extends GameObject {
   private scene: MainGameScene;
@@ -49,7 +48,7 @@ export class Ball extends GameObject {
 
     // Listen for screen edge collision events
     document.addEventListener(
-      rigidBody2DEventNames.screenEdgeCollision,
+      "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
   }
@@ -60,22 +59,22 @@ export class Ball extends GameObject {
     this.graphic!.off("pointerdown", this.handlePointerDown, this);
 
     document.removeEventListener(
-      rigidBody2DEventNames.screenEdgeCollision,
+      "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
   }
 
-  handlePointerOver() {
+  handlePointerOver = () => {
     this.scene.input.setDefaultCursor("pointer");
-  }
+  };
 
-  handlePointerOut() {
+  handlePointerOut = () => {
     this.scene.input.setDefaultCursor("default");
-  }
+  };
 
-  handlePointerDown() {
+  handlePointerDown = () => {
     this.updateGraphic(this.getRandomColor());
-  }
+  };
 
   getRandomColor(): number {
     // Generate a random color with each RGB component above a certain threshold

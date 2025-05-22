@@ -24,7 +24,7 @@ export const scoring = {
 };
 
 export const tilePatternAttrs = {
-  tileCount: 9,
+  tileCount: 4,
   seed: unseededRandom.getRandomInt(1, 10000), // UNSEEDED getRandomInt func.
   qtyStatesBeingUsed: 2,
   difficultyLevel: difficulty.EASY,

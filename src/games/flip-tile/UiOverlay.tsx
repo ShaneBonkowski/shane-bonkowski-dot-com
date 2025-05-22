@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaEye, FaRedo, FaThLarge } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaRedo, FaThLarge } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 
 // FIXME/TODO:
@@ -7,17 +7,44 @@ import GameIconButton from "@/src/components/GameIconButton";
 // - go through code and make sure theres not references to UI from the old game. Also things like events that dont occur anymore
 // - I do not love the current design for the game logic. Right now there is a lot of querying of game components instead of using events to make changes.
 // - Find a clean way to share a game state between the TS code and the react components (probably just stick w/ events and clean them up).
+// - I think it can be simplied a lot
 
 const UiOverlay: React.FC = () => {
+  const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("easy");
   const [score, setScore] = useState<number>(0);
 
+  const handleToggleSolution = () => {
+    const newState = !isSolutionVisible;
+    setIsSolutionVisible(newState);
+
+    document.dispatchEvent(
+      new CustomEvent("toggleSolution", {
+        detail: { state: newState ? "on" : "off" },
+      })
+    );
+  };
+
   const handleDifficultyChange = (difficulty: string) => {
     setSelectedDifficulty(difficulty);
-    document.dispatchEvent(new Event("difficultyChange"));
+    document.dispatchEvent(
+      new CustomEvent("difficultyChange", { detail: { difficulty } })
+    );
+  };
+
+  const handleResetTilePattern = () => {
+    document.dispatchEvent(new CustomEvent("resetTilePattern"));
+  };
+
+  const handleNewTilePattern = () => {
+    document.dispatchEvent(new CustomEvent("newTilePattern"));
   };
 
   useEffect(() => {
+    const handleOverrideToggleSolutionOff = () => {
+      setIsSolutionVisible(false);
+    };
+
     const handleScoreChange = (event: CustomEvent) => {
       if (event.detail && typeof event.detail.score === "number") {
         setScore(event.detail.score);
@@ -25,11 +52,21 @@ const UiOverlay: React.FC = () => {
     };
 
     document.addEventListener(
+      "overrideToggleSolutionOff",
+      handleOverrideToggleSolutionOff
+    );
+
+    document.addEventListener(
       "scoreChange",
       handleScoreChange as EventListener
     );
 
     return () => {
+      document.removeEventListener(
+        "overrideToggleSolutionOff",
+        handleOverrideToggleSolutionOff
+      );
+
       document.removeEventListener(
         "scoreChange",
         handleScoreChange as EventListener
@@ -56,21 +93,23 @@ const UiOverlay: React.FC = () => {
       >
         {/* Solution Toggle Button */}
         <GameIconButton
-          onPointerDown={() => console.log("Solution toggled")}
-          icon={<FaEye size={30} />}
+          onPointerDown={handleToggleSolution}
+          icon={
+            isSolutionVisible ? <FaEyeSlash size={30} /> : <FaEye size={30} />
+          }
           ariaLabel="Toggle Solution Visibility"
         />
 
         {/* Tile Reset Button */}
         <GameIconButton
-          onPointerDown={() => console.log("Tiles reset")}
+          onPointerDown={handleResetTilePattern}
           icon={<FaRedo size={30} />}
           ariaLabel="Reset Tiles"
         />
 
         {/* New Tile Layout Button */}
         <GameIconButton
-          onPointerDown={() => console.log("New tile layout")}
+          onPointerDown={handleNewTilePattern}
           icon={<FaThLarge size={30} />}
           ariaLabel="Generate New Tile Layout"
         />
@@ -81,7 +120,7 @@ const UiOverlay: React.FC = () => {
           className="flex flex-col gap-4"
           aria-label="Difficulty Selection"
         >
-          {["easy", "medium", "hard"].map((difficulty) => (
+          {["easy", "hard", "expert"].map((difficulty) => (
             <label
               key={difficulty}
               className="flex items-center gap-4"

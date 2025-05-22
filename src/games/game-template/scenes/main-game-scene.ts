@@ -107,11 +107,8 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Also checking for resize or orientation change to try to handle edge cases
     // that ResizeObserver misses!
-    window.addEventListener("resize", this.handleWindowResize.bind(this));
-    window.addEventListener(
-      "orientationchange",
-      this.handleWindowResize.bind(this)
-    );
+    window.addEventListener("resize", this.handleWindowResize);
+    window.addEventListener("orientationchange", this.handleWindowResize);
   }
 
   tearDownWindowResizeHandling() {
@@ -123,7 +120,7 @@ export class MainGameScene extends Generic2DGameScene {
     window.removeEventListener("orientationchange", this.handleWindowResize);
   }
 
-  handleWindowResize() {
+  handleWindowResize = () => {
     // Ensure the scene is fully initialized before handling resize
     if (!this.isInitialized) {
       console.warn("handleWindowResize called before scene initialization.");
@@ -170,12 +167,12 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Update lastKnownWindowSize to current screen dimensions
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-  }
+  };
 
-  handlePointerDown(pointer: Phaser.Input.Pointer) {
+  handlePointerDown = (pointer: Phaser.Input.Pointer) => {
     // Create a new ball at the pointer's position
     this.createBall(pointer.x, pointer.y);
-  }
+  };
 
   createBall(x: number, y: number) {
     // Add new ball when click somewhere if we dont exceed max

@@ -1,7 +1,6 @@
 import { GameObject } from "@/src/utils/game-object";
 import { Vec2 } from "@/src/utils/vector";
 import { MoreMath } from "@/src/utils/more-math";
-import { boidEventNames } from "@/src/games/better-boids/boid-utils";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { MainGameScene } from "@/src/games/better-boids/scenes/main-game-scene";
 import { boidSettings } from "@/src/games/better-boids/BoidsSettingsContainer";
@@ -97,87 +96,68 @@ export class Boid extends GameObject {
     }
   }
 
+  handlePointerDown = (pointer: Phaser.Input.Pointer) => {
+    this.physicsBody2D!.position.x = pointer.worldX;
+    this.physicsBody2D!.position.y = pointer.worldY;
+  };
+
+  handlePointerMove = (pointer: Phaser.Input.Pointer) => {
+    this.physicsBody2D!.position.x = pointer.worldX;
+    this.physicsBody2D!.position.y = pointer.worldY;
+  };
+
+  handlePointerHoldClick = () => {
+    if (
+      boidSettings.leaderBoidEnabled.value == true &&
+      this.scene.uiMenuOpen == false
+    ) {
+      this.enable();
+    }
+  };
+
   subscribeToEvents() {
-    // Ensure that the boid updates its own speed when the speed value changes
-    document.addEventListener(boidEventNames.onSpeedChange, () => {
-      this.updateBoidSpeed();
-    });
-
-    // Leader boid movement etc.
     if (this.mainBoid) {
-      // Follow pointer
-      this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-        this.physicsBody2D!.position.x = pointer.worldX;
-        this.physicsBody2D!.position.y = pointer.worldY;
-      });
-      this.scene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-        this.physicsBody2D!.position.x = pointer.worldX;
-        this.physicsBody2D!.position.y = pointer.worldY;
-      });
+      this.scene.input.on("pointerdown", this.handlePointerDown, this);
+      this.scene.input.on("pointermove", this.handlePointerMove, this);
 
-      // Hide / reveal leader on pointer up / down
       document.addEventListener(
-        boidEventNames.pointerholdclick,
-        () => {
-          // can only enable if leader is toggled on
-          if (
-            boidSettings.leaderBoidEnabled.value == true &&
-            this.scene.uiMenuOpen == false
-          ) {
-            this.enable();
-          }
-        },
+        "pointerholdclick",
+        this.handlePointerHoldClick,
         { capture: true }
       );
 
-      // When the user lifts their finger off the screen, or stops clicking, the
-      // leader boid should dissapear
-      document.addEventListener(
-        "pointerup",
-        () => {
-          this.disable();
-        },
-        { capture: true }
-      );
-      document.addEventListener(
-        "pointercancel",
-        () => {
-          this.disable();
-        },
-        { capture: true }
-      );
+      document.addEventListener("pointerup", this.handleDisable, {
+        capture: true,
+      });
+      document.addEventListener("pointercancel", this.handleDisable, {
+        capture: true,
+      });
     }
   }
 
   unsubscribeFromEvents() {
-    // Unsubscribe from the speed change event
-    document.removeEventListener(
-      boidEventNames.onSpeedChange,
-      this.updateBoidSpeed
-    );
-
-    // Unsubscribe from leader boid events if this is the main boid
     if (this.mainBoid) {
-      // Remove pointer events
-      this.scene.input.off("pointerdown");
-      this.scene.input.off("pointermove");
+      this.scene.input.off("pointerdown", this.handlePointerDown, this);
+      this.scene.input.off("pointermove", this.handlePointerMove, this);
 
-      // Remove custom events for leader boid visibility
       document.removeEventListener(
-        boidEventNames.pointerholdclick,
-        this.enable,
-        {
-          capture: true,
-        }
+        "pointerholdclick",
+        this.handlePointerHoldClick,
+        { capture: true }
       );
-      document.removeEventListener("pointerup", this.disable, {
+
+      document.removeEventListener("pointerup", this.handleDisable, {
         capture: true,
       });
-      document.removeEventListener("pointercancel", this.disable, {
+      document.removeEventListener("pointercancel", this.handleDisable, {
         capture: true,
       });
     }
   }
+
+  handleDisable = () => {
+    this.disable();
+  };
 
   calculateBoidSize(): number {
     // Calculate the boid size based on the screen width
@@ -223,13 +203,13 @@ export class Boid extends GameObject {
     this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
   }
 
-  updateBoidSpeed() {
+  handleUpdateBoidSpeed = () => {
     // Update's boid speed (mostly used so that when the "speed" value is changed by the slider, each boid can adjust their velocity to be
     // capped at the new speed)
     this.physicsBody2D!.velocity = this.clampVelocity(
       this.physicsBody2D!.velocity
     );
-  }
+  };
 
   clampVelocity(velocityDesired: Vec2): Vec2 {
     // Cleans up velocity such if the provided value is not within min and max speed,

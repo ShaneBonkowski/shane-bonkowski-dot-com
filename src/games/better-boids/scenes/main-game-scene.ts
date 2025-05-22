@@ -2,11 +2,7 @@ import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Boid } from "@/src/games/better-boids/boid";
 import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
-import {
-  instantiateBoids,
-  boidEventNames,
-} from "@/src/games/better-boids/boid-utils";
-import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
+import { instantiateBoids } from "@/src/games/better-boids/boid-utils";
 import { GameObject } from "@/src/utils/game-object";
 import { dispatchGameStartedEvent } from "@/src/events/game-events";
 
@@ -30,10 +26,6 @@ export class MainGameScene extends Generic2DGameScene {
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-
-    this.onUiMenuOpen = this.onUiMenuOpen.bind(this);
-    this.onUiMenuClose = this.onUiMenuClose.bind(this);
-    this.handleWindowResize = this.handleWindowResize.bind(this);
   }
 
   preload() {
@@ -111,7 +103,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.setUpWindowResizeHandling();
 
     document.addEventListener(
-      rigidBody2DEventNames.screenEdgeCollision,
+      "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
 
@@ -128,12 +120,12 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Custom event that fires whenever pointer is held down longer than threshold during a click.
     // Pretty much for any "long" click tasks, like hold for this long to call this function.
-    document.addEventListener("pointerdown", this.prolongedHoldCheck, {
+    document.addEventListener("pointerdown", this.handleProlongedHoldCheck, {
       capture: true,
     });
 
-    document.addEventListener("uiMenuOpen", this.onUiMenuOpen);
-    document.addEventListener("uiMenuClose", this.onUiMenuClose);
+    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   /*
@@ -147,7 +139,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.tearDownWindowResizeHandling();
 
     document.removeEventListener(
-      rigidBody2DEventNames.screenEdgeCollision,
+      "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
 
@@ -155,21 +147,21 @@ export class MainGameScene extends Generic2DGameScene {
     document.removeEventListener("pointerup", this.handleIsNotInteracting);
     document.removeEventListener("pointercancel", this.handleIsNotInteracting);
 
-    document.removeEventListener("pointerdown", this.prolongedHoldCheck);
+    document.removeEventListener("pointerdown", this.handleProlongedHoldCheck);
 
-    document.removeEventListener("uiMenuOpen", this.onUiMenuOpen);
-    document.removeEventListener("uiMenuClose", this.onUiMenuClose);
+    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
-  onUiMenuOpen() {
+  handleUiMenuOpen = () => {
     this.uiMenuOpen = true;
-  }
+  };
 
-  onUiMenuClose() {
+  handleUiMenuClose = () => {
     this.uiMenuOpen = false;
-  }
+  };
 
-  prolongedHoldCheck() {
+  handleProlongedHoldCheck = () => {
     // Define holdTimer if it is not already (note that it gets cleared on pointerup below)
     pointerDownTime = Date.now();
     if (!holdTimer) {
@@ -178,7 +170,7 @@ export class MainGameScene extends Generic2DGameScene {
       holdTimer = setTimeout(() => {
         const holdDuration = Date.now() - pointerDownTime;
         if (holdDuration >= holdThreshold) {
-          document.dispatchEvent(new Event(boidEventNames.pointerholdclick));
+          document.dispatchEvent(new CustomEvent("pointerholdclick"));
         }
 
         // Reset holdTimer after it's triggered
@@ -187,7 +179,7 @@ export class MainGameScene extends Generic2DGameScene {
     }
 
     // When the pointer is released, clear the hold timer
-    const pointerUpListener = () => {
+    const handlePointerUp = () => {
       // Reset holdTimer when pointer is released
       if (holdTimer != null) {
         clearTimeout(holdTimer);
@@ -196,26 +188,26 @@ export class MainGameScene extends Generic2DGameScene {
 
       // Remove the event listener so that we only listen for pointerup once.
       // For reference, we re-listen for pointerup each time we hold down again.
-      document.removeEventListener("pointerup", pointerUpListener);
-      document.removeEventListener("pointercancel", pointerUpListener);
+      document.removeEventListener("pointerup", handlePointerUp);
+      document.removeEventListener("pointercancel", handlePointerUp);
     };
-    document.addEventListener("pointerup", pointerUpListener, {
+    document.addEventListener("pointerup", handlePointerUp, {
       once: true,
     });
-    document.addEventListener("pointercancel", pointerUpListener, {
+    document.addEventListener("pointercancel", handlePointerUp, {
       once: true,
     });
-  }
+  };
 
-  handleIsInteracting() {
+  handleIsInteracting = () => {
     this.isInteracting = true;
-  }
+  };
 
-  handleIsNotInteracting() {
+  handleIsNotInteracting = () => {
     this.isInteracting = false;
-  }
+  };
 
-  handleScreenEdgeCollision(event: CustomEvent) {
+  handleScreenEdgeCollision = (event: CustomEvent) => {
     const { gameObjectId, direction } = event.detail;
 
     // Find the GameObject by ID
@@ -227,7 +219,7 @@ export class MainGameScene extends Generic2DGameScene {
         collidedObject.onCollideScreenEdge(direction);
       }
     }
-  }
+  };
 
   setUpWindowResizeHandling() {
     // Observe window resizing so we can adjust the position
@@ -254,7 +246,7 @@ export class MainGameScene extends Generic2DGameScene {
     window.removeEventListener("orientationchange", this.handleWindowResize);
   }
 
-  handleWindowResize() {
+  handleWindowResize = () => {
     // Ensure the scene is fully initialized before handling resize
     if (!this.isInitialized) {
       console.warn("handleWindowResize called before scene initialization.");
@@ -310,7 +302,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Update lastKnownWindowSize to current screen dimensions
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-  }
+  };
 
   /*
    * Note that this function is called by GameScene2D during shutdown,

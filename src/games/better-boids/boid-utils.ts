@@ -2,11 +2,6 @@ import { Boid } from "@/src/games/better-boids/boid";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { MainGameScene } from "@/src/games/better-boids/scenes/main-game-scene";
 
-export const boidEventNames = {
-  onSpeedChange: "onSpeedChange",
-  pointerholdclick: "pointerholdclick",
-};
-
 const seededRandom = new SeededRandom(1234);
 
 export async function instantiateBoids(
