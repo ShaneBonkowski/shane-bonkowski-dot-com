@@ -25,6 +25,7 @@ export class MainGameScene extends Generic2DGameScene {
   public score: number;
   public solutionRevealed: boolean;
   public revealedAtLeastOnceThisLevel: boolean;
+  private solvedTimeoutID: NodeJS.Timeout | null = null;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -239,8 +240,9 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // After x seconds, reveal the next puzzle
-      setTimeout(() => {
+      this.solvedTimeoutID = setTimeout(() => {
         this.newTilePattern();
+        this.solvedTimeoutID = null; // Reset the timeout ID after execution
       }, sharedTileAttrs.solvedTimer * 1.1 * 1000); // slightly longer than tile celebration anim
     }
   }
@@ -368,6 +370,12 @@ export class MainGameScene extends Generic2DGameScene {
    */
   shutdown() {
     super.shutdown();
+
+    // Clear the solved timeout if it exists
+    if (this.solvedTimeoutID) {
+      clearTimeout(this.solvedTimeoutID);
+      this.solvedTimeoutID = null;
+    }
 
     // Shutdown logic for this scene
     for (let row = 0; row < tiles.length; row++) {

@@ -9,7 +9,7 @@ import { dispatchGameStartedEvent } from "@/src/events/game-events";
 // Used to determine if pointer is held down
 const holdThreshold: number = 0.1; // seconds
 let pointerDownTime: number = 0;
-let holdTimer: NodeJS.Timeout | null = null;
+let holdTimeout: NodeJS.Timeout | null = null;
 
 export class MainGameScene extends Generic2DGameScene {
   public boids: Boid[] = [];
@@ -162,29 +162,29 @@ export class MainGameScene extends Generic2DGameScene {
   };
 
   handleProlongedHoldCheck = () => {
-    // Define holdTimer if it is not already (note that it gets cleared on pointerup below)
+    // Define holdTimeout if it is not already (note that it gets cleared on pointerup below)
     pointerDownTime = Date.now();
-    if (!holdTimer) {
+    if (!holdTimeout) {
       // Check holdThreshold seconds from now if we are still holding down pointer.
       // If we are still holding down, dispatch pointerholdclick to tell the event listeners that we are held down
-      holdTimer = setTimeout(() => {
+      holdTimeout = setTimeout(() => {
         const holdDuration = Date.now() - pointerDownTime;
         if (holdDuration >= holdThreshold) {
           document.dispatchEvent(new CustomEvent("pointerholdclick"));
         }
 
-        // Reset holdTimer after it's triggered
-        holdTimer = null;
+        // Reset holdTimeout after it's triggered
+        holdTimeout = null;
       }, holdThreshold * 1000); // sec -> millisec
     }
 
     // When the pointer is released, clear the hold timer
     const handlePointerUp = () => {
-      // Reset holdTimer when pointer is released
-      if (holdTimer != null) {
-        clearTimeout(holdTimer);
+      // Reset holdTimeout when pointer is released
+      if (holdTimeout != null) {
+        clearTimeout(holdTimeout);
       }
-      holdTimer = null;
+      holdTimeout = null;
 
       // Remove the event listener so that we only listen for pointerup once.
       // For reference, we re-listen for pointerup each time we hold down again.

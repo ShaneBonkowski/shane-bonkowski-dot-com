@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaEye, FaEyeSlash, FaRedo, FaThLarge } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
+import "@/src/games/flip-tile/styles/game.css";
 
 // FIXME/TODO:
 // - make all ui have correct styling for light dark mode etc.!!!
-// - go through code and make sure theres not references to UI from the old game. Also things like events that dont occur anymore
-// - I do not love the current design for the game logic. Right now there is a lot of querying of game components instead of using events to make changes.
-// - Find a clean way to share a game state between the TS code and the react components (probably just stick w/ events and clean them up).
-// - I think it can be simplied a lot
 
 const UiOverlay: React.FC = () => {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("easy");
   const [score, setScore] = useState<number>(0);
+  const [isPulsing, setIsPulsing] = useState<boolean>(false);
+
+  const handleScoreChange = (event: CustomEvent) => {
+    if (event.detail && typeof event.detail.score === "number") {
+      setScore(event.detail.score);
+
+      // Trigger the pulse effect, and remove it after 500ms
+      // which is the same duration as the CSS animation
+      setIsPulsing(true);
+      timeoutRef.current = setTimeout(() => {
+        setIsPulsing(false);
+      }, 500);
+    }
+  };
 
   const handleToggleSolution = () => {
     const newState = !isSolutionVisible;
@@ -45,12 +57,6 @@ const UiOverlay: React.FC = () => {
       setIsSolutionVisible(false);
     };
 
-    const handleScoreChange = (event: CustomEvent) => {
-      if (event.detail && typeof event.detail.score === "number") {
-        setScore(event.detail.score);
-      }
-    };
-
     document.addEventListener(
       "overrideToggleSolutionOff",
       handleOverrideToggleSolutionOff
@@ -71,6 +77,11 @@ const UiOverlay: React.FC = () => {
         "scoreChange",
         handleScoreChange as EventListener
       );
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     };
   }, []);
 
@@ -79,7 +90,9 @@ const UiOverlay: React.FC = () => {
       {/* Score Text */}
       <p
         id="score-display"
-        className="absolute top-4 left-1/2 transform -translate-x-1/2 text-2xl font-bold"
+        className={`absolute top-4 left-1/2 transform -translate-x-1/2 text-2xl font-bold ${
+          isPulsing ? "pulse" : ""
+        }`}
         aria-live="polite"
       >
         Score: {score}
