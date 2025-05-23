@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaEye, FaEyeSlash, FaRedo, FaThLarge } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaRedo,
+  FaThLarge,
+  FaRegStar,
+  FaStarHalfAlt,
+  FaStar,
+} from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
 
 // FIXME/TODO:
-// - make all ui have correct styling for light dark mode etc.!!!
+// - changing orientation breaks layout of this AND boids game
 
 const UiOverlay: React.FC = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("easy");
   const [score, setScore] = useState<number>(0);
   const [isPulsing, setIsPulsing] = useState<boolean>(false);
 
@@ -38,7 +45,6 @@ const UiOverlay: React.FC = () => {
   };
 
   const handleDifficultyChange = (difficulty: string) => {
-    setSelectedDifficulty(difficulty);
     document.dispatchEvent(
       new CustomEvent("difficultyChange", { detail: { difficulty } })
     );
@@ -55,6 +61,12 @@ const UiOverlay: React.FC = () => {
   useEffect(() => {
     const handleOverrideToggleSolutionOff = () => {
       setIsSolutionVisible(false);
+
+      document.dispatchEvent(
+        new CustomEvent("toggleSolution", {
+          detail: { state: "off" },
+        })
+      );
     };
 
     document.addEventListener(
@@ -88,21 +100,26 @@ const UiOverlay: React.FC = () => {
   return (
     <div id="ui-overlay" aria-label="Game UI Overlay">
       {/* Score Text */}
-      <p
-        id="score-display"
-        className={`absolute top-4 left-1/2 transform -translate-x-1/2 text-2xl font-bold ${
-          isPulsing ? "pulse" : ""
-        }`}
-        aria-live="polite"
+      <div
+        id="score-display-container"
+        className="fixed pointer-events-none top-[12vh] w-full flex justify-center items-center"
       >
-        Score: {score}
-      </p>
+        <p
+          id="score-display"
+          className={`pointer-events-auto font-bold text-5xl sm:6xl ${
+            isPulsing ? "pulse" : ""
+          }`}
+          aria-live="polite"
+        >
+          {score}
+        </p>
+      </div>
 
       {/* Buttons and Toggles */}
       <div
-        id="controls"
-        className="absolute bottom-4 left-4 flex flex-col gap-4"
-        aria-label="Game Controls"
+        id="tile-buttons"
+        className="pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
+        aria-label="Tile Buttons"
       >
         {/* Solution Toggle Button */}
         <GameIconButton
@@ -126,32 +143,26 @@ const UiOverlay: React.FC = () => {
           icon={<FaThLarge size={30} />}
           ariaLabel="Generate New Tile Layout"
         />
+      </div>
 
-        {/* Difficulty Toggles */}
-        <div
-          id="difficulty-controls"
-          className="flex flex-col gap-4"
-          aria-label="Difficulty Selection"
-        >
-          {["easy", "hard", "expert"].map((difficulty) => (
-            <label
-              key={difficulty}
-              className="flex items-center gap-4"
-              htmlFor={`difficulty-${difficulty}`}
-            >
-              <input
-                id={`difficulty-${difficulty}`}
-                type="radio"
-                name="difficulty"
-                value={difficulty}
-                checked={selectedDifficulty === difficulty}
-                onChange={() => handleDifficultyChange(difficulty)}
-                aria-label={`Select ${difficulty} difficulty`}
-              />
-              {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
-            </label>
-          ))}
-        </div>
+      {/* Difficulty Toggles */}
+      <div
+        id="difficulty-controls"
+        className="fixed bottom-5 left-5 flex flex-col gap-5"
+        aria-label="Difficulty Selection"
+      >
+        {[
+          { difficulty: "expert", icon: <FaStar size={30} /> },
+          { difficulty: "hard", icon: <FaStarHalfAlt size={30} /> },
+          { difficulty: "easy", icon: <FaRegStar size={30} /> },
+        ].map(({ difficulty, icon }) => (
+          <GameIconButton
+            key={difficulty}
+            onPointerDown={() => handleDifficultyChange(difficulty)}
+            icon={icon}
+            ariaLabel={`Select ${difficulty} difficulty`}
+          />
+        ))}
       </div>
     </div>
   );

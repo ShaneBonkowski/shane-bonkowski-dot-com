@@ -120,6 +120,8 @@ export class MainGameScene extends Generic2DGameScene {
     window.removeEventListener("orientationchange", this.handleWindowResize);
   }
 
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
   handleWindowResize = () => {
     // Ensure the scene is fully initialized before handling resize
     if (!this.isInitialized) {
@@ -169,6 +171,8 @@ export class MainGameScene extends Generic2DGameScene {
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   };
 
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
   handlePointerDown = (pointer: Phaser.Input.Pointer) => {
     // Create a new ball at the pointer's position
     this.createBall(pointer.x, pointer.y);

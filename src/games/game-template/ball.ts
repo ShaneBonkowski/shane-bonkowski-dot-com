@@ -64,14 +64,20 @@ export class Ball extends GameObject {
     );
   }
 
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
   handlePointerOver = () => {
     this.scene.input.setDefaultCursor("pointer");
   };
 
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
   handlePointerOut = () => {
     this.scene.input.setDefaultCursor("default");
   };
 
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
   handlePointerDown = () => {
     this.updateGraphic(this.getRandomColor());
   };
@@ -122,6 +128,8 @@ export class Ball extends GameObject {
     this.rigidBody2D!.checkCollideScreenEdge(5);
   }
 
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
   handleScreenEdgeCollision = (event: CustomEvent) => {
     if (event.detail.gameObjectId === this.id) {
       switch (event.detail.direction) {

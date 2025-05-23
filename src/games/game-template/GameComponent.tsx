@@ -106,7 +106,10 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
       <div className="absolute inset-0" id={gameParentName}></div>
 
       {/* UI */}
-      <GameMessagePopup message="For the best experience, hide the toolbar and switch to fullscreen mode."></GameMessagePopup>
+      <GameMessagePopup
+        message="For the best experience, hide the toolbar and switch to fullscreen mode."
+        bottom={true}
+      ></GameMessagePopup>
       <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
     </div>
   );

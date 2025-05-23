@@ -2,9 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 
 interface GameMessagePopupProps {
   message: string;
+  bottom: boolean;
 }
 
-const GameMessagePopup: React.FC<GameMessagePopupProps> = ({ message }) => {
+const GameMessagePopup: React.FC<GameMessagePopupProps> = ({
+  message,
+  bottom, // True if place msg on bottom, otherwise it will be placed on top
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isFading, setIsFading] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -57,17 +61,22 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({ message }) => {
 
   return (
     <div
-      className={`pointer-events-none fixed bottom-0 flex justify-center w-full transition-opacity duration-1000 ${
+      id="game-message-popup-container"
+      className={`pointer-events-none fixed ${
+        bottom ? "bottom-0" : "top-0"
+      } flex justify-center w-full transition-opacity duration-1000 ${
         isFading ? "opacity-0" : "opacity-100"
       }`}
       style={{ zIndex: 1000 }}
     >
-      <p
-        className="w-[65vw] text-center my-0 py-5 text-outline-light dark:text-outline-dark"
-        aria-live="assertive"
+      <div
+        className="bg-game-menu-bkg-color-light dark:bg-game-menu-bkg-color"
+        id="game-message-popup-background"
       >
-        {message}
-      </p>
+        <p className="w-[65vw] text-center my-0 p-5" aria-live="assertive">
+          {message}
+        </p>
+      </div>
     </div>
   );
 };

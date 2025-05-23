@@ -68,13 +68,24 @@ export class Tile extends GameObject {
   }
 
   addText() {
+    // Determine text color from theme. If no preference, assume dark since
+    // that's the default
+    const theme = localStorage.getItem("theme");
+    let textColor = "#FFFFFF"; // Default to white
+
+    if (theme === "dark" || !theme) {
+      textColor = "#FFFFFF"; // white
+    } else {
+      textColor = "#000000"; // black
+    }
+
     // Add text to the top right corner of the graphic
     this.text = this.scene.add.text(
       // Position relative to graphic's top right corner
       this.physicsBody2D!.position.x + this.graphic!.displayWidth / 2,
       this.physicsBody2D!.position.y - this.graphic!.displayHeight / 2,
       "1",
-      { fontFamily: "Arial", fontSize: 40, color: "#FFFFFF" } // init text size here, but in reality it is updated in updateTextSize()
+      { fontFamily: "Arial", fontSize: 40, color: textColor } // init text size here, but in reality it is updated in updateTextSize()
     );
     this.text!.setOrigin(-0.2, 0.7); // Origin on the top right corner of the text
     this.text!.setDepth(10); // Ensure the text appears on top of the graphic
@@ -82,6 +93,13 @@ export class Tile extends GameObject {
     this.updateTextPos();
     this.updateTextSize();
     this.hideText();
+  }
+
+  removeText() {
+    if (this.text) {
+      this.text.destroy();
+      this.text = null;
+    }
   }
 
   updateTextSize() {
@@ -115,9 +133,6 @@ export class Tile extends GameObject {
 
     this.updateTextPos();
     this.updateTextSize();
-
-    // Make sure scene is aware we have revealed the solution
-    this.scene.revealedAtLeastOnceThisLevel = true;
   }
 
   updateTileColor() {
@@ -328,6 +343,9 @@ export class Tile extends GameObject {
 
   destroy() {
     super.destroy();
+
+    // Destroy the text object
+    this.removeText();
 
     // Unsubscribe from events
     this.unsubscribeFromEvents();

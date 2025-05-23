@@ -23,7 +23,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
 
   return (
     <button
-      className={`flex items-center justify-center text-primary-text-color-light dark:text-primary-text-color ${
+      className={`pointer-events-auto flex items-center justify-center text-primary-text-color-light dark:text-primary-text-color ${
         isHoverable
           ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
           : ""

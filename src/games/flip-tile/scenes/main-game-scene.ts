@@ -252,8 +252,30 @@ export class MainGameScene extends Generic2DGameScene {
     if (customEvent.detail.state === "on") {
       this.solutionRevealed = true;
       this.revealedAtLeastOnceThisLevel = true;
+
+      // Show the solution for all tiles
+      for (let row = 0; row < tiles.length; row++) {
+        for (let col = 0; col < tiles[row].length; col++) {
+          const tile = tiles[row][col];
+
+          if (tile) {
+            tile.showText();
+          }
+        }
+      }
     } else {
       this.solutionRevealed = false;
+
+      // Hide the solution for all tiles
+      for (let row = 0; row < tiles.length; row++) {
+        for (let col = 0; col < tiles[row].length; col++) {
+          const tile = tiles[row][col];
+
+          if (tile) {
+            tile.hideText();
+          }
+        }
+      }
     }
   };
 
