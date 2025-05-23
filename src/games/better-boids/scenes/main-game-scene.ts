@@ -55,8 +55,6 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
-    this.uiMenuOpen = false;
-
     // Spawn in x random boids as a Promise (so that we can run this async), and then
     // when that promise is fufilled, we can move on to other init logic
     instantiateBoids(this, 40).then((boids) => {

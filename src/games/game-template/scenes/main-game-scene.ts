@@ -9,6 +9,7 @@ export class MainGameScene extends Generic2DGameScene {
   private resizeObserver: ResizeObserver | null = null;
   public maxBalls: number = 10;
   public lastKnownWindowSize: Vec2 | null = null;
+  public uiMenuOpen: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -80,6 +81,8 @@ export class MainGameScene extends Generic2DGameScene {
     this.setUpWindowResizeHandling();
 
     this.input.on("pointerdown", this.handlePointerDown, this);
+    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   /*
@@ -93,7 +96,21 @@ export class MainGameScene extends Generic2DGameScene {
     this.tearDownWindowResizeHandling();
 
     this.input.off("pointerdown", this.handlePointerDown, this);
+    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
   }
+
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleUiMenuOpen = () => {
+    this.uiMenuOpen = true;
+  };
+
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleUiMenuClose = () => {
+    this.uiMenuOpen = false;
+  };
 
   setUpWindowResizeHandling() {
     // Observe window resizing so we can adjust the position

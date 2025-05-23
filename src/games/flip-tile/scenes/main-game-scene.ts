@@ -26,6 +26,7 @@ export class MainGameScene extends Generic2DGameScene {
   public solutionRevealed: boolean;
   public revealedAtLeastOnceThisLevel: boolean;
   private solvedTimeoutID: NodeJS.Timeout | null = null;
+  public uiMenuOpen: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -293,6 +294,8 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("resetTilePattern", this.handleResetTilePattern);
     document.addEventListener("difficultyChange", this.handleDifficultyChange);
     document.addEventListener("toggleSolution", this.handleToggleSolution);
+    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   /*
@@ -315,7 +318,17 @@ export class MainGameScene extends Generic2DGameScene {
       this.handleDifficultyChange
     );
     document.removeEventListener("toggleSolution", this.handleToggleSolution);
+    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
   }
+
+  handleUiMenuOpen = () => {
+    this.uiMenuOpen = true;
+  };
+
+  handleUiMenuClose = () => {
+    this.uiMenuOpen = false;
+  };
 
   setUpWindowResizeHandling() {
     // Observe window resizing so we can adjust the position
