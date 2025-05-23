@@ -4,13 +4,16 @@ import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 import { dispatchGameStartedEvent } from "@/src/events/game-events";
 
-export class TemplateGameScene extends Generic2DGameScene {
+export class MainGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
+  private resizeObserver: ResizeObserver | null = null;
+  public maxBalls: number = 10;
+  public lastKnownWindowSize: Vec2 | null = null;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
-    // "TemplateGameScene" supplied as the name of the scene.
-    super("TemplateGameScene");
+    // this scene name supplied as the name of the scene.
+    super("MainGameScene");
 
     // Constructor logic for this scene
     // ...
@@ -30,7 +33,6 @@ export class TemplateGameScene extends Generic2DGameScene {
     // screen using physics
     const { width, height } = this.scale.gameSize;
 
-    this.maxBalls = 10;
     for (let i = 0; i < 5; i++) {
       this.createBall(width / 2, height / 2);
     }
@@ -40,7 +42,7 @@ export class TemplateGameScene extends Generic2DGameScene {
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
 
     this.gameStarted = true;
-    dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: Add game name here
+    dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: GAME NAME HERE
   }
 
   update(time: number, delta: number) {
@@ -88,39 +90,39 @@ export class TemplateGameScene extends Generic2DGameScene {
     super.unsubscribeFromEvents();
 
     // Unsubscribe from events for this scene
-    if (this.resizeObserver != null) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    }
-    window.removeEventListener("resize", this.handleWindowResize.bind(this));
-    window.removeEventListener(
-      "orientationchange",
-      this.handleWindowResize.bind(this)
-    );
+    this.tearDownWindowResizeHandling();
 
     this.input.off("pointerdown", this.handlePointerDown, this);
   }
 
   setUpWindowResizeHandling() {
-    // Observe window resizing so we can adjust the ball's position
+    // Observe window resizing so we can adjust the position
     // and size accordingly!
 
     // Observe window resizing with ResizeObserver since it is good for snappy changes
-    const resizeObserver = new ResizeObserver(() => {
+    this.resizeObserver = new ResizeObserver(() => {
       this.handleWindowResize();
     });
-    resizeObserver.observe(document.documentElement);
+    this.resizeObserver.observe(document.documentElement);
 
     // Also checking for resize or orientation change to try to handle edge cases
     // that ResizeObserver misses!
-    window.addEventListener("resize", this.handleWindowResize.bind(this));
-    window.addEventListener(
-      "orientationchange",
-      this.handleWindowResize.bind(this)
-    );
+    window.addEventListener("resize", this.handleWindowResize);
+    window.addEventListener("orientationchange", this.handleWindowResize);
   }
 
-  handleWindowResize() {
+  tearDownWindowResizeHandling() {
+    if (this.resizeObserver != null) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    window.removeEventListener("resize", this.handleWindowResize);
+    window.removeEventListener("orientationchange", this.handleWindowResize);
+  }
+
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleWindowResize = () => {
     // Ensure the scene is fully initialized before handling resize
     if (!this.isInitialized) {
       console.warn("handleWindowResize called before scene initialization.");
@@ -167,12 +169,14 @@ export class TemplateGameScene extends Generic2DGameScene {
 
     // Update lastKnownWindowSize to current screen dimensions
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-  }
+  };
 
-  handlePointerDown(pointer: Phaser.Input.Pointer) {
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handlePointerDown = (pointer: Phaser.Input.Pointer) => {
     // Create a new ball at the pointer's position
     this.createBall(pointer.x, pointer.y);
-  }
+  };
 
   createBall(x: number, y: number) {
     // Add new ball when click somewhere if we dont exceed max

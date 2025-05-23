@@ -1,4 +1,0 @@
-body.game-background {
-  overflow: hidden; /* Prevent scrolling */
-  background-image: url("/webps/games/boids-background.webp");
-}

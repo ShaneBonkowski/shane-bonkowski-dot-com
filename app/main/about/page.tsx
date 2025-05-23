@@ -21,7 +21,7 @@ const aboutData: ContentDataProps[] = [
   },
 ];
 
-export default function About() {
+export default function Page() {
   return (
     <div id="about">
       <PageContentLoader contentData={aboutData} />

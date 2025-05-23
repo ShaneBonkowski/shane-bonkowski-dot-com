@@ -4,10 +4,9 @@
 
 - Duplicate one of the existing stories in `/app/writing`.
 - Rename the duplicated story directory to `{story-name}`.
-- Create/update the `{storyName}Data` variable.
+- Update the `storyData` variable.
 - Replace the title, date, etc.
 - The `body` field contains a list of "paragraph" elements. Each paragraph or similar group of paragraphs can be assigned to `content`, and styled using `fontStyle` and `textAlign`.
-- Update the function name to `{StoryName}`.
 
 ### 2. Create a cover image for the story.
 

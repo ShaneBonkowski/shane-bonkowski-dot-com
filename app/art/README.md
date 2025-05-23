@@ -10,11 +10,10 @@
 
 - Duplicate one of the existing artwork pages in `/app/art`.
 - Rename the duplicated art directory to `{art-name}`.
-- Create/update the `{artName}Data` variable.
+- Update the contents of the `imageData`.
 - Make sure `artContent: true` and `body: []` if there is no text desired to be added below the image.
 - Link to the **actual** art image that will be displayed on the page.
 - Make sure `width` and `height` match the size of the image.
-- Update the function name to `{ArtName}`.
 
 ### 3. Create a cover image for the artwork.
 

@@ -17,13 +17,15 @@ export const dispatchMenuEvent = (
   menuName: string,
   action: "open" | "close"
 ) => {
+  // One of "uiMenuOpen" or "uiMenuClose"
   const eventName = `uiMenu${action.charAt(0).toUpperCase() + action.slice(1)}`;
-  const customEvent = new CustomEvent(eventName, {
-    detail: {
-      message: `${menuName} Menu ${action === "open" ? "Opened" : "Closed"}`,
-    },
-  });
-  document.dispatchEvent(customEvent);
+  document.dispatchEvent(
+    new CustomEvent(eventName, {
+      detail: {
+        message: `${menuName} Menu ${action === "open" ? "Opened" : "Closed"}`,
+      },
+    })
+  );
 };
 
 /**
@@ -37,10 +39,11 @@ export const dispatchMenuEvent = (
  * // "Better Boids Game Started"
  */
 export const dispatchGameStartedEvent = (gameName: string) => {
-  const customEvent = new CustomEvent("gameStarted", {
-    detail: {
-      message: `${gameName} Game Started`,
-    },
-  });
-  document.dispatchEvent(customEvent);
+  document.dispatchEvent(
+    new CustomEvent("gameStarted", {
+      detail: {
+        message: `${gameName} Game Started`,
+      },
+    })
+  );
 };

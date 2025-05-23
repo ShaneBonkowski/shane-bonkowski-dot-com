@@ -1,49 +1,37 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/better-boids/styles/better-boids.css";
-import GameInfoContainer from "@/src/components/GameInfoContainer";
-import BoidsSettingsContainer from "@/src/games/better-boids/BoidsSettingsContainer";
+import "@/src/games/flip-tile/styles/game.css";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
-import { ContentDataProps } from "@/src/types/data-props";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
+import { ContentDataProps } from "@/src/types/data-props";
 import GameMessagePopup from "@/src/components/GameMessagePopup";
+import GameInfoContainer from "@/src/components/GameInfoContainer";
+import UiOverlay from "@/src/games/flip-tile/UiOverlay";
 
-export const boidInfoData: ContentDataProps[] = [
+export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
-    text: "Better Boids",
+    text: "Flip Tile",
   },
   {
     type: "paragraph",
-    text: 'The <a href="https://en.wikipedia.org/wiki/Boids" target="_blank" rel="noopener noreferrer">Boids algorithm</a>, devised by Craig Reynolds, mimics the flocking behavior seen in birds and other animals. In general, Boids follow three rules:',
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Alignment:</b> Boids try to align their direction with other nearby Boids.",
-      "<b>Cohesion:</b> Boids move towards the average position of nearby Boids.",
-      "<b>Separation:</b> Boids avoid crowding near other Boids.",
-    ],
+    text: 'Inspired by the classic <a href="https://en.wikipedia.org/wiki/Lights_Out_(game)" target="_blank" rel="noopener noreferrer">Lights Out</a> game, Flip Tile brings a fresh twist to the familiar puzzle concept, offering three distinct levels of difficulty to challenge players of all skill levels.',
   },
   {
     type: "paragraph",
-    text: "From these three simple rules, complex emergent behavior and intricate patterns can arise. This little game is an attempt to display the beauty in the Boids algorithm, while expanding on it with novel concepts where applicable.",
+    text: 'I created this game mostly as an exercise to re-learn linear algebra concepts. Watch <a href="https://www.youtube.com/watch?v=0fHkKcy0x_U" target="_blank" rel="noopener noreferrer">Solving the "Lights Out" Problem</a> for more context on how linear algebra can be used to automatically solve this game!',
   },
 ];
-
-interface BoidsGameComponentProps {
-  id: string;
-}
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
 const gameParentName = "phaser-game";
 
-const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
+const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true);
   const isLoadingPhaser = useRef(false);
 
@@ -73,8 +61,8 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
       }
 
       try {
-        const { BoidsGameScene } = await import(
-          "@/src/games/better-boids/scenes/better-boids-scene"
+        const { MainGameScene } = await import(
+          "@/src/games/flip-tile/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -86,7 +74,7 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
             mode: Phaser.Scale.RESIZE,
             autoCenter: Phaser.Scale.CENTER_BOTH,
           },
-          scene: BoidsGameScene,
+          scene: MainGameScene,
           parent: gameParentName,
         };
 
@@ -112,7 +100,7 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/better-boids-cover.webp"
+          coverImage="/webps/games/flip-tile-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}
@@ -121,11 +109,14 @@ const BoidsGameComponent: React.FC<BoidsGameComponentProps> = ({ id }) => {
       <div className="absolute inset-0" id={gameParentName}></div>
 
       {/* UI */}
-      <GameMessagePopup message="For the best experience, hide the toolbar and switch to fullscreen mode."></GameMessagePopup>
-      <BoidsSettingsContainer></BoidsSettingsContainer>
-      <GameInfoContainer infoData={boidInfoData}></GameInfoContainer>
+      <UiOverlay></UiOverlay>
+      <GameMessagePopup
+        message="For the best experience, hide the toolbar and switch to fullscreen mode."
+        bottom={true}
+      ></GameMessagePopup>
+      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
     </div>
   );
 };
 
-export default BoidsGameComponent;
+export default GameComponent;

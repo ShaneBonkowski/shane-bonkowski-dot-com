@@ -73,7 +73,7 @@ export const metadata = {
   },
 };
 
-export default function MyFinalThought() {
+export default function Page() {
   return (
     <div id={storyData.title}>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />

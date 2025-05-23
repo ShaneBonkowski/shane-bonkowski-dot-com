@@ -1,14 +1,13 @@
 import { GameObject } from "@/src/utils/game-object";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec2 } from "@/src/utils/vector";
-import { TemplateGameScene } from "@/src/games/game-template/scenes/game-template-scene";
-import { rigidBody2DEventNames } from "@/src/utils/rigid-body-2d";
+import { MainGameScene } from "@/src/games/game-template/scenes/main-game-scene";
 
 export class Ball extends GameObject {
-  private scene: TemplateGameScene;
+  private scene: MainGameScene;
   private random: SeededRandom;
 
-  constructor(scene: TemplateGameScene, spawnX: number, spawnY: number) {
+  constructor(scene: MainGameScene, spawnX: number, spawnY: number) {
     // Initialize GameObject with physics, and rigid body
     super("Ball", 0, true, true);
     this.updateSize(); // set the size here!, not in GameObject
@@ -49,7 +48,7 @@ export class Ball extends GameObject {
 
     // Listen for screen edge collision events
     document.addEventListener(
-      rigidBody2DEventNames.screenEdgeCollision,
+      "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
   }
@@ -60,22 +59,28 @@ export class Ball extends GameObject {
     this.graphic!.off("pointerdown", this.handlePointerDown, this);
 
     document.removeEventListener(
-      rigidBody2DEventNames.screenEdgeCollision,
+      "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
   }
 
-  handlePointerOver() {
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handlePointerOver = () => {
     this.scene.input.setDefaultCursor("pointer");
-  }
+  };
 
-  handlePointerOut() {
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handlePointerOut = () => {
     this.scene.input.setDefaultCursor("default");
-  }
+  };
 
-  handlePointerDown() {
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handlePointerDown = () => {
     this.updateGraphic(this.getRandomColor());
-  }
+  };
 
   getRandomColor(): number {
     // Generate a random color with each RGB component above a certain threshold
@@ -105,7 +110,7 @@ export class Ball extends GameObject {
     this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
   }
 
-  calculateSize() {
+  calculateSize(): number {
     // Calculate the size based on the screen width
     let newSize = window.innerHeight * 0.07;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -123,6 +128,8 @@ export class Ball extends GameObject {
     this.rigidBody2D!.checkCollideScreenEdge(5);
   }
 
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
   handleScreenEdgeCollision = (event: CustomEvent) => {
     if (event.detail.gameObjectId === this.id) {
       switch (event.detail.direction) {

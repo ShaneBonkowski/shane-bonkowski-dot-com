@@ -44,7 +44,7 @@ export const metadata = {
   },
 };
 
-export default function StrangeLove() {
+export default function Page() {
   return (
     <div id={imageData.title}>
       <StoryContentLoader {...imageData} />

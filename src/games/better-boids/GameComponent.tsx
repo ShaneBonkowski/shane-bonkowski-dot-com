@@ -1,24 +1,45 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/game-template/styles/game-template.css";
+import "@/src/games/better-boids/styles/game.css";
+import GameInfoContainer from "@/src/components/GameInfoContainer";
+import BoidsSettingsContainer from "@/src/games/better-boids/BoidsSettingsContainer";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
+import { ContentDataProps } from "@/src/types/data-props";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
+import GameMessagePopup from "@/src/components/GameMessagePopup";
 
-interface TemplateGameComponentProps {
-  id: string;
-}
+export const gameInfoData: ContentDataProps[] = [
+  {
+    type: "h1",
+    text: "Better Boids",
+  },
+  {
+    type: "paragraph",
+    text: 'The <a href="https://en.wikipedia.org/wiki/Boids" target="_blank" rel="noopener noreferrer">Boids algorithm</a>, devised by Craig Reynolds, mimics the flocking behavior seen in birds and other animals. In general, Boids follow three rules:',
+  },
+  {
+    type: "list",
+    items: [
+      "<b>Alignment:</b> Boids try to align their direction with other nearby Boids.",
+      "<b>Cohesion:</b> Boids move towards the average position of nearby Boids.",
+      "<b>Separation:</b> Boids avoid crowding near other Boids.",
+    ],
+  },
+  {
+    type: "paragraph",
+    text: "From these three simple rules, complex emergent behavior and intricate patterns can arise. This little game is an attempt to display the beauty in the Boids algorithm, while expanding on it with novel concepts where applicable.",
+  },
+];
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
 const gameParentName = "phaser-game";
 
-const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
-  id,
-}) => {
+const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true);
   const isLoadingPhaser = useRef(false);
 
@@ -48,8 +69,8 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
       }
 
       try {
-        const { TemplateGameScene } = await import(
-          "@/src/games/game-template/scenes/game-template-scene"
+        const { MainGameScene } = await import(
+          "@/src/games/better-boids/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -61,7 +82,7 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
             mode: Phaser.Scale.RESIZE,
             autoCenter: Phaser.Scale.CENTER_BOTH,
           },
-          scene: TemplateGameScene,
+          scene: MainGameScene,
           parent: gameParentName,
         };
 
@@ -94,8 +115,16 @@ const TemplateGameComponent: React.FC<TemplateGameComponentProps> = ({
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id={gameParentName}></div>
+
+      {/* UI */}
+      <GameMessagePopup
+        message="For the best experience, hide the toolbar and switch to fullscreen mode."
+        bottom={true}
+      ></GameMessagePopup>
+      <BoidsSettingsContainer></BoidsSettingsContainer>
+      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
     </div>
   );
 };
 
-export default TemplateGameComponent;
+export default GameComponent;

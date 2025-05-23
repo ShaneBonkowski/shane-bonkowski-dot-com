@@ -167,7 +167,7 @@ export const metadata = {
   },
 };
 
-export default function TheLovers() {
+export default function Page() {
   return (
     <div id={storyData.title}>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />

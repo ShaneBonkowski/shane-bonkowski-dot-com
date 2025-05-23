@@ -1,0 +1,7 @@
+body.game-background {
+  overflow: hidden; /* Prevent scrolling */
+  background-image: url("/webps/games/better-boids-background.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

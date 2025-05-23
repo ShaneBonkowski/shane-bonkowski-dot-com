@@ -86,7 +86,7 @@ export const metadata = {
   },
 };
 
-export default function IAmImmortal() {
+export default function Page() {
   return (
     <div id={storyData.title}>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />
