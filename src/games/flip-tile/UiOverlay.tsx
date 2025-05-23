@@ -11,9 +11,6 @@ import {
 import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
 
-// FIXME/TODO:
-// - changing orientation breaks layout of this AND boids game
-
 const UiOverlay: React.FC = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
@@ -102,7 +99,7 @@ const UiOverlay: React.FC = () => {
       {/* Score Text */}
       <div
         id="score-display-container"
-        className="fixed pointer-events-none top-[12vh] w-full flex justify-center items-center"
+        className="fixed pointer-events-none top-[12vh] landscape:top-5 w-full flex justify-center items-center"
       >
         <p
           id="score-display"
