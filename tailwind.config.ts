@@ -15,7 +15,7 @@ export default {
         "secondary-text-color": "rgba(156, 163, 175, 1)",
         "link-color": "rgba(105, 218, 255, 1)",
         "info-banner-bkg-color": "rgba(62, 62, 62, 0.95)",
-        "game-menu-bkg-color": "rgba(62, 62, 62, 0.69)",
+        "game-menu-bkg-color": "rgba(62, 62, 62, 0.8)",
         // Light mode
         "primary-color-light": "rgb(255, 255, 255)",
         "secondary-color-light": "rgba(69, 69, 69, 1)",
@@ -25,7 +25,7 @@ export default {
         "secondary-text-color-light": "rgb(108, 108, 108)",
         "link-color-light": "rgb(53, 116, 218)",
         "info-banner-bkg-color-light": "rgba(208, 208, 208, 0.95)",
-        "game-menu-bkg-color-light": "rgba(208, 208, 208, 0.69)",
+        "game-menu-bkg-color-light": "rgba(208, 208, 208, 0.75)",
       },
       spacing: {
         "common-ml": "2rem",
