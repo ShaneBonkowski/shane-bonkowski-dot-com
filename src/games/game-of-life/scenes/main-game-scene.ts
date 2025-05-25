@@ -59,9 +59,6 @@ export class MainGameScene extends Generic2DGameScene {
     this.updateGeneration(0);
 
     this.gestureManager = new GestureManager();
-
-    // Let game know ui menu closed to start
-    this.onUiMenuClosed();
   }
 
   preload() {
