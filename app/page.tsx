@@ -48,6 +48,17 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
+    imageUrl: "/webps/games/game-of-life-cover.webp",
+    linkUrl: "/games/game-of-life",
+    title: "Game of Life",
+    description:
+      "Experience the emergent world of cellular automata. Classic Conway's Game of Life with advanced customization options to create your own.",
+    searchTags:
+      "conway, conways, conway's, game, of, life, cell, cellular, automata",
+    contentType: "games",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/writing/the-lovers.webp",
     linkUrl: "/writing/the-lovers",
     title: "The Lovers",

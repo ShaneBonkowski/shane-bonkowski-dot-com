@@ -57,7 +57,6 @@ export class MainGameScene extends Generic2DGameScene {
       ) {
         Physics.performPhysicsUpdate(time);
 
-        // Handle the ball physics
         for (const ball of this.balls) {
           ball.handlePhysics(delta);
         }
@@ -167,8 +166,8 @@ export class MainGameScene extends Generic2DGameScene {
         return;
       }
 
-      // Update positions of all balls based on new screen dimensions. We want to
-      // retain the general location of the ball, so we try to position it the
+      // Update positions of all objs based on new screen dimensions. We want to
+      // retain the general location of the obj, so we try to position it the
       // same screen % it was before on the new screen.
       for (const ball of this.balls) {
         // Calculate new position based on percentage of old position

@@ -1,0 +1,653 @@
+import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
+import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  instantiateTiles,
+  TileGridAttrs,
+  tileGridWidthComputer,
+  tileGridHeightComputer,
+  tileGridWidthPhone,
+  tileGridHeightPhone,
+  tileColors,
+  TileAndBackgroundColors,
+  tileStates,
+  gameOfLifeTypes,
+  cgolTileShapes,
+  gameOfLifeShape,
+  tilespaceSet,
+  LivingTilespaceSet,
+} from "@/src/games/game-of-life/tile-utils";
+import { SeededRandom } from "@/src/utils/seedable-random";
+import { GestureManager } from "@/src/utils/gesture-manager";
+import { Tile } from "@/src/games/game-of-life/tile";
+
+export const tiles: Tile[][] = [];
+
+const unseededRandom = new SeededRandom();
+
+export class MainGameScene extends Generic2DGameScene {
+  private resizeObserver: ResizeObserver | null = null;
+  public uiMenuOpen: boolean = false;
+  public renderUpdateInterval: number;
+  public lastRenderUpdateTime: number;
+  public lastGameStateUpdateTime: number;
+  public gameOfLifeType: string;
+  public discoMode: boolean;
+  public discoModeLastUpdateTime: number;
+  public autoPlayMode: boolean;
+  public autoPlayModeLastUpdateTime: number;
+  public livingTilespaceSet: LivingTilespaceSet;
+  public gestureManager: GestureManager;
+
+  constructor() {
+    // Call the parent Generic2DGameScene's constructor with
+    // this scene name supplied as the name of the scene.
+    super("MainGameScene");
+
+    // Constructor logic for this scene
+    this.renderUpdateInterval = 66; // 33ms ~= 15hz
+    this.lastRenderUpdateTime = 0;
+    this.lastGameStateUpdateTime = 0;
+
+    this.gameOfLifeType = gameOfLifeTypes.CONWAY;
+    this.discoMode = false;
+    this.discoModeLastUpdateTime = 0;
+    this.autoPlayMode = false;
+    this.autoPlayModeLastUpdateTime = 0;
+
+    this.livingTilespaceSet = new LivingTilespaceSet();
+    this.updatePopulation(0);
+    this.updateGeneration(0);
+
+    this.gestureManager = new GestureManager();
+
+    // Let game know ui menu closed to start
+    this.onUiMenuClosed();
+  }
+
+  preload() {
+    super.preload();
+
+    // Preload logic for this scene
+    this.load.image("Tile Blank", "/webps/games/game-of-life-tile-blank.webp");
+  }
+
+  create() {
+    super.create();
+
+    // (setting tile layout creates the tiles)
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+    if (window.innerWidth <= 600 || isPortrait) {
+      this.setTileLayoutForPhone();
+    } else {
+      this.setLayoutForComputer();
+    }
+
+    // If there is local storage with currentColorThemeIndex, set
+    // TileGridAttrs.currentColorThemeIndex to that to start!
+    if (localStorage.getItem("currentColorThemeIndex")) {
+      TileGridAttrs.currentColorThemeIndex = parseInt(
+        localStorage.getItem("currentColorThemeIndex") as string
+      );
+    }
+    this.updateColorThemeAttrs();
+
+    // Dispatch a custom event saying that color change just occured
+    // due to the game class, not the slider.
+    document.dispatchEvent(new Event("changeColorThemeFromMainGame"));
+
+    // After everything is loaded in, begin the game
+    this.gameStarted = true;
+    this.paused = true; // start off paused
+
+    dispatchGameStartedEvent("Game of Life");
+  }
+
+  update(time: number, delta: number) {
+    super.update(time, delta);
+
+    if (this.gameStarted) {
+      if (this.paused == false) {
+        // Perform tile grid updates on TileGridAttrs.updateInterval
+        if (
+          time - this.lastGameStateUpdateTime >=
+          TileGridAttrs.updateInterval
+        ) {
+          this.lastGameStateUpdateTime = time;
+
+          // Auto mode: automatically place shapes if the criteria fits
+          if (this.autoPlayMode) {
+            // Every 2 seconds, if the population is below some threshold, place a shape
+            if (
+              time - this.autoPlayModeLastUpdateTime >= 2000 &&
+              this.population < 30
+            ) {
+              this.autoPlayModeLastUpdateTime = time;
+              this.placeRandomShape();
+            }
+            // Otherwise, in case the population has grown static, place a shape no matter what
+            // after 5 seconds
+            else if (time - this.autoPlayModeLastUpdateTime >= 5000) {
+              this.autoPlayModeLastUpdateTime = time;
+              this.placeRandomShape();
+            }
+          }
+
+          // Disco mode: switch color theme every after discoModeUpdateInterval ms
+          if (this.discoMode) {
+            if (
+              time - this.discoModeLastUpdateTime >=
+              TileGridAttrs.discoModeUpdateInterval
+            ) {
+              this.discoModeLastUpdateTime = time;
+              this.advanceToNextColorTheme();
+
+              // Dispatch a custom event saying that disco mode just caused
+              // a color change.
+              document.dispatchEvent(new Event("changeColorThemeFromMainGame"));
+
+              // // Play a vignette animation (make it nearly as long as the disco mode interval)
+              // vignetteFade(TileGridAttrs.discoModeUpdateInterval); // ms
+            }
+          }
+
+          // Run the iteration last so it can handle things like population count etc.
+          this.runGameOfLifeIteration();
+        }
+      }
+
+      // "render" pass to update all visuals
+      if (time - this.lastRenderUpdateTime >= this.renderUpdateInterval) {
+        this.lastRenderUpdateTime = time;
+
+        this.renderPass();
+      }
+    }
+  }
+
+  renderPass() {
+    // Update tile graphics / color etc.
+    for (let row = 0; row < tiles.length; row++) {
+      for (let col = 0; col < tiles[row].length; col++) {
+        tiles[row][col].renderTileGraphics();
+      }
+    }
+
+    // Set background color -> TileAndBackgroundColors[i][2]
+    document.body.style.backgroundColor = this.hexToCssColor(
+      TileAndBackgroundColors[TileGridAttrs.currentColorThemeIndex][2]
+    );
+  }
+
+  runGameOfLifeIteration() {
+    // Run the life iteration
+    const toCheckTileGridSpaceLocs = this.checkForNeighborTiles(
+      TileGridAttrs.countCornersAsNeighbors,
+      TileGridAttrs.infiniteEdges
+    );
+
+    if (this.gameOfLifeType == gameOfLifeTypes.CONWAY) {
+      this.handleConwayLifeIteration(toCheckTileGridSpaceLocs);
+    } else {
+      console.error(`Unknown game of life type: ${this.gameOfLifeType}`);
+    }
+
+    // Update the generation count
+    this.updateGeneration(this.generation + 1);
+  }
+
+  updateGeneration(newGenerationVal: number) {
+    // Cap to safe values
+    if (newGenerationVal > Number.MAX_SAFE_INTEGER - 10) {
+      newGenerationVal = 0;
+    }
+
+    // Only fire an event if the generation value actually changed
+    if (newGenerationVal != this.generation) {
+      document.dispatchEvent(
+        new CustomEvent("genChange", {
+          detail: { message: newGenerationVal.toString() },
+        })
+      );
+    }
+
+    this.generation = newGenerationVal;
+  }
+
+  updatePopulation(newPopulationVal: number) {
+    // Cap to safe values
+    if (newPopulationVal > Number.MAX_SAFE_INTEGER - 10) {
+      newPopulationVal = 0;
+    }
+
+    // Only fire an event if the population value actually changed
+    if (newPopulationVal != this.population) {
+      document.dispatchEvent(
+        new CustomEvent("onPopChange", {
+          detail: { message: newPopulationVal.toString() },
+        })
+      );
+    }
+
+    this.population = newPopulationVal;
+
+    // If the population is 0, pause the game if it is not already.
+    // ONLY IF NOT IN AUTOPLAY MODE!
+    if (this.population == 0 && !this.autoPlayMode) {
+      if (!this.paused) {
+        this.togglePause();
+      }
+    }
+  }
+
+  checkForNeighborTiles(
+    countCorners: boolean,
+    countTorusNeighbors: boolean
+  ): [number, number][] {
+    // Check all living tiles and their surrounding neighbors to see how many living
+    // neighbors they have. This is the optimal way of checking, since vast spans of
+    // dead cells will never change state, so we can skip them.
+    const livingTileGridSpaceLocs = this.livingTilespaceSet.getTilespaceArray();
+    const toCheckTilespaceSet = new tilespaceSet();
+
+    // Add living tiles and their neighbors to the toCheckTilespaceSet
+    for (const loc of livingTileGridSpaceLocs) {
+      const [x, y] = loc;
+
+      // Add the living tile itself
+      toCheckTilespaceSet.add(tiles[x][y]);
+
+      // Add its neighbors
+      const neighborTiles = tiles[x][y].getNeighbors(
+        tiles,
+        countCorners,
+        countTorusNeighbors
+      );
+
+      for (const neighborTile of neighborTiles) {
+        toCheckTilespaceSet.add(neighborTile);
+      }
+    }
+
+    // Iterate over tiles to check and get their qty living neighbors
+    const toCheckTileGridSpaceLocs = toCheckTilespaceSet.getTilespaceArray();
+    for (const loc of toCheckTileGridSpaceLocs) {
+      const [x, y] = loc;
+      tiles[x][y].getQtyLivingNeighbors(
+        tiles,
+        countCorners,
+        countTorusNeighbors
+      );
+    }
+
+    // Only check these tiles for game of life changes (more efficient)
+    return toCheckTileGridSpaceLocs;
+  }
+
+  handleConwayLifeIteration(toCheckTileGridSpaceLocs: [number, number][]) {
+    for (const loc of toCheckTileGridSpaceLocs) {
+      const [x, y] = loc;
+      const tile = tiles[x][y];
+      tile.handleConwayLifeIteration();
+    }
+  }
+
+  /*
+   * Note that this function is called in the create() method for GameScene2D,
+   * so no need to call it! That is handled automatically.
+   */
+  subscribeToEvents() {
+    super.subscribeToEvents();
+
+    // Subscribe to events for this scene
+    this.setUpWindowResizeHandling();
+
+    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
+
+    document.addEventListener("togglePause", this.handleTogglePause);
+    document.addEventListener("toggleDisco", this.handleToggleDisco);
+    document.addEventListener("toggleAutomatic", this.handleToggleAutomatic);
+    document.addEventListener("clickAdvance", this.handleClickAdvance);
+    document.addEventListener("resetTiles", this.handleResetTiles);
+    document.addEventListener(
+      "changeColorThemeFromSlider",
+      this.handleSetColorThemeSlider
+    );
+  }
+
+  /*
+   * Note that this function is called in the shutdown() method for GameScene2D,
+   * so no need to call it! That is handled automatically.
+   */
+  unsubscribeFromEvents() {
+    super.unsubscribeFromEvents();
+
+    // Unsubscribe from events for this scene
+    this.tearDownWindowResizeHandling();
+
+    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
+
+    document.removeEventListener("togglePause", this.handleTogglePause);
+    document.removeEventListener("toggleDisco", this.handleToggleDisco);
+    document.removeEventListener("toggleAutomatic", this.handleToggleAutomatic);
+    document.removeEventListener("clickAdvance", this.handleClickAdvance);
+    document.removeEventListener("resetTiles", this.handleResetTiles);
+    document.removeEventListener(
+      "changeColorThemeFromSlider",
+      this.handleSetColorThemeSlider
+    );
+  }
+
+  handleTogglePause = () => {
+    this.togglePause();
+  };
+
+  handleToggleDisco = () => {
+    this.toggleDisco();
+  };
+
+  handleToggleAutomatic = () => {
+    this.toggleAutoPlay();
+  };
+
+  handleClickAdvance = () => {
+    this.clickAdvance();
+  };
+
+  handleResetTiles = () => {
+    this.resetTiles();
+  };
+
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleUiMenuOpen = () => {
+    this.uiMenuOpen = true;
+    this.gestureManager.blockDrag();
+    this.gestureManager.blockZoom();
+  };
+
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleUiMenuClose = () => {
+    this.uiMenuOpen = false;
+    this.gestureManager.unblockDrag();
+    this.gestureManager.unblockZoom();
+  };
+
+  setUpWindowResizeHandling() {
+    // Observe window resizing so we can adjust the position
+    // and size accordingly!
+
+    // Observe window resizing with ResizeObserver since it is good for snappy changes
+    this.resizeObserver = new ResizeObserver(() => {
+      this.handleWindowResize();
+    });
+    this.resizeObserver.observe(document.documentElement);
+
+    // Also checking for resize or orientation change to try to handle edge cases
+    // that ResizeObserver misses!
+    window.addEventListener("resize", this.handleWindowResize);
+    window.addEventListener("orientationchange", this.handleWindowResize);
+  }
+
+  tearDownWindowResizeHandling() {
+    if (this.resizeObserver != null) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    window.removeEventListener("resize", this.handleWindowResize);
+    window.removeEventListener("orientationchange", this.handleWindowResize);
+  }
+
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleWindowResize = () => {
+    // Ensure the scene is fully initialized before handling resize
+    if (!this.isInitialized) {
+      console.warn("handleWindowResize called before scene initialization.");
+      return;
+    }
+
+    // If it switches from landscape to portrait (aka phone) or vice versa,
+    // update the layout of the tile grid.
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+    if (window.innerWidth <= 600 || isPortrait) {
+      // Only update layout if it changed!
+      if (
+        TileGridAttrs.tileGridWidth != tileGridWidthPhone ||
+        TileGridAttrs.tileGridHeight != tileGridHeightPhone
+      ) {
+        this.setTileLayoutForPhone();
+      }
+    } else {
+      // Only update layout if it changed!
+      if (
+        TileGridAttrs.tileGridWidth != tileGridWidthComputer ||
+        TileGridAttrs.tileGridHeight != tileGridHeightComputer
+      ) {
+        this.setLayoutForComputer();
+      }
+    }
+  };
+
+  setTileLayoutForPhone() {
+    // Update layout for phone
+    TileGridAttrs.tileGridWidth = tileGridWidthPhone;
+    TileGridAttrs.tileGridHeight = tileGridHeightPhone;
+
+    // init or re-init all tiles
+    this.destroyTiles();
+    instantiateTiles(this).then((tilesReturned) => {
+      // Push new tiles into tiles array
+      tilesReturned.forEach((tile) => tiles.push(tile));
+    });
+  }
+
+  setLayoutForComputer() {
+    // Update layout for computer
+    TileGridAttrs.tileGridWidth = tileGridWidthComputer;
+    TileGridAttrs.tileGridHeight = tileGridHeightComputer;
+
+    // init or re-init all tiles
+    this.destroyTiles();
+    instantiateTiles(this).then((tilesReturned) => {
+      // Push new tiles into tiles array
+      tilesReturned.forEach((tile) => tiles.push(tile));
+    });
+  }
+
+  resetTiles() {
+    // reset zoom and drag to 0
+    this.gestureManager.resetDrag();
+    this.gestureManager.resetZoom();
+
+    for (let row = 0; row < tiles.length; row++) {
+      for (let col = 0; col < tiles[row].length; col++) {
+        tiles[row][col].resetTile();
+      }
+    }
+
+    // Fresh reset on generation and population as well
+    this.livingTilespaceSet.clear();
+    this.updatePopulation(0);
+    this.updateGeneration(0);
+  }
+
+  togglePause() {
+    this.paused = !this.paused;
+  }
+
+  clickAdvance() {
+    if (this.paused) {
+      this.runGameOfLifeIteration();
+    }
+  }
+
+  placeRandomShape() {
+    // Get a random shape
+    const cgolTileShapeKeys = Object.keys(cgolTileShapes) as Array<
+      keyof typeof cgolTileShapes
+    >;
+    const randomShapeIndex = unseededRandom.getRandomInt(
+      0,
+      cgolTileShapeKeys.length - 1
+    );
+    const randomShape = new gameOfLifeShape(
+      cgolTileShapeKeys[randomShapeIndex]
+    );
+
+    // console.log(cgolTileShapeKeys[randomShapeIndex]);
+    // console.log(randomShape.shapeTileSpace);
+
+    // Random shape has a shapeTileSpace indicating which tiles to turn on/off,
+    // starting from the top left. Need to find a random location on the real tileGridSpace
+    // that can fit the shape!
+    const tileSpaceWidth = tiles.length;
+    const tileSpaceHeight = tiles[0].length;
+
+    const shapeWidth = randomShape.getWidth();
+    const shapeHeight = randomShape.getHeight();
+
+    // Pick a random x coordinate between 0 and tileSpaceWidth - shapeWidth, so that the shape
+    // can always fit. Do similar for the y coordinate, but bound the lower bound since y counts downward.
+    // This logic works because we draw the tile from top left to bottom right.
+    const upperBoundX = tileSpaceWidth - shapeWidth;
+    if (upperBoundX <= 0) {
+      console.error("Shape is larger than the tile grid! Not placing shape.");
+      return;
+    }
+    const randomX = unseededRandom.getRandomInt(0, upperBoundX);
+
+    const lowerBoundY = shapeHeight;
+    if (lowerBoundY >= tileSpaceHeight) {
+      console.error("Shape is larger than the tile grid! Not placing shape.");
+      return;
+    }
+    const randomY = unseededRandom.getRandomInt(
+      lowerBoundY - 1,
+      tileSpaceHeight
+    );
+
+    // Spawn in the shape from the randomX and randomY location!
+    randomShape.iterateOverTileSpace((shape, shapeX, shapeY) => {
+      const tileSpawnLocX = randomX + shapeX;
+      const tileSpawnLocY = randomY - shapeY; // minus since it goes top left to bottom right
+
+      if (tileSpawnLocX >= tileSpaceWidth || tileSpawnLocY >= tileSpaceHeight) {
+        // Skip this iteration
+        console.error(
+          "Shape placement out of bounds. Cannot place at",
+          tileSpawnLocX,
+          tileSpawnLocY
+        );
+        console.log("Debug info about the shape:");
+        console.log("Top left coordinate x, y: ", randomX, randomY);
+        console.log("Shape width, height", shapeWidth, shapeHeight);
+        console.log(
+          "Tile Gridspace Width, height",
+          tileSpaceWidth,
+          tileSpaceHeight
+        );
+        return;
+      }
+
+      // Only add to the grid, dont remove anything!
+      const tile = tiles[tileSpawnLocX][tileSpawnLocY];
+      if (
+        tile.tileState == tileStates.OFF &&
+        shape.getStateAtCoords(shapeX, shapeY) == tileStates.ON
+      ) {
+        tile.changeState(tileStates.ON);
+      }
+    });
+  }
+
+  toggleAutoPlay() {
+    this.autoPlayMode = !this.autoPlayMode;
+
+    // If the game is paused, unpause it if autoplay is turned on
+    if (this.paused && this.autoPlayMode) {
+      this.togglePause();
+    }
+  }
+
+  toggleDisco() {
+    this.discoMode = !this.discoMode;
+  }
+
+  hexToCssColor(hex: number): string {
+    return `#${hex.toString(16).padStart(6, "0")}`;
+  }
+
+  handleSetColorThemeSlider = () => {
+    // Turn off disco mode if its on already, since if a player is using the slider
+    // then they dont want disco mode to be playing
+    if (this.discoMode) {
+      this.toggleDisco();
+    }
+
+    this.updateColorThemeAttrs();
+  };
+
+  advanceToNextColorTheme() {
+    TileGridAttrs.currentColorThemeIndex++;
+    if (
+      TileGridAttrs.currentColorThemeIndex >
+      TileAndBackgroundColors.length - 1
+    ) {
+      TileGridAttrs.currentColorThemeIndex = 0;
+    }
+    this.updateColorThemeAttrs();
+  }
+
+  decreaseToPreviousColorTheme() {
+    TileGridAttrs.currentColorThemeIndex--;
+    if (TileGridAttrs.currentColorThemeIndex < 0) {
+      TileGridAttrs.currentColorThemeIndex = TileAndBackgroundColors.length - 1;
+    }
+    this.updateColorThemeAttrs();
+  }
+
+  updateColorThemeAttrs() {
+    // Set values for the color theme on change... note rendering to actually update the colors
+    //  is handled in the render pass.
+
+    // Update the ON/OFF colors
+    tileColors.ON =
+      TileAndBackgroundColors[TileGridAttrs.currentColorThemeIndex][0];
+    tileColors.OFF =
+      TileAndBackgroundColors[TileGridAttrs.currentColorThemeIndex][1];
+
+    // Write TileGridAttrs.currentColorThemeIndex to localStorage so that
+    // the color theme persists on page reload etc.
+    localStorage.setItem(
+      "currentColorThemeIndex",
+      TileGridAttrs.currentColorThemeIndex.toString()
+    );
+  }
+
+  destroyTiles() {
+    // Clear the existing tiles
+    for (let row = 0; row < tiles.length; row++) {
+      for (let col = 0; col < tiles[row].length; col++) {
+        tiles[row][col].destroy();
+      }
+    }
+    tiles.length = 0; // Clear the tiles array
+  }
+
+  /*
+   * Note that this function is called by GameScene2D during shutdown,
+   * so no need to call it! That is handled automatically.
+   */
+  shutdown() {
+    super.shutdown();
+
+    // Shutdown logic for this scene
+    this.destroyTiles();
+    this.gestureManager.destroy();
+  }
+}
