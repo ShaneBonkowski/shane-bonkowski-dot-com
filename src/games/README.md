@@ -6,6 +6,8 @@ This directory contains the source code for games on the website, including the 
 
 There is an example of how to make a game in the `game-template` directory. Users should copy this template and use it as a framework to create their own games. The template provides a basic structure and necessary components to get started quickly.
 
+Be sure to find all `FIXME` comments in the source code, which outline key areas to pay close attention to when creating a new game.
+
 ### Running the game on a local development server
 
 Run the following command to start the development server:

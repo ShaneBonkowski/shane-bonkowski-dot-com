@@ -49,7 +49,7 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   };
 
   useEffect(() => {
-    document.body.classList.add("game-background");
+    document.body.classList.add("better-boids-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {

@@ -1,4 +1,4 @@
-body.game-background {
+body.better-boids-game-background {
   overflow: hidden; /* Prevent scrolling */
   background-image: url("/webps/games/better-boids-background.webp");
   background-size: cover;
