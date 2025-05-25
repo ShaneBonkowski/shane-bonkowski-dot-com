@@ -1,4 +1,4 @@
-body.game-background {
+body.flip-tile-game-background {
   overflow: hidden; /* Prevent scrolling */
   background-image: url("/webps/games/flip-tile-background.webp");
   background-size: cover;
@@ -6,11 +6,11 @@ body.game-background {
   background-repeat: no-repeat;
 }
 
-.pulse {
-  animation: pulse 0.5s ease-in-out;
+.flip-tile-pulse {
+  animation: flip-tile-pulse 0.5s ease-in-out;
 }
 
-@keyframes pulse {
+@keyframes flip-tile-pulse {
   0% {
     transform: scale(1);
   }

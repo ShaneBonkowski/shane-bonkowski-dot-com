@@ -42,7 +42,15 @@ export const cleanupPhaserGame = (game: Phaser.Game | null): null => {
     console.log("Phaser script removed.");
   }
 
-  document.body.classList.remove("game-background");
+  // Remove all classes containing "game-background". This is because a common
+  // naming convention is used for css game background classes (e.g. "better-boids-game-background")
+  // in order to prevent CSS class name collisions.
+  document.body.classList.forEach((className) => {
+    if (className.includes("game-background")) {
+      document.body.classList.remove(className);
+    }
+  });
+  console.log("All game-background classes removed.");
 
   // Return a "null'd" game instance to indicate that the game has been cleaned up
   return game;

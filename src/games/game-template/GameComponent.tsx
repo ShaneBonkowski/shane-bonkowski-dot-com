@@ -37,7 +37,8 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   };
 
   useEffect(() => {
-    document.body.classList.add("game-background");
+    // FIXME: UPDATE THIS TO THE GAME-SPECIFIC BACKGROUND CLASS
+    document.body.classList.add("game-name-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {

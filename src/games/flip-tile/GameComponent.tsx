@@ -41,7 +41,7 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   };
 
   useEffect(() => {
-    document.body.classList.add("game-background");
+    document.body.classList.add("flip-tile-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {
