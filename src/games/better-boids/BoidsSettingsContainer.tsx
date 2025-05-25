@@ -11,7 +11,7 @@ export const boidSettings = {
   alignmentFactor: {
     title: "Alignment",
     desc: "Determines how much boids align with their neighbors.",
-    image: "/webps/games/alignment-graphic.webp",
+    image: "/webps/games/better-boids-alignment-graphic.webp",
     type: "slider",
     value: 0.3,
     lowerBound: 0.1,
@@ -21,7 +21,7 @@ export const boidSettings = {
   cohesionFactor: {
     title: "Cohesion",
     desc: "Controls how strongly boids move toward the center of their group.",
-    image: "/webps/games/cohesion-graphic.webp",
+    image: "/webps/games/better-boids-cohesion-graphic.webp",
     type: "slider",
     value: 0.054,
     lowerBound: 0.01,
@@ -31,7 +31,7 @@ export const boidSettings = {
   separationFactor: {
     title: "Separation",
     desc: "Determines how much boids avoid crowding each other.",
-    image: "/webps/games/separation-graphic.webp",
+    image: "/webps/games/better-boids-separation-graphic.webp",
     type: "slider",
     value: 0.935,
     lowerBound: 0.5,
@@ -41,7 +41,7 @@ export const boidSettings = {
   speed: {
     title: "Speed",
     desc: "Controls how fast the boids move.",
-    image: "/webps/games/velocity-graphic.webp",
+    image: "/webps/games/better-boids-velocity-graphic.webp",
     type: "slider",
     value: 0.6,
     lowerBound: 0.1,
@@ -51,7 +51,7 @@ export const boidSettings = {
   flockSearchRadius: {
     title: "Flock Radius",
     desc: "Defines the radius within which boids consider their neighbors.",
-    image: "/webps/games/search-radius-graphic.webp",
+    image: "/webps/games/better-boids-search-radius-graphic.webp",
     type: "slider",
     value: 90,
     lowerBound: 10,
@@ -61,7 +61,7 @@ export const boidSettings = {
   leaderBoidEnabled: {
     title: "Leader Boid",
     desc: "Enables or disables the leader boid follow behavior.",
-    image: "/webps/games/leader-follow-graphic.webp",
+    image: "/webps/games/better-boids-leader-follow-graphic.webp",
     type: "checkbox",
     value: true,
     lowerBound: null,
