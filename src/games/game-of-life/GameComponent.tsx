@@ -10,6 +10,7 @@ import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameMessagePopup from "@/src/components/GameMessagePopup";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
+import UiOverlay from "@/src/games/game-of-life/UiOverlay";
 
 export const gameInfoData: ContentDataProps[] = [
   {
@@ -117,6 +118,7 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
       <div className="absolute inset-0" id={gameParentName}></div>
 
       {/* UI */}
+      <UiOverlay></UiOverlay>
       <GameMessagePopup
         message="For the best experience, hide the toolbar and switch to fullscreen mode."
         bottom={true}

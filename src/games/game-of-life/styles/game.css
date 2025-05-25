@@ -1,5 +1,7 @@
 body.game-of-life-game-background {
   overflow: hidden; /* Prevent scrolling */
+  background-color: black; /* Fallback color */
+  background-image: none;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

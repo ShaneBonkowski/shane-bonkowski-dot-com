@@ -60,7 +60,7 @@ export const boidSettings = {
   },
   leaderBoidEnabled: {
     title: "Leader Boid",
-    desc: "Enables or disables the leader boid follow behavior.",
+    desc: "Enables or disables the leader boid follow behavior on hold and drag.",
     image: "/webps/games/better-boids-leader-follow-graphic.webp",
     type: "checkbox",
     value: true,

@@ -220,7 +220,7 @@ export class MainGameScene extends Generic2DGameScene {
     // Only fire an event if the population value actually changed
     if (newPopulationVal != this.population) {
       document.dispatchEvent(
-        new CustomEvent("onPopChange", {
+        new CustomEvent("popChange", {
           detail: { message: newPopulationVal.toString() },
         })
       );
@@ -233,6 +233,7 @@ export class MainGameScene extends Generic2DGameScene {
     if (this.population == 0 && !this.autoPlayMode) {
       if (!this.paused) {
         this.togglePause();
+        document.dispatchEvent(new CustomEvent("manualPause"));
       }
     }
   }
@@ -355,6 +356,11 @@ export class MainGameScene extends Generic2DGameScene {
 
   handleResetTiles = () => {
     this.resetTiles();
+
+    if (!this.paused) {
+      this.togglePause();
+      document.dispatchEvent(new CustomEvent("manualPause"));
+    }
   };
 
   // Using Arrow Function to bind the context of "this" to the class instance.
@@ -480,6 +486,10 @@ export class MainGameScene extends Generic2DGameScene {
   clickAdvance() {
     if (this.paused) {
       this.runGameOfLifeIteration();
+    } else {
+      // Manually pause on advance if playing already
+      this.togglePause();
+      document.dispatchEvent(new CustomEvent("manualPause"));
     }
   }
 
@@ -568,6 +578,7 @@ export class MainGameScene extends Generic2DGameScene {
     // If the game is paused, unpause it if autoplay is turned on
     if (this.paused && this.autoPlayMode) {
       this.togglePause();
+      document.dispatchEvent(new CustomEvent("manualUnpause"));
     }
   }
 
