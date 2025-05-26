@@ -12,6 +12,7 @@ import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
 
 const UiOverlay: React.FC = () => {
+  const [isUiVisible, setIsUiVisible] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
@@ -56,6 +57,13 @@ const UiOverlay: React.FC = () => {
   };
 
   useEffect(() => {
+    const handleUiMenuOpen = () => {
+      setIsUiVisible(false);
+    };
+    const handleUiMenuClose = () => {
+      setIsUiVisible(true);
+    };
+
     const handleOverrideToggleSolutionOff = () => {
       setIsSolutionVisible(false);
 
@@ -65,6 +73,9 @@ const UiOverlay: React.FC = () => {
         })
       );
     };
+
+    document.addEventListener("uiMenuOpen", handleUiMenuOpen);
+    document.addEventListener("uiMenuClose", handleUiMenuClose);
 
     document.addEventListener(
       "overrideToggleSolutionOff",
@@ -77,6 +88,9 @@ const UiOverlay: React.FC = () => {
     );
 
     return () => {
+      document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
+      document.removeEventListener("uiMenuClose", handleUiMenuClose);
+
       document.removeEventListener(
         "overrideToggleSolutionOff",
         handleOverrideToggleSolutionOff
@@ -97,70 +111,76 @@ const UiOverlay: React.FC = () => {
   return (
     <div id="ui-overlay" aria-label="Game UI Overlay">
       {/* Score Text */}
-      <div
-        id="score-display-container"
-        className="fixed pointer-events-none top-[12vh] landscape:top-5 w-full flex justify-center items-center"
-      >
-        <p
-          id="score-display"
-          className={`pointer-events-auto font-bold text-5xl sm:6xl ${
-            isPulsing ? "flip-tile-pulse" : ""
-          }`}
-          aria-live="polite"
+      {isUiVisible && (
+        <div
+          id="score-display-container"
+          className="fixed pointer-events-none top-[12vh] landscape:top-5 w-full flex justify-center items-center"
         >
-          {score}
-        </p>
-      </div>
+          <p
+            id="score-display"
+            className={`pointer-events-auto font-bold text-5xl sm:6xl ${
+              isPulsing ? "flip-tile-pulse" : ""
+            }`}
+            aria-live="polite"
+          >
+            {score}
+          </p>
+        </div>
+      )}
 
       {/* Buttons and Toggles */}
-      <div
-        id="tile-buttons"
-        className="pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
-        aria-label="Tile Buttons"
-      >
-        {/* Solution Toggle Button */}
-        <GameIconButton
-          onPointerDown={handleToggleSolution}
-          icon={
-            isSolutionVisible ? <FaEyeSlash size={30} /> : <FaEye size={30} />
-          }
-          ariaLabel="Toggle Solution Visibility"
-        />
+      {isUiVisible && (
+        <div
+          id="tile-buttons"
+          className="pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
+          aria-label="Tile Buttons"
+        >
+          {/* Solution Toggle Button */}
+          <GameIconButton
+            onPointerDown={handleToggleSolution}
+            icon={
+              isSolutionVisible ? <FaEyeSlash size={30} /> : <FaEye size={30} />
+            }
+            ariaLabel="Toggle Solution Visibility"
+          />
 
-        {/* Tile Reset Button */}
-        <GameIconButton
-          onPointerDown={handleResetTilePattern}
-          icon={<FaRedo size={30} />}
-          ariaLabel="Reset Tiles"
-        />
+          {/* Tile Reset Button */}
+          <GameIconButton
+            onPointerDown={handleResetTilePattern}
+            icon={<FaRedo size={30} />}
+            ariaLabel="Reset Tiles"
+          />
 
-        {/* New Tile Layout Button */}
-        <GameIconButton
-          onPointerDown={handleNewTilePattern}
-          icon={<FaThLarge size={30} />}
-          ariaLabel="Generate New Tile Layout"
-        />
-      </div>
+          {/* New Tile Layout Button */}
+          <GameIconButton
+            onPointerDown={handleNewTilePattern}
+            icon={<FaThLarge size={30} />}
+            ariaLabel="Generate New Tile Layout"
+          />
+        </div>
+      )}
 
       {/* Difficulty Toggles */}
-      <div
-        id="difficulty-controls"
-        className="fixed bottom-5 left-5 flex flex-col gap-5"
-        aria-label="Difficulty Selection"
-      >
-        {[
-          { difficulty: "expert", icon: <FaStar size={30} /> },
-          { difficulty: "hard", icon: <FaStarHalfAlt size={30} /> },
-          { difficulty: "easy", icon: <FaRegStar size={30} /> },
-        ].map(({ difficulty, icon }) => (
-          <GameIconButton
-            key={difficulty}
-            onPointerDown={() => handleDifficultyChange(difficulty)}
-            icon={icon}
-            ariaLabel={`Select ${difficulty} difficulty`}
-          />
-        ))}
-      </div>
+      {isUiVisible && (
+        <div
+          id="difficulty-controls"
+          className="fixed bottom-5 left-5 flex flex-col gap-5"
+          aria-label="Difficulty Selection"
+        >
+          {[
+            { difficulty: "expert", icon: <FaStar size={30} /> },
+            { difficulty: "hard", icon: <FaStarHalfAlt size={30} /> },
+            { difficulty: "easy", icon: <FaRegStar size={30} /> },
+          ].map(({ difficulty, icon }) => (
+            <GameIconButton
+              key={difficulty}
+              onPointerDown={() => handleDifficultyChange(difficulty)}
+              icon={icon}
+              ariaLabel={`Select ${difficulty} difficulty`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
