@@ -12,14 +12,6 @@ import {
 import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
 
-// FIXME/TODO:
-// - Clean up UI text
-// - UI buttons could look better size-wise
-// - Make the game window lighter so you can see through it better? Maybe each game needs a different opacity?
-// - Make sure slider etc. layout looks good for settings
-// - Test layout for phone etc. too, even for settings
-// - When you go to menu and come back, the tile state does not get updated. Tiles get stuck as white for some reason?
-
 const UiOverlay: React.FC = () => {
   const [isAutoMode, setIsAutoMode] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
@@ -118,27 +110,31 @@ const UiOverlay: React.FC = () => {
   }, [isDiscoMode]);
 
   return (
-    <div id="ui-overlay" aria-label="Game UI Overlay">
+    <div
+      className="pointer-events-none fixed bottom-5 w-full flex flex-col gap-3"
+      id="ui-overlay"
+      aria-label="Game UI Overlay"
+    >
       {/* Population and Generation Display */}
       <div
         id="game-state-info"
-        className="fixed top-5 right-5 p-3"
+        className="pointer-events-none flex justify-center items-center gap-6"
         aria-label="Game State Info"
       >
-        <p>Population: {population}</p>
-        <p>Generation: {generation}</p>
+        <p className="mb-0">Population: {population}</p>
+        <p className="mb-0">Generation: {generation}</p>
       </div>
 
       {/* Buttons and Toggles */}
       <div
         id="game-of-life-buttons"
-        className="pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
+        className="pointer-events-none gap-5 flex flex-row justify-center"
         aria-label="Tile Buttons"
       >
         {/* Disco Button */}
         <GameIconButton
           onPointerDown={handleToggleDisco}
-          icon={isDiscoMode ? <FaBan size={25} /> : <FaMagic size={25} />}
+          icon={isDiscoMode ? <FaBan size={30} /> : <FaMagic size={30} />}
           ariaLabel={isDiscoMode ? "Disable Disco Mode" : "Enable Disco Mode"}
         />
 
@@ -146,7 +142,7 @@ const UiOverlay: React.FC = () => {
         <GameIconButton
           onPointerDown={handleToggleAutoMode}
           icon={
-            isAutoMode ? <FaHandPointer size={25} /> : <FaRobot size={25} />
+            isAutoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />
           }
           ariaLabel="Toggle Auto Mode"
         />
@@ -154,21 +150,21 @@ const UiOverlay: React.FC = () => {
         {/* Pause/Play Button */}
         <GameIconButton
           onPointerDown={handleTogglePause}
-          icon={isPaused ? <FaPlay size={22} /> : <FaPause size={22} />}
+          icon={isPaused ? <FaPlay size={30} /> : <FaPause size={30} />}
           ariaLabel={isPaused ? "Play" : "Pause"}
         />
 
         {/* Advance Button */}
         <GameIconButton
           onPointerDown={handleAdvance}
-          icon={<FaGreaterThan size={25} />}
+          icon={<FaGreaterThan size={30} />}
           ariaLabel="Advance to Next Generation"
         />
 
         {/* Reset Button */}
         <GameIconButton
           onPointerDown={handleReset}
-          icon={<FaRedo size={25} />}
+          icon={<FaRedo size={30} />}
           ariaLabel="Reset Tiles"
         />
       </div>

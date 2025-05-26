@@ -15,7 +15,7 @@ export default {
         "secondary-text-color": "rgba(156, 163, 175, 1)",
         "link-color": "rgba(105, 218, 255, 1)",
         "info-banner-bkg-color": "rgba(62, 62, 62, 0.95)",
-        "game-menu-bkg-color": "rgba(62, 62, 62, 0.95)",
+        "game-menu-bkg-color": "rgba(62, 62, 62, 0.88)",
         // Light mode
         "primary-color-light": "rgb(255, 255, 255)",
         "secondary-color-light": "rgba(69, 69, 69, 1)",
