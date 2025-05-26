@@ -69,11 +69,7 @@ export class GestureManager {
   }
 
   subscribeToEvents() {
-    // passive = false informs the event that we are calling preventDefault() inside it.
-    // This is important for the wheel event to prevent page scrolling.
-    window.addEventListener("wheel", this.throttledHandleWheel, {
-      passive: false,
-    });
+    window.addEventListener("wheel", this.throttledHandleWheel);
     window.addEventListener("pointerdown", this.handlePointerDown);
     window.addEventListener("pointermove", this.throttledHandlePointerMove);
     window.addEventListener("pointerup", this.handlePointerUp);
@@ -203,7 +199,6 @@ export class GestureManager {
 
     const delta = event.deltaY > 0 ? -1 : 1; // Scroll down is negative, up is positive
     this.updateZoom(delta * this.zoomRate);
-    event.preventDefault(); // Prevent page scroll
   };
 
   handleZoom = () => {
