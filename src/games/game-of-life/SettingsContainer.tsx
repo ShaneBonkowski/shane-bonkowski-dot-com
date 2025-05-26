@@ -8,33 +8,6 @@ import { dispatchMenuEvent } from "@/src/events/game-events";
 import { tileAndBackgroundColors } from "@/src/games/game-of-life/tile-utils";
 
 export const settings = {
-  autoPause: {
-    title: "Auto Pause",
-    desc: "If enabled, automatically pause when clicking to add/subtract a cell. Enabled by default.",
-    type: "checkbox",
-    value: true,
-    lowerBound: null,
-    upperBound: null,
-    step: null,
-  },
-  infiniteEdges: {
-    title: "Infinite Edges",
-    desc: "If enabled, cells treat edges as a portal to the other side (Kind've like Pac-Man). Enabled by default.",
-    type: "checkbox",
-    value: true,
-    lowerBound: null,
-    upperBound: null,
-    step: null,
-  },
-  diagonalNeighbors: {
-    title: "Diagonal Neighbors",
-    desc: "If enabled, cells treat other cells that are diagonal to them as neighbors. Enabled by default.",
-    type: "checkbox",
-    value: true,
-    lowerBound: null,
-    upperBound: null,
-    step: null,
-  },
   updateInterval: {
     title: "Cell Update Interval",
     desc: "How many milliseconds to wait between cell updates. Lower value means quicker updates.",
@@ -80,12 +53,39 @@ export const settings = {
     upperBound: tileAndBackgroundColors.length - 1,
     step: 1,
   },
+  autoPause: {
+    title: "Auto Pause",
+    desc: "If enabled, automatically pause when clicking to add/subtract a cell. Enabled by default.",
+    type: "checkbox",
+    value: true,
+    lowerBound: null,
+    upperBound: null,
+    step: null,
+  },
+  infiniteEdges: {
+    title: "Infinite Edges",
+    desc: "If enabled, cells treat edges as a portal to the other side (Kind've like Pac-Man). Enabled by default.",
+    type: "checkbox",
+    value: true,
+    lowerBound: null,
+    upperBound: null,
+    step: null,
+  },
+  diagonalNeighbors: {
+    title: "Diagonal Neighbors",
+    desc: "If enabled, cells treat other cells that are diagonal to them as neighbors. Enabled by default.",
+    type: "checkbox",
+    value: true,
+    lowerBound: null,
+    upperBound: null,
+    step: null,
+  },
 };
 
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [selectedSetting, setSelectedSetting] = useState<string>("autoPause");
+  const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
   const [, forceUpdate] = useState(0); // Dummy state to force re-renders
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -113,6 +113,10 @@ const SettingsContainer: React.FC = () => {
   const handleSliderChange = (key: string, value: number) => {
     settings[key as keyof typeof settings].value = value;
     forceUpdate((prev) => prev + 1); // Force a re-render
+
+    if (key === "colorTheme") {
+      document.dispatchEvent(new CustomEvent("changeColorThemeFromSettings"));
+    }
   };
 
   const handleCheckboxChange = (key: string, value: boolean) => {
@@ -121,8 +125,13 @@ const SettingsContainer: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleUiMenuOpen = () => setIsButtonVisible(false);
-    const handleUiMenuClose = () => setIsButtonVisible(true);
+    const handleUiMenuOpen = () => {
+      setIsButtonVisible(false);
+      setSelectedSetting(null); // Have a clean slate when opening the menu
+    };
+    const handleUiMenuClose = () => {
+      setIsButtonVisible(true);
+    };
 
     const handleManualColorUpdate = () => {
       // Force a re-render so that the color slider updates.
@@ -168,15 +177,16 @@ const SettingsContainer: React.FC = () => {
             <div className="flex flex-col items-center">
               <h1 className="text-center my-0">
                 {settings[selectedSetting as keyof typeof settings]?.title ||
-                  "Select a setting"}
+                  "Settings"}
               </h1>
               <p className="text-center mb-0">
-                {settings[selectedSetting as keyof typeof settings]?.desc}
+                {settings[selectedSetting as keyof typeof settings]?.desc ||
+                  "Select a setting to view its description."}
               </p>
             </div>
           </div>
 
-          {/* Bottom Section: Image and Controls */}
+          {/* Bottom Section: Controls */}
           <div
             className="mt-4 landscape:sm:mt-8 flex flex-col landscape:sm:flex-row gap-4 landscape:sm:gap-8"
             id="game-of-life-settings-content"

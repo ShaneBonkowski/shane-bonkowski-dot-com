@@ -32,11 +32,6 @@ export const tileAndBackgroundColors = [
   [0x00ffff, 0x008b8b, 0x0d00a4], // Cyan on dark cyan, dark blue background
 ];
 
-export const tileColors = {
-  ON: tileAndBackgroundColors[0][0],
-  OFF: tileAndBackgroundColors[0][1],
-};
-
 // Random shapes following classic Conway's Game of Life rules.
 // shapeTileSpace counts from top left to bottom right so that the shape
 // visually on the screen looks like how it does here in the code!
@@ -125,21 +120,16 @@ export const cgolTileShapes = {
   },
 };
 
-export function instantiateTiles(scene: MainGameScene): Promise<Tile[][]> {
-  // Allows for async behavior
-  return new Promise((resolve) => {
-    let tiles: Tile[][] = [];
+export function instantiateTiles(scene: MainGameScene): Tile[][] {
+  let tiles: Tile[][] = [];
 
-    if (tileGridAttrs.tileGridWidth > 0 && tileGridAttrs.tileGridHeight > 0) {
-      tiles = createTilegrid(scene);
-      resolve(tiles);
-    } else {
-      console.log(
-        `Not spawning in tiles, tile grid width and/or height is <= 0`
-      );
-      resolve(tiles);
-    }
-  });
+  if (tileGridAttrs.tileGridWidth > 0 && tileGridAttrs.tileGridHeight > 0) {
+    tiles = createTilegrid(scene);
+  } else {
+    console.log(`Not spawning in tiles, tile grid width and/or height is <= 0`);
+  }
+
+  return tiles;
 }
 
 function createTilegrid(scene: MainGameScene): Tile[][] {

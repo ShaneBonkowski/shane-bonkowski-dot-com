@@ -73,8 +73,7 @@ export const settings = {
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [selectedSetting, setSelectedSetting] =
-    useState<string>("alignmentFactor");
+  const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
   const [, forceUpdate] = useState(0); // Dummy state to force re-renders
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -110,8 +109,13 @@ const SettingsContainer: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleUiMenuOpen = () => setIsButtonVisible(false);
-    const handleUiMenuClose = () => setIsButtonVisible(true);
+    const handleUiMenuOpen = () => {
+      setIsButtonVisible(false);
+      setSelectedSetting(null); // Have a clean slate when opening the menu
+    };
+    const handleUiMenuClose = () => {
+      setIsButtonVisible(true);
+    };
 
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
@@ -144,10 +148,11 @@ const SettingsContainer: React.FC = () => {
             <div className="flex flex-col items-center">
               <h1 className="text-center my-0">
                 {settings[selectedSetting as keyof typeof settings]?.title ||
-                  "Select a setting"}
+                  "Settings"}
               </h1>
               <p className="text-center mb-0">
-                {settings[selectedSetting as keyof typeof settings]?.desc}
+                {settings[selectedSetting as keyof typeof settings]?.desc ||
+                  "Select a setting to view its description."}
               </p>
             </div>
           </div>
@@ -163,7 +168,10 @@ const SettingsContainer: React.FC = () => {
               id="boids-settings-image"
             >
               <Image
-                src={settings[selectedSetting as keyof typeof settings]?.image}
+                src={
+                  settings[selectedSetting as keyof typeof settings]?.image ||
+                  settings.alignmentFactor.image
+                }
                 alt={selectedSetting || "Description Image"}
                 fill
                 style={{ objectFit: "contain" }}

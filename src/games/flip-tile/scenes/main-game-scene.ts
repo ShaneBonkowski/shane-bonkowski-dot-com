@@ -13,7 +13,7 @@ import {
   sharedTileAttrs,
 } from "@/src/games/flip-tile/tile-utils";
 
-export const tiles: Tile[][] = [];
+export let tiles: Tile[][] = [];
 
 const unseededRandom = new SeededRandom();
 
@@ -129,16 +129,10 @@ export class MainGameScene extends Generic2DGameScene {
     // Make sure no tiles exist to start
     this.destroyAllTiles();
 
-    // Reset tile pattern in a grid as a Promise (so that we can run this async).
     // Do not change these parameters!! hence why they equals themselves
     tilePatternAttrs.tileCount = tilePatternAttrs.tileCount;
     tilePatternAttrs.seed = tilePatternAttrs.seed;
-    instantiateTiles(this).then((tilesReturned) => {
-      // Push new tiles into tiles array.
-      // We destroy tiles before this, so its safe
-      // to assume tiles is empty []
-      tilesReturned.forEach((tile) => tiles.push(tile));
-    });
+    tiles = instantiateTiles(this);
     console.log("reset");
 
     this.resetRevealSolutionToggle();
@@ -152,13 +146,7 @@ export class MainGameScene extends Generic2DGameScene {
     // Make sure no tiles exist to start
     this.destroyAllTiles();
     this.updateSeed();
-
-    instantiateTiles(this).then((tilesReturned) => {
-      // Push new tiles into tiles array.
-      // We destroy tiles before this, so its safe
-      // to assume tiles is empty []
-      tilesReturned.forEach((tile) => tiles.push(tile));
-    });
+    tiles = instantiateTiles(this);
 
     // Reset solution revealed info for this level
     this.resetRevealSolutionToggle();

@@ -73,31 +73,25 @@ export const inverseToggleMatrixLookupMod3 = {
 
 let seededRandom: SeededRandom | null = null;
 
-export function instantiateTiles(scene: MainGameScene): Promise<Tile[][]> {
-  // Allows for async behavior
-  return new Promise((resolve) => {
-    seededRandom = new SeededRandom(tilePatternAttrs.seed);
+export function instantiateTiles(scene: MainGameScene): Tile[][] {
+  seededRandom = new SeededRandom(tilePatternAttrs.seed);
 
-    let tiles: Tile[][] = []; // 2D array
+  let tiles: Tile[][] = []; // 2D array
 
-    // Spawn in tiles in a grid.. tileCount can only be a square
-    if (Math.sqrt(tilePatternAttrs.tileCount) % 1 === 0) {
-      // gridSize is the number of tiles per row and column in the grid (side length of the box the tiles make)
-      const gridSize = Math.sqrt(tilePatternAttrs.tileCount);
+  // Spawn in tiles in a grid.. tileCount can only be a square
+  if (Math.sqrt(tilePatternAttrs.tileCount) % 1 === 0) {
+    // gridSize is the number of tiles per row and column in the grid (side length of the box the tiles make)
+    const gridSize = Math.sqrt(tilePatternAttrs.tileCount);
 
-      // Try to find a solvable config of tiles
-      tiles = findSolvableTileGrid(gridSize, scene);
+    // Try to find a solvable config of tiles
+    tiles = findSolvableTileGrid(gridSize, scene);
+  } else {
+    console.log(
+      `Not spawning in tiles, tileCount of ${tilePatternAttrs.tileCount} is not an odd square as desired`
+    );
+  }
 
-      // Resolve the Promise with the array of tiles
-      resolve(tiles);
-    } else {
-      console.log(
-        `Not spawning in tiles, tileCount of ${tilePatternAttrs.tileCount} is not an odd square as desired`
-      );
-      // Resolve the Promise with the array of EMPTY tiles
-      resolve(tiles);
-    }
-  });
+  return tiles;
 }
 
 export function tilesToTilespaceMatrix(tiles: Tile[][]): Matrix {

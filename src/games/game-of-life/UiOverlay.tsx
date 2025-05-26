@@ -13,12 +13,10 @@ import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
 
 // FIXME/TODO:
-// - Clean up icon sizes!!! Make sure they look good
-// - Have the settings screen say "Settings" to start instead of selecting one. Do this for boids too
-// - Have it so that if user moves the color slider it will turn off the dicso mode manually and update that button state etc.
-// - Test a bunch to make sure the button states always reflect game state
 // - Make the game window lighter so you can see through it better? Maybe each game needs a different opacity?
+// - Make sure slider etc. layout looks good for settings
 // - Test layout for phone etc. too, even for settings
+// - When you go to menu and come back, the tile state does not get updated. Tiles get stuck as white for some reason?
 
 const UiOverlay: React.FC = () => {
   const [isAutoMode, setIsAutoMode] = useState(false);
@@ -67,6 +65,15 @@ const UiOverlay: React.FC = () => {
       setIsPaused(true);
     };
 
+    const handleManualColorChange = () => {
+      // If the color theme changes from the settings screen and disco mode is
+      // on, we should disable disco mode.
+      if (isDiscoMode) {
+        setIsDiscoMode(false);
+        document.dispatchEvent(new CustomEvent("toggleDisco"));
+      }
+    };
+
     // Add event listeners
     document.addEventListener("popChange", handlePopChange as EventListener);
     document.addEventListener("genChange", handleGenChange as EventListener);
@@ -77,6 +84,10 @@ const UiOverlay: React.FC = () => {
     document.addEventListener(
       "manualPause",
       handleManualPause as EventListener
+    );
+    document.addEventListener(
+      "changeColorThemeFromSettings",
+      handleManualColorChange as EventListener
     );
 
     // Cleanup event listeners on component unmount
@@ -97,8 +108,12 @@ const UiOverlay: React.FC = () => {
         "manualPause",
         handleManualPause as EventListener
       );
+      document.removeEventListener(
+        "changeColorThemeFromSettings",
+        handleManualColorChange as EventListener
+      );
     };
-  }, []);
+  }, [isDiscoMode]);
 
   return (
     <div id="ui-overlay" aria-label="Game UI Overlay">
@@ -129,7 +144,7 @@ const UiOverlay: React.FC = () => {
         <GameIconButton
           onPointerDown={handleToggleAutoMode}
           icon={
-            isAutoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />
+            isAutoMode ? <FaHandPointer size={25} /> : <FaRobot size={25} />
           }
           ariaLabel="Toggle Auto Mode"
         />

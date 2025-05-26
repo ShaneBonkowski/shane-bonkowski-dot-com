@@ -4,7 +4,7 @@ import { MoreMath } from "@/src/utils/more-math";
 import {
   tileStates,
   tileGridAttrs,
-  tileColors,
+  tileAndBackgroundColors,
 } from "@/src/games/game-of-life/tile-utils";
 import { MainGameScene } from "@/src/games/game-of-life/scenes/main-game-scene";
 import { settings } from "@/src/games/game-of-life/SettingsContainer.tsx";
@@ -390,9 +390,9 @@ export class Tile extends GameObject {
   renderTileGraphics() {
     this.updateVisualAttrs();
     if (this.tileState == tileStates.OFF) {
-      this.updateGraphic(tileColors.OFF);
+      this.updateGraphic(tileAndBackgroundColors[settings.colorTheme.value][1]);
     } else {
-      this.updateGraphic(tileColors.ON);
+      this.updateGraphic(tileAndBackgroundColors[settings.colorTheme.value][0]);
     }
   }
 
