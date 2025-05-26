@@ -48,33 +48,28 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1.0"
         ></meta>
-
-        {/* Add Google Analytics  */}
-        {process.env.NEXT_PUBLIC_GA_TRACKING_ID && (
-          <>
-            <Script
-              strategy="afterInteractive"
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
-            />
-            <Script
-              id="google-analytics"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_TRACKING_ID}', {
-                    page_path: window.location.pathname,
-                  });
-                `,
-              }}
-            />
-          </>
-        )}
       </Head>
       {/* Add components to the body of the website */}
       <body className="flex flex-col min-h-screen" id="website-body">
+        {/* Add Google Analytics  */}
+        <Script
+          strategy="beforeInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-ZM9N1BE5ET`}
+        />
+        <Script
+          id="google-analytics"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'G-ZM9N1BE5ET', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+          }}
+        />
         <Header />
         <main className="flex-grow" id="website-main-content">
           {children}
