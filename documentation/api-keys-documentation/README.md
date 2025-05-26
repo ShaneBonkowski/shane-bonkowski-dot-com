@@ -14,7 +14,7 @@ This documentation outlines how API keys are utilized for Shane's Games, and whe
 
 **Storage Location:**
 
-- GitHub > settings > secrets > actions > `GA_TRACKING_ID`.
+- Hardcoded in two locations in `app/layout.tsx`.
 
 ## GitHub API
 
