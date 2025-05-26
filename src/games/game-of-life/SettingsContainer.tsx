@@ -9,7 +9,7 @@ import { tileAndBackgroundColors } from "@/src/games/game-of-life/tile-utils";
 
 export const settings = {
   updateInterval: {
-    title: "Cell Update Interval",
+    title: "Update Interval",
     desc: "How many milliseconds to wait between cell updates. Lower value means quicker updates.",
     type: "slider",
     value: 200,
@@ -19,7 +19,7 @@ export const settings = {
   },
   underpopulation: {
     title: "Underpopulation",
-    desc: "Any live cell with fewer than this many neighbors dies. Defaults to 2.",
+    desc: "Any live cell with less than this many neighbors dies. Default = 2.",
     type: "slider",
     value: 2,
     lowerBound: 0,
@@ -28,7 +28,7 @@ export const settings = {
   },
   overpopulation: {
     title: "Overpopulation",
-    desc: "Any live cell with more than this many neighbors dies. Defaults to 3.",
+    desc: "Any live cell with more than this many neighbors dies. Default = 3.",
     type: "slider",
     value: 3,
     lowerBound: 0,
@@ -37,7 +37,7 @@ export const settings = {
   },
   reproduction: {
     title: "Reproduction",
-    desc: "Any dead cell with exactly this many neighbors becomes alive. Defaults to 3.",
+    desc: "Any dead cell with exactly this many neighbors becomes alive. Default = 3.",
     type: "slider",
     value: 3,
     lowerBound: 1, // canot have 0 birth criteria since that breaks things
@@ -55,7 +55,7 @@ export const settings = {
   },
   autoPause: {
     title: "Auto Pause",
-    desc: "If enabled, automatically pause when clicking to add/subtract a cell. Enabled by default.",
+    desc: "If enabled, automatically pause when clicking a cell. Enabled by default.",
     type: "checkbox",
     value: true,
     lowerBound: null,
@@ -64,7 +64,7 @@ export const settings = {
   },
   infiniteEdges: {
     title: "Infinite Edges",
-    desc: "If enabled, cells treat edges as a portal to the other side (Kind've like Pac-Man). Enabled by default.",
+    desc: "If enabled, edges teleport to the other side (like Pac-Man). Enabled by default.",
     type: "checkbox",
     value: true,
     lowerBound: null,
@@ -73,7 +73,7 @@ export const settings = {
   },
   diagonalNeighbors: {
     title: "Diagonal Neighbors",
-    desc: "If enabled, cells treat other cells that are diagonal to them as neighbors. Enabled by default.",
+    desc: "If enabled, count diagonal cells as neighbors. Enabled by default.",
     type: "checkbox",
     value: true,
     lowerBound: null,
@@ -85,7 +85,6 @@ export const settings = {
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
   const [, forceUpdate] = useState(0); // Dummy state to force re-renders
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -127,7 +126,6 @@ const SettingsContainer: React.FC = () => {
   useEffect(() => {
     const handleUiMenuOpen = () => {
       setIsButtonVisible(false);
-      setSelectedSetting(null); // Have a clean slate when opening the menu
     };
     const handleUiMenuClose = () => {
       setIsButtonVisible(true);
@@ -175,72 +173,56 @@ const SettingsContainer: React.FC = () => {
           {/* Top Section: Settings Info */}
           <div className="p-2" id="game-of-life-settings-description">
             <div className="flex flex-col items-center">
-              <h1 className="text-center my-0">
-                {settings[selectedSetting as keyof typeof settings]?.title ||
-                  "Settings"}
-              </h1>
-              <p className="text-center mb-0">
-                {settings[selectedSetting as keyof typeof settings]?.desc ||
-                  "Select a setting to view its description."}
-              </p>
+              <h1 className="text-center my-0">Settings</h1>
             </div>
           </div>
 
           {/* Bottom Section: Controls */}
           <div
-            className="mt-4 landscape:sm:mt-8 flex flex-col landscape:sm:flex-row gap-4 landscape:sm:gap-8"
-            id="game-of-life-settings-content"
+            className="w-full mt-4 p-4 landscape:sm:p-8 flex flex-col gap-8"
+            id="game-of-life-settings-controls"
           >
-            {/* Controls */}
-            <div
-              className="w-full landscape:sm:w-1/2 p-4 landscape:sm:p-8 flex flex-col gap-4"
-              id="game-of-life-settings-controls"
-            >
-              {Object.entries(settings)
-                .filter(([key]) => settings[key as keyof typeof settings]) // Only include settings with a description
-                .map(([key, desc]) => {
-                  return (
-                    <div key={key}>
-                      {desc?.type === "checkbox" ? (
-                        <div className="flex items-center gap-4">
-                          <label className="text-sm font-medium">
-                            {desc?.title}
-                          </label>
-                          <input
-                            type="checkbox"
-                            checked={desc.value as boolean}
-                            onChange={(e) =>
-                              handleCheckboxChange(key, e.target.checked)
-                            }
-                            onPointerDown={() => setSelectedSetting(key)}
-                          />
-                        </div>
-                      ) : (
-                        <>
-                          <label className="block text-sm font-medium mb-2">
-                            {desc?.title}: {desc?.value}
-                          </label>
-                          <input
-                            type="range"
-                            min={desc?.lowerBound || 0}
-                            max={desc?.upperBound || 10}
-                            step={desc?.step || 1}
-                            value={desc.value as number}
-                            onChange={(e) =>
-                              handleSliderChange(
-                                key,
-                                parseFloat(e.target.value)
-                              )
-                            }
-                            onPointerDown={() => setSelectedSetting(key)}
-                            className="w-full"
-                          />
-                        </>
-                      )}
+            {Object.entries(settings).map(([key, setting]) => {
+              return (
+                <div key={key}>
+                  {setting?.type === "checkbox" ? (
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-4 mb-2">
+                        <input
+                          type="checkbox"
+                          checked={setting.value as boolean}
+                          onChange={(e) =>
+                            handleCheckboxChange(key, e.target.checked)
+                          }
+                        />
+                        <label className="text-md font-bold">
+                          {setting?.title}
+                        </label>
+                      </div>
+                      <label className="text-sm">{setting?.desc}</label>
                     </div>
-                  );
-                })}
-            </div>
+                  ) : (
+                    <div className="flex flex-col">
+                      <label className="text-md font-bold mb-2">
+                        {setting?.title}: {setting?.value}
+                      </label>
+                      <label className="text-sm mb-2">{setting?.desc}</label>
+                      <input
+                        type="range"
+                        min={setting?.lowerBound || 0}
+                        max={setting?.upperBound || 10}
+                        step={setting?.step || 1}
+                        value={setting.value as number}
+                        onChange={(e) =>
+                          handleSliderChange(key, parseFloat(e.target.value))
+                        }
+                        className="w-full"
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </GameUiWindow>

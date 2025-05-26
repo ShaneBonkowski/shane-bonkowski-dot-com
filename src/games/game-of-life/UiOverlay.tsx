@@ -13,6 +13,8 @@ import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
 
 // FIXME/TODO:
+// - Clean up UI text
+// - UI buttons could look better size-wise
 // - Make the game window lighter so you can see through it better? Maybe each game needs a different opacity?
 // - Make sure slider etc. layout looks good for settings
 // - Test layout for phone etc. too, even for settings
