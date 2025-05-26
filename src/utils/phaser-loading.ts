@@ -52,6 +52,11 @@ export const cleanupPhaserGame = (game: Phaser.Game | null): null => {
   });
   console.log("All game-background classes removed.");
 
+  // Clear any inline styles so that bkg color can go back to normal in the
+  // main app. This is needed for example when flip tile sets a bkg color
+  // that we do not want to persist after the game is cleaned up.
+  document.body.style.backgroundColor = "";
+
   // Return a "null'd" game instance to indicate that the game has been cleaned up
   return game;
 };

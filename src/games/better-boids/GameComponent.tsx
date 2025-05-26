@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import "@/src/games/better-boids/styles/game.css";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
-import BoidsSettingsContainer from "@/src/games/better-boids/BoidsSettingsContainer";
+import SettingsContainer from "@/src/games/better-boids/SettingsContainer";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
@@ -121,7 +121,7 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
         message="For the best experience, hide the toolbar and switch to fullscreen mode."
         bottom={true}
       ></GameMessagePopup>
-      <BoidsSettingsContainer></BoidsSettingsContainer>
+      <SettingsContainer></SettingsContainer>
       <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
     </div>
   );

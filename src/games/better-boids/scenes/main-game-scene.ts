@@ -58,15 +58,10 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
-    // Spawn in x random boids as a Promise (so that we can run this async), and then
-    // when that promise is fufilled, we can move on to other init logic
-    instantiateBoids(this, 40).then((boids) => {
-      this.boids = boids;
+    this.boids = instantiateBoids(this, 40);
 
-      // After everything is loaded in, we can begin the game
-      this.gameStarted = true;
-      dispatchGameStartedEvent("Better Boids");
-    });
+    this.gameStarted = true;
+    dispatchGameStartedEvent("Better Boids");
   }
 
   update(time: number, delta: number) {

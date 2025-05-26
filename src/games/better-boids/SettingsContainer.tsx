@@ -7,7 +7,7 @@ import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import Image from "next/image";
 
-export const boidSettings = {
+export const settings = {
   alignmentFactor: {
     title: "Alignment",
     desc: "Determines how much boids align with their neighbors.",
@@ -60,7 +60,7 @@ export const boidSettings = {
   },
   leaderBoidEnabled: {
     title: "Leader Boid",
-    desc: "Enables or disables the leader boid follow behavior.",
+    desc: "Enables or disables the leader boid follow behavior on hold and drag.",
     image: "/webps/games/better-boids-leader-follow-graphic.webp",
     type: "checkbox",
     value: true,
@@ -70,11 +70,10 @@ export const boidSettings = {
   },
 };
 
-const BoidsSettingsContainer: React.FC = () => {
+const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [selectedSetting, setSelectedSetting] =
-    useState<string>("alignmentFactor");
+  const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
   const [, forceUpdate] = useState(0); // Dummy state to force re-renders
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -100,18 +99,23 @@ const BoidsSettingsContainer: React.FC = () => {
   };
 
   const handleSliderChange = (key: string, value: number) => {
-    boidSettings[key as keyof typeof boidSettings].value = value;
+    settings[key as keyof typeof settings].value = value;
     forceUpdate((prev) => prev + 1); // Force a re-render
   };
 
   const handleCheckboxChange = (key: string, value: boolean) => {
-    boidSettings[key as keyof typeof boidSettings].value = value;
+    settings[key as keyof typeof settings].value = value;
     forceUpdate((prev) => prev + 1); // Force a re-render
   };
 
   useEffect(() => {
-    const handleUiMenuOpen = () => setIsButtonVisible(false);
-    const handleUiMenuClose = () => setIsButtonVisible(true);
+    const handleUiMenuOpen = () => {
+      setIsButtonVisible(false);
+      setSelectedSetting(null); // Have a clean slate when opening the menu
+    };
+    const handleUiMenuClose = () => {
+      setIsButtonVisible(true);
+    };
 
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
@@ -143,14 +147,12 @@ const BoidsSettingsContainer: React.FC = () => {
           <div className="p-2" id="boids-settings-description">
             <div className="flex flex-col items-center">
               <h1 className="text-center my-0">
-                {boidSettings[selectedSetting as keyof typeof boidSettings]
-                  ?.title || "Select a setting"}
+                {settings[selectedSetting as keyof typeof settings]?.title ||
+                  "Settings"}
               </h1>
               <p className="text-center mb-0">
-                {
-                  boidSettings[selectedSetting as keyof typeof boidSettings]
-                    ?.desc
-                }
+                {settings[selectedSetting as keyof typeof settings]?.desc ||
+                  "Select a setting to view its description."}
               </p>
             </div>
           </div>
@@ -167,8 +169,8 @@ const BoidsSettingsContainer: React.FC = () => {
             >
               <Image
                 src={
-                  boidSettings[selectedSetting as keyof typeof boidSettings]
-                    ?.image
+                  settings[selectedSetting as keyof typeof settings]?.image ||
+                  settings.alignmentFactor.image
                 }
                 alt={selectedSetting || "Description Image"}
                 fill
@@ -181,52 +183,48 @@ const BoidsSettingsContainer: React.FC = () => {
               className="w-full landscape:sm:w-1/2 p-4 landscape:sm:p-8 flex flex-col gap-4"
               id="boids-settings-controls"
             >
-              {Object.entries(boidSettings)
-                .filter(
-                  ([key]) => boidSettings[key as keyof typeof boidSettings]
-                ) // Only include settings with a description
-                .map(([key, desc]) => {
-                  return (
-                    <div key={key}>
-                      {desc?.type === "checkbox" ? (
-                        <div className="flex items-center gap-4">
-                          <label className="text-sm font-medium">
-                            {desc?.title}
-                          </label>
-                          <input
-                            type="checkbox"
-                            checked={desc.value as boolean}
-                            onChange={(e) =>
-                              handleCheckboxChange(key, e.target.checked)
-                            }
-                            onPointerDown={() => setSelectedSetting(key)}
-                          />
-                        </div>
-                      ) : (
-                        <>
-                          <label className="block text-sm font-medium mb-2">
-                            {desc?.title}: {desc?.value}
-                          </label>
-                          <input
-                            type="range"
-                            min={desc?.lowerBound || 0}
-                            max={desc?.upperBound || 10}
-                            step={desc?.step || 1}
-                            value={desc.value as number}
-                            onChange={(e) =>
-                              handleSliderChange(
-                                key,
-                                parseFloat(e.target.value)
-                              )
-                            }
-                            onPointerDown={() => setSelectedSetting(key)}
-                            className="w-full"
-                          />
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
+              {Object.entries(settings).map(([key, setting]) => {
+                return (
+                  <div key={key}>
+                    {setting?.type === "checkbox" ? (
+                      <div className="flex items-center gap-4">
+                        <label className="text-sm font-medium">
+                          {setting?.title}
+                        </label>
+                        <input
+                          type="checkbox"
+                          checked={setting.value as boolean}
+                          onChange={(e) => {
+                            handleCheckboxChange(key, e.target.checked);
+                            // set selected onChange, rather than onPointerDown like
+                            // the sliders, since checkboxes are not as interactive. This
+                            // prevents some jumpiness when clicking the checkbox.
+                            setSelectedSetting(key);
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <label className="block text-sm font-medium mb-2">
+                          {setting?.title}: {setting?.value}
+                        </label>
+                        <input
+                          type="range"
+                          min={setting?.lowerBound || 0}
+                          max={setting?.upperBound || 10}
+                          step={setting?.step || 1}
+                          value={setting.value as number}
+                          onChange={(e) =>
+                            handleSliderChange(key, parseFloat(e.target.value))
+                          }
+                          onPointerDown={() => setSelectedSetting(key)}
+                          className="w-full"
+                        />
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -235,4 +233,4 @@ const BoidsSettingsContainer: React.FC = () => {
   );
 };
 
-export default BoidsSettingsContainer;
+export default SettingsContainer;
