@@ -35,9 +35,6 @@ const CookieAgreement: React.FC = () => {
     }, 150);
   };
 
-  // GitHub actions has injection for each page that ensures that Google
-  // Analytics knows to enable/disable tracking based on the state of
-  // localStorage.cookiesEnabled.
   const disableTracking = () => {
     // Remove all existing cookies
     document.cookie.split(";").forEach(function (c) {
