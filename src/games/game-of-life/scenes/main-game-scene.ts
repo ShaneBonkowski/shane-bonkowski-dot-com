@@ -2,13 +2,13 @@ import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { dispatchGameStartedEvent } from "@/src/events/game-events";
 import {
   instantiateTiles,
-  TileGridAttrs,
+  tileGridAttrs,
   tileGridWidthComputer,
   tileGridHeightComputer,
   tileGridWidthPhone,
   tileGridHeightPhone,
   tileColors,
-  TileAndBackgroundColors,
+  tileAndBackgroundColors,
   tileStates,
   gameOfLifeTypes,
   cgolTileShapes,
@@ -19,6 +19,7 @@ import {
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { GestureManager } from "@/src/utils/gesture-manager";
 import { Tile } from "@/src/games/game-of-life/tile";
+import { settings } from "@/src/games/game-of-life/SettingsContainer";
 
 export const tiles: Tile[][] = [];
 
@@ -27,6 +28,7 @@ const unseededRandom = new SeededRandom();
 export class MainGameScene extends Generic2DGameScene {
   private resizeObserver: ResizeObserver | null = null;
   public uiMenuOpen: boolean = false;
+  public discoModeUpdateInterval: number;
   public renderUpdateInterval: number;
   public lastRenderUpdateTime: number;
   public lastGameStateUpdateTime: number;
@@ -44,6 +46,7 @@ export class MainGameScene extends Generic2DGameScene {
     super("MainGameScene");
 
     // Constructor logic for this scene
+    this.discoModeUpdateInterval = 1500; // ms
     this.renderUpdateInterval = 66; // 33ms ~= 15hz
     this.lastRenderUpdateTime = 0;
     this.lastGameStateUpdateTime = 0;
@@ -81,9 +84,9 @@ export class MainGameScene extends Generic2DGameScene {
     }
 
     // If there is local storage with currentColorThemeIndex, set
-    // TileGridAttrs.currentColorThemeIndex to that to start!
+    // color theme to that to start!
     if (localStorage.getItem("currentColorThemeIndex")) {
-      TileGridAttrs.currentColorThemeIndex = parseInt(
+      settings.colorTheme.value = parseInt(
         localStorage.getItem("currentColorThemeIndex") as string
       );
     }
@@ -91,7 +94,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Dispatch a custom event saying that color change just occured
     // due to the game class, not the slider.
-    document.dispatchEvent(new Event("changeColorThemeFromMainGame"));
+    document.dispatchEvent(new CustomEvent("changeColorThemeFromMainGame"));
 
     // After everything is loaded in, begin the game
     this.gameStarted = true;
@@ -105,10 +108,10 @@ export class MainGameScene extends Generic2DGameScene {
 
     if (this.gameStarted) {
       if (this.paused == false) {
-        // Perform tile grid updates on TileGridAttrs.updateInterval
+        // Perform tile grid updates on tile updateInterval
         if (
           time - this.lastGameStateUpdateTime >=
-          TileGridAttrs.updateInterval
+          settings.updateInterval.value
         ) {
           this.lastGameStateUpdateTime = time;
 
@@ -134,17 +137,19 @@ export class MainGameScene extends Generic2DGameScene {
           if (this.discoMode) {
             if (
               time - this.discoModeLastUpdateTime >=
-              TileGridAttrs.discoModeUpdateInterval
+              this.discoModeUpdateInterval
             ) {
               this.discoModeLastUpdateTime = time;
               this.advanceToNextColorTheme();
 
               // Dispatch a custom event saying that disco mode just caused
               // a color change.
-              document.dispatchEvent(new Event("changeColorThemeFromMainGame"));
+              document.dispatchEvent(
+                new CustomEvent("changeColorThemeFromMainGame")
+              );
 
               // // Play a vignette animation (make it nearly as long as the disco mode interval)
-              // vignetteFade(TileGridAttrs.discoModeUpdateInterval); // ms
+              // vignetteFade(this.discoModeUpdateInterval); // ms
             }
           }
 
@@ -170,17 +175,17 @@ export class MainGameScene extends Generic2DGameScene {
       }
     }
 
-    // Set background color -> TileAndBackgroundColors[i][2]
+    // Set background color -> tileAndBackgroundColors[i][2]
     document.body.style.backgroundColor = this.hexToCssColor(
-      TileAndBackgroundColors[TileGridAttrs.currentColorThemeIndex][2]
+      tileAndBackgroundColors[settings.colorTheme.value][2]
     );
   }
 
   runGameOfLifeIteration() {
     // Run the life iteration
     const toCheckTileGridSpaceLocs = this.checkForNeighborTiles(
-      TileGridAttrs.countCornersAsNeighbors,
-      TileGridAttrs.infiniteEdges
+      settings.diagonalNeighbors.value,
+      settings.infiniteEdges.value
     );
 
     if (this.gameOfLifeType == gameOfLifeTypes.CONWAY) {
@@ -420,16 +425,16 @@ export class MainGameScene extends Generic2DGameScene {
     if (window.innerWidth <= 600 || isPortrait) {
       // Only update layout if it changed!
       if (
-        TileGridAttrs.tileGridWidth != tileGridWidthPhone ||
-        TileGridAttrs.tileGridHeight != tileGridHeightPhone
+        tileGridAttrs.tileGridWidth != tileGridWidthPhone ||
+        tileGridAttrs.tileGridHeight != tileGridHeightPhone
       ) {
         this.setTileLayoutForPhone();
       }
     } else {
       // Only update layout if it changed!
       if (
-        TileGridAttrs.tileGridWidth != tileGridWidthComputer ||
-        TileGridAttrs.tileGridHeight != tileGridHeightComputer
+        tileGridAttrs.tileGridWidth != tileGridWidthComputer ||
+        tileGridAttrs.tileGridHeight != tileGridHeightComputer
       ) {
         this.setLayoutForComputer();
       }
@@ -438,8 +443,8 @@ export class MainGameScene extends Generic2DGameScene {
 
   setTileLayoutForPhone() {
     // Update layout for phone
-    TileGridAttrs.tileGridWidth = tileGridWidthPhone;
-    TileGridAttrs.tileGridHeight = tileGridHeightPhone;
+    tileGridAttrs.tileGridWidth = tileGridWidthPhone;
+    tileGridAttrs.tileGridHeight = tileGridHeightPhone;
 
     // init or re-init all tiles
     this.destroyTiles();
@@ -451,8 +456,8 @@ export class MainGameScene extends Generic2DGameScene {
 
   setLayoutForComputer() {
     // Update layout for computer
-    TileGridAttrs.tileGridWidth = tileGridWidthComputer;
-    TileGridAttrs.tileGridHeight = tileGridHeightComputer;
+    tileGridAttrs.tileGridWidth = tileGridWidthComputer;
+    tileGridAttrs.tileGridHeight = tileGridHeightComputer;
 
     // init or re-init all tiles
     this.destroyTiles();
@@ -601,20 +606,17 @@ export class MainGameScene extends Generic2DGameScene {
   };
 
   advanceToNextColorTheme() {
-    TileGridAttrs.currentColorThemeIndex++;
-    if (
-      TileGridAttrs.currentColorThemeIndex >
-      TileAndBackgroundColors.length - 1
-    ) {
-      TileGridAttrs.currentColorThemeIndex = 0;
+    settings.colorTheme.value++;
+    if (settings.colorTheme.value > tileAndBackgroundColors.length - 1) {
+      settings.colorTheme.value = 0;
     }
     this.updateColorThemeAttrs();
   }
 
   decreaseToPreviousColorTheme() {
-    TileGridAttrs.currentColorThemeIndex--;
-    if (TileGridAttrs.currentColorThemeIndex < 0) {
-      TileGridAttrs.currentColorThemeIndex = TileAndBackgroundColors.length - 1;
+    settings.colorTheme.value--;
+    if (settings.colorTheme.value < 0) {
+      settings.colorTheme.value = tileAndBackgroundColors.length - 1;
     }
     this.updateColorThemeAttrs();
   }
@@ -624,16 +626,14 @@ export class MainGameScene extends Generic2DGameScene {
     //  is handled in the render pass.
 
     // Update the ON/OFF colors
-    tileColors.ON =
-      TileAndBackgroundColors[TileGridAttrs.currentColorThemeIndex][0];
-    tileColors.OFF =
-      TileAndBackgroundColors[TileGridAttrs.currentColorThemeIndex][1];
+    tileColors.ON = tileAndBackgroundColors[settings.colorTheme.value][0];
+    tileColors.OFF = tileAndBackgroundColors[settings.colorTheme.value][1];
 
-    // Write TileGridAttrs.currentColorThemeIndex to localStorage so that
+    // Write color theme to localStorage so that
     // the color theme persists on page reload etc.
     localStorage.setItem(
       "currentColorThemeIndex",
-      TileGridAttrs.currentColorThemeIndex.toString()
+      settings.colorTheme.value.toString()
     );
   }
 

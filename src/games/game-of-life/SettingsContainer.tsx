@@ -5,76 +5,87 @@ import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
-import Image from "next/image";
+import { tileAndBackgroundColors } from "@/src/games/game-of-life/tile-utils";
 
-export const boidSettings = {
-  alignmentFactor: {
-    title: "Alignment",
-    desc: "Determines how much boids align with their neighbors.",
-    image: "/webps/games/better-boids-alignment-graphic.webp",
-    type: "slider",
-    value: 0.3,
-    lowerBound: 0.1,
-    upperBound: 1,
-    step: 0.1,
-  },
-  cohesionFactor: {
-    title: "Cohesion",
-    desc: "Controls how strongly boids move toward the center of their group.",
-    image: "/webps/games/better-boids-cohesion-graphic.webp",
-    type: "slider",
-    value: 0.054,
-    lowerBound: 0.01,
-    upperBound: 0.1,
-    step: 0.01,
-  },
-  separationFactor: {
-    title: "Separation",
-    desc: "Determines how much boids avoid crowding each other.",
-    image: "/webps/games/better-boids-separation-graphic.webp",
-    type: "slider",
-    value: 0.935,
-    lowerBound: 0.5,
-    upperBound: 1,
-    step: 0.01,
-  },
-  speed: {
-    title: "Speed",
-    desc: "Controls how fast the boids move.",
-    image: "/webps/games/better-boids-velocity-graphic.webp",
-    type: "slider",
-    value: 0.6,
-    lowerBound: 0.1,
-    upperBound: 5,
-    step: 0.1,
-  },
-  flockSearchRadius: {
-    title: "Flock Radius",
-    desc: "Defines the radius within which boids consider their neighbors.",
-    image: "/webps/games/better-boids-search-radius-graphic.webp",
-    type: "slider",
-    value: 90,
-    lowerBound: 10,
-    upperBound: 100,
-    step: 1,
-  },
-  leaderBoidEnabled: {
-    title: "Leader Boid",
-    desc: "Enables or disables the leader boid follow behavior on hold and drag.",
-    image: "/webps/games/better-boids-leader-follow-graphic.webp",
+export const settings = {
+  autoPause: {
+    title: "Auto Pause",
+    desc: "If enabled, automatically pause when clicking to add/subtract a cell. Enabled by default.",
     type: "checkbox",
     value: true,
     lowerBound: null,
     upperBound: null,
     step: null,
   },
+  infiniteEdges: {
+    title: "Infinite Edges",
+    desc: "If enabled, cells treat edges as a portal to the other side (Kind've like Pac-Man). Enabled by default.",
+    type: "checkbox",
+    value: true,
+    lowerBound: null,
+    upperBound: null,
+    step: null,
+  },
+  diagonalNeighbors: {
+    title: "Diagonal Neighbors",
+    desc: "If enabled, cells treat other cells that are diagonal to them as neighbors. Enabled by default.",
+    type: "checkbox",
+    value: true,
+    lowerBound: null,
+    upperBound: null,
+    step: null,
+  },
+  updateInterval: {
+    title: "Cell Update Interval",
+    desc: "How many milliseconds to wait between cell updates. Lower value means quicker updates.",
+    type: "slider",
+    value: 200,
+    lowerBound: 10,
+    upperBound: 1000,
+    step: 10,
+  },
+  underpopulation: {
+    title: "Underpopulation",
+    desc: "Any live cell with fewer than this many neighbors dies. Defaults to 2.",
+    type: "slider",
+    value: 2,
+    lowerBound: 0,
+    upperBound: 8,
+    step: 1,
+  },
+  overpopulation: {
+    title: "Overpopulation",
+    desc: "Any live cell with more than this many neighbors dies. Defaults to 3.",
+    type: "slider",
+    value: 3,
+    lowerBound: 0,
+    upperBound: 8,
+    step: 1,
+  },
+  reproduction: {
+    title: "Reproduction",
+    desc: "Any dead cell with exactly this many neighbors becomes alive. Defaults to 3.",
+    type: "slider",
+    value: 3,
+    lowerBound: 1, // canot have 0 birth criteria since that breaks things
+    upperBound: 8,
+    step: 1,
+  },
+  colorTheme: {
+    title: "Color Theme",
+    desc: "Select the color theme for the Game of Life cell space.",
+    type: "slider",
+    value: 0,
+    lowerBound: 0,
+    upperBound: tileAndBackgroundColors.length - 1,
+    step: 1,
+  },
 };
 
-const BoidsSettingsContainer: React.FC = () => {
+const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [selectedSetting, setSelectedSetting] =
-    useState<string>("alignmentFactor");
+  const [selectedSetting, setSelectedSetting] = useState<string>("autoPause");
   const [, forceUpdate] = useState(0); // Dummy state to force re-renders
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -100,12 +111,12 @@ const BoidsSettingsContainer: React.FC = () => {
   };
 
   const handleSliderChange = (key: string, value: number) => {
-    boidSettings[key as keyof typeof boidSettings].value = value;
+    settings[key as keyof typeof settings].value = value;
     forceUpdate((prev) => prev + 1); // Force a re-render
   };
 
   const handleCheckboxChange = (key: string, value: boolean) => {
-    boidSettings[key as keyof typeof boidSettings].value = value;
+    settings[key as keyof typeof settings].value = value;
     forceUpdate((prev) => prev + 1); // Force a re-render
   };
 
@@ -113,12 +124,25 @@ const BoidsSettingsContainer: React.FC = () => {
     const handleUiMenuOpen = () => setIsButtonVisible(false);
     const handleUiMenuClose = () => setIsButtonVisible(true);
 
+    const handleManualColorUpdate = () => {
+      // Force a re-render so that the color slider updates.
+      forceUpdate((prev) => prev + 1);
+    };
+
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
+    document.addEventListener(
+      "changeColorThemeFromMainGame",
+      handleManualColorUpdate as EventListener
+    );
 
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+      document.removeEventListener(
+        "changeColorThemeFromMainGame",
+        handleManualColorUpdate as EventListener
+      );
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -133,24 +157,21 @@ const BoidsSettingsContainer: React.FC = () => {
         <GameIconButton
           onPointerDown={openWindow}
           icon={<FaCog size={30} />}
-          ariaLabel="Boid Settings"
+          ariaLabel="Game of Life Settings"
           className="fixed bottom-5 left-5"
         />
       )}
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
-        <div className="w-full h-full p-4" id="boids-settings-container">
+        <div className="w-full h-full p-4" id="game-of-life-settings-container">
           {/* Top Section: Settings Info */}
-          <div className="p-2" id="boids-settings-description">
+          <div className="p-2" id="game-of-life-settings-description">
             <div className="flex flex-col items-center">
               <h1 className="text-center my-0">
-                {boidSettings[selectedSetting as keyof typeof boidSettings]
-                  ?.title || "Select a setting"}
+                {settings[selectedSetting as keyof typeof settings]?.title ||
+                  "Select a setting"}
               </h1>
               <p className="text-center mb-0">
-                {
-                  boidSettings[selectedSetting as keyof typeof boidSettings]
-                    ?.desc
-                }
+                {settings[selectedSetting as keyof typeof settings]?.desc}
               </p>
             </div>
           </div>
@@ -158,33 +179,15 @@ const BoidsSettingsContainer: React.FC = () => {
           {/* Bottom Section: Image and Controls */}
           <div
             className="mt-4 landscape:sm:mt-8 flex flex-col landscape:sm:flex-row gap-4 landscape:sm:gap-8"
-            id="boids-settings-content"
+            id="game-of-life-settings-content"
           >
-            {/* Image */}
-            <div
-              className="min-h-[30vh] p-4 landscape:sm:p-8 w-full landscape:sm:w-1/2 relative"
-              id="boids-settings-image"
-            >
-              <Image
-                src={
-                  boidSettings[selectedSetting as keyof typeof boidSettings]
-                    ?.image
-                }
-                alt={selectedSetting || "Description Image"}
-                fill
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-
             {/* Controls */}
             <div
               className="w-full landscape:sm:w-1/2 p-4 landscape:sm:p-8 flex flex-col gap-4"
-              id="boids-settings-controls"
+              id="game-of-life-settings-controls"
             >
-              {Object.entries(boidSettings)
-                .filter(
-                  ([key]) => boidSettings[key as keyof typeof boidSettings]
-                ) // Only include settings with a description
+              {Object.entries(settings)
+                .filter(([key]) => settings[key as keyof typeof settings]) // Only include settings with a description
                 .map(([key, desc]) => {
                   return (
                     <div key={key}>
@@ -235,4 +238,4 @@ const BoidsSettingsContainer: React.FC = () => {
   );
 };
 
-export default BoidsSettingsContainer;
+export default SettingsContainer;

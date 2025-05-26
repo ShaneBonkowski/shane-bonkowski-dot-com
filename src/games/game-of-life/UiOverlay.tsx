@@ -14,9 +14,11 @@ import "@/src/games/flip-tile/styles/game.css";
 
 // FIXME/TODO:
 // - Clean up icon sizes!!! Make sure they look good
-// - Add settings screen with all the sliders etc.
-// - Make sure if game state changes in the game it sends an event to tell the ui to update correctly
-// - Get the game bkg to be a solid color and make sure it updates with all the other colors accordingly
+// - Have the settings screen say "Settings" to start instead of selecting one. Do this for boids too
+// - Have it so that if user moves the color slider it will turn off the dicso mode manually and update that button state etc.
+// - Test a bunch to make sure the button states always reflect game state
+// - Make the game window lighter so you can see through it better? Maybe each game needs a different opacity?
+// - Test layout for phone etc. too, even for settings
 
 const UiOverlay: React.FC = () => {
   const [isAutoMode, setIsAutoMode] = useState(false);

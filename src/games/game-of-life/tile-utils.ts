@@ -15,21 +15,12 @@ export const tileGridHeightPhone = 28;
 export const tileGridWidthComputer = 40;
 export const tileGridHeightComputer = 15;
 
-export const TileGridAttrs = {
-  updateInterval: 200, // ms
-  discoModeUpdateInterval: 1500, // ms
+export const tileGridAttrs = {
   tileGridWidth: tileGridWidthComputer,
   tileGridHeight: tileGridHeightComputer,
-  autoPauseOnClick: true,
-  infiniteEdges: true,
-  countCornersAsNeighbors: true,
-  golUnderpopulationCriteria: 2, // <
-  golOverpopulationCriteria: 3, // >
-  golRepoductionCritera: 3, // =
-  currentColorThemeIndex: 0,
 };
 
-export const TileAndBackgroundColors = [
+export const tileAndBackgroundColors = [
   // Each sub-array contains [ON color, OFF color, background color]
   [0x000000, 0xa9a9a9, 0xd3d3d3], // Black on dark grey, light grey background
   [0xffffff, 0x808080, 0x000000], // White on grey, black background
@@ -42,8 +33,8 @@ export const TileAndBackgroundColors = [
 ];
 
 export const tileColors = {
-  ON: TileAndBackgroundColors[0][0],
-  OFF: TileAndBackgroundColors[0][1],
+  ON: tileAndBackgroundColors[0][0],
+  OFF: tileAndBackgroundColors[0][1],
 };
 
 // Random shapes following classic Conway's Game of Life rules.
@@ -139,7 +130,7 @@ export function instantiateTiles(scene: MainGameScene): Promise<Tile[][]> {
   return new Promise((resolve) => {
     let tiles: Tile[][] = [];
 
-    if (TileGridAttrs.tileGridWidth > 0 && TileGridAttrs.tileGridHeight > 0) {
+    if (tileGridAttrs.tileGridWidth > 0 && tileGridAttrs.tileGridHeight > 0) {
       tiles = createTilegrid(scene);
       resolve(tiles);
     } else {
@@ -154,9 +145,9 @@ export function instantiateTiles(scene: MainGameScene): Promise<Tile[][]> {
 function createTilegrid(scene: MainGameScene): Tile[][] {
   const tiles: Tile[][] = [];
 
-  for (let i = 0; i < TileGridAttrs.tileGridWidth; i++) {
+  for (let i = 0; i < tileGridAttrs.tileGridWidth; i++) {
     tiles[i] = []; // Initialize an array for the current row
-    for (let j = 0; j < TileGridAttrs.tileGridHeight; j++) {
+    for (let j = 0; j < tileGridAttrs.tileGridHeight; j++) {
       const tile = new Tile(scene, i, j);
       tiles[i][j] = tile;
     }

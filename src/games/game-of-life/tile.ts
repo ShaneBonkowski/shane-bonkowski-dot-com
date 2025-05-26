@@ -3,10 +3,11 @@ import { Vec2 } from "@/src/utils/vector";
 import { MoreMath } from "@/src/utils/more-math";
 import {
   tileStates,
-  TileGridAttrs,
+  tileGridAttrs,
   tileColors,
 } from "@/src/games/game-of-life/tile-utils";
 import { MainGameScene } from "@/src/games/game-of-life/scenes/main-game-scene";
+import { settings } from "@/src/games/game-of-life/SettingsContainer.tsx";
 
 export class Tile extends GameObject {
   public scene: MainGameScene;
@@ -46,7 +47,7 @@ export class Tile extends GameObject {
       this.onClickToggleTileState();
 
       // Autopause the game if specified to do such
-      if (!this.scene.paused && TileGridAttrs.autoPauseOnClick) {
+      if (!this.scene.paused && settings.autoPause.value) {
         this.scene.togglePause();
         document.dispatchEvent(new CustomEvent("manualPause"));
       }
@@ -231,24 +232,24 @@ export class Tile extends GameObject {
     const tileSpacing = maxSize + smallAmountForGrid;
     let startGridX, startGridY;
 
-    if (TileGridAttrs.tileGridWidth % 2 === 0) {
+    if (tileGridAttrs.tileGridWidth % 2 === 0) {
       // Even grid size
       startGridX =
-        centerX - (TileGridAttrs.tileGridWidth / 2 - 0.5) * tileSpacing;
+        centerX - (tileGridAttrs.tileGridWidth / 2 - 0.5) * tileSpacing;
     } else {
       // Odd grid size
       startGridX =
-        centerX - ((TileGridAttrs.tileGridWidth - 1) / 2) * tileSpacing;
+        centerX - ((tileGridAttrs.tileGridWidth - 1) / 2) * tileSpacing;
     }
 
-    if (TileGridAttrs.tileGridHeight % 2 === 0) {
+    if (tileGridAttrs.tileGridHeight % 2 === 0) {
       // Even grid size
       startGridY =
-        centerY + (TileGridAttrs.tileGridHeight / 2 - 0.5) * tileSpacing;
+        centerY + (tileGridAttrs.tileGridHeight / 2 - 0.5) * tileSpacing;
     } else {
       // Odd grid size
       startGridY =
-        centerY + ((TileGridAttrs.tileGridHeight - 1) / 2) * tileSpacing;
+        centerY + ((tileGridAttrs.tileGridHeight - 1) / 2) * tileSpacing;
     }
 
     // Calculate the position of the current tile in the grid
@@ -345,13 +346,13 @@ export class Tile extends GameObject {
     // - Dead cell with 3 neighbors becomes alive (reproduction).
     if (this.tileState == tileStates.ON) {
       if (
-        this.qtyLivingNeighbors < TileGridAttrs.golUnderpopulationCriteria ||
-        this.qtyLivingNeighbors > TileGridAttrs.golOverpopulationCriteria
+        this.qtyLivingNeighbors < settings.underpopulation.value ||
+        this.qtyLivingNeighbors > settings.overpopulation.value
       ) {
         this.changeState(tileStates.OFF);
       }
     } else if (this.tileState == tileStates.OFF) {
-      if (this.qtyLivingNeighbors == TileGridAttrs.golRepoductionCritera) {
+      if (this.qtyLivingNeighbors == settings.reproduction.value) {
         this.changeState(tileStates.ON);
       }
     }
