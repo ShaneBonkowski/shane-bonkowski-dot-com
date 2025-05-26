@@ -18,7 +18,7 @@ export class GestureManager {
   public throttledHandleWheel: (event: WheelEvent) => void;
   public throttledHandlePointerMove: (event: PointerEvent) => void;
 
-  constructor(dragRate = 0.75, zoomRate = 0.15) {
+  constructor(dragRate = 0.75, zoomRate = 0.05) {
     this.activePointers = {};
     this.dragRate = dragRate;
     this.zoomRate = zoomRate;
@@ -40,7 +40,7 @@ export class GestureManager {
     this.initialPinchDistance = null;
 
     // Create throttled versions of the handlers and store them
-    const throttleInterval = 100; // ms
+    const throttleInterval = 16; // ms
     this.throttledHandleWheel = throttle(this.handleWheel, throttleInterval);
     this.throttledHandlePointerMove = throttle(
       this.handlePointerMove,
@@ -69,22 +69,15 @@ export class GestureManager {
   }
 
   subscribeToEvents() {
-    // passive = false informs the event that we might call preventDefault() inside it
+    // passive = false informs the event that we are calling preventDefault() inside it.
+    // This is important for the wheel event to prevent page scrolling.
     window.addEventListener("wheel", this.throttledHandleWheel, {
       passive: false,
     });
-    window.addEventListener("pointerdown", this.handlePointerDown, {
-      passive: false,
-    });
-    window.addEventListener("pointermove", this.throttledHandlePointerMove, {
-      passive: false,
-    });
-    window.addEventListener("pointerup", this.handlePointerUp, {
-      passive: false,
-    });
-    window.addEventListener("pointercancel", this.handlePointerUp, {
-      passive: false,
-    });
+    window.addEventListener("pointerdown", this.handlePointerDown);
+    window.addEventListener("pointermove", this.throttledHandlePointerMove);
+    window.addEventListener("pointerup", this.handlePointerUp);
+    window.addEventListener("pointercancel", this.handlePointerUp);
   }
 
   unsubscribeFromEvents() {
@@ -228,7 +221,7 @@ export class GestureManager {
     const deltaDistance = currentDistance - this.initialPinchDistance;
 
     // If the pinch distance changes above some threshold, update zoom
-    if (Math.abs(deltaDistance) > 5) {
+    if (Math.abs(deltaDistance) > 2) {
       const zoomDelta = deltaDistance > 0 ? 1 : -1;
       this.updateZoom(zoomDelta * this.zoomRate);
       this.initialPinchDistance = currentDistance; // Update initial pinch distance
