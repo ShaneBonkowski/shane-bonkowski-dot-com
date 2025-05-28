@@ -161,12 +161,15 @@ export class Boid extends GameObject {
 
   calculateBoidSize(): number {
     // Calculate the boid size based on the screen width
-    let boidSize = window.innerHeight * 0.15;
+    let boidSize = (window.visualViewport?.height || window.innerHeight) * 0.15;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger boids
-    if (window.innerWidth <= 600 || isPortrait) {
-      boidSize = window.innerHeight * 0.08;
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
+      boidSize = (window.visualViewport?.height || window.innerHeight) * 0.08;
     }
 
     return boidSize;
@@ -477,22 +480,28 @@ export class Boid extends GameObject {
     // "torus" distance as well to see if the boids are closer in that direction.
     // To do so, we can assume the shorter route from one boid to another is through the edge of a screen if
     // their distance in a given direction (x or y) is greater than half the respective size of the screen.
-    if (Math.abs(dx) > window.innerWidth / 2) {
+    if (
+      Math.abs(dx) >
+      (window.visualViewport?.width || window.innerWidth) / 2
+    ) {
       // If "other" is to the right of "this", then we subtract screen width since
       // in the land of "torus" geometry "other" is really to the left of "this" in their closest distance
       if (dx > 0) {
-        dx -= window.innerWidth;
+        dx -= window.visualViewport?.width || window.innerWidth;
       } else {
-        dx += window.innerWidth;
+        dx += window.visualViewport?.width || window.innerWidth;
       }
     }
-    if (Math.abs(dy) > window.innerHeight / 2) {
+    if (
+      Math.abs(dy) >
+      (window.visualViewport?.height || window.innerHeight) / 2
+    ) {
       // If "other" is above "this", then we subtract screen height since
       // in the land of "torus" geometry "other" is really below "this" in their closest distance
       if (dy > 0) {
-        dy -= window.innerHeight;
+        dy -= window.visualViewport?.height || window.innerHeight;
       } else {
-        dy += window.innerHeight;
+        dy += window.visualViewport?.height || window.innerHeight;
       }
     }
 
@@ -521,22 +530,28 @@ export class Boid extends GameObject {
     // "torus" distance to see if the boids are closer in that direction.
     // To do so, we can assume the shorter route from one boid to another is through the edge of a screen if
     // their distance in a given direction (x or y) is greater than half the respective size of the screen.
-    if (Math.abs(dx) > window.innerWidth / 2) {
+    if (
+      Math.abs(dx) >
+      (window.visualViewport?.width || window.innerWidth) / 2
+    ) {
       // If positionB is to the right of positionA in this case, then we subtract screen width since
       // in the land of "torus" geometry positionB is really to the left of positionA in their closest distance through the edge
       if (dx > 0) {
-        dx -= window.innerWidth;
+        dx -= window.visualViewport?.width || window.innerWidth;
       } else {
-        dx += window.innerWidth;
+        dx += window.visualViewport?.width || window.innerWidth;
       }
     }
-    if (Math.abs(dy) > window.innerHeight / 2) {
+    if (
+      Math.abs(dy) >
+      (window.visualViewport?.height || window.innerHeight) / 2
+    ) {
       // If positionB is above of positionA in this case, then we subtract screen height since
       // in the land of "torus" geometry positionB is really to the below of positionA in their closest distance through the edge
       if (dy > 0) {
-        dy -= window.innerHeight;
+        dy -= window.visualViewport?.height || window.innerHeight;
       } else {
-        dy += window.innerHeight;
+        dy += window.visualViewport?.height || window.innerHeight;
       }
     }
 
@@ -551,7 +566,9 @@ export class Boid extends GameObject {
     // If left, teleport to right side of screen
     if (collisionDirection === "left") {
       this.physicsBody2D!.position.x =
-        window.innerWidth - edgeMargin - this.size / 2;
+        (window.visualViewport?.width || window.innerWidth) -
+        edgeMargin -
+        this.size / 2;
     }
     // If right, teleport to left side of screen
     else if (collisionDirection === "right") {
@@ -560,7 +577,9 @@ export class Boid extends GameObject {
     // If top, move to bottom
     else if (collisionDirection === "top") {
       this.physicsBody2D!.position.y =
-        window.innerHeight - edgeMargin - this.size / 2;
+        (window.visualViewport?.height || window.innerHeight) -
+        edgeMargin -
+        this.size / 2;
     }
     // If bottom, move to top
     else if (collisionDirection === "bottom") {

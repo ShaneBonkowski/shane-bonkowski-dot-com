@@ -107,7 +107,10 @@ export class Tile extends GameObject {
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // for phones change the font size
-    if (window.innerWidth <= 600 || isPortrait) {
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
       fontSize = 24;
     }
     this.text!.setFontSize(fontSize);
@@ -267,8 +270,8 @@ export class Tile extends GameObject {
   }
 
   findTileLocFromTileSpace(): Vec2 {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
+    const centerX = (window.visualViewport?.width || window.innerWidth) / 2;
+    const centerY = (window.visualViewport?.height || window.innerHeight) / 2;
     const tileSpacing = this.size * sharedTileAttrs.tileSpacingFactor;
 
     // Calculate the starting position for the top-left tile in the grid
@@ -293,12 +296,15 @@ export class Tile extends GameObject {
 
   calculateTileSize(): number {
     // Calculate the tile size based on the screen width
-    let tileSize = window.innerHeight * 0.15;
+    let tileSize = (window.visualViewport?.height || window.innerHeight) * 0.15;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger tile
-    if (window.innerWidth <= 600 || isPortrait) {
-      tileSize = window.innerHeight * 0.09;
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
+      tileSize = (window.visualViewport?.height || window.innerHeight) * 0.09;
     }
 
     return tileSize;

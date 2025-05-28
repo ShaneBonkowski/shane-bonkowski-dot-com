@@ -11,8 +11,8 @@ export function instantiateBoids(
   const boids: Boid[] = [];
 
   // Spawn in the main boid at the middle of the screen, it will follow pointer
-  const spawnX = window.innerWidth / 2;
-  const spawnY = window.innerHeight / 2;
+  const spawnX = (window.visualViewport?.width || window.innerWidth) / 2;
+  const spawnY = (window.visualViewport?.height || window.innerHeight) / 2;
   let leaderBoid = true;
   const mainBoid = new Boid(scene, spawnX, spawnY, leaderBoid, 0);
   boids.push(mainBoid);
@@ -20,8 +20,12 @@ export function instantiateBoids(
   // Spawn in other boids randomly to start
   leaderBoid = false;
   for (let i = 0; i < boidCount; i++) {
-    const randomX = seededRandom.getRandomFloat(0.1, 0.9) * window.innerWidth;
-    const randomY = seededRandom.getRandomFloat(0.1, 0.9) * window.innerHeight;
+    const randomX =
+      seededRandom.getRandomFloat(0.1, 0.9) *
+      (window.visualViewport?.width || window.innerWidth);
+    const randomY =
+      seededRandom.getRandomFloat(0.1, 0.9) *
+      (window.visualViewport?.height || window.innerHeight);
     const boid = new Boid(scene, randomX, randomY, leaderBoid, i + 1);
     boids.push(boid);
   }

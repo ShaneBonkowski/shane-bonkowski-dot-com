@@ -71,7 +71,9 @@ export class RigidBody2D {
       collisionDirection = "left";
     } else if (
       this.gameObject.physicsBody2D!.position.x >=
-      window.innerWidth - edgeMargin - this.hitboxSize.x / 2
+      (window.visualViewport?.width || window.innerWidth) -
+        edgeMargin -
+        this.hitboxSize.x / 2
     ) {
       collisionDirection = "right";
     } else if (
@@ -81,7 +83,9 @@ export class RigidBody2D {
       collisionDirection = "top";
     } else if (
       this.gameObject.physicsBody2D!.position.y >=
-      window.innerHeight - edgeMargin - this.hitboxSize.y / 2
+      (window.visualViewport?.height || window.innerHeight) -
+        edgeMargin -
+        this.hitboxSize.y / 2
     ) {
       collisionDirection = "bottom";
     }
