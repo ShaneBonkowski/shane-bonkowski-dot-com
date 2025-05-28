@@ -112,12 +112,15 @@ export class Ball extends GameObject {
 
   calculateSize(): number {
     // Calculate the size based on the screen width
-    let newSize = window.innerHeight * 0.07;
+    let newSize = (window.visualViewport?.height || window.innerHeight) * 0.07;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger objects
-    if (window.innerWidth <= 600 || isPortrait) {
-      newSize = window.innerHeight * 0.05;
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
+      newSize = (window.visualViewport?.height || window.innerHeight) * 0.05;
     }
 
     return newSize;

@@ -77,7 +77,10 @@ export class MainGameScene extends Generic2DGameScene {
     // (setting tile layout creates the tiles)
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
-    if (window.innerWidth <= 600 || isPortrait) {
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
       this.setTileLayoutForPhone();
     } else {
       this.setLayoutForComputer();
@@ -437,7 +440,10 @@ export class MainGameScene extends Generic2DGameScene {
     // update the layout of the tile grid.
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
-    if (window.innerWidth <= 600 || isPortrait) {
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
       // Only update layout if it changed!
       if (
         tileGridAttrs.tileGridWidth != tileGridWidthPhone ||

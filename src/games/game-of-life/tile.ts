@@ -154,12 +154,15 @@ export class Tile extends GameObject {
 
   calculateDefaultSize(): number {
     // Calculate the size based on the screen width
-    let size = window.innerHeight * 0.035;
+    let size = (window.visualViewport?.height || window.innerHeight) * 0.035;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger
-    if (window.innerWidth <= 600 || isPortrait) {
-      size = window.innerHeight * 0.022;
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
+      size = (window.visualViewport?.height || window.innerHeight) * 0.022;
     }
 
     // Scale according to zoom!
@@ -204,14 +207,17 @@ export class Tile extends GameObject {
 
   calculateTilePosition(): Vec2 {
     // Get the tile location from the grid location and screen size
-    let centerX = window.innerWidth / 2;
-    let centerY = window.innerHeight / 2;
+    let centerX = (window.visualViewport?.width || window.innerWidth) / 2;
+    let centerY = (window.visualViewport?.height || window.innerHeight) / 2;
     let smallAmountForGrid = 0; // allows me to add small amount to create a buffer for the "grid"
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // for phones change the center location etc.
-    if (window.innerWidth <= 600 || isPortrait) {
-      centerY = window.innerHeight * 0.47;
+    if (
+      (window.visualViewport?.width || window.innerWidth) <= 600 ||
+      isPortrait
+    ) {
+      centerY = (window.visualViewport?.height || window.innerHeight) * 0.47;
       smallAmountForGrid = 0;
     }
 
@@ -219,12 +225,12 @@ export class Tile extends GameObject {
     centerX = MoreMath.clamp(
       centerX + this.scene.gestureManager.dragOffsetX,
       0,
-      window.innerWidth
+      window.visualViewport?.width || window.innerWidth
     );
     centerY = MoreMath.clamp(
       centerY + this.scene.gestureManager.dragOffsetY,
       0,
-      window.innerHeight
+      window.visualViewport?.height || window.innerHeight
     );
 
     // Calculate the starting position for the bottom-left tile in the grid
