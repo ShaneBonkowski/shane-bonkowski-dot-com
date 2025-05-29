@@ -39,6 +39,8 @@ export class MainGameScene extends Generic2DGameScene {
   public livingTilespaceSet: LivingTilespaceSet;
   public gestureManager: GestureManager;
   private currentBackgroundColor: string | null = null;
+  private lastManualWindowResizeTime: number = 0;
+  private windowResizeInterval: number = 250;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -174,6 +176,14 @@ export class MainGameScene extends Generic2DGameScene {
 
         this.renderPass();
       }
+    }
+
+    // In order to handle edge cases where the resize observer does not catch
+    // a resize (such as when iPhone toolbar changes), we also check for resize
+    // every windowResizeInterval milliseconds.
+    if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
+      this.handleWindowResize();
+      this.lastManualWindowResizeTime = time;
     }
   }
 

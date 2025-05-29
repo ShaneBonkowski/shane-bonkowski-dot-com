@@ -9,6 +9,8 @@ export class MainGameScene extends Generic2DGameScene {
   private resizeObserver: ResizeObserver | null = null;
   public maxBalls: number = 10;
   public lastKnownWindowSize: Vec2 | null = null;
+  private lastManualWindowResizeTime: number = 0;
+  private windowResizeInterval: number = 250;
   public uiMenuOpen: boolean = false;
 
   constructor() {
@@ -66,6 +68,14 @@ export class MainGameScene extends Generic2DGameScene {
       for (const ball of this.balls) {
         ball.updateGraphic();
       }
+    }
+
+    // In order to handle edge cases where the resize observer does not catch
+    // a resize (such as when iPhone toolbar changes), we also check for resize
+    // every windowResizeInterval milliseconds.
+    if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
+      this.handleWindowResize();
+      this.lastManualWindowResizeTime = time;
     }
   }
 
