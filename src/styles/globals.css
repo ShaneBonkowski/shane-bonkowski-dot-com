@@ -11,7 +11,7 @@ body {
   /* Shift up a lil to fix the rendering bug seen on phone with 1px thick line */
   background-position: center calc(100% - 4px);
   background-repeat: repeat-y;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
