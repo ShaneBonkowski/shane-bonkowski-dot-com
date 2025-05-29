@@ -109,7 +109,7 @@ const UiOverlay: React.FC = () => {
   }, []);
 
   return (
-    <div id="ui-overlay" aria-label="Game UI Overlay">
+    <div className="z-50" id="ui-overlay" aria-label="Game UI Overlay">
       {/* Score Text */}
       {isUiVisible && (
         <div
@@ -132,7 +132,7 @@ const UiOverlay: React.FC = () => {
       {isUiVisible && (
         <div
           id="tile-buttons"
-          className="pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
+          className="z-50 pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
           aria-label="Tile Buttons"
         >
           {/* Solution Toggle Button */}
@@ -164,7 +164,7 @@ const UiOverlay: React.FC = () => {
       {isUiVisible && (
         <div
           id="difficulty-controls"
-          className="fixed bottom-5 left-5 flex flex-col gap-5"
+          className="z-50 fixed bottom-5 left-5 flex flex-col gap-5"
           aria-label="Difficulty Selection"
         >
           {[

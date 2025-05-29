@@ -29,9 +29,8 @@ export const gameInfoData: ContentDataProps[] = [
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
-const gameParentName = "phaser-game";
 
-const GameComponent: React.FC<{ id: string }> = ({ id }) => {
+const GameComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const isLoadingPhaser = useRef(false);
 
@@ -71,11 +70,11 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
           height: "100%",
           transparent: true,
           scale: {
-            mode: Phaser.Scale.RESIZE,
-            autoCenter: Phaser.Scale.CENTER_BOTH,
+            mode: Phaser.Scale.NONE, // see phaser-canvas.ts resizeCanvasToParent() for manual resizing
+            autoCenter: Phaser.Scale.NO_CENTER,
           },
           scene: MainGameScene,
-          parent: gameParentName,
+          parent: "phaser-game",
         };
 
         game = new window.Phaser.Game(gameConfig);
@@ -96,18 +95,7 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
   }, []);
 
   return (
-    <div className="relative w-full h-full" id={id}>
-      {/* Loading Screen */}
-      {isLoading && (
-        <GameLoadingScreen
-          coverImage="/webps/games/flip-tile-cover.webp"
-          onFadeOutComplete={handleFadeOutComplete}
-        />
-      )}
-
-      {/* Phaser Game Container */}
-      <div className="absolute inset-0" id={gameParentName}></div>
-
+    <>
       {/* UI */}
       <UiOverlay></UiOverlay>
       <GameMessagePopup
@@ -115,7 +103,18 @@ const GameComponent: React.FC<{ id: string }> = ({ id }) => {
         bottom={true}
       ></GameMessagePopup>
       <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
-    </div>
+
+      {/* Phaser Game Container */}
+      <div className="relative inset-0" id="phaser-game"></div>
+
+      {/* Loading Screen */}
+      {isLoading && (
+        <GameLoadingScreen
+          coverImage="/webps/games/flip-tile-cover.webp"
+          onFadeOutComplete={handleFadeOutComplete}
+        />
+      )}
+    </>
   );
 };
 

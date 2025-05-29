@@ -123,7 +123,7 @@ const UiOverlay: React.FC = () => {
 
   return (
     <div
-      className="pointer-events-none fixed bottom-5 w-full flex flex-col gap-3"
+      className="z-50 pointer-events-none fixed bottom-5 w-full flex flex-col gap-3"
       id="ui-overlay"
       aria-label="Game UI Overlay"
     >
