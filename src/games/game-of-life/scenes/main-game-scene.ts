@@ -19,6 +19,7 @@ import { SeededRandom } from "@/src/utils/seedable-random";
 import { GestureManager } from "@/src/utils/gesture-manager";
 import { Tile } from "@/src/games/game-of-life/tile";
 import { settings } from "@/src/games/game-of-life/SettingsContainer";
+import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 export let tiles: Tile[][] = [];
 
@@ -445,6 +446,11 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn("handleWindowResize called before scene initialization.");
       return;
     }
+
+    // Update canvas size to match the parent.
+    // This is needed to be done manually since Phaser.AUTO does not
+    // take into account some nuances of screen size on safari/iOS.
+    resizeCanvasToParent(this.game);
 
     // If it switches from landscape to portrait (aka phone) or vice versa,
     // update the layout of the tile grid.

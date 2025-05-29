@@ -3,6 +3,7 @@ import { Ball } from "@/src/games/game-template/ball";
 import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 export class MainGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
@@ -154,6 +155,11 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn("handleWindowResize called before scene initialization.");
       return;
     }
+
+    // Update canvas size to match the parent.
+    // This is needed to be done manually since Phaser.AUTO does not
+    // take into account some nuances of screen size on safari/iOS.
+    resizeCanvasToParent(this.game);
 
     // Get the new screen dimensions
     const screenWidth = window.visualViewport?.width || window.innerWidth;

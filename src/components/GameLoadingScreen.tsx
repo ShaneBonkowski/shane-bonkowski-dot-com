@@ -67,7 +67,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       <Image
         src="/webps/sky-starry-bkg.webp"
         alt="Background Image"
-        className="absolute inset-0 w-full h-full object-cover z-0"
+        className="relative inset-0 w-full h-full object-cover z-0"
         fill
         priority
         id="game-loading-screen-background-image"
