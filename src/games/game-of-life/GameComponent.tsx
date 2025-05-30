@@ -116,7 +116,7 @@ const GameComponent: React.FC = () => {
       <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
 
       {/* Phaser Game Container */}
-      <div className="relative inset-0" id="phaser-game"></div>
+      <div className="absolute inset-0" id="phaser-game"></div>
 
       {/* Loading Screen */}
       {isLoading && (

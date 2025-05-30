@@ -71,7 +71,7 @@ export default function RootLayout({
           }}
         />
         <Header />
-        <main className="flex-grow" id="website-main-content">
+        <main className="flex-grow relative" id="website-main-content">
           {children}
         </main>
         <CookieAgreement />
