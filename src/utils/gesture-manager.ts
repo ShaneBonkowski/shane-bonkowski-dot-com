@@ -2,6 +2,7 @@ import { MoreMath } from "@/src/utils/more-math";
 
 export class GestureManager {
   public activePointers: Record<number, { x: number; y: number }>;
+  public pointerCount: number;
   public dragRate: number;
   public zoomRate: number;
   public dragOffsetX: number;
@@ -14,9 +15,11 @@ export class GestureManager {
   public dragStartX: number;
   public dragStartY: number;
   public initialPinchDistance: number | null;
+  private rafId: number | null = null;
 
   constructor(dragRate = 0.75, zoomRate = 0.05) {
     this.activePointers = {};
+    this.pointerCount = 0;
     this.dragRate = dragRate;
     this.zoomRate = zoomRate;
 
@@ -79,13 +82,14 @@ export class GestureManager {
       x: event.clientX,
       y: event.clientY,
     };
+    this.pointerCount++;
 
     // 1 finger down, then pointer down means drag
-    if (Object.keys(this.activePointers).length == 1) {
+    if (this.pointerCount == 1) {
       this.startDrag();
     }
     // Otherwise, 2 fingers down means zoom
-    else if (Object.keys(this.activePointers).length == 2) {
+    else if (this.pointerCount == 2) {
       this.startZoom();
     }
   };
@@ -96,20 +100,29 @@ export class GestureManager {
       this.activePointers[event.pointerId].x = event.clientX;
       this.activePointers[event.pointerId].y = event.clientY;
 
-      if (this.isZooming) {
-        this.handleZoom();
-      } else if (this.isDragging) {
-        this.handleDrag();
+      // Use requestAnimationFrame to throttle updates
+      if (this.rafId === null) {
+        this.rafId = requestAnimationFrame(() => {
+          if (this.isZooming) {
+            this.handleZoom();
+          } else if (this.isDragging) {
+            this.handleDrag();
+          }
+          this.rafId = null;
+        });
       }
     }
   };
 
   handlePointerUp = (event: PointerEvent) => {
     // Remove pointer from the set of active pointers
-    delete this.activePointers[event.pointerId];
+    if (this.activePointers[event.pointerId]) {
+      delete this.activePointers[event.pointerId];
+      this.pointerCount = Math.max(0, this.pointerCount - 1); // Decrement pointerCount safely
+    }
 
     // Only stop if there are 0 fingers on the screen!
-    if (Object.keys(this.activePointers).length === 0) {
+    if (this.pointerCount === 0) {
       if (this.isZooming) {
         this.stopZoom();
       } else if (this.isDragging) {
@@ -120,8 +133,7 @@ export class GestureManager {
 
   startDrag() {
     // Only start drag if there's exactly 1 touch (finger).
-    if (this.dragBlocked || Object.keys(this.activePointers).length !== 1)
-      return;
+    if (this.dragBlocked || this.pointerCount !== 1) return;
 
     this.isDragging = true;
     const { clientX, clientY } = this.getEventPosition();
@@ -131,12 +143,7 @@ export class GestureManager {
 
   handleDrag = () => {
     // Only handle drag if there's exactly 1 touch (finger).
-    if (
-      this.dragBlocked ||
-      !this.isDragging ||
-      Object.keys(this.activePointers).length !== 1
-    )
-      return;
+    if (this.dragBlocked || !this.isDragging || this.pointerCount !== 1) return;
 
     const { clientX, clientY } = this.getEventPosition();
     const deltaX = (clientX - this.dragStartX) * this.dragRate;
@@ -172,7 +179,7 @@ export class GestureManager {
 
   startZoom() {
     // Record initial distance between touches for pinch gesture
-    if (this.zoomBlocked || Object.keys(this.activePointers).length !== 2) {
+    if (this.zoomBlocked || this.pointerCount !== 2) {
       return;
     }
 
@@ -196,7 +203,7 @@ export class GestureManager {
       this.zoomBlocked ||
       !this.isZooming ||
       this.initialPinchDistance == null ||
-      Object.keys(this.activePointers).length !== 2
+      this.pointerCount !== 2
     ) {
       return;
     }
