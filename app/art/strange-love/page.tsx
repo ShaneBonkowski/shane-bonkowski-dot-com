@@ -45,9 +45,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return (
-    <div id={imageData.title}>
-      <StoryContentLoader {...imageData} />
-    </div>
-  );
+  return <StoryContentLoader {...imageData} />;
 }

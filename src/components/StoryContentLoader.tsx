@@ -66,7 +66,7 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
   return (
     <div
       className={`flex flex-col max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left`}
-      id="story-content-loader"
+      id={title.toLowerCase().replace(/\s+/g, "-")}
       aria-labelledby="story-content-title"
       aria-describedby="story-content-body"
     >
