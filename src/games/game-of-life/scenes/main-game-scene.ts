@@ -452,6 +452,12 @@ export class MainGameScene extends Generic2DGameScene {
     // take into account some nuances of screen size on safari/iOS.
     resizeCanvasToParent(this.game);
 
+    // This is a workaround for the iOS bug where address bar or "enable diction"
+    // window appearing causes scroll that gets stuck.
+    if (window.scrollX !== 0 || window.scrollY !== 0) {
+      window.scrollTo(0, 0);
+    }
+
     // If it switches from landscape to portrait (aka phone) or vice versa,
     // update the layout of the tile grid.
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;

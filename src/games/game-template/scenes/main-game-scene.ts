@@ -161,6 +161,12 @@ export class MainGameScene extends Generic2DGameScene {
     // take into account some nuances of screen size on safari/iOS.
     resizeCanvasToParent(this.game);
 
+    // This is a workaround for the iOS bug where address bar or "enable diction"
+    // window appearing causes scroll that gets stuck.
+    if (window.scrollX !== 0 || window.scrollY !== 0) {
+      window.scrollTo(0, 0);
+    }
+
     // Get the new screen dimensions
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
