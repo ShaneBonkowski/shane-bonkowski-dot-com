@@ -109,7 +109,7 @@ const GameComponent: React.FC = () => {
       {/* UI */}
       <UiOverlay></UiOverlay>
       <GameMessagePopup
-        message="For the best experience, hide the toolbar and switch to fullscreen mode."
+        message="Warning: This game is not fully optimized and may experience lag, especially on mobile."
         bottom={true}
       ></GameMessagePopup>
       <SettingsContainer></SettingsContainer>
