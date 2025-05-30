@@ -1,5 +1,4 @@
 import { MoreMath } from "@/src/utils/more-math";
-// import { throttle } from "@/src/utils/throttle";
 
 export class GestureManager {
   public activePointers: Record<number, { x: number; y: number }>;
@@ -15,8 +14,6 @@ export class GestureManager {
   public dragStartX: number;
   public dragStartY: number;
   public initialPinchDistance: number | null;
-  public throttledHandleWheel: (event: WheelEvent) => void;
-  public throttledHandlePointerMove: (event: PointerEvent) => void;
 
   constructor(dragRate = 0.75, zoomRate = 0.05) {
     this.activePointers = {};
@@ -38,11 +35,6 @@ export class GestureManager {
     this.isZooming = false;
     this.zoomBlocked = false;
     this.initialPinchDistance = null;
-
-    // Create throttled versions of the handlers and store them
-    // const throttleInterval = 16; // ms
-    this.throttledHandleWheel = this.handleWheel; // throttle(this.handleWheel, throttleInterval);
-    this.throttledHandlePointerMove = this.handlePointerMove; // throttle(this.handlePointerMove, throttleInterval);
 
     this.subscribeToEvents();
   }
@@ -66,17 +58,17 @@ export class GestureManager {
   }
 
   subscribeToEvents() {
-    window.addEventListener("wheel", this.throttledHandleWheel);
+    window.addEventListener("wheel", this.handleWheel);
     window.addEventListener("pointerdown", this.handlePointerDown);
-    window.addEventListener("pointermove", this.throttledHandlePointerMove);
+    window.addEventListener("pointermove", this.handlePointerMove);
     window.addEventListener("pointerup", this.handlePointerUp);
     window.addEventListener("pointercancel", this.handlePointerUp);
   }
 
   unsubscribeFromEvents() {
-    window.removeEventListener("wheel", this.throttledHandleWheel);
+    window.removeEventListener("wheel", this.handleWheel);
     window.removeEventListener("pointerdown", this.handlePointerDown);
-    window.removeEventListener("pointermove", this.throttledHandlePointerMove);
+    window.removeEventListener("pointermove", this.handlePointerMove);
     window.removeEventListener("pointerup", this.handlePointerUp);
     window.removeEventListener("pointercancel", this.handlePointerUp);
   }
