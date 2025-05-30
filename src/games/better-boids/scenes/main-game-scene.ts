@@ -312,6 +312,10 @@ export class MainGameScene extends Generic2DGameScene {
       }
     }
 
+    // This is a workaround for the iOS bug where address bar or "enable diction"
+    // causes scroll.
+    window.scrollTo(0, 0);
+
     // Update lastKnownWindowSize to current screen dimensions
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   };
