@@ -16,6 +16,8 @@ export class GestureManager {
   public dragStartY: number;
   public initialPinchDistance: number | null;
   private rafId: number | null = null;
+  private lastFrameTime: number = 0;
+  private minInterval: number = 50; // ~20 FPS
 
   constructor(dragRate = 0.75, zoomRate = 0.05) {
     this.activePointers = {};
@@ -100,8 +102,11 @@ export class GestureManager {
       this.activePointers[event.pointerId].x = event.clientX;
       this.activePointers[event.pointerId].y = event.clientY;
 
-      // Use requestAnimationFrame to throttle updates
-      if (this.rafId === null) {
+      // Only try to handle zoom/drag if not already scheduled and enough
+      // time has passed since the last frame
+      const now = performance.now();
+      if (this.rafId === null && now - this.lastFrameTime > this.minInterval) {
+        this.lastFrameTime = performance.now();
         this.rafId = requestAnimationFrame(() => {
           if (this.isZooming) {
             this.handleZoom();
