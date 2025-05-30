@@ -8,7 +8,6 @@ import {
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
-import GameMessagePopup from "@/src/components/GameMessagePopup";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 
 // FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO
@@ -95,10 +94,6 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <GameMessagePopup
-        message="For the best experience, hide the toolbar and switch to fullscreen mode."
-        bottom={true}
-      ></GameMessagePopup>
       <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
 
       {/* Phaser Game Container */}

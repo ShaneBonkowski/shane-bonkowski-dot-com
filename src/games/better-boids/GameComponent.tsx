@@ -10,7 +10,6 @@ import {
 } from "@/src/utils/phaser-loading";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
-import GameMessagePopup from "@/src/components/GameMessagePopup";
 
 export const gameInfoData: ContentDataProps[] = [
   {
@@ -105,10 +104,6 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <GameMessagePopup
-        message="For the best experience, hide the toolbar and switch to fullscreen mode."
-        bottom={true}
-      ></GameMessagePopup>
       <SettingsContainer></SettingsContainer>
       <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
 
