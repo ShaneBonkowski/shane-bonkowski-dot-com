@@ -1,5 +1,5 @@
 import { MoreMath } from "@/src/utils/more-math";
-import { throttle } from "@/src/utils/throttle";
+// import { throttle } from "@/src/utils/throttle";
 
 export class GestureManager {
   public activePointers: Record<number, { x: number; y: number }>;
@@ -40,12 +40,9 @@ export class GestureManager {
     this.initialPinchDistance = null;
 
     // Create throttled versions of the handlers and store them
-    const throttleInterval = 16; // ms
-    this.throttledHandleWheel = throttle(this.handleWheel, throttleInterval);
-    this.throttledHandlePointerMove = throttle(
-      this.handlePointerMove,
-      throttleInterval
-    );
+    // const throttleInterval = 16; // ms
+    this.throttledHandleWheel = this.handleWheel; // throttle(this.handleWheel, throttleInterval);
+    this.throttledHandlePointerMove = this.handlePointerMove; // throttle(this.handlePointerMove, throttleInterval);
 
     this.subscribeToEvents();
   }
