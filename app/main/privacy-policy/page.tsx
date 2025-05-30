@@ -494,8 +494,6 @@ const privacyPolicyData: ContentDataProps[] = [
 
 export default function Page() {
   return (
-    <div id="privacy-policy">
-      <PageContentLoader contentData={privacyPolicyData} />
-    </div>
+    <PageContentLoader contentData={privacyPolicyData} id="privacy-policy" />
   );
 }

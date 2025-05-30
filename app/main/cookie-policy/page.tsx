@@ -174,8 +174,6 @@ const cookiePolicyData: ContentDataProps[] = [
 
 export default function Page() {
   return (
-    <div id="cookie-policy">
-      <PageContentLoader contentData={cookiePolicyData} />
-    </div>
+    <PageContentLoader contentData={cookiePolicyData} id="cookie-policy" />
   );
 }

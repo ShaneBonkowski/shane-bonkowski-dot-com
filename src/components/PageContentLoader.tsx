@@ -1,14 +1,15 @@
 import React from "react";
 import { ContentDataProps } from "@/src/types/data-props";
 
-const PageContentLoader: React.FC<{ contentData: ContentDataProps[] }> = ({
-  contentData,
-}) => {
+const PageContentLoader: React.FC<{
+  contentData: ContentDataProps[];
+  id: string;
+}> = ({ contentData, id }) => {
   return (
     <div
       className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
-      id="page-content-loader"
-      aria-label="Page content loader"
+      id={id}
+      aria-label={`Page content for ${id}`}
     >
       {contentData.map((item, index) => {
         switch (item.type) {

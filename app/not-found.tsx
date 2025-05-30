@@ -13,9 +13,5 @@ const notFoundData: ContentDataProps[] = [
 ];
 
 export default function NotFound() {
-  return (
-    <div id="not-found">
-      <PageContentLoader contentData={notFoundData} />
-    </div>
-  );
+  return <PageContentLoader contentData={notFoundData} id="not-found" />;
 }

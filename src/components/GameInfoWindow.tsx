@@ -22,7 +22,7 @@ const GameInfoWindow: React.FC<GameInfoWindowProps> = ({
       onClose={onClose}
       aria-label="Game information window"
     >
-      <PageContentLoader contentData={infoData} />
+      <PageContentLoader contentData={infoData} id="game-info" />
     </GameUiWindow>
   );
 };
