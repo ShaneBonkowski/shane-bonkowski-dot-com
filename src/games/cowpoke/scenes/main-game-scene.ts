@@ -7,6 +7,12 @@ import { Physics } from "@/src/utils/physics";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Character, CHARACTER_TYPES } from "@/src/games/cowpoke/character";
 
+// Bkg art was drawn at 1920x1080, so we use that as the reference size.
+// This is used to scale the background decorations to fit the screen.
+// Note that this is not the same as the game canvas size, which is set to
+// 100% width and height of the parent element.
+export const REFERENCE_BKG_SIZE: Vec2 = new Vec2(1920, 1080);
+
 export class MainGameScene extends Generic2DGameScene {
   private decorations: Decoration[] = [];
   private player: Character | null = null;
@@ -30,6 +36,11 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Constructor logic for this scene
     // ...
+
+    // Last thing we do is set the lastKnownWindowSize to the current screen size
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
   preload() {
@@ -123,7 +134,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
 
     // Create the background decorations
     this.initializeBackgroundDecorations(screenWidth, screenHeight);
@@ -389,6 +399,7 @@ export class MainGameScene extends Generic2DGameScene {
           screenHeight;
 
         decoration.handleWindowResize(newX, newY);
+        console.log(`Decoration resized to new position: (${newX}, ${newY})`);
       }
 
       newX =

@@ -26,6 +26,9 @@ export class MainGameScene extends Generic2DGameScene {
     super("MainGameScene");
 
     // Constructor logic for this scene
+    // ...
+
+    // Last thing we do is set the lastKnownWindowSize to the current screen size
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);

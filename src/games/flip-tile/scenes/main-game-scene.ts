@@ -42,6 +42,11 @@ export class MainGameScene extends Generic2DGameScene {
     this.score = 0;
     this.solutionRevealed = false;
     this.revealedAtLeastOnceThisLevel = false;
+
+    // Last thing we do is set the lastKnownWindowSize to the current screen size
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
   preload() {
@@ -55,10 +60,6 @@ export class MainGameScene extends Generic2DGameScene {
 
   create() {
     super.create();
-
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
 
     // Spawn in tiles in a grid
     this.newTilePattern();

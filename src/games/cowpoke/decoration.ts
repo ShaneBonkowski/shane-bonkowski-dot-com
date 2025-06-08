@@ -1,6 +1,9 @@
 import { GameObject } from "@/src/utils/game-object";
 import { Vec2 } from "@/src/utils/vector";
-import { MainGameScene } from "@/src/games/cowpoke/scenes/main-game-scene";
+import {
+  MainGameScene,
+  REFERENCE_BKG_SIZE,
+} from "@/src/games/cowpoke/scenes/main-game-scene";
 
 export const DECOR_TYPES = {
   UNASSIGNED: -1,
@@ -13,6 +16,7 @@ export const DECOR_TYPES = {
 export class Decoration extends GameObject {
   private scene: MainGameScene;
   public type: number = DECOR_TYPES.UNASSIGNED;
+  private ogPixelSize: Vec2 = new Vec2(0, 0);
 
   constructor(
     scene: MainGameScene,
@@ -31,6 +35,15 @@ export class Decoration extends GameObject {
     // Set the sprite
     this.graphic = this.scene.add.sprite(0, 0, spriteName);
     (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 0.5);
+
+    this.ogPixelSize = new Vec2(
+      (
+        this.graphic as Phaser.GameObjects.Sprite
+      ).texture.getSourceImage().width,
+      (
+        this.graphic as Phaser.GameObjects.Sprite
+      ).texture.getSourceImage().height
+    );
 
     this.physicsBody2D!.position.x = spawnX;
     switch (this.type) {
@@ -84,18 +97,29 @@ export class Decoration extends GameObject {
 
   calculateSize(): Vec2 {
     // Calculate the size based on the screen width
-    let newSize = (window.visualViewport?.height || window.innerHeight) * 0.07;
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    let newSize = new Vec2(0, 0);
 
-    // Phone screen has larger objects
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+
+    const scaleX = screenWidth / REFERENCE_BKG_SIZE.x;
+    const scaleY = screenHeight / REFERENCE_BKG_SIZE.y;
+
+    // Backgrounds are sized to fit viewport
     if (
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
+      this.type === DECOR_TYPES.BACK ||
+      this.type === DECOR_TYPES.MID ||
+      this.type === DECOR_TYPES.FLOOR
     ) {
-      newSize = (window.visualViewport?.height || window.innerHeight) * 0.05;
+      newSize = new Vec2(screenWidth, screenHeight);
+    } else if (this.type === DECOR_TYPES.FRONT) {
+      newSize = new Vec2(
+        this.ogPixelSize.x * scaleX,
+        this.ogPixelSize.y * scaleY
+      );
     }
 
-    return new Vec2(newSize, newSize);
+    return newSize;
   }
 
   handleMoving() {
