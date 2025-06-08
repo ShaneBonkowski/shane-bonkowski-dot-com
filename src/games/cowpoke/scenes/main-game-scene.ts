@@ -376,6 +376,8 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn(
         "lastKnownWindowSize is not properly initialized. Skipping resize handling."
       );
+      this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
+      return;
     } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
@@ -399,7 +401,6 @@ export class MainGameScene extends Generic2DGameScene {
           screenHeight;
 
         decoration.handleWindowResize(newX, newY);
-        console.log(`Decoration resized to new position: (${newX}, ${newY})`);
       }
 
       newX =
