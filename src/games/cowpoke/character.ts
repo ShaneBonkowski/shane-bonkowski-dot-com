@@ -116,10 +116,20 @@ export class Character extends GameObject {
   }
 
   spawnNewPlayerCharacter() {
-    this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
+    if (!this.bodySprite) {
+      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
+    } else {
+      this.bodySprite.destroy();
+      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
+    }
     this.bodySprite!.setOrigin(0.5, 0.5);
 
-    this.headSprite = this.scene.add.sprite(0, 0, "head-chill-guy");
+    if (!this.headSprite) {
+      this.headSprite = this.scene.add.sprite(0, 0, "head-chill-guy");
+    } else {
+      this.headSprite.destroy();
+      this.headSprite = this.scene.add.sprite(0, 0, "head-chill-guy");
+    }
     this.headSprite!.setOrigin(0.5, 0.5);
 
     // Set default hat and gun when new player character is spawned
@@ -130,7 +140,12 @@ export class Character extends GameObject {
   }
 
   spawnNewRandomCharacter() {
-    this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
+    if (!this.bodySprite) {
+      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
+    } else {
+      this.bodySprite.destroy();
+      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
+    }
     this.bodySprite!.setOrigin(0.5, 0.5);
 
     // Set random head
@@ -140,9 +155,12 @@ export class Character extends GameObject {
       this.scene.random
     );
     if (randomHeadSpriteName != null) {
-      (this.headSprite as Phaser.GameObjects.Sprite).setTexture(
-        randomHeadSpriteName
-      );
+      if (!this.headSprite) {
+        this.headSprite = this.scene.add.sprite(0, 0, randomHeadSpriteName);
+      } else {
+        this.headSprite.destroy();
+        this.headSprite = this.scene.add.sprite(0, 0, randomHeadSpriteName);
+      }
     }
     this.headSprite!.setOrigin(0.5, 0.5);
 
@@ -169,7 +187,12 @@ export class Character extends GameObject {
       id = this.getIdForRandomLoot(HAT_LOOT_MAP);
     }
 
-    this.hatSprite = this.scene.add.sprite(0, 0, HAT_LOOT_MAP[id].spriteName);
+    if (!this.hatSprite) {
+      this.hatSprite = this.scene.add.sprite(0, 0, HAT_LOOT_MAP[id].spriteName);
+    } else {
+      this.hatSprite.destroy();
+      this.hatSprite = this.scene.add.sprite(0, 0, HAT_LOOT_MAP[id].spriteName);
+    }
     this.hatSprite!.setOrigin(0.5, 0.5);
 
     this.equippedHatId = id;
@@ -182,7 +205,12 @@ export class Character extends GameObject {
       id = this.getIdForRandomLoot(GUN_LOOT_MAP);
     }
 
-    this.gunSprite = this.scene.add.sprite(0, 0, GUN_LOOT_MAP[id].spriteName);
+    if (!this.gunSprite) {
+      this.gunSprite = this.scene.add.sprite(0, 0, GUN_LOOT_MAP[id].spriteName);
+    } else {
+      this.gunSprite.destroy();
+      this.gunSprite = this.scene.add.sprite(0, 0, GUN_LOOT_MAP[id].spriteName);
+    }
     this.gunSprite!.setOrigin(0.5, 0.5);
 
     this.equippedGunId = id;

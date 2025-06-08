@@ -38,7 +38,7 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/games/cowpoke-cover.webp",
+    imageUrl: "/webps/games/cowpoke-game-cover.webp",
     linkUrl: "/games/cowpoke",
     title: "Cowpoke",
     description:

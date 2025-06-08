@@ -99,7 +99,7 @@ const GameComponent: React.FC = () => {
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/cowpoke-cover.webp"
+          coverImage="/webps/games/cowpoke-game-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}
