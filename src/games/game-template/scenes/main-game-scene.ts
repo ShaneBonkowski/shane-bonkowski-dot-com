@@ -192,7 +192,6 @@ export class MainGameScene extends Generic2DGameScene {
       // retain the general location of the obj, so we try to position it the
       // same screen % it was before on the new screen.
       for (const ball of this.balls) {
-        // Calculate new position based on percentage of old position
         const newX =
           (ball.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
           screenWidth;
@@ -237,5 +236,6 @@ export class MainGameScene extends Generic2DGameScene {
     for (const ball of this.balls) {
       ball.destroy();
     }
+    this.balls.length = 0; // Clear the array
   }
 }

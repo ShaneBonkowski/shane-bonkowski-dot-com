@@ -333,5 +333,6 @@ export class MainGameScene extends Generic2DGameScene {
     for (const boid of this.boids) {
       boid.destroy();
     }
+    this.boids.length = 0; // Clear the boids array
   }
 }

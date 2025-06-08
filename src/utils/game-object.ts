@@ -1,5 +1,6 @@
 import { RigidBody2D } from "@/src/utils/rigid-body-2d";
 import { PhysicsBody2D } from "@/src/utils/physics-body-2d";
+import { SeededRandom } from "@/src/utils/seedable-random";
 
 /**
  * Class representing a game object.
@@ -12,7 +13,11 @@ export class GameObject {
   public name: string;
   public disabled: boolean;
   public size: number;
-  public graphic: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape | null;
+  public graphic:
+    | Phaser.GameObjects.Sprite
+    | Phaser.GameObjects.Shape
+    | Phaser.GameObjects.Container
+    | null;
   public physicsBody2D: PhysicsBody2D | null;
   public rigidBody2D: RigidBody2D | null;
 
@@ -69,6 +74,34 @@ export class GameObject {
   }
 
   /**
+   * Gets a random sprite from the available textures that starts with the given substring.
+   * @param substr The substring to filter the texture keys.
+   * @param allTextureKeys Obtained from scene.textures.getTextureKeys().
+   * @param random The SeededRandom instance to use for random selection.
+   * @return The name of the selected sprite or null if no matching sprites are found.
+   */
+  getRandomSprite(
+    substr: string,
+    allTextureKeys: string[],
+    random: SeededRandom
+  ) {
+    let spriteName: null | string = null;
+
+    const filteredKeys = allTextureKeys.filter((key: string) =>
+      key.startsWith(substr)
+    );
+
+    if (filteredKeys.length > 0) {
+      const randomIndex = random.getRandomInt(0, filteredKeys.length);
+      spriteName = filteredKeys[randomIndex];
+    } else {
+      console.warn(`No sprites found with prefix ${substr}`);
+    }
+
+    return spriteName;
+  }
+
+  /**
    * Update the graphic for the GameObject.
    * @param {number|null} newColor - The new color to set for the graphic.
    */
@@ -85,6 +118,18 @@ export class GameObject {
           this.graphic.setTint(newColor);
         } else if (this.graphic instanceof Phaser.GameObjects.Shape) {
           this.graphic.setFillStyle(newColor);
+        } else if (this.graphic instanceof Phaser.GameObjects.Container) {
+          this.graphic.iterate(
+            (
+              child: Phaser.GameObjects.Sprite | Phaser.GameObjects.Container
+            ) => {
+              if (child instanceof Phaser.GameObjects.Sprite) {
+                child.setTint(newColor);
+              } else if (child instanceof Phaser.GameObjects.Shape) {
+                child.setFillStyle(newColor);
+              }
+            }
+          );
         }
       }
 

@@ -432,5 +432,6 @@ export class MainGameScene extends Generic2DGameScene {
         }
       }
     }
+    tiles.length = 0; // Clear the tiles array
   }
 }
