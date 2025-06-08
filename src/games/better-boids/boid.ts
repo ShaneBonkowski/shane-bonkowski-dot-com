@@ -29,7 +29,7 @@ export class Boid extends GameObject {
   ) {
     // Set up GameObject with physics and rigid body.
     // init size just so its set, will reset to something else later
-    super("Boid", 1, true, true);
+    super("Boid", new Vec2(1, 1), true, true);
 
     this.scene = scene;
     this.mainBoid = leaderBoid;
@@ -159,7 +159,7 @@ export class Boid extends GameObject {
     this.disable();
   };
 
-  calculateBoidSize(): number {
+  calculateBoidSize(): Vec2 {
     // Calculate the boid size based on the screen width
     let boidSize = (window.visualViewport?.height || window.innerHeight) * 0.15;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -172,7 +172,7 @@ export class Boid extends GameObject {
       boidSize = (window.visualViewport?.height || window.innerHeight) * 0.08;
     }
 
-    return boidSize;
+    return new Vec2(boidSize, boidSize);
   }
 
   handleWindowResize(newX: number, newY: number) {
@@ -203,7 +203,7 @@ export class Boid extends GameObject {
 
   updateBoidSize() {
     this.size = this.calculateBoidSize();
-    this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
+    this.rigidBody2D!.hitboxSize = this.size;
   }
 
   handleUpdateBoidSpeed = () => {
@@ -568,22 +568,22 @@ export class Boid extends GameObject {
       this.physicsBody2D!.position.x =
         (window.visualViewport?.width || window.innerWidth) -
         edgeMargin -
-        this.size / 2;
+        this.size.x / 2;
     }
     // If right, teleport to left side of screen
     else if (collisionDirection === "right") {
-      this.physicsBody2D!.position.x = edgeMargin + this.size / 2;
+      this.physicsBody2D!.position.x = edgeMargin + this.size.x / 2;
     }
     // If top, move to bottom
     else if (collisionDirection === "top") {
       this.physicsBody2D!.position.y =
         (window.visualViewport?.height || window.innerHeight) -
         edgeMargin -
-        this.size / 2;
+        this.size.y / 2;
     }
     // If bottom, move to top
     else if (collisionDirection === "bottom") {
-      this.physicsBody2D!.position.y = edgeMargin + this.size / 2;
+      this.physicsBody2D!.position.y = edgeMargin + this.size.y / 2;
     }
   }
 

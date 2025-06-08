@@ -9,7 +9,7 @@ export class Ball extends GameObject {
 
   constructor(scene: MainGameScene, spawnX: number, spawnY: number) {
     // Initialize GameObject with physics, and rigid body
-    super("Ball", 0, true, true);
+    super("Ball", new Vec2(0, 0), true, true);
     this.updateSize(); // set the size here!, not in GameObject
 
     this.scene = scene;
@@ -31,7 +31,7 @@ export class Ball extends GameObject {
     this.graphic = this.scene.add.circle(
       spawnX,
       spawnY,
-      this.size / 2,
+      this.size.x / 2, // x and y are the same for a circle
       this.getRandomColor()
     );
 
@@ -107,10 +107,10 @@ export class Ball extends GameObject {
 
   updateSize() {
     this.size = this.calculateSize();
-    this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
+    this.rigidBody2D!.hitboxSize = this.size;
   }
 
-  calculateSize(): number {
+  calculateSize(): Vec2 {
     // Calculate the size based on the screen width
     let newSize = (window.visualViewport?.height || window.innerHeight) * 0.07;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -123,7 +123,7 @@ export class Ball extends GameObject {
       newSize = (window.visualViewport?.height || window.innerHeight) * 0.05;
     }
 
-    return newSize;
+    return new Vec2(newSize, newSize);
   }
 
   handlePhysics(delta: number) {

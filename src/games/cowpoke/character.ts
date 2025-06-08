@@ -32,7 +32,7 @@ export class Character extends GameObject {
     type: number
   ) {
     // Initialize GameObject with physics, and rigid body
-    super("Character", 0, true, true);
+    super("Character", new Vec2(0, 0), true, true);
     this.updateSize(); // set the size here!, not in GameObject
 
     this.scene = scene;
@@ -47,12 +47,12 @@ export class Character extends GameObject {
       case CHARACTER_TYPES.ENEMY:
         this.spawnNewRandomCharacter();
         this.graphic!.setDepth(4);
-        this.physicsBody2D!.position.y = screenHeight / 2 - this.size;
+        this.physicsBody2D!.position.y = screenHeight / 2 - this.size.y;
         break;
       case CHARACTER_TYPES.PLAYER:
         this.spawnNewPlayerCharacter();
         this.graphic!.setDepth(5);
-        this.physicsBody2D!.position.y = screenHeight / 2 - this.size;
+        this.physicsBody2D!.position.y = screenHeight / 2 - this.size.y;
         break;
       default:
         console.warn(
@@ -92,10 +92,9 @@ export class Character extends GameObject {
 
   updateSize() {
     this.size = this.calculateSize();
-    this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
   }
 
-  calculateSize(): number {
+  calculateSize(): Vec2 {
     // Calculate the size based on the screen width
     let newSize = (window.visualViewport?.height || window.innerHeight) * 0.07;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -108,7 +107,7 @@ export class Character extends GameObject {
       newSize = (window.visualViewport?.height || window.innerHeight) * 0.05;
     }
 
-    return newSize;
+    return new Vec2(newSize, newSize);
   }
 
   handleMoving() {

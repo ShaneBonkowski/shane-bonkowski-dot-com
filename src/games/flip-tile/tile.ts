@@ -28,7 +28,7 @@ export class Tile extends GameObject {
     super(
       "Tile",
       // init size just so its set, will reset to something else later
-      1,
+      new Vec2(1, 1),
       // physicsBody2D
       true,
       // rigidBody2D
@@ -192,8 +192,8 @@ export class Tile extends GameObject {
     this.scene.tweens.add({
       targets: this.graphic,
       //angle: "+=360",
-      displayWidth: this.size * sharedTileAttrs.tileSpacingFactor,
-      displayHeight: this.size * sharedTileAttrs.tileSpacingFactor,
+      displayWidth: this.size.x * sharedTileAttrs.tileSpacingFactor,
+      displayHeight: this.size.y * sharedTileAttrs.tileSpacingFactor,
       duration: duration / 2, // /2 since yoyo doubles the time
       ease: "Sine.easeInOut",
       yoyo: true, // Return to original scale and rotation after the animation
@@ -202,7 +202,8 @@ export class Tile extends GameObject {
         target: Phaser.GameObjects.Sprite
       ) => {
         // Ensures that the size variable reflects the scale as it changes with the tween
-        this.size = target.displayWidth; // Assuming width == height
+        this.size.x = target.displayWidth;
+        this.size.y = target.displayHeight;
       },
       onComplete: () => {
         // Can click after all animations are done
@@ -272,29 +273,30 @@ export class Tile extends GameObject {
   findTileLocFromTileSpace(): Vec2 {
     const centerX = (window.visualViewport?.width || window.innerWidth) / 2;
     const centerY = (window.visualViewport?.height || window.innerHeight) / 2;
-    const tileSpacing = this.size * sharedTileAttrs.tileSpacingFactor;
+    const tileSpacingX = this.size.x * sharedTileAttrs.tileSpacingFactor;
+    const tileSpacingY = this.size.y * sharedTileAttrs.tileSpacingFactor;
 
     // Calculate the starting position for the top-left tile in the grid
     let startGridX, startGridY;
 
     if (this.gridSize % 2 === 0) {
       // Even grid size
-      startGridX = centerX - (this.gridSize / 2 - 0.5) * tileSpacing;
-      startGridY = centerY - (this.gridSize / 2 - 0.5) * tileSpacing;
+      startGridX = centerX - (this.gridSize / 2 - 0.5) * tileSpacingX;
+      startGridY = centerY - (this.gridSize / 2 - 0.5) * tileSpacingY;
     } else {
       // Odd grid size
-      startGridX = centerX - ((this.gridSize - 1) / 2) * tileSpacing;
-      startGridY = centerY - ((this.gridSize - 1) / 2) * tileSpacing;
+      startGridX = centerX - ((this.gridSize - 1) / 2) * tileSpacingX;
+      startGridY = centerY - ((this.gridSize - 1) / 2) * tileSpacingY;
     }
 
     // Calculate the position of the current tile in the grid
-    const tileX = startGridX + this.tileSpaceCoord.x * tileSpacing;
-    const tileY = startGridY + this.tileSpaceCoord.y * tileSpacing;
+    const tileX = startGridX + this.tileSpaceCoord.x * tileSpacingX;
+    const tileY = startGridY + this.tileSpaceCoord.y * tileSpacingY;
 
     return new Vec2(tileX, tileY);
   }
 
-  calculateTileSize(): number {
+  calculateTileSize(): Vec2 {
     // Calculate the tile size based on the screen width
     let tileSize = (window.visualViewport?.height || window.innerHeight) * 0.15;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -307,7 +309,7 @@ export class Tile extends GameObject {
       tileSize = (window.visualViewport?.height || window.innerHeight) * 0.09;
     }
 
-    return tileSize;
+    return new Vec2(tileSize, tileSize);
   }
 
   handleWindowResize() {

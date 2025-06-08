@@ -22,7 +22,7 @@ export class Decoration extends GameObject {
     spriteName: string
   ) {
     // Initialize GameObject with physics, and rigid body
-    super("Decoration", 0, true, true);
+    super("Decoration", new Vec2(0, 0), true, true);
     this.updateSize(); // set the size here!, not in GameObject
 
     this.scene = scene;
@@ -48,7 +48,7 @@ export class Decoration extends GameObject {
         break;
       case DECOR_TYPES.FRONT:
         this.graphic!.setDepth(3);
-        this.physicsBody2D!.position.y = screenHeight / 2 - this.size / 2;
+        this.physicsBody2D!.position.y = screenHeight / 2 - this.size.y / 2;
         break;
       default:
         console.warn(
@@ -80,10 +80,9 @@ export class Decoration extends GameObject {
 
   updateSize() {
     this.size = this.calculateSize();
-    this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
   }
 
-  calculateSize(): number {
+  calculateSize(): Vec2 {
     // Calculate the size based on the screen width
     let newSize = (window.visualViewport?.height || window.innerHeight) * 0.07;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -96,7 +95,7 @@ export class Decoration extends GameObject {
       newSize = (window.visualViewport?.height || window.innerHeight) * 0.05;
     }
 
-    return newSize;
+    return new Vec2(newSize, newSize);
   }
 
   handleMoving() {
@@ -110,7 +109,7 @@ export class Decoration extends GameObject {
         this.physicsBody2D!.position.x -= 0.2;
 
         // if the mid decor goes off screen, reset it to the right side
-        if (this.physicsBody2D!.position.x < -this.size) {
+        if (this.physicsBody2D!.position.x < -this.size.x) {
           this.physicsBody2D!.position.x +=
             window.visualViewport?.width || window.innerWidth;
         }
@@ -123,7 +122,7 @@ export class Decoration extends GameObject {
         this.physicsBody2D!.position.x -= 0.4;
 
         // if the front decor goes off screen, reset it to the right side
-        if (this.physicsBody2D!.position.x < -this.size) {
+        if (this.physicsBody2D!.position.x < -this.size.x) {
           this.physicsBody2D!.position.x +=
             window.visualViewport?.width || window.innerWidth;
         }

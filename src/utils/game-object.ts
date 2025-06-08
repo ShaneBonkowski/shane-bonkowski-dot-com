@@ -1,6 +1,7 @@
 import { RigidBody2D } from "@/src/utils/rigid-body-2d";
 import { PhysicsBody2D } from "@/src/utils/physics-body-2d";
 import { SeededRandom } from "@/src/utils/seedable-random";
+import { Vec2 } from "./vector";
 
 /**
  * Class representing a game object.
@@ -12,7 +13,7 @@ export class GameObject {
   public id: number;
   public name: string;
   public disabled: boolean;
-  public size: number;
+  public size: Vec2;
   public graphic:
     | Phaser.GameObjects.Sprite
     | Phaser.GameObjects.Shape
@@ -24,13 +25,13 @@ export class GameObject {
   /**
    * Create a GameObject.
    * @param {string} name - The name of the game object.
-   * @param {number} size - Size of the gameobject, mostly for sizing the graphic attatched to it.
+   * @param {Vec2} size - Size of the gameobject, mostly for sizing the graphic attatched to it.
    * @param {boolean} hasPhysicsBody2D - Does the GameObject have PhysicsBody2D base class?
    * @param {boolean} hasRigidBody2D - Does the GameObject have RigidBody2D base class?
    */
   constructor(
     name: string,
-    size: number = 1,
+    size: Vec2 = new Vec2(1, 1),
     hasPhysicsBody2D: boolean = false,
     hasRigidBody2D: boolean = false
   ) {
@@ -134,7 +135,7 @@ export class GameObject {
       }
 
       // Update size of graphic
-      this.graphic.setDisplaySize(this.size, this.size);
+      this.graphic.setDisplaySize(this.size.x, this.size.y);
     }
   }
 

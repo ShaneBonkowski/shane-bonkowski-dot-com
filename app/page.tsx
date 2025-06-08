@@ -42,7 +42,7 @@ const contentBoxData: ContentBoxProps[] = [
     linkUrl: "/games/cowpoke",
     title: "Cowpoke",
     description:
-      "Wild west side-scroller with turn-based combat. Battle endless enemies, find rare loot, and level up forever.",
+      "Endless wild west side-scroller with turn-based combat. Face ruthless outlaws, scavenge powerful loot, and grow stronger with every showdown.",
     searchTags:
       "cowpoke, cow, poke, western, wild, west, side-scroller, fighting, fight",
     contentType: "games",

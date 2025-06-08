@@ -22,7 +22,7 @@ export class Tile extends GameObject {
     super(
       "Tile",
       // init size just so its set, will reset to something else later
-      1,
+      new Vec2(1, 1),
       // Add physicsBody2D (even though it doesnt "move", it still has a position
       // when screen resizes occur etc.)
       true,
@@ -135,13 +135,16 @@ export class Tile extends GameObject {
   updateSize() {
     const targetSize = this.calculateSize();
     if (this.size != null) {
-      this.size = MoreMath.lerpWithThreshold(this.size, targetSize, 1, 1.5);
+      this.size = new Vec2(
+        MoreMath.lerpWithThreshold(this.size.x, targetSize.x, 1, 1.5),
+        MoreMath.lerpWithThreshold(this.size.y, targetSize.y, 1, 1.5)
+      );
     } else {
       this.size = targetSize;
     }
   }
 
-  calculateSize(): number {
+  calculateSize(): Vec2 {
     let size = this.calculateDefaultSize();
 
     // Add extra for a tile in the ON state
@@ -149,7 +152,7 @@ export class Tile extends GameObject {
       size = this.calculateMaxSize(size);
     }
 
-    return size;
+    return new Vec2(size, size);
   }
 
   calculateDefaultSize(): number {
