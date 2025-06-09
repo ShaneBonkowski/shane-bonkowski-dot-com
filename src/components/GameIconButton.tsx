@@ -9,6 +9,7 @@ interface GameIconButtonProps {
   className?: string;
   lightModeDark?: boolean;
   darkModeLight?: boolean;
+  whiteBackground?: boolean;
 }
 
 const GameIconButton: React.FC<GameIconButtonProps> = ({
@@ -18,6 +19,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
   className = "",
   lightModeDark = false, // true -> make the light mode be the dark mode colors
   darkModeLight = false, // true -> make the dark mode be the light mode colors
+  whiteBackground = false, // true -> use a white background for the button
 }) => {
   const [isHoverable, setIsHoverable] = useState(false);
 
@@ -42,8 +44,12 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
       (isHoverable ? " dark:hover:text-secondary-text-color" : "");
 
   return (
+    // z-40 so that its behind z-50 windows, but above mostly everything else
     <button
-      className={`z-50 pointer-events-auto flex items-center justify-center cursor-pointer ${lightModeClass} ${darkModeClass} ${className}`}
+      className={
+        (whiteBackground ? "bg-white " : "") +
+        `z-40 pointer-events-auto flex items-center justify-center cursor-pointer ${lightModeClass} ${darkModeClass} ${className}`
+      }
       onPointerDown={onPointerDown}
       aria-label={ariaLabel}
     >

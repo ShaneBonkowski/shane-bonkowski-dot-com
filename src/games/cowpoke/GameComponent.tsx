@@ -9,6 +9,7 @@ import {
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
+import SettingsContainer from "@/src/games/cowpoke/SettingsContainer";
 
 export const gameInfoData: ContentDataProps[] = [
   {
@@ -91,10 +92,11 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
+      <SettingsContainer></SettingsContainer>
       <GameInfoContainer
         infoData={gameInfoData}
-        // Want the black buttons this game! Since bkg is light
-        darkModeLight={true}
+        darkModeLight={true} // Want the black buttons this game! Since bkg is light.
+        whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
       ></GameInfoContainer>
 
       {/* Phaser Game Container */}

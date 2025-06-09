@@ -9,6 +9,7 @@ import {
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
+import SettingsContainer from "@/src/games/game-template/SettingsContainer"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC SETTINGS CONTAINER
 
 // FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO
 export const gameInfoData: ContentDataProps[] = [
@@ -94,6 +95,7 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
+      <SettingsContainer></SettingsContainer>
       <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
 
       {/* Phaser Game Container */}

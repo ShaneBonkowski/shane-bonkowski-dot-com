@@ -122,8 +122,9 @@ const UiOverlay: React.FC = () => {
   }, [isDiscoMode]);
 
   return (
+    // z-40 so that its behind z-50 windows, but above mostly everything else
     <div
-      className="z-50 pointer-events-none fixed bottom-5 w-full flex flex-col gap-3"
+      className="z-40 pointer-events-none fixed bottom-5 w-full flex flex-col gap-3"
       id="ui-overlay"
       aria-label="Game UI Overlay"
     >

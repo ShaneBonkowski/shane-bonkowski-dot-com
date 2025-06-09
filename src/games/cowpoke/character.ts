@@ -316,9 +316,9 @@ export class Character extends GameObject {
 
   handleDeath() {
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      // TODO: add player character death logic
+      // FIXME: add player character death logic
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      // TODO: random chance to drop loot if player character
+      // FIXME: random chance to drop loot if player character
       // does not have the item already
     } else {
       console.warn(

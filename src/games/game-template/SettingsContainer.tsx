@@ -1,28 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
-import GameInfoWindow from "@/src/components/GameInfoWindow";
-import { ContentDataProps } from "@/src/types/data-props";
+import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
-import { FaInfoCircle } from "react-icons/fa";
 
-const GameInfoContainer: React.FC<{
-  infoData: ContentDataProps[];
-  lightModeDark?: boolean;
-  darkModeLight?: boolean;
-  whiteBackground?: boolean;
-}> = ({
-  infoData,
-  lightModeDark = false,
-  darkModeLight = false,
-  whiteBackground = false,
-}) => {
+const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const openInfoWindow = () => {
+  const openWindow = () => {
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
@@ -32,7 +21,7 @@ const GameInfoContainer: React.FC<{
     dispatchMenuEvent("Info", "open");
   };
 
-  const closeInfoWindow = () => {
+  const closeWindow = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
@@ -44,8 +33,12 @@ const GameInfoContainer: React.FC<{
   };
 
   useEffect(() => {
-    const handleUiMenuOpen = () => setIsButtonVisible(false);
-    const handleUiMenuClose = () => setIsButtonVisible(true);
+    const handleUiMenuOpen = () => {
+      setIsButtonVisible(false);
+    };
+    const handleUiMenuClose = () => {
+      setIsButtonVisible(true);
+    };
 
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
@@ -65,23 +58,27 @@ const GameInfoContainer: React.FC<{
     <>
       {isButtonVisible && (
         <GameIconButton
-          onPointerDown={openInfoWindow}
-          icon={<FaInfoCircle size={30} />}
-          ariaLabel="Info"
-          className="fixed bottom-5 right-5"
-          lightModeDark={lightModeDark}
-          darkModeLight={darkModeLight}
-          whiteBackground={whiteBackground}
+          onPointerDown={openWindow}
+          icon={<FaCog size={30} />}
+          ariaLabel="<GAME-NAME> Settings" // FIXME: Replace with actual game name
+          className="fixed bottom-5 left-5"
         />
       )}
-      <GameInfoWindow
-        isVisible={isVisible}
-        onClose={closeInfoWindow}
-        infoData={infoData}
-        aria-label="Game information window"
-      ></GameInfoWindow>
+      <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
+        {/* FIXME: Replace id with actual game name */}
+        <div className="w-full h-full p-4" id="<GAME-NAME>-settings-container">
+          {/* Top Section: Settings Info */}
+          {/* FIXME: Replace id with actual game name */}
+          <div className="p-2" id="<GAME-NAME>-settings-description">
+            <div className="flex flex-col items-center">
+              <h1 className="text-center my-0">Settings</h1>
+              <p className="text-center mb-0">FIXME... add settings</p>
+            </div>
+          </div>
+        </div>
+      </GameUiWindow>
     </>
   );
 };
 
-export default GameInfoContainer;
+export default SettingsContainer;
