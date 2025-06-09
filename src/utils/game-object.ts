@@ -22,6 +22,9 @@ export class GameObject {
   public physicsBody2D: PhysicsBody2D | null;
   public rigidBody2D: RigidBody2D | null;
 
+  // Keep track of last color so we dont have to set it every frame
+  private lastColor: number | null = null;
+
   /**
    * Create a GameObject.
    * @param {string} name - The name of the game object.
@@ -110,11 +113,16 @@ export class GameObject {
     if (this.graphic != null) {
       // Set graphic to be where the physics body is located
       if (this.physicsBody2D != null) {
-        this.graphic.x = this.physicsBody2D.position.x;
-        this.graphic.y = this.physicsBody2D.position.y;
+        if (
+          this.graphic.x !== this.physicsBody2D.position.x ||
+          this.graphic.y !== this.physicsBody2D.position.y
+        ) {
+          this.graphic.x = this.physicsBody2D.position.x;
+          this.graphic.y = this.physicsBody2D.position.y;
+        }
       }
 
-      if (newColor != null) {
+      if (newColor != null && newColor !== this.lastColor) {
         if (this.graphic instanceof Phaser.GameObjects.Sprite) {
           this.graphic.setTint(newColor);
         } else if (this.graphic instanceof Phaser.GameObjects.Shape) {
@@ -132,6 +140,8 @@ export class GameObject {
             }
           );
         }
+
+        this.lastColor = newColor;
       }
 
       // Update size of graphic
@@ -139,11 +149,21 @@ export class GameObject {
         this.graphic instanceof Phaser.GameObjects.Sprite ||
         this.graphic instanceof Phaser.GameObjects.Shape
       ) {
-        this.graphic.setDisplaySize(this.size.x, this.size.y);
+        if (
+          this.graphic.displayWidth !== this.size.x ||
+          this.graphic.displayHeight !== this.size.y
+        ) {
+          this.graphic.setDisplaySize(this.size.x, this.size.y);
+        }
       } else if (this.graphic instanceof Phaser.GameObjects.Container) {
         this.graphic.iterate(
           (child: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape) => {
-            child.setDisplaySize(this.size.x, this.size.y);
+            if (
+              child.displayWidth !== this.size.x ||
+              child.displayHeight !== this.size.y
+            ) {
+              child.setDisplaySize(this.size.x, this.size.y);
+            }
           }
         );
       }

@@ -11,7 +11,7 @@ export class MainGameScene extends Generic2DGameScene {
   public maxBalls: number = 10;
   public lastKnownWindowSize: Vec2 | null = null;
   private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 250;
+  private windowResizeInterval: number = 2000;
   public uiMenuOpen: boolean = false;
 
   constructor() {
