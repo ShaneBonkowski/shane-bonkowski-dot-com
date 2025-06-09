@@ -137,6 +137,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Create the background decorations
     this.initializeBackgroundDecorations(screenWidth, screenHeight);
+    this.handleWindowResize();
 
     this.gameStarted = true;
     this.gameRound = 1;
@@ -189,12 +190,17 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Add some front decorations at random x positions on the screen to start.
     // Must be sufficiently spaced out so they do not overlap.
-    const frontDecorCount = 5;
-    const frontDecorSpacing = screenWidth / (frontDecorCount + 1);
-    for (let i = 0; i < frontDecorCount; i++) {
-      const xPosition =
-        frontDecorSpacing * (i + 1) +
-        this.random.getRandomFloat(0, 1) * frontDecorSpacing;
+    const propSpawnOptionsPercentViewportWidth = [
+      [0.08, 0.14, 0.2], // e.g. prop 1 can be located at x% of viewport width from one of these choices
+      [0.3, 0.4, 0.55, 0.6],
+      [0.75, 0.8, 0.85],
+    ];
+    for (let i = 0; i < propSpawnOptionsPercentViewportWidth.length; i++) {
+      const spawnPercents = propSpawnOptionsPercentViewportWidth[i];
+      const chosenPercent =
+        spawnPercents[this.random.getRandomInt(0, spawnPercents.length - 1)];
+      const xPosition = screenWidth * chosenPercent;
+
       this.decorations.push(
         new Decoration(
           this,
@@ -209,12 +215,17 @@ export class MainGameScene extends Generic2DGameScene {
     }
 
     // Create the player character
-    this.player = new Character(this, 50, screenHeight, CHARACTER_TYPES.PLAYER);
+    this.player = new Character(
+      this,
+      screenWidth,
+      screenHeight,
+      CHARACTER_TYPES.PLAYER
+    );
 
     // Create the enemy character
     this.enemy = new Character(
       this,
-      screenWidth - 50,
+      screenWidth,
       screenHeight,
       CHARACTER_TYPES.ENEMY
     );
@@ -231,14 +242,16 @@ export class MainGameScene extends Generic2DGameScene {
       ) {
         Physics.performPhysicsUpdate(time);
 
-        // If the player is moving, need to move background to make it look like
+        // If the player is moving, need to move decor to make it look like
         // the player is moving.
-        if (this.moving) {
-          for (const decoration of this.decorations) {
-            decoration.handleMoving();
-          }
+        for (const decoration of this.decorations) {
+          decoration.handlePhysics(this.moving);
         }
       }
+
+      // Handle time-based player and enemy animations
+      this.player!.handleAnims();
+      this.enemy!.handleAnims();
 
       // Graphics update will occur every frame
       for (const decoration of this.decorations) {

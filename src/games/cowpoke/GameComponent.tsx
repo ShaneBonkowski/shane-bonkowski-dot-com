@@ -91,7 +91,11 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
+      <GameInfoContainer
+        infoData={gameInfoData}
+        // Want the black buttons this game! Since bkg is light
+        darkModeLight={true}
+      ></GameInfoContainer>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game"></div>

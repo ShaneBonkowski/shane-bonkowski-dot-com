@@ -166,6 +166,7 @@ const SettingsContainer: React.FC = () => {
           icon={<FaCog size={30} />}
           ariaLabel="Game of Life Settings"
           className="fixed bottom-5 left-5"
+          lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
         />
       )}
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>

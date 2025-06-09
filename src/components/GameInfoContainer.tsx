@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import InfoButton from "@/src/components/InfoButton";
+import GameIconButton from "@/src/components/GameIconButton";
 import GameInfoWindow from "@/src/components/GameInfoWindow";
 import { ContentDataProps } from "@/src/types/data-props";
 import { dispatchMenuEvent } from "@/src/events/game-events";
+import { FaInfoCircle } from "react-icons/fa";
 
-const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
-  infoData,
-}) => {
+const GameInfoContainer: React.FC<{
+  infoData: ContentDataProps[];
+  lightModeDark?: boolean;
+  darkModeLight?: boolean;
+}> = ({ infoData, lightModeDark = false, darkModeLight = false }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -55,9 +58,13 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
   return (
     <>
       {isButtonVisible && (
-        <InfoButton
+        <GameIconButton
           onPointerDown={openInfoWindow}
-          aria-label="Open information window"
+          icon={<FaInfoCircle size={30} />}
+          ariaLabel="Info"
+          className="fixed bottom-5 right-5"
+          lightModeDark={lightModeDark}
+          darkModeLight={darkModeLight}
         />
       )}
       <GameInfoWindow

@@ -113,7 +113,10 @@ const GameComponent: React.FC = () => {
         bottom={true}
       ></GameMessagePopup>
       <SettingsContainer></SettingsContainer>
-      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
+      <GameInfoContainer
+        infoData={gameInfoData}
+        lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+      ></GameInfoContainer>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game"></div>

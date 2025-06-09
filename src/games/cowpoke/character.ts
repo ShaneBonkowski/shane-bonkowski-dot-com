@@ -1,6 +1,9 @@
 import { GameObject } from "@/src/utils/game-object";
 import { Vec2 } from "@/src/utils/vector";
-import { MainGameScene } from "@/src/games/cowpoke/scenes/main-game-scene";
+import {
+  MainGameScene,
+  REFERENCE_BKG_SIZE,
+} from "@/src/games/cowpoke/scenes/main-game-scene";
 import { GUN_LOOT_MAP, HAT_LOOT_MAP, RARITY } from "@/src/games/cowpoke/loot";
 
 export const CHARACTER_TYPES = {
@@ -12,8 +15,11 @@ export const CHARACTER_TYPES = {
 export class Character extends GameObject {
   private scene: MainGameScene;
   public type: number = CHARACTER_TYPES.UNASSIGNED;
-
   public level: number = 0;
+
+  private ogPixelSize: Vec2 = new Vec2(0, 0);
+  private bounceTime: number = 0;
+
   public bodySprite: Phaser.GameObjects.Sprite | null = null;
   public headSprite: Phaser.GameObjects.Sprite | null = null;
   public hatSprite: Phaser.GameObjects.Sprite | null = null;
@@ -21,20 +27,17 @@ export class Character extends GameObject {
 
   public equippedHatId: number = 0;
   public ownedHatIds: number[] = [];
-
   public equippedGunId: number = 0;
   public ownedGunIds: number[] = [];
 
   constructor(
     scene: MainGameScene,
-    spawnX: number,
+    screenWidth: number,
     screenHeight: number,
     type: number
   ) {
     // Initialize GameObject with physics, and rigid body
     super("Character", new Vec2(0, 0), true, true);
-    this.updateSize(); // set the size here!, not in GameObject
-
     this.scene = scene;
     this.type = type;
 
@@ -42,32 +45,50 @@ export class Character extends GameObject {
     // full of sprites that consists of a body, head, hat, and gun.
     this.graphic = this.scene.add.container(0, 0);
 
-    this.physicsBody2D!.position.x = spawnX;
     switch (this.type) {
       case CHARACTER_TYPES.ENEMY:
         this.spawnNewRandomCharacter();
-        this.graphic!.setDepth(4);
-        this.physicsBody2D!.position.y = screenHeight / 2 - this.size.y;
         break;
       case CHARACTER_TYPES.PLAYER:
         this.spawnNewPlayerCharacter();
-        this.graphic!.setDepth(5);
-        this.physicsBody2D!.position.y = screenHeight / 2 - this.size.y;
         break;
       default:
-        console.warn(
-          `Character: Unknown character type ${this.type}. Defaulting to depth 5.`
-        );
-        this.graphic!.setDepth(5);
+        console.warn(`Character: Unknown character type ${this.type}.`);
     }
 
-    // Assemble the character graphic
-    (this.graphic as Phaser.GameObjects.Container).add([
-      this.bodySprite as Phaser.GameObjects.Sprite,
-      this.headSprite as Phaser.GameObjects.Sprite,
-      this.hatSprite as Phaser.GameObjects.Sprite,
-      this.gunSprite as Phaser.GameObjects.Sprite,
-    ]);
+    // body, head, hat, and gun all have the same pixel size, so
+    // arbitrarily use body sprite size for ogPixelSize.
+    this.ogPixelSize = new Vec2(
+      (
+        this.bodySprite as Phaser.GameObjects.Sprite
+      ).texture.getSourceImage().width,
+      (
+        this.bodySprite as Phaser.GameObjects.Sprite
+      ).texture.getSourceImage().height
+    );
+
+    // Update size at the end of sprite init, since it relies on sprite size etc.
+    this.updateSize(); // set the size here!, not in GameObject
+
+    // Update position etc.
+    switch (this.type) {
+      case CHARACTER_TYPES.ENEMY:
+        this.physicsBody2D!.position.x = screenWidth - 150;
+        (this.graphic as Phaser.GameObjects.Container).scaleX = -1; // enemy faces left
+        break;
+      case CHARACTER_TYPES.PLAYER:
+        this.physicsBody2D!.position.x = 150;
+        (this.graphic as Phaser.GameObjects.Container).scaleX = 1;
+        break;
+      default:
+        console.warn(`Character: Unknown character type ${this.type}`);
+    }
+    this.graphic!.setDepth(5);
+
+    // Top of floor is about at 225 px on the unscaled background.
+    // Place character just below top of floor.
+    this.physicsBody2D!.position.y =
+      screenHeight - screenHeight * (100 / REFERENCE_BKG_SIZE.y);
 
     this.subscribeToEvents();
   }
@@ -95,41 +116,68 @@ export class Character extends GameObject {
   }
 
   calculateSize(): Vec2 {
-    // Calculate the size based on the screen width
-    let newSize = (window.visualViewport?.height || window.innerHeight) * 0.07;
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    // Size ro scale w/ viewport at same scale as bkg's etc.
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
 
-    // Phone screen has larger objects
-    if (
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
-    ) {
-      newSize = (window.visualViewport?.height || window.innerHeight) * 0.05;
-    }
+    const scaleX = screenWidth / REFERENCE_BKG_SIZE.x;
+    const scaleY = screenHeight / REFERENCE_BKG_SIZE.y;
 
-    return new Vec2(newSize, newSize);
+    const newSize = new Vec2(
+      this.ogPixelSize.x * scaleX,
+      this.ogPixelSize.y * scaleY
+    );
+
+    return newSize;
   }
 
-  handleMoving() {
-    // No movement logic for characters... yet
+  handleAnims() {
+    // Create a subtle bounce anim on a sin wave
+    this.bounceTime += 0.05; // Adjust speed as needed
+    const minScale = 0.99;
+    const maxScale = 1.01;
+    const amplitude = (maxScale - minScale) / 2;
+    const mid = (maxScale + minScale) / 2;
+    const scaleY = mid + Math.sin(this.bounceTime) * amplitude;
+
+    (this.graphic as Phaser.GameObjects.Container).scaleY = scaleY;
+  }
+
+  updateContainerChildSprite(
+    childSprite: Phaser.GameObjects.Sprite | null,
+    newSpriteName: string
+  ) {
+    if (childSprite) {
+      (this.graphic as Phaser.GameObjects.Container).remove(childSprite);
+      childSprite.destroy();
+    }
+
+    childSprite = this.scene.add.sprite(0, 0, newSpriteName);
+
+    // Add back to container
+    (this.graphic as Phaser.GameObjects.Container).add(
+      childSprite as Phaser.GameObjects.Sprite
+    );
+
+    childSprite!.setOrigin(0.5, 1); // bottom middle pivot point
+
+    return childSprite;
   }
 
   spawnNewPlayerCharacter() {
-    if (!this.bodySprite) {
-      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
-    } else {
-      this.bodySprite.destroy();
-      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
-    }
-    this.bodySprite!.setOrigin(0.5, 0.5);
+    // Add body
+    this.bodySprite = this.updateContainerChildSprite(
+      this.bodySprite,
+      "body-default"
+    );
+    this.bodySprite!.setDepth(6);
 
-    if (!this.headSprite) {
-      this.headSprite = this.scene.add.sprite(0, 0, "head-chill-guy");
-    } else {
-      this.headSprite.destroy();
-      this.headSprite = this.scene.add.sprite(0, 0, "head-chill-guy");
-    }
-    this.headSprite!.setOrigin(0.5, 0.5);
+    // Add head
+    this.headSprite = this.updateContainerChildSprite(
+      this.headSprite,
+      "head-chill-guy"
+    );
+    this.headSprite!.setDepth(7);
 
     // Set default hat and gun when new player character is spawned
     this.equipHat(0);
@@ -139,13 +187,12 @@ export class Character extends GameObject {
   }
 
   spawnNewRandomCharacter() {
-    if (!this.bodySprite) {
-      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
-    } else {
-      this.bodySprite.destroy();
-      this.bodySprite = this.scene.add.sprite(0, 0, "body-default");
-    }
-    this.bodySprite!.setOrigin(0.5, 0.5);
+    // Add body
+    this.bodySprite = this.updateContainerChildSprite(
+      this.bodySprite,
+      "body-default"
+    );
+    this.bodySprite!.setDepth(6);
 
     // Set random head
     const randomHeadSpriteName = this.getRandomSprite(
@@ -153,15 +200,11 @@ export class Character extends GameObject {
       this.scene.textures.getTextureKeys(),
       this.scene.random
     );
-    if (randomHeadSpriteName != null) {
-      if (!this.headSprite) {
-        this.headSprite = this.scene.add.sprite(0, 0, randomHeadSpriteName);
-      } else {
-        this.headSprite.destroy();
-        this.headSprite = this.scene.add.sprite(0, 0, randomHeadSpriteName);
-      }
-    }
-    this.headSprite!.setOrigin(0.5, 0.5);
+    this.headSprite = this.updateContainerChildSprite(
+      this.headSprite,
+      randomHeadSpriteName as string
+    );
+    this.headSprite!.setDepth(7);
 
     // Set random hat/gun
     this.equipHat(-1); // -1 means random
@@ -186,13 +229,11 @@ export class Character extends GameObject {
       id = this.getIdForRandomLoot(HAT_LOOT_MAP);
     }
 
-    if (!this.hatSprite) {
-      this.hatSprite = this.scene.add.sprite(0, 0, HAT_LOOT_MAP[id].spriteName);
-    } else {
-      this.hatSprite.destroy();
-      this.hatSprite = this.scene.add.sprite(0, 0, HAT_LOOT_MAP[id].spriteName);
-    }
-    this.hatSprite!.setOrigin(0.5, 0.5);
+    this.hatSprite = this.updateContainerChildSprite(
+      this.hatSprite,
+      HAT_LOOT_MAP[id].spriteName as string
+    );
+    this.hatSprite!.setDepth(8);
 
     this.equippedHatId = id;
     this.addNewOwnedHat(id);
@@ -204,13 +245,11 @@ export class Character extends GameObject {
       id = this.getIdForRandomLoot(GUN_LOOT_MAP);
     }
 
-    if (!this.gunSprite) {
-      this.gunSprite = this.scene.add.sprite(0, 0, GUN_LOOT_MAP[id].spriteName);
-    } else {
-      this.gunSprite.destroy();
-      this.gunSprite = this.scene.add.sprite(0, 0, GUN_LOOT_MAP[id].spriteName);
-    }
-    this.gunSprite!.setOrigin(0.5, 0.5);
+    this.gunSprite = this.updateContainerChildSprite(
+      this.gunSprite,
+      GUN_LOOT_MAP[id].spriteName as string
+    );
+    this.gunSprite!.setDepth(9);
 
     this.equippedGunId = id;
     this.addNewOwnedGun(id);

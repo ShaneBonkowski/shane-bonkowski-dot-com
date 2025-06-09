@@ -134,8 +134,12 @@ const UiOverlay: React.FC = () => {
           className="pointer-events-none flex justify-center items-center gap-6"
           aria-label="Game State Info"
         >
-          <p className="mb-0">Population: {population}</p>
-          <p className="mb-0">Generation: {generation}</p>
+          <p className="mb-0 text-primary-text-color">
+            Population: {population}
+          </p>
+          <p className="mb-0 text-primary-text-color">
+            Generation: {generation}
+          </p>
         </div>
       )}
 
@@ -151,6 +155,7 @@ const UiOverlay: React.FC = () => {
             onPointerDown={handleToggleDisco}
             icon={isDiscoMode ? <FaBan size={30} /> : <FaMagic size={30} />}
             ariaLabel={isDiscoMode ? "Disable Disco Mode" : "Enable Disco Mode"}
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
           />
 
           {/* Auto Mode Button */}
@@ -160,6 +165,7 @@ const UiOverlay: React.FC = () => {
               isAutoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />
             }
             ariaLabel="Toggle Auto Mode"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
           />
 
           {/* Pause/Play Button */}
@@ -167,6 +173,7 @@ const UiOverlay: React.FC = () => {
             onPointerDown={handleTogglePause}
             icon={isPaused ? <FaPlay size={30} /> : <FaPause size={30} />}
             ariaLabel={isPaused ? "Play" : "Pause"}
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
           />
 
           {/* Advance Button */}
@@ -174,6 +181,7 @@ const UiOverlay: React.FC = () => {
             onPointerDown={handleAdvance}
             icon={<FaGreaterThan size={30} />}
             ariaLabel="Advance to Next Generation"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
           />
 
           {/* Reset Button */}
@@ -181,6 +189,7 @@ const UiOverlay: React.FC = () => {
             onPointerDown={handleReset}
             icon={<FaRedo size={30} />}
             ariaLabel="Reset Tiles"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
           />
         </div>
       )}

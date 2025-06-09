@@ -135,7 +135,18 @@ export class GameObject {
       }
 
       // Update size of graphic
-      this.graphic.setDisplaySize(this.size.x, this.size.y);
+      if (
+        this.graphic instanceof Phaser.GameObjects.Sprite ||
+        this.graphic instanceof Phaser.GameObjects.Shape
+      ) {
+        this.graphic.setDisplaySize(this.size.x, this.size.y);
+      } else if (this.graphic instanceof Phaser.GameObjects.Container) {
+        this.graphic.iterate(
+          (child: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape) => {
+            child.setDisplaySize(this.size.x, this.size.y);
+          }
+        );
+      }
     }
   }
 
