@@ -263,18 +263,22 @@ export class Character extends GameObject {
     );
 
     // Set chances for each rarity
-    let commonChance = 0.86;
-    let rareChance = 0.12;
-    let legendaryChance = 0.02;
+    let commonChance = 0;
+    let rareChance = 0;
+    let legendaryChance = 0;
 
-    if (this.scene.gameRound >= 20) {
-      commonChance = 0.8;
-      rareChance = 0.15;
-      legendaryChance = 0.05;
-    } else if (this.scene.gameRound >= 40) {
+    if (this.scene.gameRound >= 40) {
       commonChance = 0.7;
       rareChance = 0.2;
       legendaryChance = 0.1;
+    } else if (this.scene.gameRound >= 20) {
+      commonChance = 0.8;
+      rareChance = 0.15;
+      legendaryChance = 0.05;
+    } else {
+      commonChance = 0.86;
+      rareChance = 0.12;
+      legendaryChance = 0.02;
     }
 
     // Normalize in case of rounding errors

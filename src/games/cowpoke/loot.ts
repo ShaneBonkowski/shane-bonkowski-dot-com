@@ -1,7 +1,7 @@
 export const RARITY = {
-  COMMON: 1,
-  RARE: 0,
-  LEGENDARY: 3,
+  COMMON: 0,
+  RARE: 1,
+  LEGENDARY: 2,
 };
 
 export const GIZMOS = {
