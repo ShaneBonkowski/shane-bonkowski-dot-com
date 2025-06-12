@@ -117,9 +117,10 @@ export class Tile extends GameObject {
   }
 
   updateTextPos() {
+    // Set pos wrt to calculated tile size (200px sprite * scale)
     this.text!.setPosition(
-      this.physicsBody2D!.position.x + this.graphic!.displayWidth / 2,
-      this.physicsBody2D!.position.y - this.graphic!.displayHeight / 2
+      this.physicsBody2D!.position.x + (200 * this.scale.x) / 2,
+      this.physicsBody2D!.position.y - (200 * this.scale.y) / 2
     );
   }
 
