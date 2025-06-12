@@ -17,8 +17,8 @@ export class Character extends GameObject {
   public type: number = CHARACTER_TYPES.UNASSIGNED;
   public level: number = 0;
 
-  private ogPixelSize: Vec2 = new Vec2(0, 0);
   private bounceTime: number = 0;
+  private animScaleFactorY: number = 1;
 
   public bodySprite: Phaser.GameObjects.Sprite | null = null;
   public headSprite: Phaser.GameObjects.Sprite | null = null;
@@ -56,29 +56,16 @@ export class Character extends GameObject {
         console.warn(`Character: Unknown character type ${this.type}.`);
     }
 
-    // body, head, hat, and gun all have the same pixel size, so
-    // arbitrarily use body sprite size for ogPixelSize.
-    this.ogPixelSize = new Vec2(
-      (
-        this.bodySprite as Phaser.GameObjects.Sprite
-      ).texture.getSourceImage().width,
-      (
-        this.bodySprite as Phaser.GameObjects.Sprite
-      ).texture.getSourceImage().height
-    );
-
-    // Update size at the end of sprite init, since it relies on sprite size etc.
-    this.updateSize(); // set the size here!, not in GameObject
+    // Update scale at the end of sprite init, since it relies on sprite size etc.
+    this.updateScale(); // set the scale here!, not in GameObject
 
     // Update position etc.
     switch (this.type) {
       case CHARACTER_TYPES.ENEMY:
         this.physicsBody2D!.position.x = screenWidth - 150;
-        (this.graphic as Phaser.GameObjects.Container).scaleX = -1; // enemy faces left
         break;
       case CHARACTER_TYPES.PLAYER:
         this.physicsBody2D!.position.x = 150;
-        (this.graphic as Phaser.GameObjects.Container).scaleX = 1;
         break;
       default:
         console.warn(`Character: Unknown character type ${this.type}`);
@@ -105,42 +92,44 @@ export class Character extends GameObject {
       return;
     }
 
-    this.updateSize();
+    this.updateScale();
 
     this.physicsBody2D!.position.x = newX;
     this.physicsBody2D!.position.y = newY;
   }
 
-  updateSize() {
-    this.size = this.calculateSize();
+  updateScale() {
+    this.scale = this.calculateScale();
   }
 
-  calculateSize(): Vec2 {
-    // Size ro scale w/ viewport at same scale as bkg's etc.
+  calculateScale(): Vec2 {
+    // Scale w/ viewport at same scale as bkg's etc.
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
 
-    const scaleX = screenWidth / REFERENCE_BKG_SIZE.x;
-    const scaleY = screenHeight / REFERENCE_BKG_SIZE.y;
+    let scaleX = screenWidth / REFERENCE_BKG_SIZE.x;
+    let scaleY = screenHeight / REFERENCE_BKG_SIZE.y;
 
-    const newSize = new Vec2(
-      this.ogPixelSize.x * scaleX,
-      this.ogPixelSize.y * scaleY
-    );
+    // enemy faces left
+    if (this.type === CHARACTER_TYPES.ENEMY) {
+      scaleX = Math.abs(scaleX) * -1;
+    }
 
-    return newSize;
+    // Scale the Y scale by the animation factor
+    scaleY = scaleY * this.animScaleFactorY;
+
+    return new Vec2(scaleX, scaleY);
   }
 
   handleAnims() {
     // Create a subtle bounce anim on a sin wave
     this.bounceTime += 0.05; // Adjust speed as needed
-    const minScale = 0.99;
-    const maxScale = 1.01;
+    const minScale = 0.98;
+    const maxScale = 1.02;
     const amplitude = (maxScale - minScale) / 2;
     const mid = (maxScale + minScale) / 2;
-    const scaleY = mid + Math.sin(this.bounceTime) * amplitude;
-
-    (this.graphic as Phaser.GameObjects.Container).scaleY = scaleY;
+    this.animScaleFactorY = mid + Math.sin(this.bounceTime) * amplitude;
+    this.updateScale();
   }
 
   updateContainerChildSprite(

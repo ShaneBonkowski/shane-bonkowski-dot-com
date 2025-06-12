@@ -10,7 +10,7 @@ export class Ball extends GameObject {
   constructor(scene: MainGameScene, spawnX: number, spawnY: number) {
     // Initialize GameObject with physics, and rigid body
     super("Ball", new Vec2(0, 0), true, true);
-    this.updateSize(); // set the size here!, not in GameObject
+    this.updateScale(); // set the scale here!, not in GameObject
 
     this.scene = scene;
     this.random = new SeededRandom(randomType.UNSEEDED_RANDOM);
@@ -31,7 +31,7 @@ export class Ball extends GameObject {
     this.graphic = this.scene.add.circle(
       spawnX,
       spawnY,
-      this.size.x / 2, // x and y are the same for a circle
+      200,
       this.getRandomColor()
     );
 
@@ -99,20 +99,27 @@ export class Ball extends GameObject {
       return;
     }
 
-    this.updateSize();
+    this.updateScale();
 
     this.physicsBody2D!.position.x = newX;
     this.physicsBody2D!.position.y = newY;
   }
 
-  updateSize() {
-    this.size = this.calculateSize();
-    this.rigidBody2D!.hitboxSize = this.size;
+  updateScale() {
+    this.scale = this.calculateScale();
+
+    if (this.graphic) {
+      this.rigidBody2D!.hitboxSize = new Vec2(
+        this.graphic!.displayWidth,
+        this.graphic!.displayHeight
+      );
+    }
   }
 
-  calculateSize(): Vec2 {
-    // Calculate the size based on the screen width
-    let newSize = (window.visualViewport?.height || window.innerHeight) * 0.07;
+  calculateScale(): Vec2 {
+    // Calculate the scale based on the screen width
+    let newScale =
+      ((window.visualViewport?.height || window.innerHeight) * 0.07) / 200;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger objects
@@ -120,10 +127,11 @@ export class Ball extends GameObject {
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
-      newSize = (window.visualViewport?.height || window.innerHeight) * 0.05;
+      newScale =
+        ((window.visualViewport?.height || window.innerHeight) * 0.05) / 200;
     }
 
-    return new Vec2(newSize, newSize);
+    return new Vec2(newScale, newScale);
   }
 
   handlePhysics(delta: number) {

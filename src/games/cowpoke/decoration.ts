@@ -16,7 +16,6 @@ export const DECOR_TYPES = {
 export class Decoration extends GameObject {
   private scene: MainGameScene;
   public type: number = DECOR_TYPES.UNASSIGNED;
-  private ogPixelSize: Vec2 = new Vec2(0, 0);
 
   constructor(
     scene: MainGameScene,
@@ -33,17 +32,8 @@ export class Decoration extends GameObject {
     // Set the sprite
     this.graphic = this.scene.add.sprite(0, 0, spriteName);
 
-    this.ogPixelSize = new Vec2(
-      (
-        this.graphic as Phaser.GameObjects.Sprite
-      ).texture.getSourceImage().width,
-      (
-        this.graphic as Phaser.GameObjects.Sprite
-      ).texture.getSourceImage().height
-    );
-
-    // Update size at the end of sprite init, since it relies on sprite size etc.
-    this.updateSize(); // set the size here!, not in GameObject
+    // Update scale at the end of sprite init, since it relies on sprite size etc.
+    this.updateScale(); // set the scale here!, not in GameObject
 
     // Update position etc.
     this.physicsBody2D!.position.x = spawnX;
@@ -92,19 +82,19 @@ export class Decoration extends GameObject {
       return;
     }
 
-    this.updateSize();
+    this.updateScale();
 
     this.physicsBody2D!.position.x = newX;
     this.physicsBody2D!.position.y = newY;
   }
 
-  updateSize() {
-    this.size = this.calculateSize();
+  updateScale() {
+    this.scale = this.calculateScale();
   }
 
-  calculateSize(): Vec2 {
-    // Calculate the size based on the screen width
-    let newSize = new Vec2(0, 0);
+  calculateScale(): Vec2 {
+    // Calculate the scale based on the screen width
+    let newScale = new Vec2(0, 0);
 
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
@@ -112,21 +102,21 @@ export class Decoration extends GameObject {
     const scaleX = screenWidth / REFERENCE_BKG_SIZE.x;
     const scaleY = screenHeight / REFERENCE_BKG_SIZE.y;
 
-    // Backgrounds are sized to fit viewport
+    // Backgrounds are scaled to fit viewport
     if (
       this.type === DECOR_TYPES.BACK ||
       this.type === DECOR_TYPES.MID ||
       this.type === DECOR_TYPES.FLOOR
     ) {
-      newSize = new Vec2(screenWidth, screenHeight);
+      newScale = new Vec2(scaleX, scaleY);
     } else if (this.type === DECOR_TYPES.FRONT) {
-      newSize = new Vec2(
-        this.ogPixelSize.x * scaleX * 0.6, // scale to be a little smaller
-        this.ogPixelSize.y * scaleY * 0.6
+      newScale = new Vec2(
+        scaleX * 0.6, // scale to be a little smaller
+        scaleY * 0.6
       );
     }
 
-    return newSize;
+    return newScale;
   }
 
   handlePhysics(isMoving: boolean) {
@@ -142,7 +132,7 @@ export class Decoration extends GameObject {
           this.physicsBody2D!.position.x -= 0.2;
 
           // if the mid decor goes off screen, reset it to the right side
-          if (this.physicsBody2D!.position.x < -this.size.x) {
+          if (this.physicsBody2D!.position.x < -this.graphic!.displayWidth) {
             this.physicsBody2D!.position.x +=
               window.visualViewport?.width || window.innerWidth;
           }
@@ -155,7 +145,7 @@ export class Decoration extends GameObject {
           this.physicsBody2D!.position.x -= 0.4;
 
           // if the front decor goes off screen, reset it to the right side
-          if (this.physicsBody2D!.position.x < -this.size.x) {
+          if (this.physicsBody2D!.position.x < -this.graphic!.displayWidth) {
             this.physicsBody2D!.position.x +=
               window.visualViewport?.width || window.innerWidth;
           }

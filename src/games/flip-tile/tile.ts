@@ -27,7 +27,7 @@ export class Tile extends GameObject {
     // Set some properties on the parent GameObject class
     super(
       "Tile",
-      // init size just so its set, will reset to something else later
+      // init scale just so its set, will reset to something else later
       new Vec2(1, 1),
       // physicsBody2D
       true,
@@ -60,7 +60,7 @@ export class Tile extends GameObject {
   }
 
   initTile() {
-    this.size = this.calculateTileSize();
+    this.scale = this.calculateTileScale();
     this.graphic = this.scene.add.sprite(0, 0, "Tile Red"); // init, will be changed in updateTileColor
     this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
     this.updateTileColor();
@@ -192,8 +192,8 @@ export class Tile extends GameObject {
     this.scene.tweens.add({
       targets: this.graphic,
       //angle: "+=360",
-      displayWidth: this.size.x * sharedTileAttrs.tileSpacingFactor,
-      displayHeight: this.size.y * sharedTileAttrs.tileSpacingFactor,
+      scaleX: this.calculateTileScale().x * sharedTileAttrs.tileSpacingFactor,
+      scaleY: this.calculateTileScale().y * sharedTileAttrs.tileSpacingFactor,
       duration: duration / 2, // /2 since yoyo doubles the time
       ease: "Sine.easeInOut",
       yoyo: true, // Return to original scale and rotation after the animation
@@ -201,9 +201,9 @@ export class Tile extends GameObject {
         tween: Phaser.Tweens.Tween,
         target: Phaser.GameObjects.Sprite
       ) => {
-        // Ensures that the size variable reflects the scale as it changes with the tween
-        this.size.x = target.displayWidth;
-        this.size.y = target.displayHeight;
+        // Ensures that the scale variable reflects the scale as it changes with the tween
+        this.scale.x = target.scaleX;
+        this.scale.y = target.scaleY;
       },
       onComplete: () => {
         // Can click after all animations are done
@@ -273,8 +273,12 @@ export class Tile extends GameObject {
   findTileLocFromTileSpace(): Vec2 {
     const centerX = (window.visualViewport?.width || window.innerWidth) / 2;
     const centerY = (window.visualViewport?.height || window.innerHeight) / 2;
-    const tileSpacingX = this.size.x * sharedTileAttrs.tileSpacingFactor;
-    const tileSpacingY = this.size.y * sharedTileAttrs.tileSpacingFactor;
+
+    // Original tile is 200px, so spacing is og tile sprite size * scale * spacing factor
+    const tileSpacingX =
+      200 * this.calculateTileScale().x * sharedTileAttrs.tileSpacingFactor;
+    const tileSpacingY =
+      200 * this.calculateTileScale().y * sharedTileAttrs.tileSpacingFactor;
 
     // Calculate the starting position for the top-left tile in the grid
     let startGridX, startGridY;
@@ -296,9 +300,10 @@ export class Tile extends GameObject {
     return new Vec2(tileX, tileY);
   }
 
-  calculateTileSize(): Vec2 {
-    // Calculate the tile size based on the screen width
-    let tileSize = (window.visualViewport?.height || window.innerHeight) * 0.15;
+  calculateTileScale(): Vec2 {
+    // Calculate the tile scale based on the screen width
+    let tileScale =
+      ((window.visualViewport?.height || window.innerHeight) * 0.15) / 200;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger tile
@@ -306,15 +311,16 @@ export class Tile extends GameObject {
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
-      tileSize = (window.visualViewport?.height || window.innerHeight) * 0.09;
+      tileScale =
+        ((window.visualViewport?.height || window.innerHeight) * 0.09) / 200;
     }
 
-    return new Vec2(tileSize, tileSize);
+    return new Vec2(tileScale, tileScale);
   }
 
   handleWindowResize() {
     // Reinitialize the tile and its graphic on resize
-    this.size = this.calculateTileSize();
+    this.scale = this.calculateTileScale();
 
     // Init at provided location, and centered
     const spawnLoc = this.findTileLocFromTileSpace();

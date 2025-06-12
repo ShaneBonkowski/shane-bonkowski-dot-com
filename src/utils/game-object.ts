@@ -13,7 +13,7 @@ export class GameObject {
   public id: number;
   public name: string;
   public disabled: boolean;
-  public size: Vec2;
+  public scale: Vec2;
   public graphic:
     | Phaser.GameObjects.Sprite
     | Phaser.GameObjects.Shape
@@ -28,13 +28,13 @@ export class GameObject {
   /**
    * Create a GameObject.
    * @param {string} name - The name of the game object.
-   * @param {Vec2} size - Size of the gameobject, mostly for sizing the graphic attatched to it.
+   * @param {Vec2} scale - Scale of the GameObject, default is Vec2(1, 1).
    * @param {boolean} hasPhysicsBody2D - Does the GameObject have PhysicsBody2D base class?
    * @param {boolean} hasRigidBody2D - Does the GameObject have RigidBody2D base class?
    */
   constructor(
     name: string,
-    size: Vec2 = new Vec2(1, 1),
+    scale: Vec2 = new Vec2(1, 1),
     hasPhysicsBody2D: boolean = false,
     hasRigidBody2D: boolean = false
   ) {
@@ -46,7 +46,7 @@ export class GameObject {
     GameObject.instances.push(this); // Add this instance to the static array tracking all gameobjects
 
     // Visualization
-    this.size = size;
+    this.scale = scale;
     this.graphic = null;
 
     // Base classes
@@ -144,28 +144,18 @@ export class GameObject {
         this.lastColor = newColor;
       }
 
-      // Update size of graphic
+      // Update scale of graphic
       if (
         this.graphic instanceof Phaser.GameObjects.Sprite ||
-        this.graphic instanceof Phaser.GameObjects.Shape
+        this.graphic instanceof Phaser.GameObjects.Shape ||
+        this.graphic instanceof Phaser.GameObjects.Container
       ) {
         if (
-          this.graphic.displayWidth !== this.size.x ||
-          this.graphic.displayHeight !== this.size.y
+          this.graphic.scaleX !== this.scale.x ||
+          this.graphic.scaleY !== this.scale.y
         ) {
-          this.graphic.setDisplaySize(this.size.x, this.size.y);
+          this.graphic.setScale(this.scale.x, this.scale.y);
         }
-      } else if (this.graphic instanceof Phaser.GameObjects.Container) {
-        this.graphic.iterate(
-          (child: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape) => {
-            if (
-              child.displayWidth !== this.size.x ||
-              child.displayHeight !== this.size.y
-            ) {
-              child.setDisplaySize(this.size.x, this.size.y);
-            }
-          }
-        );
       }
     }
   }
