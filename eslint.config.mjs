@@ -11,6 +11,21 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      "no-restricted-syntax": [
+        "warn",
+        {
+          selector: "BinaryExpression[operator='instanceof']",
+          message: `Avoid using 'instanceof'. Use duck typing or alternative checks 
+instead. There is a known issue with 'instanceof' in Next.js 
+that can lead to unexpected behavior, especially with Hot Module 
+Replacement (HMR).
+          `,
+        },
+      ],
+    },
+  },
 ];
 
 export default eslintConfig;

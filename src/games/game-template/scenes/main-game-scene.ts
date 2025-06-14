@@ -11,7 +11,7 @@ export class MainGameScene extends Generic2DGameScene {
   public maxBalls: number = 10;
   public lastKnownWindowSize: Vec2 | null = null;
   private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 250;
+  private windowResizeInterval: number = 2000;
   public uiMenuOpen: boolean = false;
 
   constructor() {
@@ -21,6 +21,11 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Constructor logic for this scene
     // ...
+
+    // Last thing we do is set the lastKnownWindowSize to the current screen size
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
   preload() {
@@ -40,10 +45,6 @@ export class MainGameScene extends Generic2DGameScene {
     for (let i = 0; i < 5; i++) {
       this.createBall(width / 2, height / 2);
     }
-
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
 
     this.gameStarted = true;
     dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: GAME NAME HERE
@@ -180,6 +181,8 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn(
         "lastKnownWindowSize is not properly initialized. Skipping resize handling."
       );
+      this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
+      return;
     } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
@@ -192,7 +195,6 @@ export class MainGameScene extends Generic2DGameScene {
       // retain the general location of the obj, so we try to position it the
       // same screen % it was before on the new screen.
       for (const ball of this.balls) {
-        // Calculate new position based on percentage of old position
         const newX =
           (ball.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
           screenWidth;
@@ -237,5 +239,6 @@ export class MainGameScene extends Generic2DGameScene {
     for (const ball of this.balls) {
       ball.destroy();
     }
+    this.balls.length = 0; // Clear the array
   }
 }
