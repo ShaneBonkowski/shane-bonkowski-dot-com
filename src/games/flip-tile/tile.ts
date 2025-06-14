@@ -61,10 +61,14 @@ export class Tile extends GameObject {
 
   initTile() {
     this.scale = this.calculateTileScale();
-    this.graphic = this.scene.add.sprite(0, 0, "Tile Red"); // init, will be changed in updateTileColor
+    this.graphic = this.scene.add.sprite(
+      0,
+      0,
+      "Tile Red"
+    ) as Phaser.GameObjects.Sprite;
     this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
     this.updateTileColor();
-    (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 0.5); // Set the anchor point to the center
+    this.graphic.setOrigin(0.5, 0.5); // Set the anchor point to the center
   }
 
   addText() {

@@ -78,22 +78,24 @@ export class Boid extends GameObject {
       boidAnimName = "Leader Boid Anim";
     }
 
-    this.graphic = this.scene.add.sprite(0, 0, boidAnimName);
-    (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 0.5);
+    this.graphic = this.scene.add.sprite(
+      0,
+      0,
+      boidAnimName
+    ) as Phaser.GameObjects.Sprite;
+    this.graphic.setOrigin(0.5, 0.5);
 
     // Define an animation for the sprite
-    if (this.graphic instanceof Phaser.GameObjects.Sprite) {
-      this.graphic!.anims.create({
-        key: "boidAnimation",
-        frames: this.graphic.anims.generateFrameNumbers(boidAnimName, {
-          start: 0,
-          end: -1,
-        }), // -1 to use all frames
-        frameRate: 6,
-        repeat: -1, // Repeat indefinitely
-      });
-      this.graphic!.anims.play("boidAnimation");
-    }
+    this.graphic.anims.create({
+      key: "boidAnimation",
+      frames: this.graphic.anims.generateFrameNumbers(boidAnimName, {
+        start: 0,
+        end: -1,
+      }), // -1 to use all frames
+      frameRate: 6,
+      repeat: -1, // Repeat indefinitely
+    });
+    this.graphic.anims.play("boidAnimation");
   }
 
   handlePointerDown = (pointer: Phaser.Input.Pointer) => {

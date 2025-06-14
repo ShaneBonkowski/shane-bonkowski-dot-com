@@ -107,8 +107,12 @@ export class Tile extends GameObject {
 
     // Init the graphics
     const tileSpriteName = "Tile Blank";
-    this.graphic = this.scene.add.sprite(0, 0, tileSpriteName); // spawn at 0,0 to start
-    (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 0.5); // Set the anchor point to the center
+    this.graphic = this.scene.add.sprite(
+      0,
+      0,
+      tileSpriteName
+    ) as Phaser.GameObjects.Sprite; // spawn at 0,0 to start
+    this.graphic.setOrigin(0.5, 0.5); // Set the anchor point to the center
     this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
 
     // Start in off and then change to off. This is so that any necc. vars are updated, without

@@ -224,10 +224,8 @@ export class MainGameScene extends Generic2DGameScene {
     const collidedObject = GameObject.getById(gameObjectId);
 
     // If the object is found and its name is "Boid", call onCollideScreenEdge
-    if (collidedObject instanceof Boid) {
-      if (collidedObject && collidedObject.name === "Boid") {
-        collidedObject.onCollideScreenEdge(direction);
-      }
+    if (collidedObject && collidedObject.name === "Boid") {
+      (collidedObject as Boid).onCollideScreenEdge(direction);
     }
   };
 

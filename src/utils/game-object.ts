@@ -123,18 +123,17 @@ export class GameObject {
       }
 
       if (newColor != null && newColor !== this.lastColor) {
-        if (this.graphic instanceof Phaser.GameObjects.Sprite) {
+        if ("setTint" in this.graphic) {
           this.graphic.setTint(newColor);
-        } else if (this.graphic instanceof Phaser.GameObjects.Shape) {
+        } else if ("setFillStyle" in this.graphic) {
           this.graphic.setFillStyle(newColor);
-        } else if (this.graphic instanceof Phaser.GameObjects.Container) {
+        } else if ("iterate" in this.graphic) {
+          // Otherwise, assume this is a container, which has iterate method
           this.graphic.iterate(
-            (
-              child: Phaser.GameObjects.Sprite | Phaser.GameObjects.Container
-            ) => {
-              if (child instanceof Phaser.GameObjects.Sprite) {
+            (child: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape) => {
+              if ("setTint" in child) {
                 child.setTint(newColor);
-              } else if (child instanceof Phaser.GameObjects.Shape) {
+              } else if ("setFillStyle" in child) {
                 child.setFillStyle(newColor);
               }
             }
@@ -145,11 +144,7 @@ export class GameObject {
       }
 
       // Update scale of graphic
-      if (
-        this.graphic instanceof Phaser.GameObjects.Sprite ||
-        this.graphic instanceof Phaser.GameObjects.Shape ||
-        this.graphic instanceof Phaser.GameObjects.Container
-      ) {
+      if ("setScale" in this.graphic) {
         if (
           this.graphic.scaleX !== this.scale.x ||
           this.graphic.scaleY !== this.scale.y
