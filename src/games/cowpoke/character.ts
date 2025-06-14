@@ -24,6 +24,8 @@ export class Character extends GameObject {
   public headSprite: Phaser.GameObjects.Sprite | null = null;
   public hatSprite: Phaser.GameObjects.Sprite | null = null;
   public gunSprite: Phaser.GameObjects.Sprite | null = null;
+  public hatStarSprite: Phaser.GameObjects.Sprite | null = null;
+  public gunStarSprite: Phaser.GameObjects.Sprite | null = null;
 
   public equippedHatId: number = 0;
   public ownedHatIds: number[] = [];
@@ -224,6 +226,32 @@ export class Character extends GameObject {
     );
     this.hatSprite!.setDepth(8);
 
+    if (HAT_LOOT_MAP[id].rarity === RARITY.COMMON) {
+      this.hatStarSprite = this.updateContainerChildSprite(
+        this.hatStarSprite,
+        "rarity-star-1"
+      );
+    } else if (HAT_LOOT_MAP[id].rarity === RARITY.RARE) {
+      this.hatStarSprite = this.updateContainerChildSprite(
+        this.hatStarSprite,
+        "rarity-star-2"
+      );
+    } else if (HAT_LOOT_MAP[id].rarity === RARITY.LEGENDARY) {
+      this.hatStarSprite = this.updateContainerChildSprite(
+        this.hatStarSprite,
+        "rarity-star-3"
+      );
+    }
+    this.hatStarSprite!.setDepth(9);
+
+    // Initial position is relative to parent graphic container,
+    // which is about 600px tall, but the hat doesnt stretch
+    // that far.
+    this.hatStarSprite!.x = 0;
+    this.hatStarSprite!.y = -520;
+    this.hatStarSprite!.scaleX = 0.7;
+    this.hatStarSprite!.scaleY = 0.7;
+
     this.equippedHatId = id;
     this.addNewOwnedHat(id);
   }
@@ -238,7 +266,32 @@ export class Character extends GameObject {
       this.gunSprite,
       GUN_LOOT_MAP[id].spriteName as string
     );
-    this.gunSprite!.setDepth(9);
+    this.gunSprite!.setDepth(10);
+
+    if (GUN_LOOT_MAP[id].rarity === RARITY.COMMON) {
+      this.gunStarSprite = this.updateContainerChildSprite(
+        this.gunStarSprite,
+        "rarity-star-1"
+      );
+    } else if (GUN_LOOT_MAP[id].rarity === RARITY.RARE) {
+      this.gunStarSprite = this.updateContainerChildSprite(
+        this.gunStarSprite,
+        "rarity-star-2"
+      );
+    } else if (GUN_LOOT_MAP[id].rarity === RARITY.LEGENDARY) {
+      this.gunStarSprite = this.updateContainerChildSprite(
+        this.gunStarSprite,
+        "rarity-star-3"
+      );
+    }
+    this.gunStarSprite!.setDepth(11);
+
+    // Initial position is relative to parent graphic container,
+    // which is about 600px tall, but the gun is about halfway.
+    this.gunStarSprite!.x = 220;
+    this.gunStarSprite!.y = -290;
+    this.gunStarSprite!.scaleX = 0.6;
+    this.gunStarSprite!.scaleY = 0.6;
 
     this.equippedGunId = id;
     this.addNewOwnedGun(id);
