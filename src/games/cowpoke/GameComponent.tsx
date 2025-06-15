@@ -12,6 +12,7 @@ import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/cowpoke/SettingsContainer";
 import Feed from "@/src/games/cowpoke/Feed";
 import UpperHud from "@/src/games/cowpoke/UpperHud";
+import GameControls from "@/src/games/cowpoke/GameControls";
 
 export const gameInfoData: ContentDataProps[] = [
   {
@@ -101,6 +102,7 @@ const GameComponent: React.FC = () => {
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
       ></GameInfoContainer>
       <UpperHud></UpperHud>
+      <GameControls></GameControls>
       <Feed></Feed>
 
       {/* Phaser Game Container */}
