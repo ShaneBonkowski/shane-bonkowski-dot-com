@@ -124,10 +124,10 @@ export default function Feed({
                     item.align === "right"
                       ? `${DOMPurify.sanitize(
                           item.msg
-                        )}: <b>${DOMPurify.sanitize(item.sender)}</b>`
+                        )}<b> — ${DOMPurify.sanitize(item.sender)}</b>`
                       : `<b>${DOMPurify.sanitize(
                           item.sender
-                        )}:</b> ${DOMPurify.sanitize(item.msg)}`,
+                        )} — </b>${DOMPurify.sanitize(item.msg)}`,
                 }}
               />
             ))}
