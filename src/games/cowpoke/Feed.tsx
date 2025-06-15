@@ -88,62 +88,61 @@ export default function Feed({
   }
 
   return (
-    <>
-      {isVisible && (
-        <div
-          className="z-40 fixed bottom-1 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl p-2 flex flex-row gap-2 items-center border-2 border-black"
-          style={{ backgroundColor: "rgba(255, 255, 255, 0.95)" }}
-          aria-label="Feed Container"
-        >
-          <div className="flex flex-col w-full gap-1" aria-label="Feed Content">
-            {visibleFeed.map((item, i) => (
-              <div
-                key={start + i}
-                className={`text-primary-text-color-light text-sm ${
-                  item.align === "right"
-                    ? "text-right"
-                    : item.align === "center"
-                    ? "text-center"
-                    : "text-left"
-                }`}
-                // eslint-disable-next-line no-restricted-syntax
-                dangerouslySetInnerHTML={{
-                  __html:
-                    item.msg === ""
-                      ? "&nbsp;" // Use non-breaking space for empty messages
-                      : item.align === "right"
-                      ? `${DOMPurify.sanitize(
-                          item.msg
-                        )}<b> — ${DOMPurify.sanitize(item.sender)}</b>`
-                      : `<b>${DOMPurify.sanitize(
-                          item.sender
-                        )} — </b>${DOMPurify.sanitize(item.msg)}`,
-                }}
-              />
-            ))}
-          </div>
+    <div
+      className={`z-40 fixed bottom-1 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl 
+            ${
+              isVisible ? "" : "hidden"
+            } p-2 flex flex-row gap-2 items-center border-2 border-black`}
+      style={{ backgroundColor: "rgba(255, 255, 255, 0.95)" }}
+      aria-label="Feed Container"
+    >
+      <div className="flex flex-col w-full gap-1" aria-label="Feed Content">
+        {visibleFeed.map((item, i) => (
           <div
-            className="flex flex-col justify-end mb-1 gap-2"
-            aria-label="Feed Scroll Buttons Container"
-          >
-            <GameIconButton
-              onPointerDown={handleScrollUp}
-              icon={<FaArrowUp size={30} />}
-              ariaLabel="Scroll up"
-              darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-              disabled={!canScrollUp}
-            />
-            <GameIconButton
-              onPointerDown={handleScrollDown}
-              icon={<FaArrowDown size={30} />}
-              ariaLabel="Scroll down"
-              darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-              disabled={!canScrollDown}
-            />
-          </div>
-        </div>
-      )}
-    </>
+            key={start + i}
+            className={`text-primary-text-color-light text-sm ${
+              item.align === "right"
+                ? "text-right"
+                : item.align === "center"
+                ? "text-center"
+                : "text-left"
+            }`}
+            // eslint-disable-next-line no-restricted-syntax
+            dangerouslySetInnerHTML={{
+              __html:
+                item.msg === ""
+                  ? "&nbsp;" // Use non-breaking space for empty messages
+                  : item.align === "right"
+                  ? `${DOMPurify.sanitize(item.msg)}<b> — ${DOMPurify.sanitize(
+                      item.sender
+                    )}</b>`
+                  : `<b>${DOMPurify.sanitize(
+                      item.sender
+                    )} — </b>${DOMPurify.sanitize(item.msg)}`,
+            }}
+          />
+        ))}
+      </div>
+      <div
+        className="flex flex-col justify-end mb-1 gap-2"
+        aria-label="Feed Scroll Buttons Container"
+      >
+        <GameIconButton
+          onPointerDown={handleScrollUp}
+          icon={<FaArrowUp size={30} />}
+          ariaLabel="Scroll up"
+          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+          disabled={!canScrollUp}
+        />
+        <GameIconButton
+          onPointerDown={handleScrollDown}
+          icon={<FaArrowDown size={30} />}
+          ariaLabel="Scroll down"
+          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+          disabled={!canScrollDown}
+        />
+      </div>
+    </div>
   );
 }
 

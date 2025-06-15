@@ -56,14 +56,12 @@ const SettingsContainer: React.FC = () => {
 
   return (
     <>
-      {isButtonVisible && (
-        <GameIconButton
-          onPointerDown={openWindow}
-          icon={<FaCog size={30} />}
-          ariaLabel="<GAME-NAME> Settings" // FIXME: Replace with actual game name
-          className="fixed bottom-5 left-5"
-        />
-      )}
+      <GameIconButton
+        onPointerDown={openWindow}
+        icon={<FaCog size={30} />}
+        ariaLabel="<GAME-NAME> Settings" // FIXME: Replace with actual game name
+        className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
+      />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         {/* FIXME: Replace id with actual game name */}
         <div className="w-full h-full p-4" id="<GAME-NAME>-settings-container">

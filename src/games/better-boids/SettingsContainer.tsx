@@ -133,14 +133,12 @@ const SettingsContainer: React.FC = () => {
 
   return (
     <>
-      {isButtonVisible && (
-        <GameIconButton
-          onPointerDown={openWindow}
-          icon={<FaCog size={30} />}
-          ariaLabel="Boid Settings"
-          className="fixed bottom-5 left-5"
-        />
-      )}
+      <GameIconButton
+        onPointerDown={openWindow}
+        icon={<FaCog size={30} />}
+        ariaLabel="Boid Settings"
+        className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
+      />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         <div className="w-full h-full p-4" id="boids-settings-container">
           {/* Top Section: Settings Info */}

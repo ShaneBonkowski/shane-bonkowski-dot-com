@@ -44,58 +44,56 @@ export default function UpperHud() {
   }, []);
 
   return (
-    <>
-      {isVisible && (
-        <div
-          id="upper-hud"
-          className="absolute flex flex-row items-center justify-between gap-20 top-5 right-5"
-          aria-label="Game upper HUD"
-        >
-          <CharacterInfoBar
-            characterType={CHARACTER_TYPES.PLAYER}
-            name="Player"
-            level={0}
-            health={0}
-            maxHealth={0}
-            xp={0}
-            maxXp={0}
-            position="top-left"
-          ></CharacterInfoBar>
+    <div
+      id="upper-hud"
+      className={`absolute flex flex-row items-center justify-between gap-20 top-5 right-5 ${
+        isVisible ? "" : "hidden"
+      }`}
+      aria-label="Game upper HUD"
+    >
+      <CharacterInfoBar
+        characterType={CHARACTER_TYPES.PLAYER}
+        name="Player"
+        level={0}
+        health={0}
+        maxHealth={0}
+        xp={0}
+        maxXp={0}
+        position="top-left"
+      ></CharacterInfoBar>
 
-          <div
-            className="flex flex-row items-center gap-5"
-            id="hud-controls"
-            aria-label="HUD controls"
-          >
-            <GameIconButton
-              onPointerDown={handleToggleAutoMode}
-              icon={
-                isAutoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />
-              }
-              ariaLabel="Toggle Auto Mode"
-              darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-            />
-            <GameIconButton
-              onPointerDown={handleToggleSpeedUp}
-              icon={isFastMode ? <GiSnail size={30} /> : <GiRabbit size={30} />}
-              ariaLabel="Speed Up or Slow Down"
-              darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-              disabled={!isAutoMode} // Disable speed up if auto mode is off
-            />
-          </div>
+      <div
+        className="flex flex-row items-center gap-5"
+        id="hud-controls"
+        aria-label="HUD controls"
+      >
+        <GameIconButton
+          onPointerDown={handleToggleAutoMode}
+          icon={
+            isAutoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />
+          }
+          ariaLabel="Toggle Auto Mode"
+          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+        />
+        <GameIconButton
+          onPointerDown={handleToggleSpeedUp}
+          icon={isFastMode ? <GiSnail size={30} /> : <GiRabbit size={30} />}
+          ariaLabel="Speed Up or Slow Down"
+          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+          disabled={!isAutoMode} // Disable speed up if auto mode is off
+        />
+      </div>
 
-          <CharacterInfoBar
-            characterType={CHARACTER_TYPES.ENEMY}
-            name="Enemy"
-            level={0}
-            health={0}
-            maxHealth={0}
-            xp={0}
-            maxXp={0}
-            position="top-right"
-          ></CharacterInfoBar>
-        </div>
-      )}
-    </>
+      <CharacterInfoBar
+        characterType={CHARACTER_TYPES.ENEMY}
+        name="Enemy"
+        level={0}
+        health={0}
+        maxHealth={0}
+        xp={0}
+        maxXp={0}
+        position="top-right"
+      ></CharacterInfoBar>
+    </div>
   );
 }

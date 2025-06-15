@@ -56,16 +56,15 @@ const SettingsContainer: React.FC = () => {
 
   return (
     <>
-      {isButtonVisible && (
-        <GameIconButton
-          onPointerDown={openWindow}
-          icon={<FaCog size={30} />}
-          ariaLabel="Cowpoke Settings"
-          className="fixed bottom-5 left-5"
-          darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-          whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
-        />
-      )}
+      <GameIconButton
+        onPointerDown={openWindow}
+        icon={<FaCog size={30} />}
+        ariaLabel="Cowpoke Settings"
+        className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
+        darkModeLight={true} // Want the black buttons this game! Since bkg is light.
+        whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
+      />
+
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         <div className="w-full h-full p-4" id="cowpoke-settings-container">
           {/* Top Section: Settings Info */}

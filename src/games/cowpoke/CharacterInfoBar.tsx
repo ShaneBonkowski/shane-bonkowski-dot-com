@@ -22,7 +22,6 @@ export default function CharacterInfoBar({
   maxXp,
   position = "top-left",
 }: CharacterInfoBarProps) {
-  const [isVisible, setIsVisible] = useState(true);
   const [currentName, setCurrentName] = useState(name);
   const [currentLevel, setCurrentLevel] = useState(level);
   const [currentHealth, setCurrentHealth] = useState(health);
@@ -31,13 +30,6 @@ export default function CharacterInfoBar({
   const [currentMaxXp, setCurrentMaxXp] = useState(maxXp);
 
   useEffect(() => {
-    setCurrentName(name);
-    setCurrentLevel(level);
-    setCurrentHealth(health);
-    setCurrentMaxHealth(maxHealth);
-    setCurrentXp(xp);
-    setCurrentMaxXp(maxXp);
-
     function handleNameUpdate(e: Event) {
       const custom = e as CustomEvent;
       if (custom.detail?.characterType === characterType) {
@@ -75,21 +67,12 @@ export default function CharacterInfoBar({
       }
     }
 
-    const handleUiMenuOpen = () => {
-      setIsVisible(false);
-    };
-    const handleUiMenuClose = () => {
-      setIsVisible(true);
-    };
-
     window.addEventListener("characterNameUpdate", handleNameUpdate);
     window.addEventListener("characterLevelUpdate", handleLevelUpdate);
     window.addEventListener("characterHealthUpdate", handleHealthUpdate);
     window.addEventListener("characterMaxHealthUpdate", handleMaxHealthUpdate);
     window.addEventListener("characterXpUpdate", handleXpUpdate);
     window.addEventListener("characterMaxXpUpdate", handleMaxXpUpdate);
-    document.addEventListener("uiMenuOpen", handleUiMenuOpen);
-    document.addEventListener("uiMenuClose", handleUiMenuClose);
 
     return () => {
       window.removeEventListener("characterNameUpdate", handleNameUpdate);
@@ -101,10 +84,8 @@ export default function CharacterInfoBar({
       );
       window.removeEventListener("characterXpUpdate", handleXpUpdate);
       window.removeEventListener("characterMaxXpUpdate", handleMaxXpUpdate);
-      document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
-      document.removeEventListener("uiMenuClose", handleUiMenuClose);
     };
-  }, [name, level, health, maxHealth, xp, maxXp, characterType]);
+  });
 
   const healthPercent = Math.max(
     0,
@@ -115,54 +96,50 @@ export default function CharacterInfoBar({
   const positionClasses = position === "top-left" ? "items-start" : "items-end";
 
   return (
-    <>
-      {isVisible && (
-        <div
-          className={`relative z-40 p-2 flex flex-col ${positionClasses}`}
-          style={{ minWidth: "240px" }}
-          id="character-info-bar"
-          aria-label="Character Info Bar"
-        >
-          <span className="mb-1 font-bold text-primary-text-color-light">
-            {currentName}: lvl {currentLevel}
+    <div
+      className={`relative z-40 p-2 flex flex-col ${positionClasses}`}
+      style={{ minWidth: "240px" }}
+      id="character-info-bar"
+      aria-label="Character Info Bar"
+    >
+      <span className="mb-1 font-bold text-primary-text-color-light">
+        {currentName}: lvl {currentLevel}
+      </span>
+      <div className="flex flex-row items-center w-full">
+        {position === "top-left" && (
+          <span className="mr-2 font-semibold text-red-700 min-w-[60px] text-right">
+            {currentHealth}/{currentMaxHealth} HP
           </span>
-          <div className="flex flex-row items-center w-full">
-            {position === "top-left" && (
-              <span className="mr-2 font-semibold text-red-700 min-w-[60px] text-right">
-                {currentHealth}/{currentMaxHealth} HP
-              </span>
-            )}
-            <div className="relative w-[20vw] h-5 bg-transparent overflow-hidden">
-              {/* Max Health bar (background) */}
-              <div
-                className="absolute left-0 top-0 h-3 bg-red-900"
-                style={{ width: "100%", zIndex: 1 }}
-              />
-              {/* Current Health bar (foreground) */}
-              <div
-                className="absolute left-0 top-0 h-3 bg-red-500"
-                style={{ width: `${healthPercent * 100}%`, zIndex: 2 }}
-              />
+        )}
+        <div className="relative w-[20vw] h-5 bg-transparent overflow-hidden">
+          {/* Max Health bar (background) */}
+          <div
+            className="absolute left-0 top-0 h-3 bg-red-900"
+            style={{ width: "100%", zIndex: 1 }}
+          />
+          {/* Current Health bar (foreground) */}
+          <div
+            className="absolute left-0 top-0 h-3 bg-red-500"
+            style={{ width: `${healthPercent * 100}%`, zIndex: 2 }}
+          />
 
-              {/* Max XP bar (background) */}
-              <div
-                className="absolute left-0 bottom-0 h-2 bg-gray-300"
-                style={{ width: "100%", zIndex: 3 }}
-              />
-              {/* Current XP bar (foreground) */}
-              <div
-                className="absolute left-0 bottom-0 h-2 bg-blue-400"
-                style={{ width: `${xpPercent * 100}%`, zIndex: 4 }}
-              />
-            </div>
-            {position === "top-right" && (
-              <span className="ml-2 font-semibold text-red-700 min-w-[60px] text-right">
-                {currentHealth}/{currentMaxHealth} HP
-              </span>
-            )}
-          </div>
+          {/* Max XP bar (background) */}
+          <div
+            className="absolute left-0 bottom-0 h-2 bg-gray-300"
+            style={{ width: "100%", zIndex: 3 }}
+          />
+          {/* Current XP bar (foreground) */}
+          <div
+            className="absolute left-0 bottom-0 h-2 bg-blue-400"
+            style={{ width: `${xpPercent * 100}%`, zIndex: 4 }}
+          />
         </div>
-      )}
-    </>
+        {position === "top-right" && (
+          <span className="ml-2 font-semibold text-red-700 min-w-[60px] text-right">
+            {currentHealth}/{currentMaxHealth} HP
+          </span>
+        )}
+      </div>
+    </div>
   );
 }

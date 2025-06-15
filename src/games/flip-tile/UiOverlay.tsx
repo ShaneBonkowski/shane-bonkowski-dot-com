@@ -110,78 +110,76 @@ const UiOverlay: React.FC = () => {
 
   return (
     // z-40 so that its behind z-50 windows, but above mostly everything else
-    <div className="z-40" id="ui-overlay" aria-label="Game UI Overlay">
+    <div
+      className={`z-40 ${isUiVisible ? "" : "hidden"}`}
+      id="ui-overlay"
+      aria-label="Game UI Overlay"
+    >
       {/* Score Text */}
-      {isUiVisible && (
-        <div
-          id="score-display-container"
-          className="fixed pointer-events-none top-[12vh] landscape:top-5 w-full flex justify-center items-center"
+      <div
+        id="score-display-container"
+        className="fixed pointer-events-none top-[12vh] landscape:top-5 w-full flex justify-center items-center"
+      >
+        <p
+          id="score-display"
+          className={`pointer-events-auto font-bold text-5xl sm:6xl ${
+            isPulsing ? "flip-tile-pulse" : ""
+          }`}
+          aria-live="polite"
         >
-          <p
-            id="score-display"
-            className={`pointer-events-auto font-bold text-5xl sm:6xl ${
-              isPulsing ? "flip-tile-pulse" : ""
-            }`}
-            aria-live="polite"
-          >
-            {score}
-          </p>
-        </div>
-      )}
+          {score}
+        </p>
+      </div>
 
       {/* Buttons and Toggles */}
-      {isUiVisible && (
-        <div
-          id="tile-buttons"
-          className="z-40 pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
-          aria-label="Tile Buttons"
-        >
-          {/* Solution Toggle Button */}
-          <GameIconButton
-            onPointerDown={handleToggleSolution}
-            icon={
-              isSolutionVisible ? <FaEyeSlash size={30} /> : <FaEye size={30} />
-            }
-            ariaLabel="Toggle Solution Visibility"
-          />
+      <div
+        id="tile-buttons"
+        className="z-40 pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
+        aria-label="Tile Buttons"
+      >
+        {/* Solution Toggle Button */}
+        <GameIconButton
+          onPointerDown={handleToggleSolution}
+          icon={
+            isSolutionVisible ? <FaEyeSlash size={30} /> : <FaEye size={30} />
+          }
+          ariaLabel="Toggle Solution Visibility"
+        />
 
-          {/* Tile Reset Button */}
-          <GameIconButton
-            onPointerDown={handleResetTilePattern}
-            icon={<FaRedo size={30} />}
-            ariaLabel="Reset Tiles"
-          />
+        {/* Tile Reset Button */}
+        <GameIconButton
+          onPointerDown={handleResetTilePattern}
+          icon={<FaRedo size={30} />}
+          ariaLabel="Reset Tiles"
+        />
 
-          {/* New Tile Layout Button */}
-          <GameIconButton
-            onPointerDown={handleNewTilePattern}
-            icon={<FaThLarge size={30} />}
-            ariaLabel="Generate New Tile Layout"
-          />
-        </div>
-      )}
+        {/* New Tile Layout Button */}
+        <GameIconButton
+          onPointerDown={handleNewTilePattern}
+          icon={<FaThLarge size={30} />}
+          ariaLabel="Generate New Tile Layout"
+        />
+      </div>
 
       {/* Difficulty Toggles */}
-      {isUiVisible && (
-        <div
-          id="difficulty-controls"
-          className="z-40 fixed bottom-5 left-5 flex flex-col gap-5"
-          aria-label="Difficulty Selection"
-        >
-          {[
-            { difficulty: "expert", icon: <FaStar size={30} /> },
-            { difficulty: "hard", icon: <FaStarHalfAlt size={30} /> },
-            { difficulty: "easy", icon: <FaRegStar size={30} /> },
-          ].map(({ difficulty, icon }) => (
-            <GameIconButton
-              key={difficulty}
-              onPointerDown={() => handleDifficultyChange(difficulty)}
-              icon={icon}
-              ariaLabel={`Select ${difficulty} difficulty`}
-            />
-          ))}
-        </div>
-      )}
+      <div
+        id="difficulty-controls"
+        className="z-40 fixed bottom-5 left-5 flex flex-col gap-5"
+        aria-label="Difficulty Selection"
+      >
+        {[
+          { difficulty: "expert", icon: <FaStar size={30} /> },
+          { difficulty: "hard", icon: <FaStarHalfAlt size={30} /> },
+          { difficulty: "easy", icon: <FaRegStar size={30} /> },
+        ].map(({ difficulty, icon }) => (
+          <GameIconButton
+            key={difficulty}
+            onPointerDown={() => handleDifficultyChange(difficulty)}
+            icon={icon}
+            ariaLabel={`Select ${difficulty} difficulty`}
+          />
+        ))}
+      </div>
     </div>
   );
 };
