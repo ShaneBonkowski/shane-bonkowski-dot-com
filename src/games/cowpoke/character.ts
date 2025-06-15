@@ -222,7 +222,11 @@ export class Character extends GameObject {
     this.updateName("Shaner");
 
     // Send a lil dialog on spawn
-    sendFeedMessage(this.getRandomMsgFromList(PLAYER_DIALOG_QUIPS), this.name);
+    sendFeedMessage(
+      this.getRandomMsgFromList(PLAYER_DIALOG_QUIPS),
+      this.name,
+      this.getFeedMessageAlignment()
+    );
   }
 
   spawnNewRandomCharacter() {
@@ -287,13 +291,17 @@ export class Character extends GameObject {
     );
 
     // Send a lil dialog on spawn
-    sendFeedMessage(this.getRandomMsgFromList(ENEMY_DIALOG_QUIPS), this.name);
+    sendFeedMessage(
+      this.getRandomMsgFromList(ENEMY_DIALOG_QUIPS),
+      this.name,
+      this.getFeedMessageAlignment()
+    );
 
     // DEBUG
-    sendFeedMessage("test msg", "TEST");
-    sendFeedMessage("test msg", "TEST");
-    sendFeedMessage("test msg", "TEST");
-    sendFeedMessage("test msg", "TEST");
+    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
+    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
+    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
+    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
   }
 
   equipHat(id: number) {
@@ -439,6 +447,11 @@ export class Character extends GameObject {
     return msgList[randomIndex];
   }
 
+  getFeedMessageAlignment() {
+    // Player is left, enemy is right
+    return this.type === CHARACTER_TYPES.PLAYER ? "left" : "right";
+  }
+
   addNewOwnedHat(id: number) {
     if (!this.ownedHatIds.includes(id)) {
       this.ownedHatIds.push(id);
@@ -546,13 +559,15 @@ export class Character extends GameObject {
       // Player says a quip when killing enemy
       sendFeedMessage(
         this.getRandomMsgFromList(CHARACTER_KILL_QUIPS),
-        this.scene.playerCharacter.name
+        this.scene.playerCharacter.name,
+        this.getFeedMessageAlignment()
       );
     } else if (this.type === CHARACTER_TYPES.PLAYER) {
       // Enemy says a quip when killing player
       sendFeedMessage(
         this.getRandomMsgFromList(CHARACTER_KILL_QUIPS),
-        this.scene.enemyCharacter.name
+        this.scene.enemyCharacter.name,
+        this.getFeedMessageAlignment()
       );
 
       // If player dies, do things like reset game...
