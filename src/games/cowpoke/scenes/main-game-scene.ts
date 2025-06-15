@@ -6,6 +6,7 @@ import { Decoration, DECOR_TYPES } from "@/src/games/cowpoke/decoration";
 import { Physics } from "@/src/utils/physics";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Character, CHARACTER_TYPES } from "@/src/games/cowpoke/character";
+import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
 
 // Bkg art was drawn at 1920x1080, so we use that as the reference size.
 // This is used to scale the background decorations to fit the screen.
@@ -135,16 +136,29 @@ export class MainGameScene extends Generic2DGameScene {
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
 
+    sendFeedMessage(
+      "A new cowpoke is headin' west. Best of luck, partner",
+      "Cowpoke Jack's Ghost",
+      "center"
+    );
+
     // Create the background decorations
-    this.initializeBackgroundDecorations(screenWidth, screenHeight);
+    this.initializeCharactersAndBackgroundDecorations(
+      screenWidth,
+      screenHeight
+    );
     this.handleWindowResize();
 
     this.gameStarted = true;
     this.gameRound = 1;
+
     dispatchGameStartedEvent("Cowpoke");
   }
 
-  initializeBackgroundDecorations(screenWidth: number, screenHeight: number) {
+  initializeCharactersAndBackgroundDecorations(
+    screenWidth: number,
+    screenHeight: number
+  ) {
     // Back bkg
     this.decorations.push(
       new Decoration(

@@ -10,9 +10,8 @@ import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/cowpoke/SettingsContainer";
-import CharacterInfoBar from "@/src/games/cowpoke/CharacterInfoBar";
-import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
 import Feed from "@/src/games/cowpoke/Feed";
+import UpperHud from "@/src/games/cowpoke/UpperHud";
 
 export const gameInfoData: ContentDataProps[] = [
   {
@@ -96,36 +95,13 @@ const GameComponent: React.FC = () => {
     <>
       {/* UI */}
       <SettingsContainer></SettingsContainer>
-
       <GameInfoContainer
         infoData={gameInfoData}
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
       ></GameInfoContainer>
-
+      <UpperHud></UpperHud>
       <Feed></Feed>
-
-      <CharacterInfoBar
-        characterType={CHARACTER_TYPES.PLAYER}
-        name="Player"
-        level={0}
-        health={0}
-        maxHealth={0}
-        xp={0}
-        maxXp={0}
-        position="top-left"
-      ></CharacterInfoBar>
-
-      <CharacterInfoBar
-        characterType={CHARACTER_TYPES.ENEMY}
-        name="Enemy"
-        level={0}
-        health={0}
-        maxHealth={0}
-        xp={0}
-        maxXp={0}
-        position="top-right"
-      ></CharacterInfoBar>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game"></div>

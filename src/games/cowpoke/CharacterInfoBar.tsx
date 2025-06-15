@@ -112,16 +112,13 @@ export default function CharacterInfoBar({
   );
   const xpPercent = Math.max(0, Math.min(1, currentXp / currentMaxXp));
 
-  const positionClasses =
-    position === "top-left"
-      ? "left-[25vw] top-5 items-start"
-      : "right-5 top-5 items-end";
+  const positionClasses = position === "top-left" ? "items-start" : "items-end";
 
   return (
     <>
       {isVisible && (
         <div
-          className={`absolute z-40 p-2 flex flex-col ${positionClasses}`}
+          className={`relative z-40 p-2 flex flex-col ${positionClasses}`}
           style={{ minWidth: "240px" }}
         >
           <span className="mb-1 font-bold text-primary-text-color-light">

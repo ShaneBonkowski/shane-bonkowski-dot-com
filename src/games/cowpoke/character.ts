@@ -28,7 +28,6 @@ const CHARACTER_KILL_QUIPS: string[] = [
 
 const PLAYER_DIALOG_QUIPS: string[] = [
   "Looks like trouble's brewin' on the horizon",
-  "Another cowpoke joins the fray",
   "Someone's lookin' to make a name for themselves",
   "Looks like there's a new hat in town",
   "Reckon things just got a bit more interestin'",
@@ -295,12 +294,6 @@ export class Character extends GameObject {
       this.name,
       this.getFeedMessageAlignment()
     );
-
-    // DEBUG
-    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
-    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
-    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
-    sendFeedMessage("test msg", "TEST", this.getFeedMessageAlignment());
   }
 
   equipHat(id: number) {
