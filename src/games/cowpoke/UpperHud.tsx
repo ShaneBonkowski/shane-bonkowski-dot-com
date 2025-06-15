@@ -13,6 +13,12 @@ export default function UpperHud() {
   const handleToggleAutoMode = () => {
     setIsAutoMode((prev) => !prev);
     document.dispatchEvent(new CustomEvent("toggleAutomatic"));
+
+    // If auto mode is turned off, also turn off speed up mode
+    if (isAutoMode) {
+      setIsFastMode(false);
+      document.dispatchEvent(new CustomEvent("toggleSpeedUp"));
+    }
   };
 
   const handleToggleSpeedUp = () => {
@@ -66,6 +72,7 @@ export default function UpperHud() {
               icon={isFastMode ? <GiSnail size={30} /> : <GiRabbit size={30} />}
               ariaLabel="Speed Up/Slow Down"
               darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+              disabled={!isAutoMode} // Disable speed up if auto mode is off
             />
           </div>
 

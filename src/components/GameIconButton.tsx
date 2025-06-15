@@ -62,7 +62,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
         disabled:cursor-not-allowed
         ${lightModeClass} ${darkModeClass} ${className}`
       }
-      onPointerDown={onPointerDown}
+      onPointerDown={disabled ? undefined : onPointerDown}
       aria-label={ariaLabel}
       disabled={disabled}
     >
