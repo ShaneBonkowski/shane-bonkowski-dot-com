@@ -336,6 +336,9 @@ export class Character extends GameObject {
 
     this.equippedHatId = id;
     this.addNewOwnedHat(id);
+
+    // Refresh health, since hats can add health
+    this.updateMaxHealth();
   }
 
   equipGun(id: number) {
@@ -377,6 +380,9 @@ export class Character extends GameObject {
 
     this.equippedGunId = id;
     this.addNewOwnedGun(id);
+
+    // Refresh health, since guns can add health
+    this.updateMaxHealth();
   }
 
   getIdForRandomLoot(LOOT_MAP: typeof HAT_LOOT_MAP | typeof GUN_LOOT_MAP) {
@@ -490,6 +496,11 @@ export class Character extends GameObject {
 
   updateMaxHealth() {
     this.maxHealth = 10 + this.level * 2;
+
+    this.maxHealth +=
+      HAT_LOOT_MAP[this.equippedHatId].addHealth +
+      GUN_LOOT_MAP[this.equippedGunId].addHealth;
+
     window.dispatchEvent(
       new CustomEvent("characterMaxHealthUpdate", {
         detail: { characterType: this.type, maxHealth: this.maxHealth },
