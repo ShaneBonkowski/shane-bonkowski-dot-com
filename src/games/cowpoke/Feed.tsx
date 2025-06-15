@@ -93,8 +93,9 @@ export default function Feed({
         <div
           className="z-40 fixed bottom-1 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl p-2 flex flex-row gap-2 items-center border-2 border-black"
           style={{ backgroundColor: "rgba(255, 255, 255, 0.95)" }}
+          aria-label="Feed Container"
         >
-          <div className="flex flex-col w-full gap-1">
+          <div className="flex flex-col w-full gap-1" aria-label="Feed Content">
             {visibleFeed.map((item, i) => (
               <div
                 key={start + i}
@@ -121,7 +122,10 @@ export default function Feed({
               />
             ))}
           </div>
-          <div className="flex flex-col justify-end mb-1 gap-2">
+          <div
+            className="flex flex-col justify-end mb-1 gap-2"
+            aria-label="Feed Scroll Buttons Container"
+          >
             <GameIconButton
               onPointerDown={handleScrollUp}
               icon={<FaArrowUp size={30} />}

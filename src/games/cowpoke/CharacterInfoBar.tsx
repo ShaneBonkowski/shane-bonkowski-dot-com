@@ -120,6 +120,8 @@ export default function CharacterInfoBar({
         <div
           className={`relative z-40 p-2 flex flex-col ${positionClasses}`}
           style={{ minWidth: "240px" }}
+          id="character-info-bar"
+          aria-label="Character Info Bar"
         >
           <span className="mb-1 font-bold text-primary-text-color-light">
             {currentName}: lvl {currentLevel}

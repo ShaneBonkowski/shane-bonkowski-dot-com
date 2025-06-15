@@ -41,12 +41,16 @@ export default function UpperHud() {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
     };
-  });
+  }, []);
 
   return (
     <>
       {isVisible && (
-        <div className="absolute flex flex-row items-center justify-between gap-20 top-5 right-5">
+        <div
+          id="upper-hud"
+          className="absolute flex flex-row items-center justify-between gap-20 top-5 right-5"
+          aria-label="Game upper HUD"
+        >
           <CharacterInfoBar
             characterType={CHARACTER_TYPES.PLAYER}
             name="Player"
@@ -58,7 +62,11 @@ export default function UpperHud() {
             position="top-left"
           ></CharacterInfoBar>
 
-          <div className="flex flex-row items-center gap-5">
+          <div
+            className="flex flex-row items-center gap-5"
+            id="hud-controls"
+            aria-label="HUD controls"
+          >
             <GameIconButton
               onPointerDown={handleToggleAutoMode}
               icon={
@@ -70,7 +78,7 @@ export default function UpperHud() {
             <GameIconButton
               onPointerDown={handleToggleSpeedUp}
               icon={isFastMode ? <GiSnail size={30} /> : <GiRabbit size={30} />}
-              ariaLabel="Speed Up/Slow Down"
+              ariaLabel="Speed Up or Slow Down"
               darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
               disabled={!isAutoMode} // Disable speed up if auto mode is off
             />
