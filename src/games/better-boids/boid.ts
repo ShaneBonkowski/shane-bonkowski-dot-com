@@ -28,8 +28,8 @@ export class Boid extends GameObject {
     boidNumber: number
   ) {
     // Set up GameObject with physics and rigid body.
-    // init size just so its set, will reset to something else later
-    super("Boid", 1, true, true);
+    // init scale just so its set, will reset to something else later
+    super("Boid", new Vec2(1, 1), true, true);
 
     this.scene = scene;
     this.mainBoid = leaderBoid;
@@ -66,7 +66,7 @@ export class Boid extends GameObject {
   }
 
   initBoid() {
-    this.updateBoidSize();
+    this.updateBoidScale();
 
     // Init the graphics
     let boidAnimName = "";
@@ -78,22 +78,24 @@ export class Boid extends GameObject {
       boidAnimName = "Leader Boid Anim";
     }
 
-    this.graphic = this.scene.add.sprite(0, 0, boidAnimName);
-    this.graphic!.setOrigin(0.5, 0.5);
+    this.graphic = this.scene.add.sprite(
+      0,
+      0,
+      boidAnimName
+    ) as Phaser.GameObjects.Sprite;
+    this.graphic.setOrigin(0.5, 0.5);
 
     // Define an animation for the sprite
-    if (this.graphic instanceof Phaser.GameObjects.Sprite) {
-      this.graphic!.anims.create({
-        key: "boidAnimation",
-        frames: this.graphic.anims.generateFrameNumbers(boidAnimName, {
-          start: 0,
-          end: -1,
-        }), // -1 to use all frames
-        frameRate: 6,
-        repeat: -1, // Repeat indefinitely
-      });
-      this.graphic!.anims.play("boidAnimation");
-    }
+    this.graphic.anims.create({
+      key: "boidAnimation",
+      frames: this.graphic.anims.generateFrameNumbers(boidAnimName, {
+        start: 0,
+        end: -1,
+      }), // -1 to use all frames
+      frameRate: 6,
+      repeat: -1, // Repeat indefinitely
+    });
+    this.graphic.anims.play("boidAnimation");
   }
 
   handlePointerDown = (pointer: Phaser.Input.Pointer) => {
@@ -159,9 +161,10 @@ export class Boid extends GameObject {
     this.disable();
   };
 
-  calculateBoidSize(): number {
-    // Calculate the boid size based on the screen width
-    let boidSize = (window.visualViewport?.height || window.innerHeight) * 0.15;
+  calculateBoidScale(): Vec2 {
+    // Calculate the boid scale based on the screen width
+    let boidScale =
+      ((window.visualViewport?.height || window.innerHeight) * 0.15) / 200;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger boids
@@ -169,10 +172,11 @@ export class Boid extends GameObject {
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
-      boidSize = (window.visualViewport?.height || window.innerHeight) * 0.08;
+      boidScale =
+        ((window.visualViewport?.height || window.innerHeight) * 0.08) / 200;
     }
 
-    return boidSize;
+    return new Vec2(boidScale, boidScale);
   }
 
   handleWindowResize(newX: number, newY: number) {
@@ -184,7 +188,7 @@ export class Boid extends GameObject {
     }
 
     // Reinitialize the boid and its graphic on resize
-    this.updateBoidSize();
+    this.updateBoidScale();
 
     this.physicsBody2D!.position.x = newX;
     this.physicsBody2D!.position.y = newY;
@@ -201,9 +205,15 @@ export class Boid extends GameObject {
     return velocityDesired;
   }
 
-  updateBoidSize() {
-    this.size = this.calculateBoidSize();
-    this.rigidBody2D!.hitboxSize = new Vec2(this.size, this.size);
+  updateBoidScale() {
+    this.scale = this.calculateBoidScale();
+
+    if (this.graphic) {
+      this.rigidBody2D!.hitboxSize = new Vec2(
+        this.graphic!.displayWidth,
+        this.graphic!.displayHeight
+      );
+    }
   }
 
   handleUpdateBoidSpeed = () => {
@@ -568,22 +578,24 @@ export class Boid extends GameObject {
       this.physicsBody2D!.position.x =
         (window.visualViewport?.width || window.innerWidth) -
         edgeMargin -
-        this.size / 2;
+        this.graphic!.displayWidth / 2;
     }
     // If right, teleport to left side of screen
     else if (collisionDirection === "right") {
-      this.physicsBody2D!.position.x = edgeMargin + this.size / 2;
+      this.physicsBody2D!.position.x =
+        edgeMargin + this.graphic!.displayWidth / 2;
     }
     // If top, move to bottom
     else if (collisionDirection === "top") {
       this.physicsBody2D!.position.y =
         (window.visualViewport?.height || window.innerHeight) -
         edgeMargin -
-        this.size / 2;
+        this.graphic!.displayHeight / 2;
     }
     // If bottom, move to top
     else if (collisionDirection === "bottom") {
-      this.physicsBody2D!.position.y = edgeMargin + this.size / 2;
+      this.physicsBody2D!.position.y =
+        edgeMargin + this.graphic!.displayHeight / 2;
     }
   }
 

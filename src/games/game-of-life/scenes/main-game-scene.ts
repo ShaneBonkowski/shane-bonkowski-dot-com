@@ -41,7 +41,7 @@ export class MainGameScene extends Generic2DGameScene {
   public gestureManager: GestureManager;
   private currentBackgroundColor: string | null = null;
   private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 250;
+  private windowResizeInterval: number = 2000;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with

@@ -9,6 +9,8 @@ import {
 import { MainGameScene } from "@/src/games/game-of-life/scenes/main-game-scene";
 import { settings } from "@/src/games/game-of-life/SettingsContainer.tsx";
 
+const TILE_ON_SCALE_FACTOR = 1.2;
+
 export class Tile extends GameObject {
   public scene: MainGameScene;
   public gridSpaceLoc: Vec2;
@@ -21,8 +23,8 @@ export class Tile extends GameObject {
   constructor(scene: MainGameScene, gridX: number, gridY: number) {
     super(
       "Tile",
-      // init size just so its set, will reset to something else later
-      1,
+      // init scale just so its set, will reset to something else later
+      new Vec2(1, 1),
       // Add physicsBody2D (even though it doesnt "move", it still has a position
       // when screen resizes occur etc.)
       true,
@@ -105,8 +107,12 @@ export class Tile extends GameObject {
 
     // Init the graphics
     const tileSpriteName = "Tile Blank";
-    this.graphic = this.scene.add.sprite(0, 0, tileSpriteName); // spawn at 0,0 to start
-    this.graphic!.setOrigin(0.5, 0.5); // Set the anchor point to the center
+    this.graphic = this.scene.add.sprite(
+      0,
+      0,
+      tileSpriteName
+    ) as Phaser.GameObjects.Sprite; // spawn at 0,0 to start
+    this.graphic.setOrigin(0.5, 0.5); // Set the anchor point to the center
     this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
 
     // Start in off and then change to off. This is so that any necc. vars are updated, without
@@ -114,11 +120,11 @@ export class Tile extends GameObject {
     this.tileState = tileStates.OFF;
     this.changeState(tileStates.OFF);
 
-    // Set position and size
+    // Set position and scale
     const initialPos = this.calculateTilePosition();
     this.physicsBody2D!.position.x = initialPos.x;
     this.physicsBody2D!.position.y = initialPos.y;
-    this.size = this.calculateSize();
+    this.scale = this.calculateScale();
   }
 
   resetTile() {
@@ -132,29 +138,33 @@ export class Tile extends GameObject {
     this.changeState(tileStates.OFF);
   }
 
-  updateSize() {
-    const targetSize = this.calculateSize();
-    if (this.size != null) {
-      this.size = MoreMath.lerpWithThreshold(this.size, targetSize, 1, 1.5);
+  updateScale() {
+    const targetScale = this.calculateScale();
+    if (this.scale != null) {
+      this.scale = new Vec2(
+        MoreMath.lerpWithThreshold(this.scale.x, targetScale.x, 1, 1.5),
+        MoreMath.lerpWithThreshold(this.scale.y, targetScale.y, 1, 1.5)
+      );
     } else {
-      this.size = targetSize;
+      this.scale = targetScale;
     }
   }
 
-  calculateSize(): number {
-    let size = this.calculateDefaultSize();
+  calculateScale(): Vec2 {
+    let scale = this.calculateDefaultScale();
 
     // Add extra for a tile in the ON state
     if (this.tileState == tileStates.ON) {
-      size = this.calculateMaxSize(size);
+      scale = scale * TILE_ON_SCALE_FACTOR;
     }
 
-    return size;
+    return new Vec2(scale, scale);
   }
 
-  calculateDefaultSize(): number {
-    // Calculate the size based on the screen width
-    let size = (window.visualViewport?.height || window.innerHeight) * 0.035;
+  calculateDefaultScale(): number {
+    // Calculate the scale based on the screen width
+    let scale =
+      ((window.visualViewport?.height || window.innerHeight) * 0.035) / 600;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger
@@ -162,18 +172,14 @@ export class Tile extends GameObject {
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
-      size = (window.visualViewport?.height || window.innerHeight) * 0.022;
+      scale =
+        ((window.visualViewport?.height || window.innerHeight) * 0.022) / 600;
     }
 
     // Scale according to zoom!
-    size = size * this.scene.gestureManager.zoomOffset;
+    scale = scale * this.scene.gestureManager.zoomOffset;
 
-    return size;
-  }
-
-  calculateMaxSize(size: number): number {
-    // "max" size is just the size of an ON state tile since it is larger
-    return size * 1.15;
+    return scale;
   }
 
   updatePosition() {
@@ -234,7 +240,9 @@ export class Tile extends GameObject {
     );
 
     // Calculate the starting position for the bottom-left tile in the grid
-    const maxSize = this.calculateMaxSize(this.calculateDefaultSize());
+    // max size = size of tile png which is 600px * max scale
+    const maxSize = 600 * this.calculateDefaultScale() * TILE_ON_SCALE_FACTOR;
+
     const tileSpacing = maxSize + smallAmountForGrid;
     let startGridX, startGridY;
 
@@ -404,7 +412,7 @@ export class Tile extends GameObject {
 
   updateVisualAttrs() {
     this.updatePosition();
-    this.updateSize();
+    this.updateScale();
   }
 
   playSpinAnim() {

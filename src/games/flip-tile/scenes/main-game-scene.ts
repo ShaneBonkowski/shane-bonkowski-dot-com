@@ -22,7 +22,7 @@ export class MainGameScene extends Generic2DGameScene {
   private resizeObserver: ResizeObserver | null = null;
   public lastKnownWindowSize: Vec2 | null = null;
   private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 250;
+  private windowResizeInterval: number = 2000;
   public canClickTile: boolean;
   public disableClickID: number;
   public score: number;
@@ -42,6 +42,11 @@ export class MainGameScene extends Generic2DGameScene {
     this.score = 0;
     this.solutionRevealed = false;
     this.revealedAtLeastOnceThisLevel = false;
+
+    // Last thing we do is set the lastKnownWindowSize to the current screen size
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
   preload() {
@@ -55,10 +60,6 @@ export class MainGameScene extends Generic2DGameScene {
 
   create() {
     super.create();
-
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
 
     // Spawn in tiles in a grid
     this.newTilePattern();
@@ -385,6 +386,8 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn(
         "lastKnownWindowSize is not properly initialized. Skipping resize handling."
       );
+      this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
+      return;
     } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
@@ -432,5 +435,6 @@ export class MainGameScene extends Generic2DGameScene {
         }
       }
     }
+    tiles.length = 0; // Clear the tiles array
   }
 }
