@@ -32,25 +32,25 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
   // Conditionally build class names
   const lightModeClass = lightModeDark
     ? // dark colors
-      "text-primary-text-color active:text-secondary-text-color" +
+      "text-primary-text-color active:text-secondary-text-color disabled:text-secondary-text-color" +
       (isHoverable
-        ? " hover:text-secondary-text-color disabled:hover:text-primary-text-color"
+        ? " hover:text-secondary-text-color disabled:hover:text-secondary-text-color"
         : "")
     : // light colors
-      "text-primary-text-color-light active:text-secondary-text-color-light" +
+      "text-primary-text-color-light active:text-secondary-text-color-light disabled:text-secondary-text-color-light" +
       (isHoverable
-        ? " hover:text-secondary-text-color-light disabled:hover:text-primary-text-color-light"
+        ? " hover:text-secondary-text-color-light disabled:hover:text-secondary-text-color-light"
         : "");
   const darkModeClass = darkModeLight
     ? // light colors
-      "dark:text-primary-text-color-light dark:active:text-secondary-text-color-light" +
+      "dark:text-primary-text-color-light dark:active:text-secondary-text-color-light dark:disabled:text-secondary-text-color-light" +
       (isHoverable
-        ? " dark:hover:text-secondary-text-color-light disabled:dark:hover:text-primary-text-color-light"
+        ? " dark:hover:text-secondary-text-color-light disabled:dark:hover:text-secondary-text-color-light"
         : "")
     : // dark colors
-      "dark:text-primary-text-color dark:active:text-secondary-text-color" +
+      "dark:text-primary-text-color dark:active:text-secondary-text-color dark:disabled:text-secondary-text-color" +
       (isHoverable
-        ? " dark:hover:text-secondary-text-color disabled:dark:hover:text-primary-text-color"
+        ? " dark:hover:text-secondary-text-color disabled:dark:hover:text-secondary-text-color"
         : "");
 
   return (
