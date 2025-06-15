@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { StoryDataProps, StoryDataContentProps } from "@/src/types/data-props";
+import DOMPurify from "dompurify";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
 const avgWPMReading = 238;
@@ -31,20 +32,21 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
 
     if (paragraph.splitParagraphs) {
       // If splitParagraphs is true, split by newline into separate <p> tags
-      return paragraph.content
-        .split("\n")
-        .map((paraContent, paraIndex) => (
-          <p
-            key={`${pIndex}-${paraIndex}`}
-            className={`leading-relaxed ${
-              paragraph.textAlign === "justify"
-                ? "text-justify hyphens-auto"
-                : `text-${paragraph.textAlign}`
-            } ${isFirst ? "mt-0" : ""} ${isLast ? "mb-0" : ""}`}
-            style={{ fontStyle: paragraph.fontStyle }}
-            dangerouslySetInnerHTML={{ __html: paraContent }}
-          />
-        ));
+      return paragraph.content.split("\n").map((paraContent, paraIndex) => (
+        <p
+          key={`${pIndex}-${paraIndex}`}
+          className={`leading-relaxed ${
+            paragraph.textAlign === "justify"
+              ? "text-justify hyphens-auto"
+              : `text-${paragraph.textAlign}`
+          } ${isFirst ? "mt-0" : ""} ${isLast ? "mb-0" : ""}`}
+          style={{ fontStyle: paragraph.fontStyle }}
+          // eslint-disable-next-line no-restricted-syntax
+          dangerouslySetInnerHTML={{
+            __html: paraContent ? DOMPurify.sanitize(paraContent) : "",
+          }}
+        />
+      ));
     } else {
       // If splitParagraphs is false, replace newlines with <br /> in one <p> tag
       const contentWithBr = paragraph.content.replace(/\n/g, "<br />");
@@ -57,7 +59,10 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
               : `text-${paragraph.textAlign}`
           } ${isFirst ? "mt-0" : ""} ${isLast ? "mb-0" : ""}`}
           style={{ fontStyle: paragraph.fontStyle }}
-          dangerouslySetInnerHTML={{ __html: contentWithBr }}
+          // eslint-disable-next-line no-restricted-syntax
+          dangerouslySetInnerHTML={{
+            __html: contentWithBr ? DOMPurify.sanitize(contentWithBr) : "",
+          }}
         />
       );
     }

@@ -23,6 +23,11 @@ that can lead to unexpected behavior, especially with Hot Module
 Replacement (HMR).
           `,
         },
+        {
+          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+          message:
+            "Use of dangerouslySetInnerHTML detected. Make sure to sanitize HTML with DOMPurify.sanitize(). Add an eslint-disable comment if this is safe.",
+        },
       ],
     },
   },

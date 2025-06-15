@@ -270,25 +270,16 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
-  handlePlayerDeath() {
-    this.player!.handleDeath();
-
-    document.dispatchEvent(
-      new CustomEvent("cowpokePlayerDefeated", {
-        detail: { gameRound: this.gameRound },
-      })
-    );
+  ready() {
+    //
   }
 
-  handleEnemyDeath() {
-    this.gameRound++;
-    this.enemy!.handleDeath();
+  draw() {
+    //
+  }
 
-    document.dispatchEvent(
-      new CustomEvent("cowpokeEnemyDefeated", {
-        detail: { gameRound: this.gameRound },
-      })
-    );
+  fire() {
+    // Play out the "sub-round" to see who won, who gets dmg'd etc.
   }
 
   /*

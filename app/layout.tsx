@@ -59,6 +59,7 @@ export default function RootLayout({
         <Script
           id="google-analytics"
           strategy="beforeInteractive"
+          // eslint-disable-next-line no-restricted-syntax
           dangerouslySetInnerHTML={{
             __html: `
                   window.dataLayer = window.dataLayer || [];

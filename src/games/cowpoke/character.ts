@@ -5,17 +5,60 @@ import {
   REFERENCE_BKG_SIZE,
 } from "@/src/games/cowpoke/scenes/main-game-scene";
 import { GUN_LOOT_MAP, HAT_LOOT_MAP, RARITY } from "@/src/games/cowpoke/loot";
+import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
 
-export const CHARACTER_TYPES = {
-  UNASSIGNED: -1,
-  PLAYER: 0,
-  ENEMY: 1,
-};
+export enum CHARACTER_TYPES {
+  UNASSIGNED = -1,
+  PLAYER = 0,
+  ENEMY = 1,
+}
+
+const CHARACTER_KILL_QUIPS: string[] = [
+  "You've yee'd yer last haw, partner.",
+  "This town ain't big enough for the tew of us.",
+  "Looks like you brought a lasso to a gunfight.",
+  "Guess you ran outta luck, cowboy.",
+  "Shoulda stayed on the porch, partner.",
+  "Hope you said all yer howdys and goodbyes.",
+  "That's the last tumbleweed you'll chase.",
+  "You bit the cactus, compadre.",
+  "You done rode yer last rodeo.",
+  "You couldn't dodge this bullet, friend.",
+];
+
+const PLAYER_DIALOG_QUIPS: string[] = [
+  "Looks like trouble's brewin' on the horizon.",
+  "Another cowpoke joins the fray.",
+  "Someone's lookin' to make a name for themselves.",
+  "Whose this stranger, spurs a-jinglin'?",
+  "Looks like there's a new hat in town.",
+  "Reckon things just got a bit more interestin'.",
+  "Better keep yer hand close to yer holster.",
+];
+
+const ENEMY_DIALOG_QUIPS: string[] = [
+  "Well would you look what the tumbleweed dragged in.",
+  "You best be ready, partner. I'm fixin' to cause some trouble.",
+  "Ain't no lawman gonna save you now.",
+  "Time to see who's the fastest draw in these parts.",
+  "I heard you were tough. Let's see if that's true.",
+  "You lookin' for a showdown? 'Cause you just found one.",
+  "Don't blink, or you'll miss yer last sunrise.",
+  "Hope yer boots are fast, 'cause my bullets are faster.",
+  "You look nervous, partner. That's a good instinct.",
+  "Let's see if you can dance when the bullets start flyin'.",
+];
 
 export class Character extends GameObject {
   private scene: MainGameScene;
   public type: number = CHARACTER_TYPES.UNASSIGNED;
+
+  public name: string = "Character";
   public level: number = 0;
+  public health: number = 0;
+  public maxHealth: number = 0;
+  public xp: number = 0;
+  public maxXp: number = 0;
 
   private bounceTime: number = 0;
   private animScaleFactorY: number = 1;
@@ -174,7 +217,12 @@ export class Character extends GameObject {
     this.equipHat(0);
     this.equipGun(0);
 
-    this.level = 1;
+    // Set level, this will set max health, xp, etc.
+    this.updateLevel(1);
+    this.updateName("Shaner");
+
+    // Send a lil dialog on spawn
+    sendFeedMessage(this.getRandomMsgFromList(PLAYER_DIALOG_QUIPS), this.name);
   }
 
   spawnNewRandomCharacter() {
@@ -201,17 +249,51 @@ export class Character extends GameObject {
     this.equipHat(-1); // -1 means random
     this.equipGun(-1);
 
-    // Set a random level for enemy characters
+    // Set a random level for enemy characters, this will
+    // set max health, xp, etc.
     if (this.scene.gameRound < 5) {
-      this.level = this.scene.random.getRandomInt(1, 4);
+      this.updateLevel(this.scene.random.getRandomInt(1, 4));
     } else if (this.scene.gameRound < 10) {
-      this.level = this.scene.random.getRandomInt(3, 8);
+      this.updateLevel(this.scene.random.getRandomInt(3, 8));
     } else {
-      this.level = this.scene.random.getRandomInt(
-        this.scene.gameRound - 5,
-        this.scene.gameRound
+      this.updateLevel(
+        this.scene.random.getRandomInt(
+          this.scene.gameRound - 5,
+          this.scene.gameRound
+        )
       );
     }
+
+    // Set a random name for enemy characters
+    const randomTitleOptions = [
+      "Bandito",
+      "Outlaw",
+      "Desperado",
+      "Gunslinger",
+      "Cowpoke",
+      "Ranger",
+    ];
+    const randomTitleIndex = this.scene.random.getRandomInt(
+      0,
+      randomTitleOptions.length - 1
+    );
+    const randomNameOptions = ["Bob", "Sally", "Rick", "Dan", "Gus"];
+    const randomNameIndex = this.scene.random.getRandomInt(
+      0,
+      randomNameOptions.length - 1
+    );
+    this.updateName(
+      `${randomTitleOptions[randomTitleIndex]} ${randomNameOptions[randomNameIndex]}`
+    );
+
+    // Send a lil dialog on spawn
+    sendFeedMessage(this.getRandomMsgFromList(ENEMY_DIALOG_QUIPS), this.name);
+
+    // DEBUG
+    sendFeedMessage("test msg", "TEST");
+    sendFeedMessage("test msg", "TEST");
+    sendFeedMessage("test msg", "TEST");
+    sendFeedMessage("test msg", "TEST");
   }
 
   equipHat(id: number) {
@@ -348,6 +430,15 @@ export class Character extends GameObject {
     }
   }
 
+  getRandomMsgFromList(msgList: string[]) {
+    if (msgList.length === 0) {
+      console.warn("getRandomMsgFromList: msgList is empty.");
+    }
+
+    const randomIndex = this.scene.random.getRandomInt(0, msgList.length - 1);
+    return msgList[randomIndex];
+  }
+
   addNewOwnedHat(id: number) {
     if (!this.ownedHatIds.includes(id)) {
       this.ownedHatIds.push(id);
@@ -360,17 +451,121 @@ export class Character extends GameObject {
     }
   }
 
-  handleDeath() {
-    if (this.type === CHARACTER_TYPES.PLAYER) {
-      // FIXME: add player character death logic
-    } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      // FIXME: random chance to drop loot if player character
-      // does not have the item already
-    } else {
-      console.warn(
-        `Character.handleDeath: Unknown character type ${this.type}. No death logic applied.`
-      );
+  handleDamage(damage: number) {
+    this.updateHealth(this.health - damage);
+  }
+
+  updateName(newName: string) {
+    if (newName.length === 0) {
+      newName = "Character";
     }
+    this.name = newName;
+
+    window.dispatchEvent(
+      new CustomEvent("characterNameUpdate", {
+        detail: { characterType: this.type, name: newName },
+      })
+    );
+  }
+
+  updateHealth(newHealth: number) {
+    if (newHealth < 0) {
+      newHealth = 0;
+    } else if (newHealth > this.maxHealth) {
+      newHealth = this.maxHealth;
+    }
+    this.health = newHealth;
+
+    window.dispatchEvent(
+      new CustomEvent("characterHealthUpdate", {
+        detail: { characterType: this.type, health: newHealth },
+      })
+    );
+  }
+
+  updateMaxHealth() {
+    this.maxHealth = 10 + this.level * 2;
+    window.dispatchEvent(
+      new CustomEvent("characterMaxHealthUpdate", {
+        detail: { characterType: this.type, maxHealth: this.maxHealth },
+      })
+    );
+  }
+
+  updateLevel(newLevel: number) {
+    if (newLevel < 0) {
+      newLevel = 0;
+    }
+    this.level = newLevel;
+    window.dispatchEvent(
+      new CustomEvent("characterLevelUpdate", {
+        detail: { characterType: this.type, level: newLevel },
+      })
+    );
+
+    // Update max health on level up, then restore health
+    this.updateMaxHealth();
+    this.updateHealth(this.maxHealth);
+
+    // Reset xp on level up, and add to max xp
+    this.updateMaxXp();
+    this.updateXp(0);
+  }
+
+  updateXp(newXp: number) {
+    if (newXp < 0) {
+      newXp = 0;
+    }
+    this.xp = newXp;
+    window.dispatchEvent(
+      new CustomEvent("characterXpUpdate", {
+        detail: { characterType: this.type, xp: newXp },
+      })
+    );
+
+    // Level up!
+    if (this.xp >= this.maxXp) {
+      this.updateLevel(this.level + 1);
+    }
+  }
+
+  updateMaxXp() {
+    this.maxXp = 10 + this.level * 2;
+    window.dispatchEvent(
+      new CustomEvent("characterMaxXpUpdate", {
+        detail: { characterType: this.type, maxXp: this.maxXp },
+      })
+    );
+  }
+
+  handleDeath() {
+    // If enemy dies, add xp etc. to player
+    if (this.type === CHARACTER_TYPES.ENEMY) {
+      this.scene.playerCharacter.handleKill(this);
+
+      // Player says a quip when killing enemy
+      sendFeedMessage(
+        this.getRandomMsgFromList(CHARACTER_KILL_QUIPS),
+        this.scene.playerCharacter.name
+      );
+    } else if (this.type === CHARACTER_TYPES.PLAYER) {
+      // Enemy says a quip when killing player
+      sendFeedMessage(
+        this.getRandomMsgFromList(CHARACTER_KILL_QUIPS),
+        this.scene.enemyCharacter.name
+      );
+
+      // If player dies, do things like reset game...
+      // FIXME: add this...
+    }
+  }
+
+  handleKill(otherCharacter: Character) {
+    // Gain xp
+    this.updateXp(this.xp + Math.floor(otherCharacter.level * 1.2));
+
+    // Random chance to get enemy's loot
+    // FIXME: add this...
   }
 
   destroy() {
