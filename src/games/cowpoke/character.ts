@@ -57,6 +57,8 @@ export class Character extends GameObject {
   public maxHealth: number = 0;
   public xp: number = 0;
   public maxXp: number = 0;
+  public elementSelected: string | null = null; // rock, paper, or scissors
+  public combatSelected: string | null = null; // attack, defend, or counter
 
   private bounceTime: number = 0;
   private animScaleFactorY: number = 1;
@@ -472,7 +474,7 @@ export class Character extends GameObject {
     }
     this.name = newName;
 
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("characterNameUpdate", {
         detail: { characterType: this.type, name: newName },
       })
@@ -487,7 +489,7 @@ export class Character extends GameObject {
     }
     this.health = newHealth;
 
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("characterHealthUpdate", {
         detail: { characterType: this.type, health: newHealth },
       })
@@ -501,7 +503,7 @@ export class Character extends GameObject {
       HAT_LOOT_MAP[this.equippedHatId].addHealth +
       GUN_LOOT_MAP[this.equippedGunId].addHealth;
 
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("characterMaxHealthUpdate", {
         detail: { characterType: this.type, maxHealth: this.maxHealth },
       })
@@ -513,7 +515,7 @@ export class Character extends GameObject {
       newLevel = 0;
     }
     this.level = newLevel;
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("characterLevelUpdate", {
         detail: { characterType: this.type, level: newLevel },
       })
@@ -533,7 +535,7 @@ export class Character extends GameObject {
       newXp = 0;
     }
     this.xp = newXp;
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("characterXpUpdate", {
         detail: { characterType: this.type, xp: newXp },
       })
@@ -547,7 +549,7 @@ export class Character extends GameObject {
 
   updateMaxXp() {
     this.maxXp = 10 + this.level * 2;
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("characterMaxXpUpdate", {
         detail: { characterType: this.type, maxXp: this.maxXp },
       })

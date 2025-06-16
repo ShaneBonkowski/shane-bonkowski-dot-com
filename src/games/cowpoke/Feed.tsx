@@ -52,11 +52,11 @@ export default function Feed({
       setIsVisible(true);
     };
 
-    window.addEventListener("newMessage", handleNewMessage);
+    document.addEventListener("newMessage", handleNewMessage);
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
     return () => {
-      window.removeEventListener("newMessage", handleNewMessage);
+      document.removeEventListener("newMessage", handleNewMessage);
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
     };
@@ -92,8 +92,7 @@ export default function Feed({
       className={`z-40 fixed bottom-1 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl 
             ${
               isVisible ? "" : "hidden"
-            } p-2 flex flex-row gap-2 items-center border-2 border-black`}
-      style={{ backgroundColor: "rgba(255, 255, 255, 0.95)" }}
+            } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border-2 border-black`}
       aria-label="Feed Container"
     >
       <div className="flex flex-col w-full gap-1" aria-label="Feed Content">
@@ -157,7 +156,7 @@ export function sendFeedMessage(
   sender: string,
   align: "left" | "right" | "center" = "left"
 ) {
-  window.dispatchEvent(
+  document.dispatchEvent(
     new CustomEvent("newMessage", { detail: { msg, sender, align } })
   );
 }

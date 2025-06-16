@@ -14,6 +14,18 @@ import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
 // 100% width and height of the parent element.
 export const REFERENCE_BKG_SIZE: Vec2 = new Vec2(1920, 1080);
 
+const COMBAT_BEATEN_BY_MAP: Record<string, string> = {
+  attack: "counter", // counter is ideal against attack
+  defend: "attack", // attack is ideal (somewhat) against defend
+  counter: "defend", // defend is ideal against counter
+};
+
+const ELEMENT_BEATEN_BY_MAP: Record<string, string> = {
+  rock: "paper", // paper beats rock
+  paper: "scissors", // scissors beats paper
+  scissors: "rock", // rock beats scissors
+};
+
 export class MainGameScene extends Generic2DGameScene {
   private decorations: Decoration[] = [];
   private player: Character | null = null;
@@ -153,6 +165,13 @@ export class MainGameScene extends Generic2DGameScene {
     this.gameRound = 1;
 
     dispatchGameStartedEvent("Cowpoke");
+
+    // Start the moving slider bar for element to start
+    document.dispatchEvent(
+      new CustomEvent("startMovingSlider", {
+        detail: { sliderId: "win-element" },
+      })
+    );
   }
 
   initializeCharactersAndBackgroundDecorations(
@@ -284,18 +303,6 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
-  ready() {
-    //
-  }
-
-  draw() {
-    //
-  }
-
-  fire() {
-    // Play out the "sub-round" to see who won, who gets dmg'd etc.
-  }
-
   /*
    * Note that this function is called in the create() method for GameScene2D,
    * so no need to call it! That is handled automatically.
@@ -308,6 +315,264 @@ export class MainGameScene extends Generic2DGameScene {
 
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
+
+    document.addEventListener("selectElement", this.ready);
+    document.addEventListener("selectCombat", this.draw);
+    document.addEventListener(
+      "movingSliderResult",
+      this.handleMovingSliderResult
+    );
+  }
+
+  ready = (event: Event) => {
+    const custom = event as CustomEvent;
+    const type = custom.detail?.type;
+
+    if (type === "rock" || type === "paper" || type === "scissors") {
+      // Player picks element, then stops element slider.. this will trigger
+      // another event which starts the combat slider and picks enemy element.
+      this.player!.elementSelected = type;
+
+      document.dispatchEvent(
+        new CustomEvent("stopMovingSlider", {
+          detail: { sliderId: "win-element" },
+        })
+      );
+    } else {
+      console.warn(
+        `Unknown type "${type}" in ready event. Expected "rock", "paper", or "scissors".`
+      );
+    }
+  };
+
+  draw = (event: Event) => {
+    const custom = event as CustomEvent;
+    const type = custom.detail?.type;
+
+    if (type === "attack" || type === "defend" || type === "counter") {
+      // Player picks combat, then stops combat slider.. this will trigger
+      // another event which picks enemy combat and fires.
+      this.player!.combatSelected = type;
+
+      document.dispatchEvent(
+        new CustomEvent("stopMovingSlider", {
+          detail: { sliderId: "win-combat" },
+        })
+      );
+    } else {
+      console.warn(
+        `Unknown type "${type}" in draw event. Expected "attack", "defend", or "counter".`
+      );
+    }
+  };
+
+  fire() {
+    // Play out the "sub-round" to see who won, who gets dmg'd etc.
+    console.log("EXECUTING FIRE LOGIC");
+
+    // Start the moving slider for element again
+    document.dispatchEvent(
+      new CustomEvent("startMovingSlider", {
+        detail: { sliderId: "win-element" },
+      })
+    );
+  }
+
+  handleMovingSliderResult = (event: Event) => {
+    const custom = event as CustomEvent;
+    const sliderId = custom.detail?.sliderId;
+    const distance = custom.detail?.distance;
+    if (sliderId === "win-element") {
+      // % chance enemy picks optimal element, lower if player got close to the target
+      let winElementChance = 0.33;
+      let extraWinElementStr = "";
+      if (distance < 0.01) {
+        winElementChance += 0.5;
+        extraWinElementStr = " +50% win chance";
+      } else if (distance < 0.05) {
+        winElementChance += 0.1;
+        extraWinElementStr = " +10% win chance";
+      } else if (distance < 0.1) {
+        winElementChance += 0.05;
+        extraWinElementStr = " +5% win chance";
+      }
+
+      this.enemy!.elementSelected = this.pickEnemyChoice(
+        this.player!.elementSelected!,
+        winElementChance,
+        ["rock", "paper", "scissors"],
+        ELEMENT_BEATEN_BY_MAP
+      );
+
+      // Send the message for the player and enemy's element choice
+      this.sendElementMessage(
+        this.player,
+        this.player!.elementSelected!,
+        extraWinElementStr
+      );
+      this.sendElementMessage(this.enemy, this.enemy!.elementSelected);
+
+      // Start the combat slider after the element slider is done
+      document.dispatchEvent(
+        new CustomEvent("startMovingSlider", {
+          detail: { sliderId: "win-combat" },
+        })
+      );
+    } else if (sliderId === "win-combat") {
+      // % chance enemy picks optimal combat action, lower if player got close to the target
+      let winCombatChance = 0.33;
+      let extraWinCombatStr = "";
+      if (distance < 0.01) {
+        winCombatChance += 0.5;
+        extraWinCombatStr = " +50% win chance";
+      } else if (distance < 0.05) {
+        winCombatChance += 0.1;
+        extraWinCombatStr = " +10% win chance";
+      } else if (distance < 0.1) {
+        winCombatChance += 0.05;
+        extraWinCombatStr = " +5% win chance";
+      }
+
+      this.enemy!.combatSelected = this.pickEnemyChoice(
+        this.player!.combatSelected!,
+        winCombatChance,
+        ["attack", "defend", "counter"],
+        COMBAT_BEATEN_BY_MAP
+      );
+
+      // Send the message for the winner's combat action choice, then the loser, or if
+      // its a draw, do player first, then enemy.
+      if (
+        COMBAT_BEATEN_BY_MAP[this.player!.combatSelected!] ===
+        this.enemy!.combatSelected
+      ) {
+        // Enemy wins
+        this.sendCombatMessage(this.enemy, this.enemy!.combatSelected);
+        this.sendCombatMessage(
+          this.player,
+          this.player!.combatSelected!,
+          extraWinCombatStr
+        );
+      } else {
+        // Player wins or draw, send player msg first
+        this.sendCombatMessage(
+          this.player,
+          this.player!.combatSelected!,
+          extraWinCombatStr
+        );
+        this.sendCombatMessage(this.enemy, this.enemy!.combatSelected!);
+      }
+
+      // Attack time!
+      this.fire();
+    } else {
+      console.warn(
+        `Unknown sliderId "${sliderId}" in handleMovingSliderResult. Expected "win-element" or "win-combat".`
+      );
+    }
+  };
+
+  /**
+   * Picks an enemy choice based on the player's choice and the win chance.
+   * @param playerChoice The player's choice (e.g. rock, paper, or scissors).
+   * @param playerWinChance The chance that the enemy will pick a choice that makes player win.
+   * @param choices The available choices for the enemy.
+   * @param beatenByMap A map of choices that are beaten by each choice.
+   * @returns The enemy's choice.
+   */
+  pickEnemyChoice(
+    playerChoice: string,
+    playerWinChance: number,
+    choices: string[],
+    beatenByMap: Record<string, string>
+  ) {
+    // Find the choice that is beaten by the player's choice (i.e., player wins)
+    const beatenChoice = Object.keys(beatenByMap).find(
+      (key) => beatenByMap[key] === playerChoice
+    );
+
+    if (this.random.getRandomFloat(0, 1) < playerWinChance && beatenChoice) {
+      // Enemy picks the losing choice (player wins)
+      return beatenChoice;
+    } else {
+      // Enemy picks randomly from the other options
+      const choicesToPickFrom = choices.filter(
+        (choice) => choice !== beatenChoice
+      );
+      return choicesToPickFrom[
+        this.random.getRandomInt(0, choicesToPickFrom.length - 1)
+      ];
+    }
+  }
+
+  sendElementMessage(
+    character: Character | null,
+    type: string,
+    extraStr: string = ""
+  ) {
+    switch (type) {
+      case "rock":
+        sendFeedMessage(
+          "Feel this, partner <b>(rock" + extraStr + ")</b>",
+          character!.name,
+          character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+        );
+        break;
+      case "paper":
+        sendFeedMessage(
+          "Here's my wanted poster <b>(paper" + extraStr + ")</b>",
+          character!.name,
+          character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+        );
+        break;
+      case "scissors":
+        sendFeedMessage(
+          "Snip-snip, varmint <b>(scissors" + extraStr + ")</b>",
+          character!.name,
+          character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+        );
+        break;
+      default:
+        console.warn(
+          `Unknown type "${type}" in sendElementMessage. Expected "rock", "paper", or "scissors".`
+        );
+        break;
+    }
+  }
+
+  sendCombatMessage(
+    character: Character | null,
+    type: string,
+    extraStr: string = ""
+  ) {
+    switch (type) {
+      case "attack":
+        sendFeedMessage(
+          "Draw, partner! <b>(attack" + extraStr + ")</b>",
+          character!.name,
+          character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+        );
+        break;
+      case "defend":
+        sendFeedMessage(
+          "Take'n cover, yellabelly! <b>(defend" + extraStr + ")</b>",
+          character!.name,
+          character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+        );
+        break;
+      case "counter":
+        sendFeedMessage(
+          "Yeehaw, not so fast <b>(counter" + extraStr + ")</b>",
+          character!.name,
+          character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+        );
+        break;
+      default:
+        console.warn(
+          `Unknown type "${type}" in sendCombatMessage. Expected "attack", "defend", or "counter".`
+        );
+        break;
+    }
   }
 
   /*
@@ -322,6 +587,13 @@ export class MainGameScene extends Generic2DGameScene {
 
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
+
+    document.removeEventListener("selectElement", this.ready);
+    document.removeEventListener("selectCombat", this.draw);
+    document.removeEventListener(
+      "movingSliderResult",
+      this.handleMovingSliderResult
+    );
   }
 
   // Using Arrow Function to bind the context of "this" to the class instance.

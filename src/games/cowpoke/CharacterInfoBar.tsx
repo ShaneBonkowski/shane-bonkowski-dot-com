@@ -67,23 +67,26 @@ export default function CharacterInfoBar({
       }
     }
 
-    window.addEventListener("characterNameUpdate", handleNameUpdate);
-    window.addEventListener("characterLevelUpdate", handleLevelUpdate);
-    window.addEventListener("characterHealthUpdate", handleHealthUpdate);
-    window.addEventListener("characterMaxHealthUpdate", handleMaxHealthUpdate);
-    window.addEventListener("characterXpUpdate", handleXpUpdate);
-    window.addEventListener("characterMaxXpUpdate", handleMaxXpUpdate);
+    document.addEventListener("characterNameUpdate", handleNameUpdate);
+    document.addEventListener("characterLevelUpdate", handleLevelUpdate);
+    document.addEventListener("characterHealthUpdate", handleHealthUpdate);
+    document.addEventListener(
+      "characterMaxHealthUpdate",
+      handleMaxHealthUpdate
+    );
+    document.addEventListener("characterXpUpdate", handleXpUpdate);
+    document.addEventListener("characterMaxXpUpdate", handleMaxXpUpdate);
 
     return () => {
-      window.removeEventListener("characterNameUpdate", handleNameUpdate);
-      window.removeEventListener("characterLevelUpdate", handleLevelUpdate);
-      window.removeEventListener("characterHealthUpdate", handleHealthUpdate);
-      window.removeEventListener(
+      document.removeEventListener("characterNameUpdate", handleNameUpdate);
+      document.removeEventListener("characterLevelUpdate", handleLevelUpdate);
+      document.removeEventListener("characterHealthUpdate", handleHealthUpdate);
+      document.removeEventListener(
         "characterMaxHealthUpdate",
         handleMaxHealthUpdate
       );
-      window.removeEventListener("characterXpUpdate", handleXpUpdate);
-      window.removeEventListener("characterMaxXpUpdate", handleMaxXpUpdate);
+      document.removeEventListener("characterXpUpdate", handleXpUpdate);
+      document.removeEventListener("characterMaxXpUpdate", handleMaxXpUpdate);
     };
   });
 
