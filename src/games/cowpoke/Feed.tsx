@@ -14,6 +14,11 @@ type FeedProps = {
   maxFeedLength?: number;
 };
 
+// // EDIT: I removed this since it doesnt look super good.
+// // Top of floor is about at 225 px on the unscaled background.
+// // Try to make feed the height of the floor, so it looks like it is on the floor nicely.
+// const heightVh = (228 / REFERENCE_BKG_SIZE.y) * 100; // 100vh is the full viewport height
+
 export default function Feed({
   initialFeedList = [],
   maxFeedLength = 100,
@@ -52,15 +57,25 @@ export default function Feed({
       setIsVisible(true);
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp") {
+        handleScrollUp();
+      } else if (e.key === "ArrowDown") {
+        handleScrollDown();
+      }
+    };
+
     document.addEventListener("newMessage", handleNewMessage);
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("newMessage", handleNewMessage);
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [maxFeedLength]);
+  }, [maxFeedLength, handleScrollUp, handleScrollDown]);
 
   // Show the x most recent messages based on viewIndex
   const feedViewLength = 4;

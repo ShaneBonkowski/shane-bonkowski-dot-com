@@ -218,8 +218,11 @@ export class Character extends GameObject {
     this.equipGun(0);
 
     // Set level, this will set max health, xp, etc.
-    this.updateLevel(1, true);
+    this.updateLevel(5, true);
     this.updateName("Shaner");
+
+    // Set visible since player characters are set invisible on death
+    this.graphic!.setVisible(true);
 
     // Send a lil dialog on spawn
     sendFeedMessage(
@@ -290,6 +293,9 @@ export class Character extends GameObject {
     this.updateName(
       `${randomTitleOptions[randomTitleIndex]} ${randomNameOptions[randomNameIndex]}`
     );
+
+    // Set visible since enemy characters are set invisible on death
+    this.graphic!.setVisible(true);
 
     // Send a lil dialog on spawn
     sendFeedMessage(
@@ -484,9 +490,10 @@ export class Character extends GameObject {
   }
 
   getDamageAmount() {
-    // 1 base dmg + gun and hat bonuses
+    // base dmg + gun and hat bonuses
+    const baseDmg = 1 + this.level * 0.6;
     return (
-      1 +
+      baseDmg +
       GUN_LOOT_MAP[this.equippedGunId].addDmg +
       HAT_LOOT_MAP[this.equippedHatId].addDmg
     );
@@ -517,19 +524,25 @@ export class Character extends GameObject {
     }
     this.health = newHealth;
 
+    // Ensure health is an int
+    this.health = Math.round(this.health);
+
     document.dispatchEvent(
       new CustomEvent("characterHealthUpdate", {
-        detail: { characterType: this.type, health: newHealth },
+        detail: { characterType: this.type, health: this.health },
       })
     );
   }
 
   updateMaxHealth() {
-    this.maxHealth = 10 + this.level * 2;
+    this.maxHealth = 10 + this.level * 1.2;
 
     this.maxHealth +=
       HAT_LOOT_MAP[this.equippedHatId].addHealth +
       GUN_LOOT_MAP[this.equippedGunId].addHealth;
+
+    // Ensure max health is an int
+    this.maxHealth = Math.round(this.maxHealth);
 
     document.dispatchEvent(
       new CustomEvent("characterMaxHealthUpdate", {
@@ -594,7 +607,7 @@ export class Character extends GameObject {
   }
 
   handleKill(otherCharacter: Character) {
-    if (this.type !== CHARACTER_TYPES.PLAYER) {
+    if (this.type === CHARACTER_TYPES.PLAYER) {
       const addXp = Math.floor(otherCharacter.level * 1.2);
 
       // Player says a quip when killing enemy

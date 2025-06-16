@@ -119,7 +119,11 @@ export class Decoration extends GameObject {
     return newScale;
   }
 
-  handlePhysics(isMoving: boolean) {
+  handlePhysics(delta: number, isMoving: boolean) {
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const midSpeed = 0.2 * screenWidth; // x% of width per second
+    const frontSpeed = 0.6 * screenWidth; // x% of width per second
+
     // If player is moving, move the decor accordingly.
     if (isMoving) {
       // Need to move backgrounds at different speeds based on their depth
@@ -129,12 +133,15 @@ export class Decoration extends GameObject {
           this.physicsBody2D!.position.x -= 0;
           break;
         case DECOR_TYPES.MID:
-          this.physicsBody2D!.position.x -= 0.2;
+          this.physicsBody2D!.position.x -= (midSpeed * delta) / 1000; // Convert delta to seconds
 
           // if the mid decor goes off screen, reset it to the right side
-          if (this.physicsBody2D!.position.x < -this.graphic!.displayWidth) {
-            this.physicsBody2D!.position.x +=
-              window.visualViewport?.width || window.innerWidth;
+          if (
+            this.physicsBody2D!.position.x <
+            -this.graphic!.displayWidth / 2
+          ) {
+            this.physicsBody2D!.position.x =
+              screenWidth + this.graphic!.displayWidth / 2;
           }
 
           break;
@@ -142,24 +149,28 @@ export class Decoration extends GameObject {
           this.physicsBody2D!.position.x -= 0;
           break;
         case DECOR_TYPES.FRONT:
-          this.physicsBody2D!.position.x -= 0.4;
+          this.physicsBody2D!.position.x -= (frontSpeed * delta) / 1000; // Convert delta to seconds
 
           // if the front decor goes off screen, reset it to the right side
-          if (this.physicsBody2D!.position.x < -this.graphic!.displayWidth) {
-            this.physicsBody2D!.position.x +=
-              window.visualViewport?.width || window.innerWidth;
-          }
+          if (
+            this.physicsBody2D!.position.x <
+            -this.graphic!.displayWidth / 2
+          ) {
+            this.physicsBody2D!.position.x =
+              screenWidth + this.graphic!.displayWidth / 2;
 
-          // Also update it to a random new decor graphic sprite to keep it fresh
-          const randomSpriteName = this.getRandomSprite(
-            "bkg-front-",
-            this.scene.textures.getTextureKeys(),
-            this.scene.random
-          );
-          if (randomSpriteName != null) {
-            (this.graphic as Phaser.GameObjects.Sprite).setTexture(
-              randomSpriteName
+            // Also update it to a random new decor graphic sprite to keep it fresh
+            const randomSpriteName = this.getRandomSprite(
+              "bkg-front-",
+              this.scene.textures.getTextureKeys(),
+              this.scene.random
             );
+
+            if (randomSpriteName != null) {
+              (this.graphic as Phaser.GameObjects.Sprite).setTexture(
+                randomSpriteName
+              );
+            }
           }
 
           break;

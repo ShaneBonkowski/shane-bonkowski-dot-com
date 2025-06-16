@@ -21,7 +21,24 @@ export const gameInfoData: ContentDataProps[] = [
   },
   {
     type: "paragraph",
-    text: "FIXME: Fill in information about the game here",
+    text: "Follow'n in the footsteps of Cowpoke Jack, you're headin' out west to find your place in this here frontier.",
+  },
+  {
+    type: "h2",
+    text: "Keyboard Shortcuts",
+  },
+  {
+    type: "list",
+    items: [
+      "<b>1</b>: Select Rock",
+      "<b>2</b>: Select Paper",
+      "<b>3</b>: Select Scissors",
+      "<b>4</b>: Select Attack",
+      "<b>5</b>: Select Defend",
+      "<b>6</b>: Select Counter",
+      "<b>Up Arrow</b>: Scroll up in the feed",
+      "<b>Down Arrow</b>: Scroll down in the feed",
+    ],
   },
 ];
 

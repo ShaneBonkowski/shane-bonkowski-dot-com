@@ -79,10 +79,31 @@ export default function GameControls() {
     const handleUiMenuOpen = () => setIsVisible(false);
     const handleUiMenuClose = () => setIsVisible(true);
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!elementDisabled) {
+        if (e.key === "1") {
+          selectRock();
+        } else if (e.key === "2") {
+          selectPaper();
+        } else if (e.key === "3") {
+          selectScissors();
+        }
+      } else if (!combatDisabled) {
+        if (e.key === "4") {
+          selectAttack();
+        } else if (e.key === "5") {
+          selectDefend();
+        } else if (e.key === "6") {
+          selectCounter();
+        }
+      }
+    };
+
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
     document.addEventListener("startMovingSlider", handleStartMovingSlider);
     document.addEventListener("stopMovingSlider", handleStopMovingSlider);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
@@ -92,8 +113,9 @@ export default function GameControls() {
         handleStartMovingSlider
       );
       document.removeEventListener("stopMovingSlider", handleStopMovingSlider);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [elementDisabled, combatDisabled]);
 
   return (
     <div

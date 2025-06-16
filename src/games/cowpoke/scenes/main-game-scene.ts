@@ -41,14 +41,13 @@ export class MainGameScene extends Generic2DGameScene {
 
   public uiMenuOpen: boolean = false;
   public moving: boolean = false;
+  private movingStartTime: number = 0;
+  private movingDuration: number = 2000;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
     // this scene name supplied as the name of the scene.
     super("MainGameScene");
-
-    // Constructor logic for this scene
-    // ...
 
     // Last thing we do is set the lastKnownWindowSize to the current screen size
     const screenWidth = window.visualViewport?.width || window.innerWidth;
@@ -278,7 +277,7 @@ export class MainGameScene extends Generic2DGameScene {
         // If the player is moving, need to move decor to make it look like
         // the player is moving.
         for (const decoration of this.decorations) {
-          decoration.handlePhysics(this.moving);
+          decoration.handlePhysics(delta, this.moving);
         }
       }
 
@@ -292,6 +291,13 @@ export class MainGameScene extends Generic2DGameScene {
       }
       this.player!.updateGraphic();
       this.enemy!.updateGraphic();
+
+      // Check if moving can be ended
+      if (this.moving) {
+        if (time - this.movingStartTime >= this.movingDuration) {
+          this.stopMoving();
+        }
+      }
     }
 
     // In order to handle edge cases where the resize observer does not catch
@@ -446,30 +452,36 @@ export class MainGameScene extends Generic2DGameScene {
       }
     }
 
-    // Execute the "sub round" combat
+    // Execute the "sub round" combat.. round dmg to 2 dec
+    let playerDmgDealt =
+      this.player!.getDamageAmount() * playerExtraDamageMultiplier;
+    playerDmgDealt = Math.round(playerDmgDealt * 100) / 100;
+
+    let enemyDmgDealt =
+      this.enemy!.getDamageAmount() * enemyExtraDamageMultiplier;
+    enemyDmgDealt = Math.round(enemyDmgDealt * 100) / 100;
+
     if (playerGoesFirst) {
       this.executeCombat(
         this.player!,
-        this.player!.getDamageAmount() * playerExtraDamageMultiplier,
+        playerDmgDealt,
         this.enemy!,
-        this.enemy!.getDamageAmount() * enemyExtraDamageMultiplier
+        enemyDmgDealt
       );
     } else {
       this.executeCombat(
         this.enemy!,
-        this.enemy!.getDamageAmount() * enemyExtraDamageMultiplier,
+        enemyDmgDealt,
         this.player!,
-        this.player!.getDamageAmount() * playerExtraDamageMultiplier
+        playerDmgDealt
       );
     }
 
     if (this.player!.health <= 0) {
       // FIXME handle game over
-      console.log("Player has been defeated!");
+      this.player!.graphic!.setVisible(false);
     } else if (this.enemy!.health <= 0) {
-      // FIXME handle player win round
-      console.log("Enemy has been defeated!");
-
+      this.enemy!.graphic!.setVisible(false);
       this.gameRound += 1;
       this.walkToNextEnemy();
     } else {
@@ -573,9 +585,18 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   walkToNextEnemy() {
-    // FIXME: Implement walking to next enemy logic
-    // ...
+    this.startMoving();
+  }
 
+  startMoving() {
+    this.moving = true;
+    this.movingStartTime = performance.now();
+  }
+
+  stopMoving() {
+    this.moving = false;
+
+    // Arrive at the next enemy after done moving
     this.arriveAtNextEnemy();
   }
 
