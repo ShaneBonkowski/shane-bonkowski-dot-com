@@ -62,13 +62,14 @@ export default function Feed({
     };
   }, [maxFeedLength]);
 
-  // Show the 3 most recent messages based on viewIndex
-  const start = Math.max(0, feedList.length - 3 - viewIndex);
+  // Show the x most recent messages based on viewIndex
+  const feedViewLength = 4;
+  const start = Math.max(0, feedList.length - feedViewLength - viewIndex);
   const end = Math.max(0, feedList.length - viewIndex);
   const visibleFeedRaw = feedList.slice(start, end);
 
-  // Pad with empty messages if less than 3
-  const missing = 3 - visibleFeedRaw.length;
+  // Pad with empty messages if less than feedViewLength
+  const missing = feedViewLength - visibleFeedRaw.length;
   const visibleFeed =
     missing > 0
       ? visibleFeedRaw.concat(
@@ -77,11 +78,12 @@ export default function Feed({
       : visibleFeedRaw;
 
   // Allow/disallow scrolling if on top or bottom of feed
-  const canScrollUp = viewIndex < feedList.length - 3;
+  const canScrollUp = viewIndex < feedList.length - feedViewLength;
   const canScrollDown = viewIndex > 0;
 
   function handleScrollUp() {
-    if (canScrollUp) setViewIndex((i) => Math.min(i + 1, feedList.length - 3));
+    if (canScrollUp)
+      setViewIndex((i) => Math.min(i + 1, feedList.length - feedViewLength));
   }
   function handleScrollDown() {
     if (canScrollDown) setViewIndex((i) => Math.max(i - 1, 0));

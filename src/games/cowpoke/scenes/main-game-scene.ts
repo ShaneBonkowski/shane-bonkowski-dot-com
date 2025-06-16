@@ -366,9 +366,222 @@ export class MainGameScene extends Generic2DGameScene {
     }
   };
 
-  fire() {
+  fire(playerGoesFirst: boolean) {
     // Play out the "sub-round" to see who won, who gets dmg'd etc.
-    console.log("EXECUTING FIRE LOGIC");
+    let playerExtraDamageMultiplier = 1;
+    let enemyExtraDamageMultiplier = 1;
+
+    // Handle element matchups
+    if (
+      ELEMENT_BEATEN_BY_MAP[this.player!.elementSelected!] ===
+      this.enemy!.elementSelected
+    ) {
+      // Enemy wins element
+      playerExtraDamageMultiplier = 0.5;
+      enemyExtraDamageMultiplier = 1.5;
+    } else if (
+      // Player wins element
+      ELEMENT_BEATEN_BY_MAP[this.enemy!.elementSelected!] ===
+      this.player!.elementSelected
+    ) {
+      playerExtraDamageMultiplier = 1.5;
+      enemyExtraDamageMultiplier = 0.5;
+    } else {
+      // Draw, both do normal damage
+      playerExtraDamageMultiplier = 1;
+      enemyExtraDamageMultiplier = 1;
+    }
+
+    // Handle combat matchups
+    if (this.player!.combatSelected === "attack") {
+      if (this.enemy!.combatSelected === "attack") {
+        // Both attack, no extra damage
+        playerExtraDamageMultiplier *= 1;
+        enemyExtraDamageMultiplier *= 1;
+      } else if (this.enemy!.combatSelected === "defend") {
+        // Attack a defender, do 0.5x each
+        playerExtraDamageMultiplier *= 0.5;
+        enemyExtraDamageMultiplier *= 0.5;
+      } else if (this.enemy!.combatSelected === "counter") {
+        // Attack a counter, 50/50 chance to do no damage.
+        // Enemy doing counter does 1.5x.
+        if (this.random.getRandomFloat(0, 1) < 0.5) {
+          playerExtraDamageMultiplier = 0;
+        } else {
+          playerExtraDamageMultiplier *= 1;
+        }
+        enemyExtraDamageMultiplier *= 1.5;
+      }
+    } else if (this.player!.combatSelected === "defend") {
+      if (this.enemy!.combatSelected === "attack") {
+        // Defend against an attacker, do 0.5x each
+        playerExtraDamageMultiplier *= 0.5;
+        enemyExtraDamageMultiplier *= 0.5;
+      } else if (this.enemy!.combatSelected === "defend") {
+        // Both defend, no damage dealt
+        playerExtraDamageMultiplier *= 0;
+        enemyExtraDamageMultiplier *= 0;
+      } else if (this.enemy!.combatSelected === "counter") {
+        // Defend against a counter, do 1x dmg and enemy does 0x.
+        playerExtraDamageMultiplier *= 1;
+        enemyExtraDamageMultiplier *= 0;
+      }
+    } else if (this.player!.combatSelected === "counter") {
+      if (this.enemy!.combatSelected === "attack") {
+        // Counter an attacker, do 1.5x dmg and 50/50 chance enemy does 0x.
+        playerExtraDamageMultiplier *= 1.5;
+        if (this.random.getRandomFloat(0, 1) < 0.5) {
+          enemyExtraDamageMultiplier = 0;
+        } else {
+          enemyExtraDamageMultiplier *= 1;
+        }
+      } else if (this.enemy!.combatSelected === "defend") {
+        // Counter a defender, do 0x dmg and enemy does 1x shield bash.
+        playerExtraDamageMultiplier *= 0;
+        enemyExtraDamageMultiplier *= 1;
+      } else if (this.enemy!.combatSelected === "counter") {
+        // Both counter, no extra damage
+        playerExtraDamageMultiplier *= 1;
+        enemyExtraDamageMultiplier *= 1;
+      }
+    }
+
+    // Execute the "sub round" combat
+    if (playerGoesFirst) {
+      this.executeCombat(
+        this.player!,
+        this.player!.getDamageAmount() * playerExtraDamageMultiplier,
+        this.enemy!,
+        this.enemy!.getDamageAmount() * enemyExtraDamageMultiplier
+      );
+    } else {
+      this.executeCombat(
+        this.enemy!,
+        this.enemy!.getDamageAmount() * enemyExtraDamageMultiplier,
+        this.player!,
+        this.player!.getDamageAmount() * playerExtraDamageMultiplier
+      );
+    }
+
+    if (this.player!.health <= 0) {
+      // FIXME handle game over
+      console.log("Player has been defeated!");
+    } else if (this.enemy!.health <= 0) {
+      // FIXME handle player win round
+      console.log("Enemy has been defeated!");
+
+      this.gameRound += 1;
+      this.walkToNextEnemy();
+    } else {
+      // Neither have died, move to next "sub round" and start the moving slider
+      // for element again
+      document.dispatchEvent(
+        new CustomEvent("startMovingSlider", {
+          detail: { sliderId: "win-element" },
+        })
+      );
+    }
+  }
+
+  executeCombat(
+    firstAttacker: Character,
+    firstAttackerDmg: number,
+    lastAttacker: Character,
+    lastAttackerDmg: number
+  ) {
+    // First attacks the last character
+    lastAttacker.handleDamage(firstAttackerDmg);
+    this.sendAttackMessage(
+      firstAttacker!,
+      firstAttacker.combatSelected!,
+      firstAttackerDmg
+    );
+
+    if (lastAttacker.health <= 0) {
+      firstAttacker.handleKill(lastAttacker);
+    } else {
+      // last character attacks back on first
+      firstAttacker.handleDamage(lastAttackerDmg);
+      this.sendAttackMessage(
+        lastAttacker!,
+        lastAttacker.combatSelected!,
+        lastAttackerDmg
+      );
+
+      if (firstAttacker.health <= 0) {
+        lastAttacker.handleKill(firstAttacker);
+      }
+    }
+  }
+
+  sendAttackMessage(
+    character: Character | null,
+    type: string,
+    dmgValue: number
+  ) {
+    switch (type) {
+      case "attack":
+        if (dmgValue > 0) {
+          sendFeedMessage(
+            "Take that! <b>(+" + dmgValue + " dmg)</b>",
+            character!.name,
+            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        } else {
+          sendFeedMessage(
+            "I musta missed... <b>(0 dmg)</b>",
+            character!.name,
+            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        }
+        break;
+      case "defend":
+        if (dmgValue > 0) {
+          sendFeedMessage(
+            "Feel the wrath of my shield, friend! <b>(+" +
+              dmgValue +
+              " dmg)</b>",
+            character!.name,
+            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        } else {
+          sendFeedMessage(
+            "I ain't afraid of you! <b>(0 dmg)</b>",
+            character!.name,
+            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        }
+        break;
+      case "counter":
+        if (dmgValue > 0) {
+          sendFeedMessage(
+            "You can't hit me! <b>(+" + dmgValue + " dmg)</b>",
+            character!.name,
+            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        } else {
+          sendFeedMessage(
+            "I musta missed... <b>(0 dmg)</b>",
+            character!.name,
+            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        }
+        break;
+      default:
+        console.warn(`Unknown attack type "${type}" in sendAttackMessage.`);
+    }
+  }
+
+  walkToNextEnemy() {
+    // FIXME: Implement walking to next enemy logic
+    // ...
+
+    this.arriveAtNextEnemy();
+  }
+
+  arriveAtNextEnemy() {
+    // Spawn new enemy
+    this.enemy!.spawnNewRandomCharacter();
 
     // Start the moving slider for element again
     document.dispatchEvent(
@@ -396,6 +609,11 @@ export class MainGameScene extends Generic2DGameScene {
         winElementChance += 0.05;
         extraWinElementStr = " +5% win chance";
       }
+
+      // Add any element inc/dec from player and enemy loot, if applicable
+      winElementChance += this.player!.getElementIncreaseFromLoot();
+      winElementChance -= this.enemy!.getElementIncreaseFromLoot();
+      winElementChance = Math.max(0, Math.min(1, winElementChance));
 
       this.enemy!.elementSelected = this.pickEnemyChoice(
         this.player!.elementSelected!,
@@ -433,6 +651,11 @@ export class MainGameScene extends Generic2DGameScene {
         extraWinCombatStr = " +5% win chance";
       }
 
+      // Add any combat inc/dec from player and enemy loot, if applicable
+      winCombatChance += this.player!.getCombatIncreaseFromLoot();
+      winCombatChance -= this.enemy!.getCombatIncreaseFromLoot();
+      winCombatChance = Math.max(0, Math.min(1, winCombatChance));
+
       this.enemy!.combatSelected = this.pickEnemyChoice(
         this.player!.combatSelected!,
         winCombatChance,
@@ -442,6 +665,7 @@ export class MainGameScene extends Generic2DGameScene {
 
       // Send the message for the winner's combat action choice, then the loser, or if
       // its a draw, do player first, then enemy.
+      let playerGoesFirst: boolean = true;
       if (
         COMBAT_BEATEN_BY_MAP[this.player!.combatSelected!] ===
         this.enemy!.combatSelected
@@ -453,6 +677,7 @@ export class MainGameScene extends Generic2DGameScene {
           this.player!.combatSelected!,
           extraWinCombatStr
         );
+        playerGoesFirst = false;
       } else {
         // Player wins or draw, send player msg first
         this.sendCombatMessage(
@@ -461,10 +686,11 @@ export class MainGameScene extends Generic2DGameScene {
           extraWinCombatStr
         );
         this.sendCombatMessage(this.enemy, this.enemy!.combatSelected!);
+        playerGoesFirst = true;
       }
 
       // Attack time!
-      this.fire();
+      this.fire(playerGoesFirst);
     } else {
       console.warn(
         `Unknown sliderId "${sliderId}" in handleMovingSliderResult. Expected "win-element" or "win-combat".`

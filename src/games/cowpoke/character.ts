@@ -218,7 +218,7 @@ export class Character extends GameObject {
     this.equipGun(0);
 
     // Set level, this will set max health, xp, etc.
-    this.updateLevel(1);
+    this.updateLevel(1, true);
     this.updateName("Shaner");
 
     // Send a lil dialog on spawn
@@ -256,15 +256,16 @@ export class Character extends GameObject {
     // Set a random level for enemy characters, this will
     // set max health, xp, etc.
     if (this.scene.gameRound < 5) {
-      this.updateLevel(this.scene.random.getRandomInt(1, 4));
+      this.updateLevel(this.scene.random.getRandomInt(1, 4), true);
     } else if (this.scene.gameRound < 10) {
-      this.updateLevel(this.scene.random.getRandomInt(3, 8));
+      this.updateLevel(this.scene.random.getRandomInt(3, 8), true);
     } else {
       this.updateLevel(
         this.scene.random.getRandomInt(
           this.scene.gameRound - 5,
           this.scene.gameRound
-        )
+        ),
+        true
       );
     }
 
@@ -464,6 +465,33 @@ export class Character extends GameObject {
     }
   }
 
+  getCombatIncreaseFromLoot() {
+    // +10% win chance per addCombat bonus from gun and hat
+    return (
+      0.1 *
+      (GUN_LOOT_MAP[this.equippedGunId].addCombat +
+        HAT_LOOT_MAP[this.equippedHatId].addCombat)
+    );
+  }
+
+  getElementIncreaseFromLoot() {
+    // +10% win chance per addElement bonus from gun and hat
+    return (
+      0.1 *
+      (GUN_LOOT_MAP[this.equippedGunId].addElement +
+        HAT_LOOT_MAP[this.equippedHatId].addElement)
+    );
+  }
+
+  getDamageAmount() {
+    // 1 base dmg + gun and hat bonuses
+    return (
+      1 +
+      GUN_LOOT_MAP[this.equippedGunId].addDmg +
+      HAT_LOOT_MAP[this.equippedHatId].addDmg
+    );
+  }
+
   handleDamage(damage: number) {
     this.updateHealth(this.health - damage);
   }
@@ -510,7 +538,7 @@ export class Character extends GameObject {
     );
   }
 
-  updateLevel(newLevel: number) {
+  updateLevel(newLevel: number, skipMsg: boolean = false) {
     if (newLevel < 0) {
       newLevel = 0;
     }
@@ -528,6 +556,15 @@ export class Character extends GameObject {
     // Reset xp on level up, and add to max xp
     this.updateMaxXp();
     this.updateXp(0);
+
+    // Send a level up message
+    if (!skipMsg) {
+      sendFeedMessage(
+        "Good goin', son. You've reached level " + this.level,
+        "Cowpoke Jack's Ghost",
+        "center"
+      );
+    }
   }
 
   updateXp(newXp: number) {
@@ -556,36 +593,31 @@ export class Character extends GameObject {
     );
   }
 
-  handleDeath() {
-    // If enemy dies, add xp etc. to player
-    if (this.type === CHARACTER_TYPES.ENEMY) {
-      this.scene.playerCharacter.handleKill(this);
+  handleKill(otherCharacter: Character) {
+    if (this.type !== CHARACTER_TYPES.PLAYER) {
+      const addXp = Math.floor(otherCharacter.level * 1.2);
 
       // Player says a quip when killing enemy
       sendFeedMessage(
-        this.getRandomMsgFromList(CHARACTER_KILL_QUIPS),
-        this.scene.playerCharacter.name,
+        this.getRandomMsgFromList(CHARACTER_KILL_QUIPS) +
+          ` <b>(+${addXp} XP)</b>`,
+        this.name,
         this.getFeedMessageAlignment()
       );
-    } else if (this.type === CHARACTER_TYPES.PLAYER) {
+
+      // Gain xp
+      this.updateXp(this.xp + addXp);
+
+      // Random chance to get enemy's loot
+      // FIXME: add this...
+    } else {
       // Enemy says a quip when killing player
       sendFeedMessage(
         this.getRandomMsgFromList(CHARACTER_KILL_QUIPS),
-        this.scene.enemyCharacter.name,
+        this.name,
         this.getFeedMessageAlignment()
       );
-
-      // If player dies, do things like reset game...
-      // FIXME: add this...
     }
-  }
-
-  handleKill(otherCharacter: Character) {
-    // Gain xp
-    this.updateXp(this.xp + Math.floor(otherCharacter.level * 1.2));
-
-    // Random chance to get enemy's loot
-    // FIXME: add this...
   }
 
   destroy() {
