@@ -13,6 +13,7 @@ import SettingsContainer from "@/src/games/cowpoke/SettingsContainer";
 import Feed from "@/src/games/cowpoke/Feed";
 import UpperHud from "@/src/games/cowpoke/UpperHud";
 import GameControls from "@/src/games/cowpoke/GameControls";
+import StartEndMenu from "@/src/games/cowpoke/StartEndMenu";
 
 export const gameInfoData: ContentDataProps[] = [
   {
@@ -112,6 +113,7 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
+      <StartEndMenu></StartEndMenu>
       <SettingsContainer></SettingsContainer>
       <GameInfoContainer
         infoData={gameInfoData}

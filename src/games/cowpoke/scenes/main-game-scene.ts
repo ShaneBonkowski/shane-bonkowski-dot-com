@@ -1,6 +1,9 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Vec2 } from "@/src/utils/vector";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchGameLoadedEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Decoration, DECOR_TYPES } from "@/src/games/cowpoke/decoration";
 import { Physics } from "@/src/utils/physics";
@@ -144,6 +147,15 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
+    // Make sure the canvas is resized to fit the parent element
+    this.handleWindowResize();
+
+    // Open the start menu automatically when the game starts
+    dispatchGameLoadedEvent("Cowpoke"); // this hides loading screen
+    this.openStartMenu();
+  }
+
+  startGame = () => {
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
 
@@ -153,23 +165,61 @@ export class MainGameScene extends Generic2DGameScene {
       "center"
     );
 
-    // Create the background decorations
     this.initializeCharactersAndBackgroundDecorations(
       screenWidth,
       screenHeight
     );
-    this.handleWindowResize();
 
     this.gameStarted = true;
     this.gameRound = 1;
-
-    dispatchGameStartedEvent("Cowpoke");
 
     // Start the moving slider bar for element to start
     document.dispatchEvent(
       new CustomEvent("startMovingSlider", {
         detail: { sliderId: "win-element" },
       })
+    );
+
+    dispatchGameStartedEvent("Cowpoke");
+  };
+
+  /**
+   * This function is called when the game ends, either because the player
+   * has lost, or the player has chosen to end the game.
+   */
+  endGame() {
+    // Add to total kills in local storage
+    const totalKills = localStorage.getItem("cowpokeTotalKills");
+    const newTotalKills = totalKills
+      ? parseInt(totalKills, 10) + this.character!.kills
+      : this.character!.kills;
+    localStorage.setItem("cowpokeTotalKills", newTotalKills.toString());
+
+    // Add to furthest round achieved if this is higher
+    const furthestRound = localStorage.getItem("cowpokeFurthestRound");
+    const newFurthestRound = furthestRound
+      ? Math.max(parseInt(furthestRound, 10), this.gameRound)
+      : this.gameRound;
+    localStorage.setItem("cowpokeFurthestRound", newFurthestRound.toString());
+
+    this.gameStarted = false;
+    this.destroyGameObjects();
+
+    // Open the end menu so a player can restart etc.
+    this.openEndMenu();
+  }
+
+  openStartMenu() {
+    // Dispatch an event to open the start menu
+    document.dispatchEvent(
+      new CustomEvent("openStartEndMenu", { detail: { type: "start" } })
+    );
+  }
+
+  openEndMenu() {
+    // Dispatch an event to open the end menu
+    document.dispatchEvent(
+      new CustomEvent("openStartEndMenu", { detail: { type: "end" } })
     );
   }
 
@@ -318,6 +368,8 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Subscribe to events for this scene
     this.setUpWindowResizeHandling();
+
+    document.addEventListener("startLoadingGame", this.startGame);
 
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
@@ -478,8 +530,9 @@ export class MainGameScene extends Generic2DGameScene {
     }
 
     if (this.player!.health <= 0) {
-      // FIXME handle game over
+      // Game Over if player dies
       this.player!.graphic!.setVisible(false);
+      this.endGame();
     } else if (this.enemy!.health <= 0) {
       this.enemy!.graphic!.setVisible(false);
       this.gameRound += 1;
@@ -832,6 +885,8 @@ export class MainGameScene extends Generic2DGameScene {
     // Unsubscribe from events for this scene
     this.tearDownWindowResizeHandling();
 
+    document.removeEventListener("startLoadingGame", this.startGame);
+
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
 
@@ -963,6 +1018,20 @@ export class MainGameScene extends Generic2DGameScene {
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   };
 
+  destroyGameObjects() {
+    for (const decoration of this.decorations) {
+      decoration.destroy();
+    }
+    this.decoration.length = 0; // Clear the array
+    this.decorations = [];
+
+    this.player!.destroy();
+    this.player = null;
+
+    this.enemy!.destroy();
+    this.enemy = null;
+  }
+
   /*
    * Note that this function is called by GameScene2D during shutdown,
    * so no need to call it! That is handled automatically.
@@ -971,13 +1040,6 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
-    for (const decoration of this.decorations) {
-      decoration.destroy();
-    }
-    this.decoration.length = 0; // Clear the array
-
-    this.player!.destroy();
-
-    this.enemy!.destroy();
+    this.destroyGameObjects();
   }
 }

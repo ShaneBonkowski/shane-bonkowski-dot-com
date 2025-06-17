@@ -1,6 +1,9 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Vec2 } from "@/src/utils/vector";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchGameLoadedEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import { Tile } from "@/src/games/flip-tile/tile";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import {
@@ -65,6 +68,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.newTilePattern();
 
     this.gameStarted = true;
+    dispatchGameLoadedEvent("flip tile");
     dispatchGameStartedEvent("flip tile");
   }
 

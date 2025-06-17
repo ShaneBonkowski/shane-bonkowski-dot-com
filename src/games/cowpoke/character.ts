@@ -59,6 +59,7 @@ export class Character extends GameObject {
   public maxXp: number = 0;
   public elementSelected: string | null = null; // rock, paper, or scissors
   public combatSelected: string | null = null; // attack, defend, or counter
+  public kills: number = 0;
 
   private bounceTime: number = 0;
   private animScaleFactorY: number = 1;
@@ -607,6 +608,8 @@ export class Character extends GameObject {
   }
 
   handleKill(otherCharacter: Character) {
+    this.kills += 1;
+
     if (this.type === CHARACTER_TYPES.PLAYER) {
       const addXp = Math.floor(otherCharacter.level * 1.2);
 

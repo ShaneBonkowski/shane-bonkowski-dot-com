@@ -25,9 +25,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       });
     }, 250);
 
-    const handleGameStarted = () => {
-      console.log("gameStarted event received");
-
+    const handleGameLoaded = () => {
       // Clear any existing timeout
       if (fadeOutTimeoutRef.current) {
         clearTimeout(fadeOutTimeoutRef.current);
@@ -40,11 +38,11 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       }, fadeDuration);
     };
 
-    document.addEventListener("gameStarted", handleGameStarted);
+    document.addEventListener("gameLoaded", handleGameLoaded);
 
     return () => {
       clearInterval(interval);
-      document.removeEventListener("gameStarted", handleGameStarted);
+      document.removeEventListener("gameLoaded", handleGameLoaded);
 
       // Cleanup fade-out timeout
       if (fadeOutTimeoutRef.current) {

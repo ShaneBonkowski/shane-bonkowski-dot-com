@@ -1,5 +1,8 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchGameLoadedEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import {
   instantiateTiles,
   tileGridAttrs,
@@ -105,15 +108,8 @@ export class MainGameScene extends Generic2DGameScene {
     this.gameStarted = true;
     this.paused = true; // start off paused
 
+    dispatchGameLoadedEvent("Game of Life");
     dispatchGameStartedEvent("Game of Life");
-
-    // DEBUG
-    console.log("Game of Life scene created with tiles: ");
-    for (let row = 0; row < tiles.length; row++) {
-      for (let col = 0; col < tiles[row].length; col++) {
-        console.log(tiles[row][col]);
-      }
-    }
   }
 
   update(time: number, delta: number) {

@@ -4,7 +4,10 @@ import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 import { instantiateBoids } from "@/src/games/better-boids/boid-utils";
 import { GameObject } from "@/src/utils/game-object";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchGameLoadedEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 // Used to determine if pointer is held down
@@ -67,6 +70,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.boids = instantiateBoids(this, 40);
 
     this.gameStarted = true;
+    dispatchGameLoadedEvent("Better Boids");
     dispatchGameStartedEvent("Better Boids");
   }
 

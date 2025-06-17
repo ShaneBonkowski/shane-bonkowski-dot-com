@@ -2,7 +2,10 @@ import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Ball } from "@/src/games/game-template/ball";
 import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchGameLoadedEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 export class MainGameScene extends Generic2DGameScene {
@@ -47,6 +50,7 @@ export class MainGameScene extends Generic2DGameScene {
     }
 
     this.gameStarted = true;
+    dispatchGameLoadedEvent("<TYPE GAME NAME HERE>"); // FIXME: GAME NAME HERE
     dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: GAME NAME HERE
   }
 

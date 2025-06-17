@@ -36,7 +36,7 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({
   };
 
   useEffect(() => {
-    document.addEventListener("gameStarted", handleGameStarted);
+    document.addEventListener("gameLoaded", handleGameStarted);
 
     return () => {
       if (delayTimeoutRef.current) {
@@ -51,7 +51,7 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({
         clearTimeout(fadeTimeoutRef.current);
         fadeTimeoutRef.current = null;
       }
-      document.removeEventListener("gameStarted", handleGameStarted);
+      document.removeEventListener("gameLoaded", handleGameStarted);
     };
   }, []);
 

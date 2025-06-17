@@ -47,3 +47,23 @@ export const dispatchGameStartedEvent = (gameName: string) => {
     })
   );
 };
+
+/**
+ * Dispatches a custom event for when a game is loaded.
+ *
+ * @param gameName - The name of the game (e.g. "Better Boids").
+ *
+ * @example
+ * dispatchGameLoadedEvent("Better Boids");
+ * // This will create and dispatch a "gameLoaded" event with the message:
+ * // "Better Boids Game Loaded"
+ */
+export const dispatchGameLoadedEvent = (gameName: string) => {
+  document.dispatchEvent(
+    new CustomEvent("gameLoaded", {
+      detail: {
+        message: `${gameName} Game Loaded`,
+      },
+    })
+  );
+};

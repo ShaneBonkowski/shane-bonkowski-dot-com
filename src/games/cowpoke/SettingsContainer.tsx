@@ -18,7 +18,7 @@ const SettingsContainer: React.FC = () => {
       setIsVisible(true);
     }, 150);
 
-    dispatchMenuEvent("Info", "open");
+    dispatchMenuEvent("Settings", "open");
   };
 
   const closeWindow = () => {
@@ -29,7 +29,7 @@ const SettingsContainer: React.FC = () => {
       setIsVisible(false);
     }, 150);
 
-    dispatchMenuEvent("Info", "close");
+    dispatchMenuEvent("Settings", "close");
   };
 
   useEffect(() => {
