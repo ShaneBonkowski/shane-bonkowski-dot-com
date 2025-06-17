@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { FaPlay } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
@@ -71,49 +72,65 @@ const StartEndMenu: React.FC = () => {
       : 0;
 
   return (
-    <GameUiWindow
-      isVisible={isVisible}
-      onClose={null}
-      overrideBgColor="bg-white dark:bg-white"
-      overrideTextColor="text-black dark:text-black"
-    >
-      <div className="w-full h-full p-4" id="cowpoke-start-container">
-        {/* Top Section: Info */}
-        <div className="p-2" id="cowpoke-start-description">
-          <div className="flex flex-col items-center">
-            <h1 className="text-center my-0 text-black dark:text-black">
-              {menuType === "end" ? "Game Over" : "Cowpoke"}
-            </h1>
-            <p className="text-center mb-0 text-black dark:text-black">
-              FIXME... add start menu instructions
-            </p>
-            {(furthestRound || totalKills) && (
-              <div className="mt-4 text-center">
-                {totalKills && (
-                  <div className="text-black dark:text-black">
-                    <b>Total Kills:</b> {totalKills}
-                  </div>
-                )}
-                {furthestRound && (
-                  <div className="text-black dark:text-black">
-                    <b>Furthest Round Achieved:</b> {furthestRound}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-        {/* Bottom Section: Start/End Game Button */}
-        <GameIconButton
-          onPointerDown={handleStartLoadingGame}
-          icon={<FaPlay size={30} />}
-          ariaLabel="Cowpoke Start/End Menu"
-          className={"fixed bottom-5 right-5"}
-          darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-          whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
+    <>
+      {/* --- Background Image --- */}
+      <div className="z-0 absolute inset-0 w-full h-full pointer-events-none">
+        <Image
+          src="/webps/games/cowpoke-bkg-for-menu.webp"
+          alt=""
+          fill
+          className="object-cover absolute inset-0"
+          draggable={false}
+          aria-hidden="true"
+          priority
         />
       </div>
-    </GameUiWindow>
+
+      {/* --- Start/End Menu Window Content --- */}
+      <GameUiWindow
+        isVisible={isVisible}
+        onClose={null}
+        overrideBgColor="bg-transparent dark:bg-transparent"
+        overrideTextColor="text-black dark:text-black"
+      >
+        <div className="w-full h-full p-4" id="cowpoke-start-container">
+          {/* Top Section: Info */}
+          <div className="p-2" id="cowpoke-start-description">
+            <div className="flex flex-col items-center">
+              <h1 className="text-center my-0 text-black dark:text-black">
+                {menuType === "end" ? "Game Over" : "Cowpoke"}
+              </h1>
+              <p className="text-center mb-0 text-black dark:text-black">
+                FIXME... add start menu instructions
+              </p>
+              {(furthestRound || totalKills) && (
+                <div className="mt-4 text-center">
+                  {totalKills && (
+                    <div className="text-black dark:text-black">
+                      <b>Total Kills:</b> {totalKills}
+                    </div>
+                  )}
+                  {furthestRound && (
+                    <div className="text-black dark:text-black">
+                      <b>Furthest Round Achieved:</b> {furthestRound}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Bottom Section: Start/End Game Button */}
+          <GameIconButton
+            onPointerDown={handleStartLoadingGame}
+            icon={<FaPlay size={30} />}
+            ariaLabel="Cowpoke Start/End Menu"
+            className={"fixed bottom-5 right-5"}
+            darkModeLight={true} // Want the black buttons this game! Since bkg is light.
+            whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
+          />
+        </div>
+      </GameUiWindow>
+    </>
   );
 };
 

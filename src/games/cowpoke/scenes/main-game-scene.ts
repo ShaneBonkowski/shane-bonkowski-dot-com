@@ -191,8 +191,8 @@ export class MainGameScene extends Generic2DGameScene {
     // Add to total kills in local storage
     const totalKills = localStorage.getItem("cowpokeTotalKills");
     const newTotalKills = totalKills
-      ? parseInt(totalKills, 10) + this.character!.kills
-      : this.character!.kills;
+      ? parseInt(totalKills, 10) + this.player!.kills
+      : this.player!.kills;
     localStorage.setItem("cowpokeTotalKills", newTotalKills.toString());
 
     // Add to furthest round achieved if this is higher
@@ -1022,7 +1022,6 @@ export class MainGameScene extends Generic2DGameScene {
     for (const decoration of this.decorations) {
       decoration.destroy();
     }
-    this.decoration.length = 0; // Clear the array
     this.decorations = [];
 
     this.player!.destroy();
