@@ -1,7 +1,7 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Vec2 } from "@/src/utils/vector";
 import {
-  dispatchGameLoadedEvent,
+  dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
 import { Tile } from "@/src/games/flip-tile/tile";
@@ -68,7 +68,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.newTilePattern();
 
     this.gameStarted = true;
-    dispatchGameLoadedEvent("flip tile");
+    dispatchCloseLoadingScreenEvent("flip tile");
     dispatchGameStartedEvent("flip tile");
   }
 

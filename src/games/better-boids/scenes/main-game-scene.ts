@@ -5,7 +5,7 @@ import { Vec2 } from "@/src/utils/vector";
 import { instantiateBoids } from "@/src/games/better-boids/boid-utils";
 import { GameObject } from "@/src/utils/game-object";
 import {
-  dispatchGameLoadedEvent,
+  dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
@@ -70,7 +70,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.boids = instantiateBoids(this, 40);
 
     this.gameStarted = true;
-    dispatchGameLoadedEvent("Better Boids");
+    dispatchCloseLoadingScreenEvent("Better Boids");
     dispatchGameStartedEvent("Better Boids");
   }
 

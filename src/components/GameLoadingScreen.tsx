@@ -25,7 +25,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       });
     }, 250);
 
-    const handleGameLoaded = () => {
+    const handleCloseLoadingScreen = () => {
       // Clear any existing timeout
       if (fadeOutTimeoutRef.current) {
         clearTimeout(fadeOutTimeoutRef.current);
@@ -38,11 +38,14 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       }, fadeDuration);
     };
 
-    document.addEventListener("gameLoaded", handleGameLoaded);
+    document.addEventListener("closeLoadingScreen", handleCloseLoadingScreen);
 
     return () => {
       clearInterval(interval);
-      document.removeEventListener("gameLoaded", handleGameLoaded);
+      document.removeEventListener(
+        "closeLoadingScreen",
+        handleCloseLoadingScreen
+      );
 
       // Cleanup fade-out timeout
       if (fadeOutTimeoutRef.current) {

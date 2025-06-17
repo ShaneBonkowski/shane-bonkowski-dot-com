@@ -49,7 +49,7 @@ const StartEndMenu: React.FC = () => {
 
   useEffect(() => {
     document.addEventListener("openStartEndMenu", openWindow);
-    document.addEventListener("gameStarted", closeWindow); // Close the menu when the game starts
+    document.addEventListener("gameStarted", closeWindow); // Close the menu when the game actually starts.. aka is fully loaded
 
     return () => {
       document.removeEventListener("openStartEndMenu", openWindow);
@@ -119,11 +119,11 @@ const StartEndMenu: React.FC = () => {
               )}
             </div>
           </div>
-          {/* Bottom Section: Start/End Game Button */}
+          {/* Bottom Section: Start Loading Game Button */}
           <GameIconButton
             onPointerDown={handleStartLoadingGame}
             icon={<FaPlay size={30} />}
-            ariaLabel="Cowpoke Start/End Menu"
+            ariaLabel="Cowpoke Start Loading Game"
             className={"fixed bottom-5 right-5"}
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
             whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered

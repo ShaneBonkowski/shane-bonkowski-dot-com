@@ -1,6 +1,6 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import {
-  dispatchGameLoadedEvent,
+  dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
 import {
@@ -108,7 +108,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.gameStarted = true;
     this.paused = true; // start off paused
 
-    dispatchGameLoadedEvent("Game of Life");
+    dispatchCloseLoadingScreenEvent("Game of Life");
     dispatchGameStartedEvent("Game of Life");
   }
 

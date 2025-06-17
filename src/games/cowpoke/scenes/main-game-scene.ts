@@ -1,7 +1,7 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Vec2 } from "@/src/utils/vector";
 import {
-  dispatchGameLoadedEvent,
+  dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
@@ -150,8 +150,9 @@ export class MainGameScene extends Generic2DGameScene {
     // Make sure the canvas is resized to fit the parent element
     this.handleWindowResize();
 
-    // Open the start menu automatically when the game starts
-    dispatchGameLoadedEvent("Cowpoke"); // this hides loading screen
+    // Hide loading screen so we can reveal the start menu...
+    // game start is not called til after start menu is closed
+    dispatchCloseLoadingScreenEvent("Cowpoke");
     this.openStartMenu();
   }
 
