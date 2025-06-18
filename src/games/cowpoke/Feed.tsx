@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
@@ -26,6 +26,34 @@ export default function Feed({
   const [isVisible, setIsVisible] = useState(true);
   const [feedList, setFeedList] = useState<FeedMsg[]>(initialFeedList);
   const [viewIndex, setViewIndex] = useState(0); // 0 = bottom (most recent)
+
+  // Show the x most recent messages based on viewIndex
+  const feedViewLength = 4;
+  const start = Math.max(0, feedList.length - feedViewLength - viewIndex);
+  const end = Math.max(0, feedList.length - viewIndex);
+  const visibleFeedRaw = feedList.slice(start, end);
+
+  // Pad with empty messages if less than feedViewLength
+  const missing = feedViewLength - visibleFeedRaw.length;
+  const visibleFeed =
+    missing > 0
+      ? visibleFeedRaw.concat(
+          Array(missing).fill({ msg: "", sender: "", align: "left" })
+        )
+      : visibleFeedRaw;
+
+  // Allow/disallow scrolling if on top or bottom of feed
+  const canScrollUp = viewIndex < feedList.length - feedViewLength;
+  const canScrollDown = viewIndex > 0;
+
+  const handleScrollUp = useCallback(() => {
+    if (canScrollUp)
+      setViewIndex((i) => Math.min(i + 1, feedList.length - feedViewLength));
+  }, [canScrollUp, feedList.length, feedViewLength]);
+
+  const handleScrollDown = useCallback(() => {
+    if (canScrollDown) setViewIndex((i) => Math.max(i - 1, 0));
+  }, [canScrollDown]);
 
   useEffect(() => {
     function updateFeed(item: FeedMsg) {
@@ -76,33 +104,6 @@ export default function Feed({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [maxFeedLength, handleScrollUp, handleScrollDown]);
-
-  // Show the x most recent messages based on viewIndex
-  const feedViewLength = 4;
-  const start = Math.max(0, feedList.length - feedViewLength - viewIndex);
-  const end = Math.max(0, feedList.length - viewIndex);
-  const visibleFeedRaw = feedList.slice(start, end);
-
-  // Pad with empty messages if less than feedViewLength
-  const missing = feedViewLength - visibleFeedRaw.length;
-  const visibleFeed =
-    missing > 0
-      ? visibleFeedRaw.concat(
-          Array(missing).fill({ msg: "", sender: "", align: "left" })
-        )
-      : visibleFeedRaw;
-
-  // Allow/disallow scrolling if on top or bottom of feed
-  const canScrollUp = viewIndex < feedList.length - feedViewLength;
-  const canScrollDown = viewIndex > 0;
-
-  function handleScrollUp() {
-    if (canScrollUp)
-      setViewIndex((i) => Math.min(i + 1, feedList.length - feedViewLength));
-  }
-  function handleScrollDown() {
-    if (canScrollDown) setViewIndex((i) => Math.max(i - 1, 0));
-  }
 
   return (
     <div
