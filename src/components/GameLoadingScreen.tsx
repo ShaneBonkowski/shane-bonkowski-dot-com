@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import FadeOut from "@/src/components/FadeOut";
 
 interface LoadingScreenProps {
   coverImage: string;
@@ -13,29 +14,19 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [loadingDots, setLoadingDots] = useState("");
   const fadeDuration = 1000; // milliseconds
-  const fadeOutTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Animate the dots
     const interval = setInterval(() => {
       setLoadingDots((prev) => {
-        const trimmed = prev.trim(); // Remove trailing spaces
-        if (trimmed === "...") return ".  "; // Reset to ".  "
+        const trimmed = prev.trim();
+        if (trimmed === "...") return ".  ";
         return (trimmed + ".").padEnd(3, " ");
       });
     }, 250);
 
     const handleCloseLoadingScreen = () => {
-      // Clear any existing timeout
-      if (fadeOutTimeoutRef.current) {
-        clearTimeout(fadeOutTimeoutRef.current);
-      }
-
-      // Start fade-out animation
       setIsFadingOut(true);
-      fadeOutTimeoutRef.current = setTimeout(() => {
-        onFadeOutComplete();
-      }, fadeDuration);
     };
 
     document.addEventListener("closeLoadingScreen", handleCloseLoadingScreen);
@@ -46,21 +37,16 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
         "closeLoadingScreen",
         handleCloseLoadingScreen
       );
-
-      // Cleanup fade-out timeout
-      if (fadeOutTimeoutRef.current) {
-        clearTimeout(fadeOutTimeoutRef.current);
-      }
-
       setIsFadingOut(false);
     };
   }, [onFadeOutComplete, fadeDuration]);
 
   return (
-    <div
-      className={`fixed z-50 inset-0 flex items-center justify-center bg-black transition-opacity duration-1000 ${
-        isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100"
-      }`}
+    <FadeOut
+      isFadingOut={isFadingOut}
+      duration={fadeDuration}
+      onFadeOutComplete={onFadeOutComplete}
+      className="fixed z-50 inset-0 flex items-center justify-center bg-black"
       id="game-loading-screen"
       aria-label="Game loading screen"
     >
@@ -97,7 +83,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       >
         Loading{loadingDots}
       </p>
-    </div>
+    </FadeOut>
   );
 };
 
