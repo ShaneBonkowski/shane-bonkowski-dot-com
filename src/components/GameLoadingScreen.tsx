@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import FadeOut from "@/src/components/FadeOut";
+import Fade from "@/src/components/Fade";
 
 interface LoadingScreenProps {
   coverImage: string;
@@ -42,10 +42,11 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
   }, [onFadeOutComplete, fadeDuration]);
 
   return (
-    <FadeOut
-      isFadingOut={isFadingOut}
+    <Fade
+      isFading={isFadingOut}
+      fadeType="out"
       duration={fadeDuration}
-      onFadeOutComplete={onFadeOutComplete}
+      onFadeComplete={onFadeOutComplete}
       className="fixed z-50 inset-0 flex items-center justify-center bg-black"
       id="game-loading-screen"
       aria-label="Game loading screen"
@@ -83,7 +84,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       >
         Loading{loadingDots}
       </p>
-    </FadeOut>
+    </Fade>
   );
 };
 
