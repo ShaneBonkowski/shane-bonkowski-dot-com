@@ -20,24 +20,25 @@ const StartEndMenu: React.FC = () => {
     }
     setMenuType(type);
 
-    // No delay needed since this menu is not opened by a button click
+    // No delay needed since this menu is not opened by a direct button click
     setIsVisible(true);
     dispatchMenuEvent("Start/End", "open");
   };
 
   const closeWindow = () => {
+    // No delay needed since this menu is not opened by a direct button click
+    setIsVisible(false);
+    dispatchMenuEvent("Start/End", "close");
+  };
+
+  const handleStartLoadingGame = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-      dispatchMenuEvent("Start/End", "close");
+      // Tell the main-game-scene to start loading the game
+      document.dispatchEvent(new CustomEvent("startLoadingGame"));
     }, 150);
-  };
-
-  const handleStartLoadingGame = () => {
-    // Tell the main-game-scene to start loading the game
-    document.dispatchEvent(new CustomEvent("startLoadingGame"));
   };
 
   useEffect(() => {
