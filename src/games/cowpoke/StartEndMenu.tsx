@@ -7,8 +7,6 @@ import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 
-// FIXME: Add some game art maybe? Make it look nice
-
 const StartEndMenu: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
@@ -22,12 +20,8 @@ const StartEndMenu: React.FC = () => {
     }
     setMenuType(type);
 
-    // Add a small delay before revealing.
-    // This is a hack b/c phones sometimes double click.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(true);
-    }, 150);
-
+    // No delay needed since this menu is not opened by a button click
+    setIsVisible(true);
     dispatchMenuEvent("Start/End", "open");
   };
 
@@ -37,9 +31,8 @@ const StartEndMenu: React.FC = () => {
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
+      dispatchMenuEvent("Start/End", "close");
     }, 150);
-
-    dispatchMenuEvent("Start/End", "close");
   };
 
   const handleStartLoadingGame = () => {
@@ -74,17 +67,19 @@ const StartEndMenu: React.FC = () => {
   return (
     <>
       {/* --- Background Image --- */}
-      <div className="z-0 absolute inset-0 w-full h-full pointer-events-none">
-        <Image
-          src="/webps/games/cowpoke-bkg-for-menu.webp"
-          alt=""
-          fill
-          className="object-cover absolute inset-0"
-          draggable={false}
-          aria-hidden="true"
-          priority
-        />
-      </div>
+      {isVisible && (
+        <div className="z-0 absolute inset-0 w-full h-full pointer-events-none">
+          <Image
+            src="/webps/games/cowpoke-bkg-for-menu.webp"
+            alt=""
+            fill
+            className="object-cover absolute inset-0"
+            draggable={false}
+            aria-hidden="true"
+            priority
+          />
+        </div>
+      )}
 
       {/* --- Start/End Menu Window Content --- */}
       <GameUiWindow

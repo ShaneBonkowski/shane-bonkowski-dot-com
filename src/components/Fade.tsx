@@ -4,7 +4,7 @@ interface FadeProps {
   isFading: boolean; // When true, start the fade anim
   fadeType: "in" | "out"; // Direction of fade
   duration?: number; // milliseconds, default 1000
-  onFadeComplete?: () => void;
+  onFadeComplete?: (() => void) | null;
   children: React.ReactNode;
   className?: string;
   id?: string;
