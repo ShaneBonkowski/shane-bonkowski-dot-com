@@ -21,7 +21,7 @@ const GameUiWindow: React.FC<GameUiWindowProps> = ({
   return (
     <div
       className={`
-        z-50 overflow-y-auto p-4 fixed h-full w-full ${
+        z-30 overflow-y-auto p-4 fixed h-full w-full ${
           isVisible ? "" : "hidden"
         }
         ${

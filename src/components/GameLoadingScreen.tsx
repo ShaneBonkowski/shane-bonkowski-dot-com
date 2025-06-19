@@ -47,6 +47,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       fadeType="out"
       duration={fadeDuration}
       onFadeComplete={onFadeOutComplete}
+      // z-50 so its all the way in the front.. other stuff is usually z-30 or z-40
       className="fixed z-50 inset-0 flex items-center justify-center bg-black"
       id="game-loading-screen"
       aria-label="Game loading screen"
@@ -78,7 +79,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
 
       {/* Loading Text */}
       <p
-        className="absolute text-left m-0 bottom-5 right-5 text-primary-text-color z-20"
+        className="z-20 absolute text-left m-0 bottom-5 right-5 text-primary-text-color"
         style={{ width: "10ch", textAlign: "left" }} // Fixed width for consistent alignment
         aria-live="polite"
       >

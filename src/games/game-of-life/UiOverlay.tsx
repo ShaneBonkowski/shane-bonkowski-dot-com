@@ -122,9 +122,9 @@ const UiOverlay: React.FC = () => {
   }, [isDiscoMode]);
 
   return (
-    // z-40 so that its behind z-50 windows, but above mostly everything else
+    // z-20 so that its behind z-30 windows, but above mostly everything else
     <div
-      className={`z-40 pointer-events-none fixed bottom-5 w-full flex flex-col gap-3 ${
+      className={`z-20 pointer-events-none fixed bottom-5 w-full flex flex-col gap-3 ${
         isUiVisible ? "" : "hidden"
       }`}
       id="ui-overlay"

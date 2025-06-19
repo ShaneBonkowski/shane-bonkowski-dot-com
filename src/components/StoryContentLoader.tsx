@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import Image from "next/image";
 import { StoryDataProps, StoryDataContentProps } from "@/src/types/data-props";
@@ -43,7 +42,11 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
           style={{ fontStyle: paragraph.fontStyle }}
           // eslint-disable-next-line no-restricted-syntax
           dangerouslySetInnerHTML={{
-            __html: paraContent ? DOMPurify.sanitize(paraContent) : "",
+            __html: paraContent
+              ? DOMPurify.sanitize(paraContent, {
+                  ADD_ATTR: ["target", "rel"],
+                })
+              : "",
           }}
         />
       ));
@@ -61,7 +64,11 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
           style={{ fontStyle: paragraph.fontStyle }}
           // eslint-disable-next-line no-restricted-syntax
           dangerouslySetInnerHTML={{
-            __html: contentWithBr ? DOMPurify.sanitize(contentWithBr) : "",
+            __html: contentWithBr
+              ? DOMPurify.sanitize(contentWithBr, {
+                  ADD_ATTR: ["target", "rel"],
+                })
+              : "",
           }}
         />
       );

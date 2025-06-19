@@ -100,7 +100,7 @@ export default function CharacterInfoBar({
 
   return (
     <div
-      className={`relative z-40 p-2 flex flex-col ${positionClasses}`}
+      className={`relative z-20 p-2 flex flex-col ${positionClasses}`}
       style={{ minWidth: "240px" }}
       id="character-info-bar"
       aria-label="Character Info Bar"

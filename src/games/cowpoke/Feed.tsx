@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
@@ -64,6 +65,11 @@ export default function Feed({
       setViewIndex(0); // Jump to bottom on new message
     }
 
+    function handleClearFeed() {
+      setFeedList([]);
+      setViewIndex(0);
+    }
+
     function handleNewMessage(e: Event) {
       const custom = e as CustomEvent;
       if (
@@ -94,11 +100,13 @@ export default function Feed({
     };
 
     document.addEventListener("newMessage", handleNewMessage);
+    document.addEventListener("clearFeed", handleClearFeed);
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("newMessage", handleNewMessage);
+      document.removeEventListener("clearFeed", handleClearFeed);
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
       window.removeEventListener("keydown", handleKeyDown);
@@ -107,7 +115,7 @@ export default function Feed({
 
   return (
     <div
-      className={`z-40 fixed bottom-1 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl 
+      className={`z-20 fixed bottom-1 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl 
             ${
               isVisible ? "" : "hidden"
             } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border-2 border-black`}
@@ -130,12 +138,16 @@ export default function Feed({
                 item.msg === ""
                   ? "&nbsp;" // Use non-breaking space for empty messages
                   : item.align === "right"
-                  ? `${DOMPurify.sanitize(item.msg)}<b> — ${DOMPurify.sanitize(
-                      item.sender
-                    )}</b>`
-                  : `<b>${DOMPurify.sanitize(
-                      item.sender
-                    )} — </b>${DOMPurify.sanitize(item.msg)}`,
+                  ? `${DOMPurify.sanitize(item.msg, {
+                      ADD_ATTR: ["target", "rel"],
+                    })}<b> — ${DOMPurify.sanitize(item.sender, {
+                      ADD_ATTR: ["target", "rel"],
+                    })}</b>`
+                  : `<b>${DOMPurify.sanitize(item.sender, {
+                      ADD_ATTR: ["target", "rel"],
+                    })} — </b>${DOMPurify.sanitize(item.msg, {
+                      ADD_ATTR: ["target", "rel"],
+                    })}`,
             }}
           />
         ))}

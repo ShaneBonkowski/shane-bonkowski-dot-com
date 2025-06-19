@@ -8,6 +8,7 @@ import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 
 const StartEndMenu: React.FC = () => {
+  const [nameProvided, setNameProvided] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -23,6 +24,9 @@ const StartEndMenu: React.FC = () => {
     // No delay needed since this menu is not opened by a direct button click
     setIsVisible(true);
     dispatchMenuEvent("Start/End", "open");
+
+    // Manually override the header visibility, since openning a menu hides it typically
+    document.dispatchEvent(new CustomEvent("manualRevealHeader"));
   };
 
   const closeWindow = () => {
@@ -36,6 +40,11 @@ const StartEndMenu: React.FC = () => {
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
+      // Update the selected name in localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem("cowpokePlayerName", nameProvided);
+      }
+
       // Tell the main-game-scene to start loading the game
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
     }, 150);
@@ -56,11 +65,24 @@ const StartEndMenu: React.FC = () => {
     };
   }, []);
 
-  const totalKills =
+  // Get playthrough stats from localStorage
+  const killsThisPlaythrough =
+    typeof window !== "undefined"
+      ? localStorage.getItem("cowpokeKillsThisPlaythrough")
+      : 0;
+
+  const roundThisPlaythrough =
+    typeof window !== "undefined"
+      ? localStorage.getItem("cowpokeRoundThisPlaythrough")
+      : 0;
+
+  // Get lifetime stats from localStorage
+  const killsLifetime =
     typeof window !== "undefined"
       ? localStorage.getItem("cowpokeTotalKills")
       : 0;
-  const furthestRound =
+
+  const furthestRoundLifetime =
     typeof window !== "undefined"
       ? localStorage.getItem("cowpokeFurthestRound")
       : 0;
@@ -86,43 +108,62 @@ const StartEndMenu: React.FC = () => {
       <GameUiWindow
         isVisible={isVisible}
         onClose={null}
-        overrideBgColor="bg-transparent dark:bg-transparent"
-        overrideTextColor="text-black dark:text-black"
+        overrideBgColor="bg-white dark:bg-white bg-opacity-75 dark:bg-opacity-75"
+        overrideTextColor="text-primary-text-color-light dark:text-primary-text-color-light"
       >
-        <div className="w-full h-full p-4" id="cowpoke-start-container">
-          {/* Top Section: Info */}
-          <div className="p-2" id="cowpoke-start-description">
-            <div className="flex flex-col items-center">
-              <h1 className="text-center my-0 text-black dark:text-black">
-                {menuType === "end" ? "Game Over" : "Cowpoke"}
-              </h1>
-              <p className="text-center mb-0 text-black dark:text-black">
-                FIXME... add start menu instructions
+        {/* Info / Stats / etc. */}
+        {/* Title and description */}
+        <div className="flex flex-col items-center justify-center w-full max-w-[60vw] mx-auto">
+          <h1 className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+            {menuType === "end" ? "Game Over" : "Howdy, Partner"}
+          </h1>
+          <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+            {menuType === "end"
+              ? "Ain't no reason not to try again, friend! Dust yourself off and give it another go."
+              : `It's yer pal Cowpoke Jack talkin'. Hope yer ready to follow in my footsteps 'n set out West.
+      Go'n remind me what's yer name, then press that play button down there in the corner to git started.`}
+          </p>
+          {/* Cowpoke stats only show on end screen */}
+          {menuType === "end" && (
+            <>
+              <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+                <b>Kills:</b> {killsThisPlaythrough}
               </p>
-              {(furthestRound || totalKills) && (
-                <div className="mt-4 text-center">
-                  {totalKills && (
-                    <div className="text-black dark:text-black">
-                      <b>Total Kills:</b> {totalKills}
-                    </div>
-                  )}
-                  {furthestRound && (
-                    <div className="text-black dark:text-black">
-                      <b>Furthest Round Achieved:</b> {furthestRound}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* Bottom Section: Start Loading Game Button */}
+              <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+                <b>Round:</b> {roundThisPlaythrough}
+              </p>
+              <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+                <b>Lifetime Kills:</b> {killsLifetime}
+              </p>
+              <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+                <b>Lifetime Furthest Round:</b> {furthestRoundLifetime}
+              </p>
+            </>
+          )}
+        </div>
+
+        {/* Input + Start Loading Game Button */}
+        <div className="fixed bottom-5 right-5 flex flex-row gap-4 items-center">
+          <input
+            type="text"
+            placeholder="Yer name here..."
+            value={nameProvided}
+            onChange={(e) => setNameProvided(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleStartLoadingGame();
+              }
+            }}
+            maxLength={10}
+            className="p-2 text-small flex-grow bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
+            aria-label="Player name input"
+          />
           <GameIconButton
             onPointerDown={handleStartLoadingGame}
-            icon={<FaPlay size={30} />}
+            icon={<FaPlay size={25} />}
             ariaLabel="Cowpoke Start Loading Game"
-            className={"fixed bottom-5 right-5"}
+            className={""}
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-            whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
           />
         </div>
       </GameUiWindow>

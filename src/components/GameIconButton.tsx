@@ -54,11 +54,11 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
         : "");
 
   return (
-    // z-40 so that its behind z-50 windows, but above mostly everything else
+    // z-20 so that its behind z-30 windows, but above mostly everything else
     <button
       className={
         (whiteBackground ? "bg-white " : "") +
-        `z-40 pointer-events-auto flex items-center justify-center cursor-pointer 
+        `z-20 pointer-events-auto flex items-center justify-center cursor-pointer 
         disabled:cursor-not-allowed
         ${lightModeClass} ${darkModeClass} ${className}`
       }

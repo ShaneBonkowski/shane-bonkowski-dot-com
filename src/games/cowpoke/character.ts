@@ -220,7 +220,15 @@ export class Character extends GameObject {
 
     // Set level, this will set max health, xp, etc.
     this.updateLevel(5, true);
-    this.updateName("Shaner");
+
+    // Set default name, or load from localStorage if available
+    const storedName = localStorage.getItem("cowpokePlayerName");
+    if (storedName) {
+      this.updateName(storedName);
+    } else {
+      // If no name is stored, set a default name
+      this.updateName("Shaner");
+    }
 
     // Set visible since player characters are set invisible on death
     this.graphic!.setVisible(true);
@@ -506,7 +514,7 @@ export class Character extends GameObject {
 
   updateName(newName: string) {
     if (newName.length === 0) {
-      newName = "Character";
+      newName = "Shaner";
     }
     this.name = newName;
 

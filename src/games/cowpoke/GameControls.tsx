@@ -119,7 +119,7 @@ export default function GameControls() {
 
   return (
     <div
-      className={`z-40 w-[55vw] fixed top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 
+      className={`z-20 w-[55vw] fixed top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 
         flex flex-col gap-4 p-4 h-[20vh] ${isVisible ? "" : "hidden"}`}
     >
       <div className="flex flex-row gap-4 items-center justify-center">

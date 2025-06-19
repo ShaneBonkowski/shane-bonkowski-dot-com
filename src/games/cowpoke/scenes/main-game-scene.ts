@@ -3,6 +3,7 @@ import { Vec2 } from "@/src/utils/vector";
 import {
   dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
+  dispatchMenuEvent,
 } from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Decoration, DECOR_TYPES } from "@/src/games/cowpoke/decoration";
@@ -189,6 +190,18 @@ export class MainGameScene extends Generic2DGameScene {
    * has lost, or the player has chosen to end the game.
    */
   endGame() {
+    // Save qty kills this playthrough to local storage
+    localStorage.setItem(
+      "cowpokeKillsThisPlaythrough",
+      this.player!.kills.toString()
+    );
+
+    // Save round made it to this playthrough to local storage
+    localStorage.setItem(
+      "cowpokeRoundThisPlaythrough",
+      this.gameRound.toString()
+    );
+
     // Add to total kills in local storage
     const totalKills = localStorage.getItem("cowpokeTotalKills");
     const newTotalKills = totalKills
@@ -203,11 +216,21 @@ export class MainGameScene extends Generic2DGameScene {
       : this.gameRound;
     localStorage.setItem("cowpokeFurthestRound", newFurthestRound.toString());
 
-    this.gameStarted = false;
-    this.destroyGameObjects();
+    // Tell the game that ui menu was opened so that it
+    // hides the UI etc.
+    dispatchMenuEvent("fake menu", "open");
 
-    // Open the end menu so a player can restart etc.
-    this.openEndMenu();
+    // Actually end the game after a short delay...
+    // This allows user to maybe see the death anim etc.
+    setTimeout(() => {
+      // End game
+      this.gameStarted = false;
+      this.destroyGameObjects();
+      document.dispatchEvent(new Event("clearFeed"));
+
+      // Open the end menu so a player can restart etc.
+      this.openEndMenu();
+    }, 1250);
   }
 
   openStartMenu() {

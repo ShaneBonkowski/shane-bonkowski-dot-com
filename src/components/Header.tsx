@@ -33,13 +33,19 @@ const Header: React.FC = () => {
 
     const handleUiMenuOpen = () => setIsButtonVisible(false);
     const handleUiMenuClose = () => setIsButtonVisible(true);
+    const handleManualRevealHeader = () => setIsButtonVisible(true);
 
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
+    document.addEventListener("manualRevealHeader", handleManualRevealHeader);
 
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+      document.removeEventListener(
+        "manualRevealHeader",
+        handleManualRevealHeader
+      );
     };
   }, []);
 
@@ -54,7 +60,9 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`pointer-events-none flex justify-between items-center p-common-p sm:p-common-p-sm z-50 ${
+      // z-40 so its all the way in the front.. but behind e.g. the loading screen at z-50.
+      // Other stuff is usually z-30
+      className={`z-40 pointer-events-none flex justify-between items-center p-common-p sm:p-common-p-sm ${
         isButtonVisible ? "" : "hidden"
       } ${isGamesPath ? "absolute top-0 left-0 w-full" : ""}`}
       id="header"

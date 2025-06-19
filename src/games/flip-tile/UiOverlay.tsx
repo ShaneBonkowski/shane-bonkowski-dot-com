@@ -109,9 +109,9 @@ const UiOverlay: React.FC = () => {
   }, []);
 
   return (
-    // z-40 so that its behind z-50 windows, but above mostly everything else
+    // z-20 so that its behind z-30 windows, but above mostly everything else
     <div
-      className={`z-40 ${isUiVisible ? "" : "hidden"}`}
+      className={`z-20 ${isUiVisible ? "" : "hidden"}`}
       id="ui-overlay"
       aria-label="Game UI Overlay"
     >
@@ -134,7 +134,7 @@ const UiOverlay: React.FC = () => {
       {/* Buttons and Toggles */}
       <div
         id="tile-buttons"
-        className="z-40 pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
+        className="z-20 pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
         aria-label="Tile Buttons"
       >
         {/* Solution Toggle Button */}
@@ -164,7 +164,7 @@ const UiOverlay: React.FC = () => {
       {/* Difficulty Toggles */}
       <div
         id="difficulty-controls"
-        className="z-40 fixed bottom-5 left-5 flex flex-col gap-5"
+        className="z-20 fixed bottom-5 left-5 flex flex-col gap-5"
         aria-label="Difficulty Selection"
       >
         {[
