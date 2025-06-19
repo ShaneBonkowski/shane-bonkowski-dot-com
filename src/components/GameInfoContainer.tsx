@@ -27,9 +27,8 @@ const GameInfoContainer: React.FC<{
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
+      dispatchMenuEvent("Info", "open");
     }, 150);
-
-    dispatchMenuEvent("Info", "open");
   };
 
   const closeInfoWindow = () => {
@@ -38,9 +37,8 @@ const GameInfoContainer: React.FC<{
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
+      dispatchMenuEvent("Info", "close");
     }, 150);
-
-    dispatchMenuEvent("Info", "close");
   };
 
   useEffect(() => {

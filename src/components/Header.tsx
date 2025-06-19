@@ -60,8 +60,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      // z-40 so its all the way in the front.. but behind e.g. the loading screen at z-50.
-      // Other stuff is usually z-30
+      // z-40 so its most of the way in the front.. but behind e.g. the loading screen at z-50.
       className={`z-40 pointer-events-none flex justify-between items-center p-common-p sm:p-common-p-sm ${
         isButtonVisible ? "" : "hidden"
       } ${isGamesPath ? "absolute top-0 left-0 w-full" : ""}`}

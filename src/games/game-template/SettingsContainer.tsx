@@ -16,9 +16,8 @@ const SettingsContainer: React.FC = () => {
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
+      dispatchMenuEvent("Settings", "open");
     }, 150);
-
-    dispatchMenuEvent("Settings", "open");
   };
 
   const closeWindow = () => {
@@ -27,9 +26,8 @@ const SettingsContainer: React.FC = () => {
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
+      dispatchMenuEvent("Settings", "close");
     }, 150);
-
-    dispatchMenuEvent("Settings", "close");
   };
 
   useEffect(() => {
