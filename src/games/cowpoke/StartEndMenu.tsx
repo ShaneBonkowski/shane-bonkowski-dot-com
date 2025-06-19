@@ -66,25 +66,25 @@ const StartEndMenu: React.FC = () => {
   }, []);
 
   // Get playthrough stats from localStorage
+  const levelThisPlaythrough =
+    typeof window !== "undefined"
+      ? localStorage.getItem("cowpokeLevelThisPlaythrough")
+      : 0;
+
   const killsThisPlaythrough =
     typeof window !== "undefined"
       ? localStorage.getItem("cowpokeKillsThisPlaythrough")
       : 0;
 
-  const roundThisPlaythrough =
+  // Get lifetime stats from localStorage
+  const furthestLevelLifetime =
     typeof window !== "undefined"
-      ? localStorage.getItem("cowpokeRoundThisPlaythrough")
+      ? localStorage.getItem("cowpokeFurthestLevel")
       : 0;
 
-  // Get lifetime stats from localStorage
   const killsLifetime =
     typeof window !== "undefined"
       ? localStorage.getItem("cowpokeTotalKills")
-      : 0;
-
-  const furthestRoundLifetime =
-    typeof window !== "undefined"
-      ? localStorage.getItem("cowpokeFurthestRound")
       : 0;
 
   return (
@@ -127,16 +127,16 @@ const StartEndMenu: React.FC = () => {
           {menuType === "end" && (
             <>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+                <b>Level:</b> {levelThisPlaythrough}
+              </p>
+              <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
                 <b>Kills:</b> {killsThisPlaythrough}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Round:</b> {roundThisPlaythrough}
+                <b>Lifetime Highest Level:</b> {furthestLevelLifetime}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Lifetime Kills:</b> {killsLifetime}
-              </p>
-              <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Lifetime Furthest Round:</b> {furthestRoundLifetime}
+                <b>Lifetime Total Kills:</b> {killsLifetime}
               </p>
             </>
           )}

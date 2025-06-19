@@ -130,7 +130,12 @@ export class GameObject {
         } else if ("iterate" in this.graphic) {
           // Otherwise, assume this is a container, which has iterate method
           this.graphic.iterate(
-            (child: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape) => {
+            (
+              child:
+                | Phaser.GameObjects.Sprite
+                | Phaser.GameObjects.Shape
+                | Phaser.GameObjects.Text
+            ) => {
               if ("setTint" in child) {
                 child.setTint(newColor);
               } else if ("setFillStyle" in child) {

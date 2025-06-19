@@ -33,8 +33,11 @@ const ELEMENT_BEATEN_BY_MAP: Record<string, string> = {
 export class MainGameScene extends Generic2DGameScene {
   private decorations: Decoration[] = [];
   private player: Character | null = null;
+  private playerExtraDamageMultiplier: number = 1;
   private enemy: Character | null = null;
+  private enemyExtraDamageMultiplier: number = 1;
   public gameRound: number = 0;
+  public playerGoesFirst: boolean = true;
 
   public random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
 
@@ -46,7 +49,8 @@ export class MainGameScene extends Generic2DGameScene {
   public uiMenuOpen: boolean = false;
   public moving: boolean = false;
   private movingStartTime: number = 0;
-  private movingDuration: number = 2000;
+  private movingDuration: number = 1250; // ms
+  public combatDuration = 500; // ms
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -190,31 +194,29 @@ export class MainGameScene extends Generic2DGameScene {
    * has lost, or the player has chosen to end the game.
    */
   endGame() {
-    // Save qty kills this playthrough to local storage
+    // Last game stats
+    localStorage.setItem(
+      "cowpokeLevelThisPlaythrough",
+      this.player!.level.toString()
+    );
+
     localStorage.setItem(
       "cowpokeKillsThisPlaythrough",
       this.player!.kills.toString()
     );
 
-    // Save round made it to this playthrough to local storage
-    localStorage.setItem(
-      "cowpokeRoundThisPlaythrough",
-      this.gameRound.toString()
-    );
+    // Lifetime stats
+    const furthestLevel = localStorage.getItem("cowpokeFurthestLevel");
+    const newFurthestLevel = furthestLevel
+      ? Math.max(parseInt(furthestLevel, 10), this.player!.level)
+      : this.player!.level;
+    localStorage.setItem("cowpokeFurthestLevel", newFurthestLevel.toString());
 
-    // Add to total kills in local storage
     const totalKills = localStorage.getItem("cowpokeTotalKills");
     const newTotalKills = totalKills
       ? parseInt(totalKills, 10) + this.player!.kills
       : this.player!.kills;
     localStorage.setItem("cowpokeTotalKills", newTotalKills.toString());
-
-    // Add to furthest round achieved if this is higher
-    const furthestRound = localStorage.getItem("cowpokeFurthestRound");
-    const newFurthestRound = furthestRound
-      ? Math.max(parseInt(furthestRound, 10), this.gameRound)
-      : this.gameRound;
-    localStorage.setItem("cowpokeFurthestRound", newFurthestRound.toString());
 
     // Tell the game that ui menu was opened so that it
     // hides the UI etc.
@@ -356,8 +358,8 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // Handle time-based player and enemy animations
-      this.player!.handleAnims();
-      this.enemy!.handleAnims();
+      this.player!.handleAnims(delta);
+      this.enemy!.handleAnims(delta);
 
       // Graphics update will occur every frame
       for (const decoration of this.decorations) {
@@ -404,6 +406,11 @@ export class MainGameScene extends Generic2DGameScene {
       "movingSliderResult",
       this.handleMovingSliderResult
     );
+    document.addEventListener(
+      "executeLastCombat",
+      this.handleExecuteLastCombat
+    );
+    document.addEventListener("postCombat", this.handlePostCombat);
   }
 
   ready = (event: Event) => {
@@ -448,7 +455,136 @@ export class MainGameScene extends Generic2DGameScene {
     }
   };
 
-  fire(playerGoesFirst: boolean) {
+  fire() {
+    // Execute the "sub round" combat
+    this.calculateDamageMultipliers();
+
+    // Start w/ first combat, and let events drive the
+    // rest of the combat so that theres time for animations.
+    this.executeFirstCombat();
+  }
+
+  executeFirstCombat() {
+    // Execute the first combat based on who goes first.
+    if (this.playerGoesFirst) {
+      this.executePlayerCombat();
+    } else {
+      this.executeEnemyCombat();
+    }
+
+    // Dispatch an event to handle the next combat step after a lil delay
+    // for combat animations to play.
+    setTimeout(() => {
+      document.dispatchEvent(new Event("executeLastCombat"));
+    }, this.combatDuration);
+  }
+
+  handleExecuteLastCombat = () => {
+    this.executeLastCombat();
+  };
+
+  executeLastCombat() {
+    if (this.playerGoesFirst) {
+      // Player just shot in "executeFirstCombat", so stop shooting anim
+      this.player!.isShooting = false;
+
+      // Let the enemy execute their combat if they are still alive
+      if (!this.enemy!.dead) {
+        this.executeEnemyCombat();
+      }
+    } else {
+      // Enemy just shot in "executeFirstCombat", so stop shooting anim
+      this.enemy!.isShooting = false;
+
+      // Let the player execute their combat if they are still alive
+      if (!this.player!.dead) {
+        this.executePlayerCombat();
+      }
+    }
+
+    // dispatch event to handle post-combat logic after a lil delay
+    setTimeout(() => {
+      document.dispatchEvent(new Event("postCombat"));
+    }, this.combatDuration);
+  }
+
+  handlePostCombat = () => {
+    this.postCombat();
+  };
+
+  postCombat() {
+    // After "executeLastCombat", need to turn off shooting anims
+    // for the characters that just did the last combat.
+    if (this.playerGoesFirst) {
+      // If player went first, then enemy just shot in "executeLastCombat"
+      this.enemy!.isShooting = false;
+    } else {
+      // If enemy went first, then player just shot in "executeLastCombat".
+      this.player!.isShooting = false;
+    }
+
+    // Handle the combat results
+    if (this.player!.dead) {
+      // Game Over if player dies
+      this.endGame();
+    } else if (this.enemy!.dead) {
+      // Next round if enemy dies
+      this.gameRound += 1;
+      this.walkToNextEnemy();
+    } else {
+      // Neither have died, move to next "sub round" and start the moving slider
+      // for element again
+      document.dispatchEvent(
+        new CustomEvent("startMovingSlider", {
+          detail: { sliderId: "win-element" },
+        })
+      );
+    }
+  }
+
+  executePlayerCombat() {
+    this.player!.isShooting = true;
+
+    let playerDmgDealt =
+      this.player!.getDamageAmount() * this.playerExtraDamageMultiplier;
+    playerDmgDealt = Math.round(playerDmgDealt * 100) / 100;
+
+    this.enemy!.handleDamage(playerDmgDealt);
+    this.sendAttackMessage(
+      this.player!,
+      this.player!.combatSelected!,
+      playerDmgDealt
+    );
+
+    // Handle kill/death
+    if (this.enemy!.health <= 0) {
+      this.player!.handleKill(this.enemy!);
+      this.enemy!.handleDeath();
+    }
+  }
+
+  executeEnemyCombat() {
+    this.enemy!.isShooting = true;
+
+    let enemyDmgDealt =
+      this.enemy!.getDamageAmount() * this.enemyExtraDamageMultiplier;
+    enemyDmgDealt = Math.round(enemyDmgDealt * 100) / 100;
+
+    this.player!.handleDamage(enemyDmgDealt);
+    this.sendAttackMessage(
+      this.enemy!,
+      this.enemy!.combatSelected!,
+      enemyDmgDealt
+    );
+
+    // Handle kill/death
+    if (this.player!.health <= 0) {
+      this.enemy!.handleKill(this.player!);
+      this.player!.handleDeath();
+    }
+  }
+
+  calculateDamageMultipliers() {
     // Play out the "sub-round" to see who won, who gets dmg'd etc.
     let playerExtraDamageMultiplier = 1;
     let enemyExtraDamageMultiplier = 1;
@@ -528,79 +664,9 @@ export class MainGameScene extends Generic2DGameScene {
       }
     }
 
-    // Execute the "sub round" combat.. round dmg to 2 dec
-    let playerDmgDealt =
-      this.player!.getDamageAmount() * playerExtraDamageMultiplier;
-    playerDmgDealt = Math.round(playerDmgDealt * 100) / 100;
-
-    let enemyDmgDealt =
-      this.enemy!.getDamageAmount() * enemyExtraDamageMultiplier;
-    enemyDmgDealt = Math.round(enemyDmgDealt * 100) / 100;
-
-    if (playerGoesFirst) {
-      this.executeCombat(
-        this.player!,
-        playerDmgDealt,
-        this.enemy!,
-        enemyDmgDealt
-      );
-    } else {
-      this.executeCombat(
-        this.enemy!,
-        enemyDmgDealt,
-        this.player!,
-        playerDmgDealt
-      );
-    }
-
-    if (this.player!.health <= 0) {
-      // Game Over if player dies
-      this.player!.graphic!.setVisible(false);
-      this.endGame();
-    } else if (this.enemy!.health <= 0) {
-      this.enemy!.graphic!.setVisible(false);
-      this.gameRound += 1;
-      this.walkToNextEnemy();
-    } else {
-      // Neither have died, move to next "sub round" and start the moving slider
-      // for element again
-      document.dispatchEvent(
-        new CustomEvent("startMovingSlider", {
-          detail: { sliderId: "win-element" },
-        })
-      );
-    }
-  }
-
-  executeCombat(
-    firstAttacker: Character,
-    firstAttackerDmg: number,
-    lastAttacker: Character,
-    lastAttackerDmg: number
-  ) {
-    // First attacks the last character
-    lastAttacker.handleDamage(firstAttackerDmg);
-    this.sendAttackMessage(
-      firstAttacker!,
-      firstAttacker.combatSelected!,
-      firstAttackerDmg
-    );
-
-    if (lastAttacker.health <= 0) {
-      firstAttacker.handleKill(lastAttacker);
-    } else {
-      // last character attacks back on first
-      firstAttacker.handleDamage(lastAttackerDmg);
-      this.sendAttackMessage(
-        lastAttacker!,
-        lastAttacker.combatSelected!,
-        lastAttackerDmg
-      );
-
-      if (firstAttacker.health <= 0) {
-        lastAttacker.handleKill(firstAttacker);
-      }
-    }
+    // Update the multipliers for the player and enemy
+    this.playerExtraDamageMultiplier = playerExtraDamageMultiplier;
+    this.enemyExtraDamageMultiplier = enemyExtraDamageMultiplier;
   }
 
   sendAttackMessage(
@@ -763,7 +829,6 @@ export class MainGameScene extends Generic2DGameScene {
 
       // Send the message for the winner's combat action choice, then the loser, or if
       // its a draw, do player first, then enemy.
-      let playerGoesFirst: boolean = true;
       if (
         COMBAT_BEATEN_BY_MAP[this.player!.combatSelected!] ===
         this.enemy!.combatSelected
@@ -775,7 +840,7 @@ export class MainGameScene extends Generic2DGameScene {
           this.player!.combatSelected!,
           extraWinCombatStr
         );
-        playerGoesFirst = false;
+        this.playerGoesFirst = false;
       } else {
         // Player wins or draw, send player msg first
         this.sendCombatMessage(
@@ -784,11 +849,11 @@ export class MainGameScene extends Generic2DGameScene {
           extraWinCombatStr
         );
         this.sendCombatMessage(this.enemy, this.enemy!.combatSelected!);
-        playerGoesFirst = true;
+        this.playerGoesFirst = true;
       }
 
       // Attack time!
-      this.fire(playerGoesFirst);
+      this.fire();
     } else {
       console.warn(
         `Unknown sliderId "${sliderId}" in handleMovingSliderResult. Expected "win-element" or "win-combat".`
@@ -920,6 +985,11 @@ export class MainGameScene extends Generic2DGameScene {
       "movingSliderResult",
       this.handleMovingSliderResult
     );
+    document.removeEventListener(
+      "executeLastCombat",
+      this.handleExecuteLastCombat
+    );
+    document.removeEventListener("postCombat", this.handlePostCombat);
   }
 
   // Using Arrow Function to bind the context of "this" to the class instance.
@@ -1044,14 +1114,20 @@ export class MainGameScene extends Generic2DGameScene {
 
   destroyGameObjects() {
     for (const decoration of this.decorations) {
-      decoration.destroy();
+      if (decoration) {
+        decoration.destroy();
+      }
     }
     this.decorations = [];
 
-    this.player!.destroy();
+    if (this.player) {
+      this.player!.destroy();
+    }
     this.player = null;
 
-    this.enemy!.destroy();
+    if (this.enemy) {
+      this.enemy!.destroy();
+    }
     this.enemy = null;
   }
 

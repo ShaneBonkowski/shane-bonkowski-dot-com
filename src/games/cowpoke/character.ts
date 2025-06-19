@@ -6,6 +6,7 @@ import {
 } from "@/src/games/cowpoke/scenes/main-game-scene";
 import { GUN_LOOT_MAP, HAT_LOOT_MAP, RARITY } from "@/src/games/cowpoke/loot";
 import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
+import { MoreMath } from "@/src/utils/more-math";
 
 export enum CHARACTER_TYPES {
   UNASSIGNED = -1,
@@ -60,9 +61,14 @@ export class Character extends GameObject {
   public elementSelected: string | null = null; // rock, paper, or scissors
   public combatSelected: string | null = null; // attack, defend, or counter
   public kills: number = 0;
+  public dead: boolean = false;
 
   private bounceTime: number = 0;
   private animScaleFactorY: number = 1;
+  public isShooting: boolean = false;
+
+  private floatingText?: Phaser.GameObjects.Text;
+  private floatingTextTween?: Phaser.Tweens.Tween;
 
   public bodySprite: Phaser.GameObjects.Sprite | null = null;
   public headSprite: Phaser.GameObjects.Sprite | null = null;
@@ -167,7 +173,19 @@ export class Character extends GameObject {
     return new Vec2(scaleX, scaleY);
   }
 
-  handleAnims() {
+  handleAnims(delta: number) {
+    // Player idly bounces up and down
+    this.handleBounceAnim();
+
+    // Shooting anim
+    if (this.isShooting) {
+      this.handleShootingAnim(delta);
+    } else {
+      this.handleResetShootingAnim(delta);
+    }
+  }
+
+  handleBounceAnim() {
     // Create a subtle bounce anim on a sin wave
     this.bounceTime += 0.05; // Adjust speed as needed
     const minScale = 0.98;
@@ -176,6 +194,41 @@ export class Character extends GameObject {
     const mid = (maxScale + minScale) / 2;
     this.animScaleFactorY = mid + Math.sin(this.bounceTime) * amplitude;
     this.updateScale();
+  }
+
+  handleShootingAnim(delta: number) {
+    // Lerp the rotation to 20 ish degrees
+    const targetRotation =
+      this.type === CHARACTER_TYPES.PLAYER
+        ? -20 * (Math.PI / 180)
+        : 20 * (Math.PI / 180);
+    this.handleRotationAnimation(
+      targetRotation,
+      MoreMath.getLerpInterpolatedValue(delta, this.scene.combatDuration, 0.01)
+    );
+  }
+
+  handleResetShootingAnim(delta: number) {
+    // Lerp the rotation CW back to 0 degrees
+    this.handleRotationAnimation(
+      0,
+      MoreMath.getLerpInterpolatedValue(delta, this.scene.combatDuration, 0.01)
+    );
+  }
+
+  handleRotationAnimation(targetRotation: number, lerpSpeed: number = 0.1) {
+    if (this.graphic && this.graphic.rotation !== targetRotation) {
+      this.graphic.rotation = MoreMath.lerp(
+        this.graphic.rotation,
+        targetRotation,
+        lerpSpeed
+      );
+
+      // If close enough to target rotation, snap to it
+      if (Math.abs(this.graphic.rotation - targetRotation) < lerpSpeed * 1.1) {
+        this.graphic.rotation = targetRotation;
+      }
+    }
   }
 
   updateContainerChildSprite(
@@ -232,6 +285,11 @@ export class Character extends GameObject {
 
     // Set visible since player characters are set invisible on death
     this.graphic!.setVisible(true);
+    this.dead = false;
+
+    // Reset some parameters that can be changed during anims
+    this.isShooting = false;
+    this.graphic!.rotation = 0;
 
     // Send a lil dialog on spawn
     sendFeedMessage(
@@ -305,6 +363,7 @@ export class Character extends GameObject {
 
     // Set visible since enemy characters are set invisible on death
     this.graphic!.setVisible(true);
+    this.dead = false;
 
     // Send a lil dialog on spawn
     sendFeedMessage(
@@ -348,7 +407,7 @@ export class Character extends GameObject {
     // which is about 600px tall, but the hat doesnt stretch
     // that far.
     this.hatStarSprite!.x = 0;
-    this.hatStarSprite!.y = -520;
+    this.hatStarSprite!.y = (-520 / 600) * this.bodySprite!.displayHeight;
     this.hatStarSprite!.scaleX = 0.7;
     this.hatStarSprite!.scaleY = 0.7;
 
@@ -391,8 +450,8 @@ export class Character extends GameObject {
 
     // Initial position is relative to parent graphic container,
     // which is about 600px tall, but the gun is about halfway.
-    this.gunStarSprite!.x = 220;
-    this.gunStarSprite!.y = -290;
+    this.gunStarSprite!.x = (220 / 600) * this.bodySprite!.displayWidth;
+    this.gunStarSprite!.y = (-290 / 600) * this.bodySprite!.displayHeight;
     this.gunStarSprite!.scaleX = 0.6;
     this.gunStarSprite!.scaleY = 0.6;
 
@@ -510,6 +569,62 @@ export class Character extends GameObject {
 
   handleDamage(damage: number) {
     this.updateHealth(this.health - damage);
+    this.showHealDmgFloatingText(-1 * damage);
+  }
+
+  handleHeal(healthAdded: number) {
+    // Only heal if health is not already at max
+    if (this.health !== this.maxHealth) {
+      this.updateHealth(this.health + healthAdded);
+      this.showHealDmgFloatingText(healthAdded);
+    }
+  }
+
+  showHealDmgFloatingText(healthChangeAmount: number) {
+    // Init the text object if it doesn't exist yet
+    if (!this.floatingText) {
+      this.floatingText = this.scene.add
+        .text(0, 0, "", {
+          font: "bold 36px Arial",
+          color: "#fff",
+          align: "center",
+        })
+        .setOrigin(0.5, 1); // bottom middle pivot point
+      (this.graphic as Phaser.GameObjects.Container).add(this.floatingText!);
+    }
+
+    // If a previous tween is running, stop it
+    if (this.floatingTextTween) {
+      this.floatingTextTween.stop();
+    }
+
+    // Set text and color
+    const color = healthChangeAmount > 0 ? "#22c55e" : "#ef4444";
+    const sign = healthChangeAmount > 0 ? "+" : "-";
+    this.floatingText!.setText(`${sign}${Math.abs(healthChangeAmount)}`);
+    this.floatingText!.setColor(color);
+    this.floatingText!.setAlpha(1);
+    this.floatingText!.setScale(
+      1.2,
+      // Flip text on enemy across y
+      this.type === CHARACTER_TYPES.PLAYER ? 1.2 : -1.2
+    );
+    this.floatingText!.y = -1 * this.bodySprite!.displayHeight * 1.1;
+    this.floatingText!.setVisible(true);
+
+    // Animate: grow, shrink, then fade out
+    this.floatingTextTween = this.scene.tweens.add({
+      targets: this.floatingText,
+      // Flip text on enemy
+      scale: this.type === CHARACTER_TYPES.PLAYER ? 1 : -1,
+      alpha: 0,
+      y: this.floatingText!.y * 1.05,
+      duration: this.scene.combatDuration * 2,
+      ease: "Cubic.easeOut",
+      onComplete: () => {
+        this.floatingText?.setVisible(false);
+      },
+    });
   }
 
   updateName(newName: string) {
@@ -573,7 +688,7 @@ export class Character extends GameObject {
 
     // Update max health on level up, then restore health
     this.updateMaxHealth();
-    this.updateHealth(this.maxHealth);
+    this.handleHeal(this.maxHealth - this.health); // Restore health to max
 
     // Reset xp on level up, and add to max xp
     this.updateMaxXp();
@@ -642,6 +757,11 @@ export class Character extends GameObject {
         this.getFeedMessageAlignment()
       );
     }
+  }
+
+  handleDeath() {
+    this.graphic!.setVisible(false);
+    this.dead = true;
   }
 
   destroy() {
