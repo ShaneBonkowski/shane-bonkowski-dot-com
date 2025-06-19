@@ -358,8 +358,8 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // Handle time-based player and enemy animations
-      this.player!.handleAnims(delta);
-      this.enemy!.handleAnims(delta);
+      this.player!.handleAnims();
+      this.enemy!.handleAnims();
 
       // Graphics update will occur every frame
       for (const decoration of this.decorations) {
@@ -485,17 +485,11 @@ export class MainGameScene extends Generic2DGameScene {
 
   executeLastCombat() {
     if (this.playerGoesFirst) {
-      // Player just shot in "executeFirstCombat", so stop shooting anim
-      this.player!.isShooting = false;
-
       // Let the enemy execute their combat if they are still alive
       if (!this.enemy!.dead) {
         this.executeEnemyCombat();
       }
     } else {
-      // Enemy just shot in "executeFirstCombat", so stop shooting anim
-      this.enemy!.isShooting = false;
-
       // Let the player execute their combat if they are still alive
       if (!this.player!.dead) {
         this.executePlayerCombat();
@@ -513,16 +507,6 @@ export class MainGameScene extends Generic2DGameScene {
   };
 
   postCombat() {
-    // After "executeLastCombat", need to turn off shooting anims
-    // for the characters that just did the last combat.
-    if (this.playerGoesFirst) {
-      // If player went first, then enemy just shot in "executeLastCombat"
-      this.enemy!.isShooting = false;
-    } else {
-      // If enemy went first, then player just shot in "executeLastCombat".
-      this.player!.isShooting = false;
-    }
-
     // Handle the combat results
     if (this.player!.dead) {
       // Game Over if player dies
@@ -543,45 +527,19 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   executePlayerCombat() {
-    this.player!.isShooting = true;
-
     let playerDmgDealt =
       this.player!.getDamageAmount() * this.playerExtraDamageMultiplier;
     playerDmgDealt = Math.round(playerDmgDealt * 100) / 100;
 
-    this.enemy!.handleDamage(playerDmgDealt);
-    this.sendAttackMessage(
-      this.player!,
-      this.player!.combatSelected!,
-      playerDmgDealt
-    );
-
-    // Handle kill/death
-    if (this.enemy!.health <= 0) {
-      this.player!.handleKill(this.enemy!);
-      this.enemy!.handleDeath();
-    }
+    this.player!.attack(this.enemy!, playerDmgDealt);
   }
 
   executeEnemyCombat() {
-    this.enemy!.isShooting = true;
-
     let enemyDmgDealt =
       this.enemy!.getDamageAmount() * this.enemyExtraDamageMultiplier;
     enemyDmgDealt = Math.round(enemyDmgDealt * 100) / 100;
 
-    this.player!.handleDamage(enemyDmgDealt);
-    this.sendAttackMessage(
-      this.enemy!,
-      this.enemy!.combatSelected!,
-      enemyDmgDealt
-    );
-
-    // Handle kill/death
-    if (this.player!.health <= 0) {
-      this.enemy!.handleKill(this.player!);
-      this.player!.handleDeath();
-    }
+    this.enemy!.attack(this.player!, enemyDmgDealt);
   }
 
   calculateDamageMultipliers() {
@@ -667,64 +625,6 @@ export class MainGameScene extends Generic2DGameScene {
     // Update the multipliers for the player and enemy
     this.playerExtraDamageMultiplier = playerExtraDamageMultiplier;
     this.enemyExtraDamageMultiplier = enemyExtraDamageMultiplier;
-  }
-
-  sendAttackMessage(
-    character: Character | null,
-    type: string,
-    dmgValue: number
-  ) {
-    switch (type) {
-      case "attack":
-        if (dmgValue > 0) {
-          sendFeedMessage(
-            "Take that! <b>(+" + dmgValue + " dmg)</b>",
-            character!.name,
-            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
-          );
-        } else {
-          sendFeedMessage(
-            "I musta missed... <b>(0 dmg)</b>",
-            character!.name,
-            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
-          );
-        }
-        break;
-      case "defend":
-        if (dmgValue > 0) {
-          sendFeedMessage(
-            "Feel the wrath of my shield, friend! <b>(+" +
-              dmgValue +
-              " dmg)</b>",
-            character!.name,
-            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
-          );
-        } else {
-          sendFeedMessage(
-            "I ain't afraid of you! <b>(0 dmg)</b>",
-            character!.name,
-            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
-          );
-        }
-        break;
-      case "counter":
-        if (dmgValue > 0) {
-          sendFeedMessage(
-            "You can't hit me! <b>(+" + dmgValue + " dmg)</b>",
-            character!.name,
-            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
-          );
-        } else {
-          sendFeedMessage(
-            "I musta missed... <b>(0 dmg)</b>",
-            character!.name,
-            character!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
-          );
-        }
-        break;
-      default:
-        console.warn(`Unknown attack type "${type}" in sendAttackMessage.`);
-    }
   }
 
   walkToNextEnemy() {

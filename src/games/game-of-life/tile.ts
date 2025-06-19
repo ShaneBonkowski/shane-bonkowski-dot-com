@@ -17,7 +17,7 @@ export class Tile extends GameObject {
   public initialClickOnThisTile: boolean = false;
   public qtyLivingNeighbors: number = 0;
   public canClick: boolean = true;
-  public currentTileAnim: Phaser.Tweens.Tween | null = null;
+  public currentTileTween: Phaser.Tweens.Tween | null = null;
   public tileState: number = tileStates.OFF;
 
   constructor(scene: MainGameScene, gridX: number, gridY: number) {
@@ -103,7 +103,7 @@ export class Tile extends GameObject {
     this.initialClickOnThisTile = false;
     this.qtyLivingNeighbors = 0; // For storing qty of neighbors prior to update loop
     this.canClick = true;
-    this.currentTileAnim = null;
+    this.currentTileTween = null;
 
     // Init the graphics
     const tileSpriteName = "Tile Blank";
@@ -130,7 +130,7 @@ export class Tile extends GameObject {
   resetTile() {
     this.qtyLivingNeighbors = 0;
     this.canClick = true;
-    this.currentTileAnim = null;
+    this.currentTileTween = null;
 
     // Start in off and then change to off. This is so that any necc. vars are updated, without
     // the game thinking the state "changed" from ON to OFF for e.g.
@@ -385,7 +385,7 @@ export class Tile extends GameObject {
 
   changeState(newState: number) {
     // Make sure no anim is playing prior to updating tile state!
-    this.stopCurrentTileAnim();
+    this.stopCurrentTileTween();
 
     // If state changed, update population.
     if (this.tileState != newState) {
@@ -416,27 +416,27 @@ export class Tile extends GameObject {
   }
 
   playSpinAnim() {
-    this.stopCurrentTileAnim();
+    this.stopCurrentTileTween();
     this.canClick = false;
 
     // Rotate the graphic 360 degrees
-    this.currentTileAnim = this.scene.tweens.add({
+    this.currentTileTween = this.scene.tweens.add({
       targets: this.graphic,
       angle: "+=360",
       duration: 220,
       ease: "Linear",
       repeat: 0, // Do not repeat
       onComplete: () => {
-        this.stopCurrentTileAnim();
+        this.stopCurrentTileTween();
       },
     });
   }
 
-  stopCurrentTileAnim() {
+  stopCurrentTileTween() {
     // Stop the anim if there is one
-    if (this.currentTileAnim) {
-      this.currentTileAnim.stop();
-      this.currentTileAnim = null;
+    if (this.currentTileTween) {
+      this.currentTileTween.stop();
+      this.currentTileTween = null;
 
       // Ensure attrs that may have changed in the anim are reset
       this.graphic!.angle = 0;

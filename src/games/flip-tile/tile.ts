@@ -15,6 +15,9 @@ export class Tile extends GameObject {
   public tileSpaceCoord: Vec2;
   public gridSize: number;
   public tileState: number;
+
+  public celebrationTween: Phaser.Tweens.Tween | null = null;
+  public spinTween: Phaser.Tweens.Tween | null = null;
   public animationPlaying: boolean;
 
   constructor(
@@ -167,7 +170,11 @@ export class Tile extends GameObject {
     this.animationPlaying = true;
 
     // Rotate the graphic 360 degrees
-    this.scene.tweens.add({
+    if (this.spinTween) {
+      this.spinTween.stop();
+    }
+
+    this.spinTween = this.scene.tweens.add({
       targets: this.graphic,
       angle: "+=360",
       duration: 1000 * sharedTileAttrs.clickTimer,
@@ -194,7 +201,11 @@ export class Tile extends GameObject {
     this.animationPlaying = true;
 
     // Play animation
-    this.scene.tweens.add({
+    if (this.celebrationTween) {
+      this.celebrationTween.stop();
+    }
+
+    this.celebrationTween = this.scene.tweens.add({
       targets: this.graphic,
       //angle: "+=360",
       scaleX: this.calculateTileScale().x * sharedTileAttrs.tileSpacingFactor,

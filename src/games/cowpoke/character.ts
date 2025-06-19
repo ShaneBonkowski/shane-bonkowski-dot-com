@@ -6,7 +6,6 @@ import {
 } from "@/src/games/cowpoke/scenes/main-game-scene";
 import { GUN_LOOT_MAP, HAT_LOOT_MAP, RARITY } from "@/src/games/cowpoke/loot";
 import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
-import { MoreMath } from "@/src/utils/more-math";
 
 export enum CHARACTER_TYPES {
   UNASSIGNED = -1,
@@ -65,10 +64,11 @@ export class Character extends GameObject {
 
   private bounceTime: number = 0;
   private animScaleFactorY: number = 1;
-  public isShooting: boolean = false;
 
   private floatingText?: Phaser.GameObjects.Text;
   private floatingTextTween?: Phaser.Tweens.Tween;
+  private visibilityTween?: Phaser.Tweens.Tween;
+  private shootTween?: Phaser.Tweens.Tween;
 
   public bodySprite: Phaser.GameObjects.Sprite | null = null;
   public headSprite: Phaser.GameObjects.Sprite | null = null;
@@ -173,16 +173,9 @@ export class Character extends GameObject {
     return new Vec2(scaleX, scaleY);
   }
 
-  handleAnims(delta: number) {
+  handleAnims() {
     // Player idly bounces up and down
     this.handleBounceAnim();
-
-    // Shooting anim
-    if (this.isShooting) {
-      this.handleShootingAnim(delta);
-    } else {
-      this.handleResetShootingAnim(delta);
-    }
   }
 
   handleBounceAnim() {
@@ -194,41 +187,6 @@ export class Character extends GameObject {
     const mid = (maxScale + minScale) / 2;
     this.animScaleFactorY = mid + Math.sin(this.bounceTime) * amplitude;
     this.updateScale();
-  }
-
-  handleShootingAnim(delta: number) {
-    // Lerp the rotation to 20 ish degrees
-    const targetRotation =
-      this.type === CHARACTER_TYPES.PLAYER
-        ? -20 * (Math.PI / 180)
-        : 20 * (Math.PI / 180);
-    this.handleRotationAnimation(
-      targetRotation,
-      MoreMath.getLerpInterpolatedValue(delta, this.scene.combatDuration, 0.01)
-    );
-  }
-
-  handleResetShootingAnim(delta: number) {
-    // Lerp the rotation CW back to 0 degrees
-    this.handleRotationAnimation(
-      0,
-      MoreMath.getLerpInterpolatedValue(delta, this.scene.combatDuration, 0.01)
-    );
-  }
-
-  handleRotationAnimation(targetRotation: number, lerpSpeed: number = 0.1) {
-    if (this.graphic && this.graphic.rotation !== targetRotation) {
-      this.graphic.rotation = MoreMath.lerp(
-        this.graphic.rotation,
-        targetRotation,
-        lerpSpeed
-      );
-
-      // If close enough to target rotation, snap to it
-      if (Math.abs(this.graphic.rotation - targetRotation) < lerpSpeed * 1.1) {
-        this.graphic.rotation = targetRotation;
-      }
-    }
   }
 
   updateContainerChildSprite(
@@ -283,20 +241,8 @@ export class Character extends GameObject {
       this.updateName("Shaner");
     }
 
-    // Set visible since player characters are set invisible on death
-    this.graphic!.setVisible(true);
-    this.dead = false;
-
-    // Reset some parameters that can be changed during anims
-    this.isShooting = false;
-    this.graphic!.rotation = 0;
-
-    // Send a lil dialog on spawn
-    sendFeedMessage(
-      this.getRandomMsgFromList(PLAYER_DIALOG_QUIPS),
-      this.name,
-      this.getFeedMessageAlignment()
-    );
+    // Setup the character
+    this.spawnCharacterSetup();
   }
 
   spawnNewRandomCharacter() {
@@ -361,13 +307,26 @@ export class Character extends GameObject {
       `${randomTitleOptions[randomTitleIndex]} ${randomNameOptions[randomNameIndex]}`
     );
 
-    // Set visible since enemy characters are set invisible on death
-    this.graphic!.setVisible(true);
+    // Setup the character
+    this.spawnCharacterSetup();
+  }
+
+  spawnCharacterSetup() {
+    // Set visible since characters are set invisible on death
     this.dead = false;
+    this.tweenVisibility();
+
+    // Reset some parameters that can be changed during anims
+    this.graphic!.setRotation(0);
+    this.graphic!.setAlpha(1);
 
     // Send a lil dialog on spawn
     sendFeedMessage(
-      this.getRandomMsgFromList(ENEMY_DIALOG_QUIPS),
+      this.getRandomMsgFromList(
+        this.type === CHARACTER_TYPES.PLAYER
+          ? PLAYER_DIALOG_QUIPS
+          : ENEMY_DIALOG_QUIPS
+      ),
       this.name,
       this.getFeedMessageAlignment()
     );
@@ -408,8 +367,7 @@ export class Character extends GameObject {
     // that far.
     this.hatStarSprite!.x = 0;
     this.hatStarSprite!.y = (-520 / 600) * this.bodySprite!.displayHeight;
-    this.hatStarSprite!.scaleX = 0.7;
-    this.hatStarSprite!.scaleY = 0.7;
+    this.hatStarSprite!.setScale(0.7, 0.7);
 
     this.equippedHatId = id;
     this.addNewOwnedHat(id);
@@ -452,8 +410,7 @@ export class Character extends GameObject {
     // which is about 600px tall, but the gun is about halfway.
     this.gunStarSprite!.x = (220 / 600) * this.bodySprite!.displayWidth;
     this.gunStarSprite!.y = (-290 / 600) * this.bodySprite!.displayHeight;
-    this.gunStarSprite!.scaleX = 0.6;
-    this.gunStarSprite!.scaleY = 0.6;
+    this.gunStarSprite!.setScale(0.6, 0.6);
 
     this.equippedGunId = id;
     this.addNewOwnedGun(id);
@@ -567,9 +524,83 @@ export class Character extends GameObject {
     );
   }
 
+  attack(otherCharacter: Character, dmgDealt: number) {
+    // Play the shoot animation
+    this.tweenShoot();
+
+    // dmg the other character
+    otherCharacter!.handleDamage(dmgDealt);
+    this.sendAttackMessage(dmgDealt);
+
+    // Handle this character getting a kill
+    if (otherCharacter!.health <= 0) {
+      this.handleKill(otherCharacter);
+    }
+  }
+
+  sendAttackMessage(dmgValue: number) {
+    switch (this.combatSelected) {
+      case "attack":
+        if (dmgValue > 0) {
+          sendFeedMessage(
+            "Take that! <b>(+" + dmgValue + " dmg)</b>",
+            this!.name,
+            this!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        } else {
+          sendFeedMessage(
+            "I musta missed... <b>(0 dmg)</b>",
+            this!.name,
+            this!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        }
+        break;
+      case "defend":
+        if (dmgValue > 0) {
+          sendFeedMessage(
+            "Feel the wrath of my shield, friend! <b>(+" +
+              dmgValue +
+              " dmg)</b>",
+            this!.name,
+            this!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        } else {
+          sendFeedMessage(
+            "I ain't afraid of you! <b>(0 dmg)</b>",
+            this!.name,
+            this!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        }
+        break;
+      case "counter":
+        if (dmgValue > 0) {
+          sendFeedMessage(
+            "You can't hit me! <b>(+" + dmgValue + " dmg)</b>",
+            this!.name,
+            this!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        } else {
+          sendFeedMessage(
+            "I musta missed... <b>(0 dmg)</b>",
+            this!.name,
+            this!.type == CHARACTER_TYPES.PLAYER ? "left" : "right"
+          );
+        }
+        break;
+      default:
+        console.warn(
+          `Unknown attack type "${this.combatSelected}" in sendAttackMessage.`
+        );
+    }
+  }
+
   handleDamage(damage: number) {
     this.updateHealth(this.health - damage);
     this.showHealDmgFloatingText(-1 * damage);
+
+    if (this.health <= 0) {
+      this.handleDeath();
+    }
   }
 
   handleHeal(healthAdded: number) {
@@ -593,38 +624,14 @@ export class Character extends GameObject {
       (this.graphic as Phaser.GameObjects.Container).add(this.floatingText!);
     }
 
-    // If a previous tween is running, stop it
-    if (this.floatingTextTween) {
-      this.floatingTextTween.stop();
-    }
-
-    // Set text and color
-    const color = healthChangeAmount > 0 ? "#22c55e" : "#ef4444";
-    const sign = healthChangeAmount > 0 ? "+" : "-";
-    this.floatingText!.setText(`${sign}${Math.abs(healthChangeAmount)}`);
-    this.floatingText!.setColor(color);
-    this.floatingText!.setAlpha(1);
-    this.floatingText!.setScale(
-      1.2,
-      // Flip text on enemy across y
-      this.type === CHARACTER_TYPES.PLAYER ? 1.2 : -1.2
+    // Set green +health or red -health text
+    this.floatingText!.setText(
+      `${healthChangeAmount > 0 ? "+" : "-"}${Math.abs(healthChangeAmount)}`
     );
-    this.floatingText!.y = -1 * this.bodySprite!.displayHeight * 1.1;
-    this.floatingText!.setVisible(true);
+    this.floatingText!.setColor(healthChangeAmount > 0 ? "#22c55e" : "#ef4444");
 
-    // Animate: grow, shrink, then fade out
-    this.floatingTextTween = this.scene.tweens.add({
-      targets: this.floatingText,
-      // Flip text on enemy
-      scale: this.type === CHARACTER_TYPES.PLAYER ? 1 : -1,
-      alpha: 0,
-      y: this.floatingText!.y * 1.05,
-      duration: this.scene.combatDuration * 2,
-      ease: "Cubic.easeOut",
-      onComplete: () => {
-        this.floatingText?.setVisible(false);
-      },
-    });
+    // Play animation for the floating text
+    this.tweenFloatingText();
   }
 
   updateName(newName: string) {
@@ -760,8 +767,97 @@ export class Character extends GameObject {
   }
 
   handleDeath() {
-    this.graphic!.setVisible(false);
     this.dead = true;
+    this.tweenInvisibility();
+  }
+
+  tweenShoot() {
+    // play a tween for rotation that goes from 0 to -20 degrees, or 0 to 20 for enemey
+    const rotationAngle = this.type === CHARACTER_TYPES.PLAYER ? -20 : 20;
+
+    if (this.shootTween) {
+      this.shootTween.stop();
+    }
+
+    this.shootTween = this.scene.tweens.add({
+      targets: this.graphic,
+      rotation: rotationAngle * (Math.PI / 180), // Convert degrees to radians
+      duration: this.scene.combatDuration / 2,
+      ease: "Cubic.easeInOut",
+      yoyo: true, // Go back to original rotation
+      onComplete: () => {
+        // Reset rotation after attack
+        this.graphic!.setRotation(0);
+      },
+    });
+  }
+
+  tweenVisibility() {
+    // Set visible, then tween opacity to 1
+    this.graphic!.setAlpha(0); // Start invisible for fade-in effect
+    this.graphic!.setVisible(true);
+
+    if (this.visibilityTween) {
+      this.visibilityTween.stop();
+    }
+
+    this.visibilityTween = this.scene.tweens.add({
+      targets: this.graphic,
+      alpha: 1,
+      duration: this.scene.combatDuration,
+      ease: "Cubic.easeOut",
+    });
+  }
+
+  tweenInvisibility() {
+    // Tween opacity to 0, then set invisible
+    this.graphic!.setAlpha(1);
+    this.graphic!.setVisible(true);
+
+    if (this.visibilityTween) {
+      this.visibilityTween.stop();
+    }
+
+    this.visibilityTween = this.scene.tweens.add({
+      targets: this.graphic,
+      alpha: 0,
+      duration: this.scene.combatDuration,
+      ease: "Cubic.easeOut",
+      onComplete: () => {
+        this.graphic!.setVisible(false);
+      },
+    });
+  }
+
+  tweenFloatingText() {
+    // Init pos, scale, and alpha before tweening
+    this.floatingText!.setAlpha(1);
+    this.floatingText!.setScale(
+      // Flip text on enemy across x
+      this.type === CHARACTER_TYPES.PLAYER ? 1.2 : -1.2,
+      1.2
+    );
+    this.floatingText!.y = -1 * this.bodySprite!.displayHeight * 1.05;
+    this.floatingText!.setVisible(true);
+
+    // Animate: grow, shrink, then fade out
+    if (this.floatingTextTween) {
+      this.floatingTextTween.stop();
+    }
+
+    this.floatingTextTween = this.scene.tweens.add({
+      targets: this.floatingText,
+      // Flip text on enemy across x
+      scaleX: this.type === CHARACTER_TYPES.PLAYER ? 1 : -1,
+      scaleY: 1,
+      alpha: 0,
+      y: this.floatingText!.y * 1.05,
+      duration: this.scene.combatDuration * 2,
+      ease: "Cubic.easeOut",
+      onComplete: () => {
+        this.floatingText?.setVisible(false);
+      },
+    });
   }
 
   destroy() {
