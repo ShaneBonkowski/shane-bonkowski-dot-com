@@ -107,6 +107,7 @@ export class MainGameScene extends Generic2DGameScene {
     );
 
     // Guns
+    this.load.image("shield-block", "/webps/games/cowpoke-shield.webp");
     this.load.image(
       "gun-handcannon",
       "/webps/games/cowpoke-gun-handcannon.webp"
@@ -750,6 +751,15 @@ export class MainGameScene extends Generic2DGameScene {
         );
         this.sendCombatMessage(this.enemy, this.enemy!.combatSelected!);
         this.playerGoesFirst = true;
+      }
+
+      // Start the block animations for both player and enemy if they are defending.
+      if (this.player!.combatSelected === "defend") {
+        this.player!.block();
+      }
+
+      if (this.enemy!.combatSelected === "defend") {
+        this.enemy!.block();
       }
 
       // Attack time!

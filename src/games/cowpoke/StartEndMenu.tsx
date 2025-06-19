@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { FaPlay } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
@@ -35,7 +35,7 @@ const StartEndMenu: React.FC = () => {
     dispatchMenuEvent("Start/End", "close");
   };
 
-  const handleStartLoadingGame = () => {
+  const handleStartLoadingGame = useCallback(() => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
@@ -48,22 +48,31 @@ const StartEndMenu: React.FC = () => {
       // Tell the main-game-scene to start loading the game
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
     }, 150);
-  };
+  }, [nameProvided]);
 
   useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Start game if Enter is pressed and the menu is visible
+      if (e.key === "Enter" && isVisible) {
+        handleStartLoadingGame();
+      }
+    };
+
     document.addEventListener("openStartEndMenu", openWindow);
     document.addEventListener("gameStarted", closeWindow); // Close the menu when the game actually starts.. aka is fully loaded
+    document.addEventListener("keydown", handleGlobalKeyDown);
 
     return () => {
       document.removeEventListener("openStartEndMenu", openWindow);
       document.removeEventListener("gameStarted", closeWindow);
+      document.removeEventListener("keydown", handleGlobalKeyDown);
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
     };
-  }, []);
+  }, [handleStartLoadingGame, isVisible]);
 
   // Get playthrough stats from localStorage
   const levelThisPlaythrough =
@@ -119,9 +128,10 @@ const StartEndMenu: React.FC = () => {
           </h1>
           <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
             {menuType === "end"
-              ? "Ain't no reason not to try again, friend! Dust yourself off and give it another go."
+              ? `Ain't no reason not to try again, friend! Dust yerself off and give it another go. 
+              Press "Enter" or that play button down there in the corner if you wanna get back on that horse.`
               : `It's yer pal Cowpoke Jack talkin'. Hope yer ready to follow in my footsteps 'n set out West.
-      Go'n remind me what's yer name, then press that play button down there in the corner to git started.`}
+      Go'n remind me what's yer name, then press "Enter" or that play button down there in the corner to git started.`}
           </p>
           {/* Cowpoke stats only show on end screen */}
           {menuType === "end" && (
@@ -149,11 +159,6 @@ const StartEndMenu: React.FC = () => {
             placeholder="Yer name here..."
             value={nameProvided}
             onChange={(e) => setNameProvided(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleStartLoadingGame();
-              }
-            }}
             maxLength={10}
             className="p-2 text-small flex-grow bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
             aria-label="Player name input"

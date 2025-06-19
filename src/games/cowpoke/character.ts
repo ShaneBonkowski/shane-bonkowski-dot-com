@@ -63,12 +63,13 @@ export class Character extends GameObject {
   public dead: boolean = false;
 
   private bounceTime: number = 0;
+  private animScaleFactorX: number = 1;
   private animScaleFactorY: number = 1;
 
   private floatingText?: Phaser.GameObjects.Text;
   private floatingTextTween?: Phaser.Tweens.Tween;
   private visibilityTween?: Phaser.Tweens.Tween;
-  private shootTween?: Phaser.Tweens.Tween;
+  private attackTween?: Phaser.Tweens.Tween;
 
   public bodySprite: Phaser.GameObjects.Sprite | null = null;
   public headSprite: Phaser.GameObjects.Sprite | null = null;
@@ -167,14 +168,15 @@ export class Character extends GameObject {
       scaleX = Math.abs(scaleX) * -1;
     }
 
-    // Scale the Y scale by the animation factor
+    // Scale the X, Y scale by the animation factor
+    scaleX = scaleX * this.animScaleFactorX;
     scaleY = scaleY * this.animScaleFactorY;
 
     return new Vec2(scaleX, scaleY);
   }
 
   handleAnims() {
-    // Player idly bounces up and down
+    // This is for animations that are not tweens and are based on the update loop.
     this.handleBounceAnim();
   }
 
@@ -526,7 +528,18 @@ export class Character extends GameObject {
 
   attack(otherCharacter: Character, dmgDealt: number) {
     // Play the shoot animation
-    this.tweenShoot();
+    if (this.combatSelected === "attack") {
+      this.tweenShoot();
+    } else if (this.combatSelected === "defend") {
+      this.tweenDefend();
+    } else if (this.combatSelected === "counter") {
+      this.tweenCounter();
+    } else {
+      console.warn(
+        `Character: Unknown combatSelected "${this.combatSelected}" in attack.`
+      );
+      return;
+    }
 
     // dmg the other character
     otherCharacter!.handleDamage(dmgDealt);
@@ -536,6 +549,22 @@ export class Character extends GameObject {
     if (otherCharacter!.health <= 0) {
       this.handleKill(otherCharacter);
     }
+  }
+
+  block() {
+    // "Block" by temporarily overriding gun sprite to shield
+    this.gunSprite = this.updateContainerChildSprite(
+      this.gunSprite,
+      "shield-block"
+    );
+  }
+
+  unblock() {
+    // "Unblock" by restoring the gun sprite
+    this.gunSprite = this.updateContainerChildSprite(
+      this.gunSprite,
+      GUN_LOOT_MAP[this.equippedGunId].spriteName as string
+    );
   }
 
   sendAttackMessage(dmgValue: number) {
@@ -597,6 +626,8 @@ export class Character extends GameObject {
   handleDamage(damage: number) {
     this.updateHealth(this.health - damage);
     this.showHealDmgFloatingText(-1 * damage);
+
+    this.tweenTakeDamage();
 
     if (this.health <= 0) {
       this.handleDeath();
@@ -775,19 +806,54 @@ export class Character extends GameObject {
     // play a tween for rotation that goes from 0 to -20 degrees, or 0 to 20 for enemey
     const rotationAngle = this.type === CHARACTER_TYPES.PLAYER ? -20 : 20;
 
-    if (this.shootTween) {
-      this.shootTween.stop();
+    if (this.attackTween) {
+      this.attackTween.stop();
     }
 
-    this.shootTween = this.scene.tweens.add({
+    this.attackTween = this.scene.tweens.add({
       targets: this.graphic,
-      rotation: rotationAngle * (Math.PI / 180), // Convert degrees to radians
+      rotation: rotationAngle * (Math.PI / 180),
+      duration: this.scene.combatDuration / 2,
+      ease: "Cubic.easeInOut",
+      yoyo: true, // Go back to original rotation
+    });
+  }
+
+  tweenDefend() {
+    // play a tween for rotation that goes from 0 to -10 degrees, or 0 to 10 for enemy
+    const rotationAngle = this.type === CHARACTER_TYPES.PLAYER ? -10 : 10;
+    if (this.attackTween) {
+      this.attackTween.stop();
+    }
+
+    this.attackTween = this.scene.tweens.add({
+      targets: this.graphic,
+      rotation: rotationAngle * (Math.PI / 180),
       duration: this.scene.combatDuration / 2,
       ease: "Cubic.easeInOut",
       yoyo: true, // Go back to original rotation
       onComplete: () => {
-        // Reset rotation after attack
-        this.graphic!.setRotation(0);
+        this.unblock(); // Restore gun sprite after defend
+      },
+    });
+  }
+
+  tweenCounter() {
+    // Tween animScaleFactorX from -1 to 1 for a flip effect...
+    // See updateScale() to see where this is used. This is needed because
+    // scale is already being set / modified in updateScale()
+    if (this.attackTween) {
+      this.attackTween.stop();
+    }
+
+    this.attackTween = this.scene.tweens.add({
+      targets: this,
+      animScaleFactorX: -1,
+      duration: this.scene.combatDuration / 2,
+      ease: "Cubic.easeInOut",
+      yoyo: true, // Go back to original animScaleFactorX (1)
+      onUpdate: () => {
+        this.updateScale();
       },
     });
   }
@@ -826,6 +892,22 @@ export class Character extends GameObject {
       onComplete: () => {
         this.graphic!.setVisible(false);
       },
+    });
+  }
+
+  tweenTakeDamage() {
+    // Flash the character to indicate damage taken
+    this.graphic!.setAlpha(1);
+
+    if (this.visibilityTween) {
+      this.visibilityTween.stop();
+    }
+
+    this.visibilityTween = this.scene.tweens.add({
+      targets: this.graphic,
+      alpha: [1, 0.3, 0.7, 0.2, 1],
+      duration: this.scene.combatDuration,
+      ease: "Power2.easeOut",
     });
   }
 
