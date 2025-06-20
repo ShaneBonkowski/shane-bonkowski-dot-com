@@ -124,7 +124,10 @@ export default function GameControls() {
     >
       <div className="flex flex-row gap-4 items-center justify-center">
         <MovingSliderBar sliderId={"win-element"}></MovingSliderBar>
-        <div className="flex flex-row gap-4 items-center justify-center">
+        <div
+          className="flex flex-row gap-4 items-center justify-center"
+          title="Shortcut: Press 1, 2, or 3" // tooltip
+        >
           <GameIconButton
             onPointerDown={selectRock}
             icon={<GiRock size={30} />}
@@ -151,7 +154,10 @@ export default function GameControls() {
 
       <div className="flex flex-row gap-4 items-center justify-center">
         <MovingSliderBar sliderId={"win-combat"}></MovingSliderBar>
-        <div className="flex flex-row gap-4 items-center justify-center">
+        <div
+          className="flex flex-row gap-4 items-center justify-center"
+          title="Shortcut: Press 4, 5, or 6" // tooltip
+        >
           <GameIconButton
             onPointerDown={selectAttack}
             icon={<GiCrossedSwords size={30} />}

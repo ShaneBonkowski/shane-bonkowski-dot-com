@@ -4,9 +4,9 @@ export enum RARITY {
   LEGENDARY,
 }
 
-export const GIZMOS = {
-  NONE: 0,
-};
+export enum GIZMOS {
+  NONE,
+}
 
 export const GUN_LOOT_MAP = [
   {
@@ -14,6 +14,7 @@ export const GUN_LOOT_MAP = [
     name: "Makeshift Revolver",
     rarity: RARITY.COMMON,
     spriteName: "gun-revolver",
+    pathToWebp: "/webps/games/cowpoke-gun-revolver.webp",
     addDmg: 0,
     addHealth: 0,
     addCombat: 0,
@@ -25,6 +26,7 @@ export const GUN_LOOT_MAP = [
     name: "Trusty Revolver",
     rarity: RARITY.RARE,
     spriteName: "gun-revolver",
+    pathToWebp: "/webps/games/cowpoke-gun-revolver.webp",
     addDmg: 1,
     addHealth: 0,
     addCombat: 0,
@@ -36,6 +38,7 @@ export const GUN_LOOT_MAP = [
     name: "Cowpoke Jack's Revolver",
     rarity: RARITY.LEGENDARY,
     spriteName: "gun-revolver",
+    pathToWebp: "/webps/games/cowpoke-gun-revolver.webp",
     addDmg: 3,
     addHealth: 0,
     addCombat: 0,
@@ -47,6 +50,7 @@ export const GUN_LOOT_MAP = [
     name: "Rusty Handcannon",
     rarity: RARITY.COMMON,
     spriteName: "gun-handcannon",
+    pathToWebp: "/webps/games/cowpoke-gun-handcannon.webp",
     addDmg: 1,
     addHealth: 0,
     addCombat: 0,
@@ -58,6 +62,7 @@ export const GUN_LOOT_MAP = [
     name: "Ol' Reliable Handcannon",
     rarity: RARITY.RARE,
     spriteName: "gun-handcannon",
+    pathToWebp: "/webps/games/cowpoke-gun-handcannon.webp",
     addDmg: 3,
     addHealth: 0,
     addCombat: 0,
@@ -69,6 +74,7 @@ export const GUN_LOOT_MAP = [
     name: "Big Bertha",
     rarity: RARITY.LEGENDARY,
     spriteName: "gun-handcannon",
+    pathToWebp: "/webps/games/cowpoke-gun-handcannon.webp",
     addDmg: 4,
     addHealth: 0,
     addCombat: 0,
@@ -83,6 +89,7 @@ export const HAT_LOOT_MAP = [
     name: "Deputy Hat",
     rarity: RARITY.COMMON,
     spriteName: "hat-sherif",
+    pathToWebp: "/webps/games/cowpoke-hat-sherif.webp",
     addDmg: 0,
     addHealth: 1,
     addCombat: 0,
@@ -94,6 +101,7 @@ export const HAT_LOOT_MAP = [
     name: "Sheriff Hat",
     rarity: RARITY.RARE,
     spriteName: "hat-sherif",
+    pathToWebp: "/webps/games/cowpoke-hat-sherif.webp",
     addDmg: 0,
     addHealth: 2,
     addCombat: 0,
@@ -105,6 +113,7 @@ export const HAT_LOOT_MAP = [
     name: "Cowpoke Jack's Hat",
     rarity: RARITY.LEGENDARY,
     spriteName: "hat-sherif",
+    pathToWebp: "/webps/games/cowpoke-hat-sherif.webp",
     addDmg: 0,
     addHealth: 3,
     addCombat: 0,
@@ -116,6 +125,7 @@ export const HAT_LOOT_MAP = [
     name: "Lazy Bandito Hat",
     rarity: RARITY.COMMON,
     spriteName: "hat-bandito",
+    pathToWebp: "/webps/games/cowpoke-hat-bandito.webp",
     addDmg: 0,
     addHealth: 1,
     addCombat: 0,
@@ -127,6 +137,7 @@ export const HAT_LOOT_MAP = [
     name: "Career Bandito Hat",
     rarity: RARITY.RARE,
     spriteName: "hat-bandito",
+    pathToWebp: "/webps/games/cowpoke-hat-bandito.webp",
     addDmg: 0,
     addHealth: 2,
     addCombat: 0,
@@ -138,6 +149,7 @@ export const HAT_LOOT_MAP = [
     name: "Bandito Earl's Hat",
     rarity: RARITY.LEGENDARY,
     spriteName: "hat-bandito",
+    pathToWebp: "/webps/games/cowpoke-hat-bandito.webp",
     addDmg: 0,
     addHealth: 3,
     addCombat: 0,

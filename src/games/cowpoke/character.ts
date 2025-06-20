@@ -532,20 +532,23 @@ export class Character extends GameObject {
   }
 
   updateOwnedHatsUiAndStorage() {
-    // Save to localStorage
-    if (typeof window !== "undefined") {
-      localStorage.setItem(
-        "cowpokeOwnedHatIds",
-        JSON.stringify(this.ownedHatIds)
+    // Only update player-owned hats
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      // Save to localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          "cowpokeOwnedHatIds",
+          JSON.stringify(this.ownedHatIds)
+        );
+      }
+
+      // Dispatch event to update owned hats in the game
+      document.dispatchEvent(
+        new CustomEvent("updateOwnedHats", {
+          detail: { ownedHatIds: this.ownedHatIds },
+        })
       );
     }
-
-    // Dispatch event to update owned hats in the game
-    dispatchEvent(
-      new CustomEvent("updateOwnedHats", {
-        detail: { ownedHatIds: this.ownedHatIds },
-      })
-    );
   }
 
   addNewOwnedGun(id: number) {
@@ -556,20 +559,23 @@ export class Character extends GameObject {
   }
 
   updateOwnedGunsUiAndStorage() {
-    // Save to localStorage
-    if (typeof window !== "undefined") {
-      localStorage.setItem(
-        "cowpokeOwnedGunIds",
-        JSON.stringify(this.ownedGunIds)
+    // Only update player-owned guns
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      // Save to localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          "cowpokeOwnedGunIds",
+          JSON.stringify(this.ownedGunIds)
+        );
+      }
+
+      // Dispatch event to update owned guns in the game
+      document.dispatchEvent(
+        new CustomEvent("updateOwnedGuns", {
+          detail: { ownedGunIds: this.ownedGunIds },
+        })
       );
     }
-
-    // Dispatch event to update owned guns in the game
-    dispatchEvent(
-      new CustomEvent("updateOwnedGuns", {
-        detail: { ownedGunIds: this.ownedGunIds },
-      })
-    );
   }
 
   getCombatIncreaseFromLoot() {
@@ -733,7 +739,7 @@ export class Character extends GameObject {
     this.floatingText!.setText(
       `${healthChangeAmount > 0 ? "+" : "-"}${Math.abs(healthChangeAmount)}`
     );
-    this.floatingText!.setColor(healthChangeAmount > 0 ? "#22c55e" : "#ef4444");
+    this.floatingText!.setColor(healthChangeAmount > 0 ? "#10b981" : "#ef4444");
 
     // Play animation for the floating text
     this.tweenFloatingText();

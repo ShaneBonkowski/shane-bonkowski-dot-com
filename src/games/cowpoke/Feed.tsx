@@ -155,6 +155,7 @@ export default function Feed({
       <div
         className="flex flex-col justify-end mb-1 gap-2"
         aria-label="Feed Scroll Buttons Container"
+        title="Shortcut: Press UP/DOWN Arrows" // tooltip
       >
         <GameIconButton
           onPointerDown={handleScrollUp}

@@ -153,7 +153,10 @@ const StartEndMenu: React.FC = () => {
         </div>
 
         {/* Input + Start Loading Game Button */}
-        <div className="fixed bottom-5 right-5 flex flex-row gap-4 items-center">
+        <div
+          className="fixed bottom-5 right-5 flex flex-row gap-4 items-center"
+          title="Shortcut: Press Enter to begin" // tooltip
+        >
           <input
             type="text"
             placeholder="Yer name here..."

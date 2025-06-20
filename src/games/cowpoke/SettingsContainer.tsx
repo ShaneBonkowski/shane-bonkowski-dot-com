@@ -140,31 +140,16 @@ const SettingsContainer: React.FC = () => {
       />
 
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
-        <div
-          className="w-full h-full p-4 overflow-y-auto"
-          id="cowpoke-settings-container"
-        >
-          {/* Top Section: Player Stats */}
-          <div className="p-2 mb-4" id="cowpoke-player-stats">
-            <div className="flex flex-col items-center">
-              <h1 className="text-center my-0">Cowpoke Gear & Upgrades</h1>
-              <div className="flex flex-row gap-8 mt-2">
-                <p className="text-center mb-0">
-                  <b>Current Level:</b> {currentLevel}
-                </p>
-                <p className="text-center mb-0">
-                  <b>Upgrade Points Available:</b> {upgradePoints}
-                </p>
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col items-center">
+          {/* Title */}
+          <h1 className="text-center text-white">Cowpoke Gear & Upgrades</h1>
 
           {/* Currently Equipped Section */}
-          <div className="mb-6">
-            <h2 className="text-center mb-3">Currently Equipped</h2>
+          <div id="equipped-items">
+            <h2 className="text-center text-white">Currently Equipped</h2>
             <div className="flex flex-row justify-center gap-6">
               <div className="flex flex-col items-center">
-                <h3 className="mb-2">Hat</h3>
+                <h3 className="text-center text-white">Hat</h3>
                 <LootContainer
                   lootId={equippedHatId}
                   lootType="hat"
@@ -173,7 +158,7 @@ const SettingsContainer: React.FC = () => {
                 />
               </div>
               <div className="flex flex-col items-center">
-                <h3 className="mb-2">Gun</h3>
+                <h3 className="text-center text-white">Gun</h3>
                 <LootContainer
                   lootId={equippedGunId}
                   lootType="gun"
@@ -182,47 +167,53 @@ const SettingsContainer: React.FC = () => {
                 />
               </div>
             </div>
-          </div>
 
-          {/* Owned Guns Section */}
-          <div className="mb-6">
-            <h2 className="text-center mb-3">Owned Guns</h2>
-            <div className="flex flex-row flex-wrap justify-center gap-3">
-              {ownedGunIds.map((gunId) => (
-                <LootContainer
-                  key={`gun-${gunId}`}
-                  lootId={gunId}
-                  lootType="gun"
-                  isEquipped={gunId === equippedGunId}
-                  onClick={() => handleEquipGun(gunId)}
-                />
-              ))}
+            {/* Owned Guns Section */}
+            <div id="owned-guns">
+              <h2 className="text-center text-white">Owned Guns</h2>
+              <div className="flex flex-row flex-wrap justify-center gap-3">
+                {ownedGunIds.map((gunId) => (
+                  <LootContainer
+                    key={`gun-${gunId}`}
+                    lootId={gunId}
+                    lootType="gun"
+                    isEquipped={gunId === equippedGunId}
+                    onClick={() => handleEquipGun(gunId)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Owned Hats Section */}
-          <div className="mb-6">
-            <h2 className="text-center mb-3">Owned Hats</h2>
-            <div className="flex flex-row flex-wrap justify-center gap-3">
-              {ownedHatIds.map((hatId) => (
-                <LootContainer
-                  key={`hat-${hatId}`}
-                  lootId={hatId}
-                  lootType="hat"
-                  isEquipped={hatId === equippedHatId}
-                  onClick={() => handleEquipHat(hatId)}
-                />
-              ))}
+            {/* Owned Hats Section */}
+            <div id="owned-hats">
+              <h2 className="text-center text-white">Owned Hats</h2>
+              <div className="flex flex-row flex-wrap justify-center gap-3">
+                {ownedHatIds.map((hatId) => (
+                  <LootContainer
+                    key={`hat-${hatId}`}
+                    lootId={hatId}
+                    lootType="hat"
+                    isEquipped={hatId === equippedHatId}
+                    onClick={() => handleEquipHat(hatId)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Upgrades Section (Placeholder) */}
-          <div className="mb-6">
-            <h2 className="text-center mb-3">Permanent Upgrades</h2>
-            <p className="text-center text-secondary-text-color">
-              Coming Soon - Spend upgrade points here!
+          <h2 className="text-center text-white">Permanent Upgrades</h2>
+          <div className="flex flex-row gap-8 mx-auto">
+            <p className="text-center text-white">
+              <b>Current Level:</b> {currentLevel}
+            </p>
+            <p className="text-center text-white">
+              <b>Upgrade Points Available:</b> {upgradePoints}
             </p>
           </div>
+          <p className="text-center text-white">
+            Coming Soon - Spend upgrade points here!
+          </p>
         </div>
       </GameUiWindow>
     </>
