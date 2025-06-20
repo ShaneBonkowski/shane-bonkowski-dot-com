@@ -163,7 +163,7 @@ const StartEndMenu: React.FC = () => {
             value={nameProvided}
             onChange={(e) => setNameProvided(e.target.value)}
             maxLength={10}
-            className="p-2 text-small flex-grow bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
+            className="p-2 text-small flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
             aria-label="Player name input"
           />
           <GameIconButton

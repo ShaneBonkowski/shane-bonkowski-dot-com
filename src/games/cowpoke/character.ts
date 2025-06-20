@@ -878,8 +878,58 @@ export class Character extends GameObject {
         })
       );
 
-      // Random chance to get enemy's loot
-      // FIXME: add this...
+      // 50/50 chance to try to drop either gun or hat
+      if (this.scene.random.getRandomFloat(0, 1) < 0.5) {
+        // Random chance to get enemy's gun
+        let gunDropOdds = 0.2;
+        if (GUN_LOOT_MAP[otherCharacter.equippedGunId].rarity === RARITY.RARE) {
+          gunDropOdds = 0.1;
+        } else if (
+          GUN_LOOT_MAP[otherCharacter.equippedGunId].rarity === RARITY.LEGENDARY
+        ) {
+          gunDropOdds = 0.05;
+        }
+
+        if (this.scene.random.getRandomFloat(0, 1) < gunDropOdds) {
+          // Only drop if player doesn't already own it
+          if (!this.ownedGunIds.includes(otherCharacter.equippedGunId)) {
+            sendFeedMessage(
+              `Look's like that foe dropped <b>${
+                GUN_LOOT_MAP[otherCharacter.equippedGunId].name
+              }</b>!`,
+              "Cowpoke Jack's Ghost",
+              "center"
+            );
+
+            this.addNewOwnedGun(otherCharacter.equippedGunId);
+          }
+        }
+      } else {
+        // Random chance to get enemy's hat
+        let hatDropOdds = 0.2;
+        if (HAT_LOOT_MAP[otherCharacter.equippedHatId].rarity === RARITY.RARE) {
+          hatDropOdds = 0.1;
+        } else if (
+          HAT_LOOT_MAP[otherCharacter.equippedHatId].rarity === RARITY.LEGENDARY
+        ) {
+          hatDropOdds = 0.05;
+        }
+
+        if (this.scene.random.getRandomFloat(0, 1) < hatDropOdds) {
+          // Only drop if player doesn't already own it
+          if (!this.ownedHatIds.includes(otherCharacter.equippedHatId)) {
+            sendFeedMessage(
+              `Look's like that foe dropped <b>${
+                HAT_LOOT_MAP[otherCharacter.equippedHatId].name
+              }</b>!`,
+              "Cowpoke Jack's Ghost",
+              "center"
+            );
+
+            this.addNewOwnedHat(otherCharacter.equippedHatId);
+          }
+        }
+      }
     } else {
       // Enemy says a quip when killing player
       sendFeedMessage(

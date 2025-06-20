@@ -93,7 +93,7 @@ export const HAT_LOOT_MAP = [
     addDmg: 0,
     addHealth: 1,
     addCombat: 0,
-    addElement: 1,
+    addElement: 0,
     extraGizmo: GIZMOS.NONE,
   },
   {
@@ -105,7 +105,7 @@ export const HAT_LOOT_MAP = [
     addDmg: 0,
     addHealth: 2,
     addCombat: 0,
-    addElement: 1,
+    addElement: 0,
     extraGizmo: GIZMOS.NONE,
   },
   {

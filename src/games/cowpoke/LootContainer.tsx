@@ -18,7 +18,7 @@ interface LootContainerProps {
   lootType: "hat" | "gun";
   isEquipped: boolean;
   isNew?: boolean;
-  onClick: () => void;
+  onPointerDown: () => void;
 }
 
 const LootContainer: React.FC<LootContainerProps> = ({
@@ -26,7 +26,7 @@ const LootContainer: React.FC<LootContainerProps> = ({
   lootType,
   isEquipped,
   isNew = false,
-  onClick,
+  onPointerDown,
 }) => {
   const lootMap = lootType === "hat" ? HAT_LOOT_MAP : GUN_LOOT_MAP;
   const lootItem = lootMap[lootId];
@@ -57,7 +57,7 @@ const LootContainer: React.FC<LootContainerProps> = ({
         ${isClickable ? "cursor-pointer" : "cursor-not-allowed"}
         flex flex-col items-center justify-center p-2
       `}
-      onClick={isClickable ? onClick : undefined}
+      onPointerDown={isClickable ? onPointerDown : undefined}
       title={`${lootItem.name} - ${RARITY[lootItem.rarity]}`}
     >
       {/* Top: Item Art + Stats */}
