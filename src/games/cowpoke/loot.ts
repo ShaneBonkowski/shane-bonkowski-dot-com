@@ -1,8 +1,8 @@
-export const RARITY = {
-  COMMON: 0,
-  RARE: 1,
-  LEGENDARY: 2,
-};
+export enum RARITY {
+  COMMON,
+  RARE,
+  LEGENDARY,
+}
 
 export const GIZMOS = {
   NONE: 0,

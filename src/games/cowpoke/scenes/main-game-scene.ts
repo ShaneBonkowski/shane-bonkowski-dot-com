@@ -989,33 +989,43 @@ export class MainGameScene extends Generic2DGameScene {
       let newY: number | null = null;
 
       for (const decoration of this.decorations) {
-        newX =
-          (decoration.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
-          screenWidth;
-        newY =
-          (decoration.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
-          screenHeight;
+        if (decoration) {
+          newX =
+            (decoration.physicsBody2D!.position.x /
+              this.lastKnownWindowSize.x) *
+            screenWidth;
+          newY =
+            (decoration.physicsBody2D!.position.y /
+              this.lastKnownWindowSize.y) *
+            screenHeight;
 
-        decoration.handleWindowResize(newX, newY);
+          decoration.handleWindowResize(newX, newY);
+        }
       }
 
-      newX =
-        (this.player!.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
-        screenWidth;
-      newY =
-        (this.player!.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
-        screenHeight;
+      if (this.player) {
+        newX =
+          (this.player!.physicsBody2D!.position.x /
+            this.lastKnownWindowSize.x) *
+          screenWidth;
+        newY =
+          (this.player!.physicsBody2D!.position.y /
+            this.lastKnownWindowSize.y) *
+          screenHeight;
 
-      this.player!.handleWindowResize(newX, newY);
+        this.player!.handleWindowResize(newX, newY);
+      }
 
-      newX =
-        (this.enemy!.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
-        screenWidth;
-      newY =
-        (this.enemy!.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
-        screenHeight;
+      if (this.enemy) {
+        newX =
+          (this.enemy!.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
+          screenWidth;
+        newY =
+          (this.enemy!.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
+          screenHeight;
 
-      this.enemy!.handleWindowResize(newX, newY);
+        this.enemy!.handleWindowResize(newX, newY);
+      }
     }
 
     // Update lastKnownWindowSize to current screen dimensions

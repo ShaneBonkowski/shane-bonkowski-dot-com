@@ -5,10 +5,24 @@ import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
+import LootContainer from "@/src/games/cowpoke/LootContainer";
+import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
+
+// FIXME:
+// - Make sure all styles match what I use
+// - Make sure all events are being used and all ones we listen for exist..
+// - Need to decrease level up points on spend
+// - Update loot to store the img link?? Or just have generic icon for hat and imgs. Then can just look over at player to see it equip
 
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [upgradePoints, setUpgradePoints] = useState(0);
+  const [equippedHatId, setEquippedHatId] = useState(0);
+  const [equippedGunId, setEquippedGunId] = useState(0);
+  const [ownedHatIds, setOwnedHatIds] = useState<number[]>([]);
+  const [ownedGunIds, setOwnedGunIds] = useState<number[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openWindow = () => {
@@ -30,6 +44,30 @@ const SettingsContainer: React.FC = () => {
     }, 150);
   };
 
+  const handleEquipHat = (hatId: number) => {
+    if (hatId !== equippedHatId) {
+      setEquippedHatId(hatId);
+      // Dispatch event to notify game
+      document.dispatchEvent(
+        new CustomEvent("equipmentChanged", {
+          detail: { type: "hat", id: hatId },
+        })
+      );
+    }
+  };
+
+  const handleEquipGun = (gunId: number) => {
+    if (gunId !== equippedGunId) {
+      setEquippedGunId(gunId);
+      // Dispatch event to notify game
+      document.dispatchEvent(
+        new CustomEvent("equipmentChanged", {
+          detail: { type: "gun", id: gunId },
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     const handleUiMenuOpen = () => {
       setIsButtonVisible(false);
@@ -38,12 +76,50 @@ const SettingsContainer: React.FC = () => {
       setIsButtonVisible(true);
     };
 
+    const handleCharacterLevelUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent;
+
+      // If player levels up, update the current level and upgrade points
+      if (customEvent.detail?.characterType === CHARACTER_TYPES.PLAYER) {
+        if (customEvent.detail?.level)
+          setCurrentLevel(customEvent.detail.level);
+        if (customEvent.detail?.upgradePoints)
+          setUpgradePoints(customEvent.detail.upgradePoints);
+      }
+    };
+
+    const handleUpdateOwnedHats = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail?.ownedHatIds) {
+        setOwnedHatIds(customEvent.detail.ownedHatIds);
+      }
+    };
+
+    const handleUpdateOwnedGuns = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail?.ownedGunIds) {
+        setOwnedGunIds(customEvent.detail.ownedGunIds);
+      }
+    };
+
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
+    document.addEventListener(
+      "characterLevelUpdate",
+      handleCharacterLevelUpdate
+    );
+    document.addEventListener("updateOwnedHats", handleUpdateOwnedHats);
+    document.addEventListener("updateOwnedGuns", handleUpdateOwnedGuns);
 
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+      document.removeEventListener(
+        "characterLevelUpdate",
+        handleCharacterLevelUpdate
+      );
+      document.removeEventListener("updateOwnedHats", handleUpdateOwnedHats);
+      document.removeEventListener("updateOwnedGuns", handleUpdateOwnedGuns);
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -59,18 +135,93 @@ const SettingsContainer: React.FC = () => {
         icon={<FaCog size={30} />}
         ariaLabel="Cowpoke Settings"
         className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
-        darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-        whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
+        darkModeLight={true}
+        whiteBackground={true}
       />
 
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
-        <div className="w-full h-full p-4" id="cowpoke-settings-container">
-          {/* Top Section: Settings Info */}
-          <div className="p-2" id="cowpoke-settings-description">
+        <div
+          className="w-full h-full p-4 overflow-y-auto"
+          id="cowpoke-settings-container"
+        >
+          {/* Top Section: Player Stats */}
+          <div className="p-2 mb-4" id="cowpoke-player-stats">
             <div className="flex flex-col items-center">
-              <h1 className="text-center my-0">Settings</h1>
-              <p className="text-center mb-0">FIXME... add settings</p>
+              <h1 className="text-center my-0">Cowpoke Gear & Upgrades</h1>
+              <div className="flex flex-row gap-8 mt-2">
+                <p className="text-center mb-0">
+                  <b>Current Level:</b> {currentLevel}
+                </p>
+                <p className="text-center mb-0">
+                  <b>Upgrade Points Available:</b> {upgradePoints}
+                </p>
+              </div>
             </div>
+          </div>
+
+          {/* Currently Equipped Section */}
+          <div className="mb-6">
+            <h2 className="text-center mb-3">Currently Equipped</h2>
+            <div className="flex flex-row justify-center gap-6">
+              <div className="flex flex-col items-center">
+                <h3 className="mb-2">Hat</h3>
+                <LootContainer
+                  lootId={equippedHatId}
+                  lootType="hat"
+                  isEquipped={true}
+                  onClick={() => {}} // No-op for equipped items
+                />
+              </div>
+              <div className="flex flex-col items-center">
+                <h3 className="mb-2">Gun</h3>
+                <LootContainer
+                  lootId={equippedGunId}
+                  lootType="gun"
+                  isEquipped={true}
+                  onClick={() => {}} // No-op for equipped items
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Owned Guns Section */}
+          <div className="mb-6">
+            <h2 className="text-center mb-3">Owned Guns</h2>
+            <div className="flex flex-row flex-wrap justify-center gap-3">
+              {ownedGunIds.map((gunId) => (
+                <LootContainer
+                  key={`gun-${gunId}`}
+                  lootId={gunId}
+                  lootType="gun"
+                  isEquipped={gunId === equippedGunId}
+                  onClick={() => handleEquipGun(gunId)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Owned Hats Section */}
+          <div className="mb-6">
+            <h2 className="text-center mb-3">Owned Hats</h2>
+            <div className="flex flex-row flex-wrap justify-center gap-3">
+              {ownedHatIds.map((hatId) => (
+                <LootContainer
+                  key={`hat-${hatId}`}
+                  lootId={hatId}
+                  lootType="hat"
+                  isEquipped={hatId === equippedHatId}
+                  onClick={() => handleEquipHat(hatId)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Upgrades Section (Placeholder) */}
+          <div className="mb-6">
+            <h2 className="text-center mb-3">Permanent Upgrades</h2>
+            <p className="text-center text-secondary-text-color">
+              Coming Soon - Spend upgrade points here!
+            </p>
           </div>
         </div>
       </GameUiWindow>

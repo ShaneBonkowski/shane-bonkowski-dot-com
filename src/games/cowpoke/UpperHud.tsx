@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import CharacterInfoBar from "@/src/games/cowpoke/CharacterInfoBar";
 import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
-import { FaRobot, FaHandPointer } from "react-icons/fa";
+import { FaRobot, FaHandPointer, FaSkull } from "react-icons/fa";
 import { GiRabbit, GiSnail } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 
 export default function UpperHud() {
+  const [killsThisPlaythrough, setKillsThisPlaythrough] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [isAutoMode, setIsAutoMode] = useState(false);
   const [isFastMode, setIsFastMode] = useState(false);
@@ -33,13 +34,26 @@ export default function UpperHud() {
     const handleUiMenuClose = () => {
       setIsVisible(true);
     };
+    const handlePlayerQtyKillsUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const kills = customEvent.detail?.kills || 0;
+      setKillsThisPlaythrough(kills);
+    };
 
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
+    document.addEventListener(
+      "playerQtyKillsUpdate",
+      handlePlayerQtyKillsUpdate
+    );
 
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+      document.removeEventListener(
+        "playerQtyKillsUpdate",
+        handlePlayerQtyKillsUpdate
+      );
     };
   }, []);
 
@@ -82,6 +96,13 @@ export default function UpperHud() {
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           disabled={!isAutoMode} // Disable speed up if auto mode is off
         />
+        <div className="z-20 flex flex-row items-center">
+          <FaSkull size={25} className="text-primary-text-color-light" />
+          <span className="ml-1 font-bold text-primary-text-color-light">
+            <b>x</b>
+            {killsThisPlaythrough}
+          </span>
+        </div>
       </div>
 
       <CharacterInfoBar

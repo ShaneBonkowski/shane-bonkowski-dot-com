@@ -53,6 +53,7 @@ export class Character extends GameObject {
 
   public name: string = "Character";
   public level: number = 0;
+  public upgradePoints: number = 0;
   public health: number = 0;
   public maxHealth: number = 0;
   public xp: number = 0;
@@ -133,9 +134,16 @@ export class Character extends GameObject {
     this.subscribeToEvents();
   }
 
-  subscribeToEvents() {}
+  subscribeToEvents() {
+    document.addEventListener("equipmentChanged", this.handleEquipmentChanged);
+  }
 
-  unsubscribeFromEvents() {}
+  unsubscribeFromEvents() {
+    document.removeEventListener(
+      "equipmentChanged",
+      this.handleEquipmentChanged
+    );
+  }
 
   handleWindowResize(newX: number, newY: number) {
     if (newX == null || newY == null) {
@@ -150,6 +158,16 @@ export class Character extends GameObject {
     this.physicsBody2D!.position.x = newX;
     this.physicsBody2D!.position.y = newY;
   }
+
+  handleEquipmentChanged = (event: Event) => {
+    const customEvent = event as CustomEvent;
+    const { type, id } = customEvent.detail;
+    if (type === "hat") {
+      this.equipHat(id);
+    } else if (type === "gun") {
+      this.equipGun(id);
+    }
+  };
 
   updateScale() {
     this.scale = this.calculateScale();
@@ -227,6 +245,19 @@ export class Character extends GameObject {
     );
     this.headSprite!.setDepth(7);
 
+    // Read in hats + guns from localStorage if there are any
+    const storedHatIds = localStorage.getItem("cowpokeOwnedHatIds");
+    if (storedHatIds) {
+      this.ownedHatIds = JSON.parse(storedHatIds);
+      this.updateOwnedHatsUiAndStorage();
+    }
+
+    const storedGunIds = localStorage.getItem("cowpokeOwnedGunIds");
+    if (storedGunIds) {
+      this.ownedGunIds = JSON.parse(storedGunIds);
+      this.updateOwnedGunsUiAndStorage();
+    }
+
     // Set default hat and gun when new player character is spawned
     this.equipHat(0);
     this.equipGun(0);
@@ -245,6 +276,13 @@ export class Character extends GameObject {
 
     // Setup the character
     this.spawnCharacterSetup();
+
+    // Let ui know player has 0 kills to start
+    document.dispatchEvent(
+      new CustomEvent("playerQtyKillsUpdate", {
+        detail: { kills: this.kills },
+      })
+    );
   }
 
   spawnNewRandomCharacter() {
@@ -489,13 +527,49 @@ export class Character extends GameObject {
   addNewOwnedHat(id: number) {
     if (!this.ownedHatIds.includes(id)) {
       this.ownedHatIds.push(id);
+      this.updateOwnedHatsUiAndStorage();
     }
+  }
+
+  updateOwnedHatsUiAndStorage() {
+    // Save to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "cowpokeOwnedHatIds",
+        JSON.stringify(this.ownedHatIds)
+      );
+    }
+
+    // Dispatch event to update owned hats in the game
+    dispatchEvent(
+      new CustomEvent("updateOwnedHats", {
+        detail: { ownedHatIds: this.ownedHatIds },
+      })
+    );
   }
 
   addNewOwnedGun(id: number) {
     if (!this.ownedGunIds.includes(id)) {
       this.ownedGunIds.push(id);
+      this.updateOwnedGunsUiAndStorage();
     }
+  }
+
+  updateOwnedGunsUiAndStorage() {
+    // Save to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "cowpokeOwnedGunIds",
+        JSON.stringify(this.ownedGunIds)
+      );
+    }
+
+    // Dispatch event to update owned guns in the game
+    dispatchEvent(
+      new CustomEvent("updateOwnedGuns", {
+        detail: { ownedGunIds: this.ownedGunIds },
+      })
+    );
   }
 
   getCombatIncreaseFromLoot() {
@@ -718,9 +792,15 @@ export class Character extends GameObject {
       newLevel = 0;
     }
     this.level = newLevel;
+    this.upgradePoints += 1;
+
     document.dispatchEvent(
       new CustomEvent("characterLevelUpdate", {
-        detail: { characterType: this.type, level: newLevel },
+        detail: {
+          characterType: this.type,
+          level: newLevel,
+          upgradePoints: this.upgradePoints,
+        },
       })
     );
 
@@ -784,6 +864,13 @@ export class Character extends GameObject {
 
       // Gain xp
       this.updateXp(this.xp + addXp);
+
+      // Update ui that shows player kills
+      document.dispatchEvent(
+        new CustomEvent("playerQtyKillsUpdate", {
+          detail: { kills: this.kills },
+        })
+      );
 
       // Random chance to get enemy's loot
       // FIXME: add this...
@@ -905,9 +992,10 @@ export class Character extends GameObject {
 
     this.visibilityTween = this.scene.tweens.add({
       targets: this.graphic,
-      alpha: [1, 0.3, 0.7, 0.2, 1],
-      duration: this.scene.combatDuration,
+      alpha: 0.5,
+      duration: this.scene.combatDuration / 4,
       ease: "Power2.easeOut",
+      yoyo: true,
     });
   }
 
