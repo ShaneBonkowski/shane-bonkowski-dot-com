@@ -63,6 +63,9 @@ export class Character extends GameObject {
   public kills: number = 0;
   public dead: boolean = false;
 
+  public permanentHealthBonus: number = 0;
+  public permanentDamageBonus: number = 0;
+
   private bounceTime: number = 0;
   private animScaleFactorX: number = 1;
   private animScaleFactorY: number = 1;
@@ -136,12 +139,20 @@ export class Character extends GameObject {
 
   subscribeToEvents() {
     document.addEventListener("equipmentChanged", this.handleEquipmentChanged);
+    document.addEventListener(
+      "permanentUpgradeChanged",
+      this.handlePermanentUpgradeChanged
+    );
   }
 
   unsubscribeFromEvents() {
     document.removeEventListener(
       "equipmentChanged",
       this.handleEquipmentChanged
+    );
+    document.removeEventListener(
+      "permanentUpgradeChanged",
+      this.handlePermanentUpgradeChanged
     );
   }
 
@@ -166,6 +177,22 @@ export class Character extends GameObject {
       this.equipHat(id);
     } else if (type === "gun") {
       this.equipGun(id);
+    }
+  };
+
+  handlePermanentUpgradeChanged = (event: Event) => {
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      const customEvent = event as CustomEvent;
+      const { type, upgradePointsRemaining } = customEvent.detail;
+
+      if (type === "health") {
+        this.permanentHealthBonus += 1;
+      } else if (type === "damage") {
+        this.permanentDamageBonus += 1;
+      }
+
+      // Update upgrade points
+      this.upgradePoints = upgradePointsRemaining;
     }
   };
 
@@ -245,25 +272,9 @@ export class Character extends GameObject {
     );
     this.headSprite!.setDepth(7);
 
-    // Read in hats + guns from localStorage if there are any
-    const storedHatIds = localStorage.getItem("cowpokeOwnedHatIds");
-    if (storedHatIds) {
-      this.ownedHatIds = JSON.parse(storedHatIds);
-      this.updateOwnedHatsUiAndStorage();
-    }
-
-    const storedGunIds = localStorage.getItem("cowpokeOwnedGunIds");
-    if (storedGunIds) {
-      this.ownedGunIds = JSON.parse(storedGunIds);
-      this.updateOwnedGunsUiAndStorage();
-    }
-
-    // Set default hat and gun when new player character is spawned
-    this.equipHat(0);
-    this.equipGun(0);
-
-    // Set level, this will set max health, xp, etc.
-    this.updateLevel(5, true);
+    // Load in saved state from localStorage
+    this.loadGunsAndHats();
+    this.loadPermanentUpgrades();
 
     // Set default name, or load from localStorage if available
     const storedName = localStorage.getItem("cowpokePlayerName");
@@ -273,6 +284,13 @@ export class Character extends GameObject {
       // If no name is stored, set a default name
       this.updateName("Shaner");
     }
+
+    // Set default hat and gun when new player character is spawned
+    this.equipHat(0);
+    this.equipGun(0);
+
+    // Set level, this will set max health, xp, etc.
+    this.updateLevel(5, true);
 
     // Setup the character
     this.spawnCharacterSetup();
@@ -370,6 +388,39 @@ export class Character extends GameObject {
       this.name,
       this.getFeedMessageAlignment()
     );
+  }
+
+  private loadGunsAndHats() {
+    // Read in hats + guns from localStorage if there are any
+    const storedHatIds = localStorage.getItem("cowpokeOwnedHatIds");
+    if (storedHatIds) {
+      this.ownedHatIds = JSON.parse(storedHatIds);
+      this.updateOwnedHatsUiAndStorage();
+    }
+
+    const storedGunIds = localStorage.getItem("cowpokeOwnedGunIds");
+    if (storedGunIds) {
+      this.ownedGunIds = JSON.parse(storedGunIds);
+      this.updateOwnedGunsUiAndStorage();
+    }
+  }
+
+  private loadPermanentUpgrades() {
+    const savedPermaHealth = localStorage.getItem("cowpoke-perma-health");
+    const savedPermaDamage = localStorage.getItem("cowpoke-perma-damage");
+
+    if (savedPermaHealth) {
+      const healthLevel = parseInt(savedPermaHealth);
+      this.permanentHealthBonus = healthLevel;
+    }
+
+    if (savedPermaDamage) {
+      const damageLevel = parseInt(savedPermaDamage);
+      this.permanentDamageBonus = damageLevel;
+    }
+
+    // Refresh health, since permanent upgrades can add health
+    this.updateMaxHealth();
   }
 
   equipHat(id: number) {
@@ -602,7 +653,8 @@ export class Character extends GameObject {
     return (
       baseDmg +
       GUN_LOOT_MAP[this.equippedGunId].addDmg +
-      HAT_LOOT_MAP[this.equippedHatId].addDmg
+      HAT_LOOT_MAP[this.equippedHatId].addDmg +
+      this.permanentDamageBonus
     );
   }
 
@@ -777,7 +829,7 @@ export class Character extends GameObject {
   }
 
   updateMaxHealth() {
-    this.maxHealth = 10 + this.level * 1.2;
+    this.maxHealth = 10 + this.level * 1.2 + this.permanentHealthBonus;
 
     this.maxHealth +=
       HAT_LOOT_MAP[this.equippedHatId].addHealth +

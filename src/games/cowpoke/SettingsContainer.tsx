@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { FaCog } from "react-icons/fa";
+import { FaCog, FaHeart } from "react-icons/fa";
+import { GiCrossedSwords } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
@@ -18,7 +19,7 @@ const UpgradeButton = ({
   onPointerDown,
 }: {
   type: "Health" | "Damage";
-  icon: string;
+  icon: React.ReactNode;
   level: number;
   upgradePoints: number;
   borderColor: string;
@@ -29,7 +30,7 @@ const UpgradeButton = ({
     onPointerDown={onPointerDown}
     disabled={upgradePoints <= 0}
     className={`
-        w-32 h-20 border-2 bg-black bg-opacity-50 
+        min-w-32 min-h-20 border-2 bg-black bg-opacity-50 
         ${
           upgradePoints > 0
             ? `border-${borderColor} hover:bg-opacity-40 cursor-pointer`
@@ -41,7 +42,7 @@ const UpgradeButton = ({
       upgradePoints > 0 ? " - Click to upgrade!" : " - Need upgrade points"
     }`}
   >
-    <div className="font-bold text-lg">{icon}</div>
+    <div className="text-lg mb-1">{icon}</div>
     <div>Level {level}</div>
     {upgradePoints > 0 && (
       <div className={`text-xs text-${textColor}`}>{`+1 ${type}`}</div>
@@ -52,7 +53,6 @@ const UpgradeButton = ({
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [currentLevel, setCurrentLevel] = useState(1);
   const [upgradePoints, setUpgradePoints] = useState(0);
   const [equippedHatId, setEquippedHatId] = useState(0);
   const [equippedGunId, setEquippedGunId] = useState(0);
@@ -99,10 +99,8 @@ const SettingsContainer: React.FC = () => {
     const handleCharacterLevelUpdate = (event: Event) => {
       const customEvent = event as CustomEvent;
 
-      // If player levels up, update the current level and upgrade points
+      // If player levels up, update the upgrade points
       if (customEvent.detail?.characterType === CHARACTER_TYPES.PLAYER) {
-        if (customEvent.detail?.level)
-          setCurrentLevel(customEvent.detail.level);
         if (customEvent.detail?.upgradePoints)
           setUpgradePoints(customEvent.detail.upgradePoints);
       }
@@ -233,10 +231,9 @@ const SettingsContainer: React.FC = () => {
 
       // Notify game
       document.dispatchEvent(
-        new CustomEvent("permanentUpgrade", {
+        new CustomEvent("permanentUpgradeChanged", {
           detail: {
             type: "health",
-            level: newLevel,
             upgradePointsRemaining: newUpgradePoints,
           },
         })
@@ -258,7 +255,7 @@ const SettingsContainer: React.FC = () => {
 
       // Notify game
       document.dispatchEvent(
-        new CustomEvent("permanentUpgrade", {
+        new CustomEvent("permanentUpgradeChanged", {
           detail: {
             type: "damage",
             level: newLevel,
@@ -290,105 +287,95 @@ const SettingsContainer: React.FC = () => {
       </div>
 
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-6 mb-6">
           {/* Title */}
           <h1 className="text-center">Cowpoke Gear & Upgrades</h1>
 
-          <div className="flex flex-row gap-8 mx-auto">
-            <p className="text-center">
-              <b>Current Level:</b> {currentLevel}
-            </p>
-            <p className="text-center">
-              <b>Upgrade Points Available:</b> {upgradePoints}
-            </p>
-          </div>
-
           {/* Upgrades Section */}
-          <h2 className="text-center">Permanent Upgrades</h2>
-          <div className="flex flex-row gap-6 justify-center">
-            <UpgradeButton
-              type="Health"
-              icon="❤️"
-              level={permaHealthLevel}
-              upgradePoints={upgradePoints}
-              borderColor="green-500"
-              textColor="green-400"
-              onPointerDown={handlePermaHealthUpgrade}
-            />
+          <div>
+            <h2 className="text-center">Permanent Upgrades</h2>
+            {upgradePoints > 0 ? (
+              <p className="text-center">
+                Upgrade Points Available: {upgradePoints}
+              </p>
+            ) : (
+              <p className="text-center">Level up to earn upgrade points!</p>
+            )}
+            <div className="flex flex-row gap-6 justify-center">
+              <UpgradeButton
+                type="Health"
+                icon={<FaHeart size={30} />}
+                level={permaHealthLevel}
+                upgradePoints={upgradePoints}
+                borderColor="green-500"
+                textColor="green-400"
+                onPointerDown={handlePermaHealthUpgrade}
+              />
 
-            <UpgradeButton
-              type="Damage"
-              icon="⚔️"
-              level={permaDamageLevel}
-              upgradePoints={upgradePoints}
-              borderColor="red-500"
-              textColor="red-400"
-              onPointerDown={handlePermaDamageUpgrade}
-            />
+              <UpgradeButton
+                type="Damage"
+                icon={<GiCrossedSwords size={30} />}
+                level={permaDamageLevel}
+                upgradePoints={upgradePoints}
+                borderColor="red-500"
+                textColor="red-400"
+                onPointerDown={handlePermaDamageUpgrade}
+              />
+            </div>
           </div>
-
-          {upgradePoints === 0 && (
-            <p className="text-center">Level up to earn upgrade points!</p>
-          )}
 
           {/* Currently Equipped Section */}
           <div id="equipped-items">
             <h2 className="text-center">Currently Equipped</h2>
             <div className="flex flex-row justify-center gap-6">
-              <div className="flex flex-col items-center">
-                <h3 className="text-center">Hat</h3>
+              <LootContainer
+                lootId={equippedHatId}
+                lootType="hat"
+                isEquipped={true}
+                isNew={isHatNew(equippedHatId)}
+                onPointerDown={() => {}} // No-op for equipped items
+              />
+              <LootContainer
+                lootId={equippedGunId}
+                lootType="gun"
+                isEquipped={true}
+                isNew={isGunNew(equippedGunId)}
+                onPointerDown={() => {}} // No-op for equipped items
+              />
+            </div>
+          </div>
+
+          {/* Owned Guns Section */}
+          <div id="owned-guns">
+            <h2 className="text-center">Owned Guns</h2>
+            <div className="flex flex-row flex-wrap justify-center gap-3">
+              {ownedGunIds.map((gunId) => (
                 <LootContainer
-                  lootId={equippedHatId}
-                  lootType="hat"
-                  isEquipped={true}
-                  isNew={isHatNew(equippedHatId)}
-                  onPointerDown={() => {}} // No-op for equipped items
-                />
-              </div>
-              <div className="flex flex-col items-center">
-                <h3 className="text-center">Gun</h3>
-                <LootContainer
-                  lootId={equippedGunId}
+                  key={`gun-${gunId}`}
+                  lootId={gunId}
                   lootType="gun"
-                  isEquipped={true}
-                  isNew={isGunNew(equippedGunId)}
-                  onPointerDown={() => {}} // No-op for equipped items
+                  isEquipped={gunId === equippedGunId}
+                  isNew={isGunNew(gunId)}
+                  onPointerDown={() => handleEquipGun(gunId)}
                 />
-              </div>
+              ))}
             </div>
+          </div>
 
-            {/* Owned Guns Section */}
-            <div id="owned-guns">
-              <h2 className="text-center">Owned Guns</h2>
-              <div className="flex flex-row flex-wrap justify-center gap-3">
-                {ownedGunIds.map((gunId) => (
-                  <LootContainer
-                    key={`gun-${gunId}`}
-                    lootId={gunId}
-                    lootType="gun"
-                    isEquipped={gunId === equippedGunId}
-                    isNew={isGunNew(gunId)}
-                    onPointerDown={() => handleEquipGun(gunId)}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Owned Hats Section */}
-            <div id="owned-hats">
-              <h2 className="text-center">Owned Hats</h2>
-              <div className="flex flex-row flex-wrap justify-center gap-3">
-                {ownedHatIds.map((hatId) => (
-                  <LootContainer
-                    key={`hat-${hatId}`}
-                    lootId={hatId}
-                    lootType="hat"
-                    isEquipped={hatId === equippedHatId}
-                    isNew={isHatNew(hatId)}
-                    onPointerDown={() => handleEquipHat(hatId)}
-                  />
-                ))}
-              </div>
+          {/* Owned Hats Section */}
+          <div id="owned-hats">
+            <h2 className="text-center">Owned Hats</h2>
+            <div className="flex flex-row flex-wrap justify-center gap-3">
+              {ownedHatIds.map((hatId) => (
+                <LootContainer
+                  key={`hat-${hatId}`}
+                  lootId={hatId}
+                  lootType="hat"
+                  isEquipped={hatId === equippedHatId}
+                  isNew={isHatNew(hatId)}
+                  onPointerDown={() => handleEquipHat(hatId)}
+                />
+              ))}
             </div>
           </div>
         </div>
