@@ -6,6 +6,7 @@ import {
 } from "@/src/games/cowpoke/scenes/main-game-scene";
 import { GUN_LOOT_MAP, HAT_LOOT_MAP, RARITY } from "@/src/games/cowpoke/loot";
 import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
+import { gameDataStore, GameData } from "@/src/games/cowpoke/game-data-store";
 
 export enum CHARACTER_TYPES {
   UNASSIGNED = -1,
@@ -134,7 +135,49 @@ export class Character extends GameObject {
     this.physicsBody2D!.position.y =
       screenHeight - screenHeight * (100 / REFERENCE_BKG_SIZE.y);
 
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    this.setupSyncedGameData();
+
+    // Subscribe to game data changes
     this.subscribeToEvents();
+  }
+
+  setupSyncedGameData() {
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    const gameData = gameDataStore.getSnapshot();
+
+    this.setGameDataFromStore(gameData);
+
+    gameDataStore.subscribe(() => {
+      const newGameData = gameDataStore.getSnapshot();
+      this.handleGameDataChange(newGameData);
+    });
+  }
+
+  handleGameDataChange = (gameData: GameData) => {
+    this.setGameDataFromStore(gameData);
+  };
+
+  setGameDataFromStore(gameData: GameData) {
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      this.name = gameData.playerName;
+      this.level = gameData.playerLevel;
+      this.health = gameData.playerHealth;
+      this.maxHealth = gameData.playerMaxHealth;
+      this.xp = gameData.playerXp;
+      this.maxXp = gameData.playerMaxXp;
+      this.upgradePoints = gameData.playerUpgradePoints;
+      this.kills = gameData.playerKills;
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      this.name = gameData.enemyName;
+      this.level = gameData.enemyLevel;
+      this.health = gameData.enemyHealth;
+      this.maxHealth = gameData.enemyMaxHealth;
+      this.xp = gameData.enemyXp;
+      this.maxXp = gameData.enemyMaxXp;
+      this.upgradePoints = gameData.enemyUpgradePoints;
+      this.kills = gameData.enemyKills;
+    }
   }
 
   subscribeToEvents() {
@@ -294,13 +337,6 @@ export class Character extends GameObject {
 
     // Setup the character
     this.spawnCharacterSetup();
-
-    // Let ui know player has 0 kills to start
-    document.dispatchEvent(
-      new CustomEvent("playerQtyKillsUpdate", {
-        detail: { kills: this.kills },
-      })
-    );
   }
 
   spawnNewRandomCharacter() {
@@ -801,13 +837,12 @@ export class Character extends GameObject {
     if (newName.length === 0) {
       newName = "Shaner";
     }
-    this.name = newName;
 
-    document.dispatchEvent(
-      new CustomEvent("characterNameUpdate", {
-        detail: { characterType: this.type, name: newName },
-      })
-    );
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerName(newName);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyName(newName);
+    }
   }
 
   updateHealth(newHealth: number) {
@@ -816,51 +851,50 @@ export class Character extends GameObject {
     } else if (newHealth > this.maxHealth) {
       newHealth = this.maxHealth;
     }
-    this.health = newHealth;
 
     // Ensure health is an int
-    this.health = Math.round(this.health);
+    newHealth = Math.round(newHealth);
 
-    document.dispatchEvent(
-      new CustomEvent("characterHealthUpdate", {
-        detail: { characterType: this.type, health: this.health },
-      })
-    );
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerHealth(newHealth);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyHealth(newHealth);
+    }
   }
 
   updateMaxHealth() {
-    this.maxHealth = 10 + this.level * 1.2 + this.permanentHealthBonus;
+    let newMaxHealth = 10 + this.level * 1.2 + this.permanentHealthBonus;
 
-    this.maxHealth +=
+    newMaxHealth +=
       HAT_LOOT_MAP[this.equippedHatId].addHealth +
       GUN_LOOT_MAP[this.equippedGunId].addHealth;
 
     // Ensure max health is an int
-    this.maxHealth = Math.round(this.maxHealth);
+    newMaxHealth = Math.round(newMaxHealth);
 
-    document.dispatchEvent(
-      new CustomEvent("characterMaxHealthUpdate", {
-        detail: { characterType: this.type, maxHealth: this.maxHealth },
-      })
-    );
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerMaxHealth(newMaxHealth);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyMaxHealth(newMaxHealth);
+    }
   }
 
   updateLevel(newLevel: number, skipMsg: boolean = false) {
     if (newLevel < 0) {
       newLevel = 0;
     }
-    this.level = newLevel;
-    this.upgradePoints += 1;
 
-    document.dispatchEvent(
-      new CustomEvent("characterLevelUpdate", {
-        detail: {
-          characterType: this.type,
-          level: newLevel,
-          upgradePoints: this.upgradePoints,
-        },
-      })
-    );
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerLevel(newLevel);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyLevel(newLevel);
+    }
+
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerUpgradePoints(this.upgradePoints + 1);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyUpgradePoints(this.upgradePoints + 1);
+    }
 
     // Update max health on level up, then restore health
     this.updateMaxHealth();
@@ -884,12 +918,12 @@ export class Character extends GameObject {
     if (newXp < 0) {
       newXp = 0;
     }
-    this.xp = newXp;
-    document.dispatchEvent(
-      new CustomEvent("characterXpUpdate", {
-        detail: { characterType: this.type, xp: newXp },
-      })
-    );
+
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerXp(newXp);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyXp(newXp);
+    }
 
     // Level up!
     if (this.xp >= this.maxXp) {
@@ -898,18 +932,19 @@ export class Character extends GameObject {
   }
 
   updateMaxXp() {
-    this.maxXp = 10 + this.level * 2;
-    document.dispatchEvent(
-      new CustomEvent("characterMaxXpUpdate", {
-        detail: { characterType: this.type, maxXp: this.maxXp },
-      })
-    );
+    const newMaxXp = 10 + this.level * 2;
+
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerMaxXp(newMaxXp);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyMaxXp(newMaxXp);
+    }
   }
 
   handleKill(otherCharacter: Character) {
-    this.kills += 1;
-
     if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerKills((this.kills += 1));
+
       const addXp = Math.floor(otherCharacter.level * 1.2);
 
       // Player says a quip when killing enemy
@@ -922,13 +957,6 @@ export class Character extends GameObject {
 
       // Gain xp
       this.updateXp(this.xp + addXp);
-
-      // Update ui that shows player kills
-      document.dispatchEvent(
-        new CustomEvent("playerQtyKillsUpdate", {
-          detail: { kills: this.kills },
-        })
-      );
 
       // 50/50 chance to try to drop either gun or hat
       if (this.scene.random.getRandomFloat(0, 1) < 0.5) {
@@ -983,6 +1011,8 @@ export class Character extends GameObject {
         }
       }
     } else {
+      gameDataStore.setEnemyKills((this.kills += 1));
+
       // Enemy says a quip when killing player
       sendFeedMessage(
         this.getRandomMsgFromList(CHARACTER_KILL_QUIPS),

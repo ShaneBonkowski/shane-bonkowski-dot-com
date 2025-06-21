@@ -11,6 +11,7 @@ import { Physics } from "@/src/utils/physics";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Character, CHARACTER_TYPES } from "@/src/games/cowpoke/character";
 import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
+import { gameDataStore, GameData } from "@/src/games/cowpoke/game-data-store";
 
 // Bkg art was drawn at 1920x1080, so we use that as the reference size.
 // This is used to scale the background decorations to fit the screen.
@@ -51,6 +52,9 @@ export class MainGameScene extends Generic2DGameScene {
   private movingStartTime: number = 0;
   private movingDuration: number = 1250; // ms
   public combatDuration = 500; // ms
+
+  public autoMode: boolean = false;
+  public fastMode: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -153,6 +157,8 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
+    this.setupSyncedGameData();
+
     // Make sure the canvas is resized to fit the parent element
     this.handleWindowResize();
 
@@ -160,6 +166,27 @@ export class MainGameScene extends Generic2DGameScene {
     // game start is not called til after start menu is closed
     dispatchCloseLoadingScreenEvent("Cowpoke");
     this.openStartMenu();
+  }
+
+  setupSyncedGameData() {
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    const gameData = gameDataStore.getSnapshot();
+
+    this.setGameDataFromStore(gameData);
+
+    gameDataStore.subscribe(() => {
+      const newGameData = gameDataStore.getSnapshot();
+      this.handleGameDataChange(newGameData);
+    });
+  }
+
+  handleGameDataChange = (gameData: GameData) => {
+    this.setGameDataFromStore(gameData);
+  };
+
+  setGameDataFromStore(gameData: GameData) {
+    this.autoMode = gameData.autoMode;
+    this.fastMode = gameData.fastMode;
   }
 
   startGame = () => {
@@ -195,29 +222,13 @@ export class MainGameScene extends Generic2DGameScene {
    * has lost, or the player has chosen to end the game.
    */
   endGame() {
-    // Last game stats
-    localStorage.setItem(
-      "cowpokeLevelThisPlaythrough",
-      this.player!.level.toString()
-    );
-
-    localStorage.setItem(
-      "cowpokeKillsThisPlaythrough",
-      this.player!.kills.toString()
-    );
-
     // Lifetime stats
-    const furthestLevel = localStorage.getItem("cowpokeFurthestLevel");
-    const newFurthestLevel = furthestLevel
-      ? Math.max(parseInt(furthestLevel, 10), this.player!.level)
-      : this.player!.level;
-    localStorage.setItem("cowpokeFurthestLevel", newFurthestLevel.toString());
+    const gameData = gameDataStore.getSnapshot();
+    gameDataStore.setLifetimeKills(gameData.lifetimeKills + this.player!.kills);
 
-    const totalKills = localStorage.getItem("cowpokeTotalKills");
-    const newTotalKills = totalKills
-      ? parseInt(totalKills, 10) + this.player!.kills
-      : this.player!.kills;
-    localStorage.setItem("cowpokeTotalKills", newTotalKills.toString());
+    if (this.player!.level > gameData.lifetimeFurthestLevel) {
+      gameDataStore.setLifetimeFurthestLevel(this.player!.level);
+    }
 
     // Tell the game that ui menu was opened so that it
     // hides the UI etc.
@@ -397,6 +408,8 @@ export class MainGameScene extends Generic2DGameScene {
     this.setUpWindowResizeHandling();
 
     document.addEventListener("startLoadingGame", this.startGame);
+    document.addEventListener("toggleAutomatic", this.handleToggleAutomatic);
+    document.addEventListener("toggleFastMode", this.handleToggleFastMode);
 
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
@@ -874,6 +887,14 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
+  handleToggleAutomatic = () => {
+    gameDataStore.setAutoMode(!this.autoMode);
+  };
+
+  handleToggleFastMode = () => {
+    gameDataStore.setFastMode(!this.fastMode);
+  };
+
   /*
    * Note that this function is called in the shutdown() method for GameScene2D,
    * so no need to call it! That is handled automatically.
@@ -885,6 +906,8 @@ export class MainGameScene extends Generic2DGameScene {
     this.tearDownWindowResizeHandling();
 
     document.removeEventListener("startLoadingGame", this.startGame);
+    document.removeEventListener("toggleAutomatic", this.handleToggleAutomatic);
+    document.removeEventListener("toggleFastMode", this.handleToggleFastMode);
 
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
@@ -1059,6 +1082,7 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
+    gameDataStore.resetData();
     this.destroyGameObjects();
   }
 }

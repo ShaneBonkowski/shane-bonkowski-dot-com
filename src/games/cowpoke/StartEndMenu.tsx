@@ -6,9 +6,17 @@ import { FaPlay } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
+import { UseGameData } from "@/src/games/cowpoke/UseGameData";
 
 const StartEndMenu: React.FC = () => {
-  const [nameProvided, setNameProvided] = useState("");
+  const {
+    playerName,
+    playerLevel,
+    playerKills,
+    lifetimeFurthestLevel,
+    lifetimeKills,
+    setPlayerName,
+  } = UseGameData();
   const [isVisible, setIsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -40,15 +48,13 @@ const StartEndMenu: React.FC = () => {
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
-      // Update the selected name in localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem("cowpokePlayerName", nameProvided);
-      }
+      // Update the player name in the game data store
+      setPlayerName(playerName);
 
       // Tell the main-game-scene to start loading the game
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
     }, 150);
-  }, [nameProvided]);
+  }, [playerName, setPlayerName]);
 
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
@@ -73,28 +79,6 @@ const StartEndMenu: React.FC = () => {
       }
     };
   }, [handleStartLoadingGame, isVisible]);
-
-  // Get playthrough stats from localStorage
-  const levelThisPlaythrough =
-    typeof window !== "undefined"
-      ? localStorage.getItem("cowpokeLevelThisPlaythrough")
-      : 0;
-
-  const killsThisPlaythrough =
-    typeof window !== "undefined"
-      ? localStorage.getItem("cowpokeKillsThisPlaythrough")
-      : 0;
-
-  // Get lifetime stats from localStorage
-  const furthestLevelLifetime =
-    typeof window !== "undefined"
-      ? localStorage.getItem("cowpokeFurthestLevel")
-      : 0;
-
-  const killsLifetime =
-    typeof window !== "undefined"
-      ? localStorage.getItem("cowpokeTotalKills")
-      : 0;
 
   return (
     <>
@@ -137,16 +121,16 @@ const StartEndMenu: React.FC = () => {
           {menuType === "end" && (
             <>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Level:</b> {levelThisPlaythrough}
+                <b>Level:</b> {playerLevel}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Kills:</b> {killsThisPlaythrough}
+                <b>Kills:</b> {playerKills}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Lifetime Highest Level:</b> {furthestLevelLifetime}
+                <b>Lifetime Highest Level:</b> {lifetimeFurthestLevel}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Lifetime Total Kills:</b> {killsLifetime}
+                <b>Lifetime Total Kills:</b> {lifetimeKills}
               </p>
             </>
           )}
@@ -160,8 +144,7 @@ const StartEndMenu: React.FC = () => {
           <input
             type="text"
             placeholder="Yer name here..."
-            value={nameProvided}
-            onChange={(e) => setNameProvided(e.target.value)}
+            value={playerName}
             maxLength={10}
             className="p-2 text-small flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
             aria-label="Player name input"
