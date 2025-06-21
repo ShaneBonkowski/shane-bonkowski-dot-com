@@ -20,7 +20,7 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({
   const VISIBLE_DURATION = 5000; // Message stays visible for 5 seconds
   const FADE_DURATION = 1000; // NOTE: ensure fade-out duration matches CSS (duration-1000)
 
-  const handleGameStarted = () => {
+  const handleCloseLoadingScreen = () => {
     delayTimeoutRef.current = setTimeout(() => {
       setIsVisible(true);
 
@@ -36,7 +36,7 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({
   };
 
   useEffect(() => {
-    document.addEventListener("gameStarted", handleGameStarted);
+    document.addEventListener("closeLoadingScreen", handleCloseLoadingScreen);
 
     return () => {
       if (delayTimeoutRef.current) {
@@ -51,7 +51,10 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({
         clearTimeout(fadeTimeoutRef.current);
         fadeTimeoutRef.current = null;
       }
-      document.removeEventListener("gameStarted", handleGameStarted);
+      document.removeEventListener(
+        "closeLoadingScreen",
+        handleCloseLoadingScreen
+      );
     };
   }, []);
 

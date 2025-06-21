@@ -13,6 +13,12 @@ This project uses the following technologies:
 
 ## Development
 
+Download requirements from the root directory of shane-bonkowski-dot-com:
+
+```bash
+npm install
+```
+
 Spin up a development server:
 
 ```bash

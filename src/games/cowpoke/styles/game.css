@@ -1,0 +1,13 @@
+body.cowpoke-game-background {
+  overflow: hidden; /* Prevent scrolling */
+  /* bkg image is handled in the phaser canvas! */
+  background-color: #ffffff;
+  background-image: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.cowpoke-panel-white {
+  background-color: rgba(255, 255, 255, 0.85);
+}

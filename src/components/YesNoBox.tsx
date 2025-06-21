@@ -33,7 +33,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
     <div
       className={`fixed ${
         bottomRight ? "bottom-0 right-0" : "bottom-0 left-0 right-0"
-      } bg-info-banner-bkg-color-light dark:bg-info-banner-bkg-color text-body text-primary-text-color-light dark:text-primary-text-color p-common-p sm:p-common-p-sm z-50 ${
+      } z-40 bg-info-banner-bkg-color-light dark:bg-info-banner-bkg-color text-body text-primary-text-color-light dark:text-primary-text-color p-common-p sm:p-common-p-sm ${
         bottomRight ? "w-full sm:w-auto" : "w-full"
       } pointer-events-none`}
       id={id}

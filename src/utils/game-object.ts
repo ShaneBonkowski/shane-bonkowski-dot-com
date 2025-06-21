@@ -1,5 +1,7 @@
 import { RigidBody2D } from "@/src/utils/rigid-body-2d";
 import { PhysicsBody2D } from "@/src/utils/physics-body-2d";
+import { SeededRandom } from "@/src/utils/seedable-random";
+import { Vec2 } from "./vector";
 
 /**
  * Class representing a game object.
@@ -11,21 +13,28 @@ export class GameObject {
   public id: number;
   public name: string;
   public disabled: boolean;
-  public size: number;
-  public graphic: Phaser.GameObjects.Sprite | Phaser.GameObjects.Shape | null;
+  public scale: Vec2;
+  public graphic:
+    | Phaser.GameObjects.Sprite
+    | Phaser.GameObjects.Shape
+    | Phaser.GameObjects.Container
+    | null;
   public physicsBody2D: PhysicsBody2D | null;
   public rigidBody2D: RigidBody2D | null;
+
+  // Keep track of last color so we dont have to set it every frame
+  private lastColor: number | null = null;
 
   /**
    * Create a GameObject.
    * @param {string} name - The name of the game object.
-   * @param {number} size - Size of the gameobject, mostly for sizing the graphic attatched to it.
+   * @param {Vec2} scale - Scale of the GameObject, default is Vec2(1, 1).
    * @param {boolean} hasPhysicsBody2D - Does the GameObject have PhysicsBody2D base class?
    * @param {boolean} hasRigidBody2D - Does the GameObject have RigidBody2D base class?
    */
   constructor(
     name: string,
-    size: number = 1,
+    scale: Vec2 = new Vec2(1, 1),
     hasPhysicsBody2D: boolean = false,
     hasRigidBody2D: boolean = false
   ) {
@@ -37,7 +46,7 @@ export class GameObject {
     GameObject.instances.push(this); // Add this instance to the static array tracking all gameobjects
 
     // Visualization
-    this.size = size;
+    this.scale = scale;
     this.graphic = null;
 
     // Base classes
@@ -69,6 +78,34 @@ export class GameObject {
   }
 
   /**
+   * Gets a random sprite from the available textures that starts with the given substring.
+   * @param substr The substring to filter the texture keys.
+   * @param allTextureKeys Obtained from scene.textures.getTextureKeys().
+   * @param random The SeededRandom instance to use for random selection.
+   * @return The name of the selected sprite or null if no matching sprites are found.
+   */
+  getRandomSprite(
+    substr: string,
+    allTextureKeys: string[],
+    random: SeededRandom
+  ) {
+    let spriteName: null | string = null;
+
+    const filteredKeys = allTextureKeys.filter((key: string) =>
+      key.startsWith(substr)
+    );
+
+    if (filteredKeys.length > 0) {
+      const randomIndex = random.getRandomInt(0, filteredKeys.length);
+      spriteName = filteredKeys[randomIndex];
+    } else {
+      console.warn(`No sprites found with prefix ${substr}`);
+    }
+
+    return spriteName;
+  }
+
+  /**
    * Update the graphic for the GameObject.
    * @param {number|null} newColor - The new color to set for the graphic.
    */
@@ -76,20 +113,50 @@ export class GameObject {
     if (this.graphic != null) {
       // Set graphic to be where the physics body is located
       if (this.physicsBody2D != null) {
-        this.graphic.x = this.physicsBody2D.position.x;
-        this.graphic.y = this.physicsBody2D.position.y;
-      }
-
-      if (newColor != null) {
-        if (this.graphic instanceof Phaser.GameObjects.Sprite) {
-          this.graphic.setTint(newColor);
-        } else if (this.graphic instanceof Phaser.GameObjects.Shape) {
-          this.graphic.setFillStyle(newColor);
+        if (
+          this.graphic.x !== this.physicsBody2D.position.x ||
+          this.graphic.y !== this.physicsBody2D.position.y
+        ) {
+          this.graphic.x = this.physicsBody2D.position.x;
+          this.graphic.y = this.physicsBody2D.position.y;
         }
       }
 
-      // Update size of graphic
-      this.graphic.setDisplaySize(this.size, this.size);
+      if (newColor != null && newColor !== this.lastColor) {
+        if ("setTint" in this.graphic) {
+          this.graphic.setTint(newColor);
+        } else if ("setFillStyle" in this.graphic) {
+          this.graphic.setFillStyle(newColor);
+        } else if ("iterate" in this.graphic) {
+          // Otherwise, assume this is a container, which has iterate method
+          this.graphic.iterate(
+            (
+              child:
+                | Phaser.GameObjects.Sprite
+                | Phaser.GameObjects.Shape
+                | Phaser.GameObjects.Text
+            ) => {
+              if ("setTint" in child) {
+                child.setTint(newColor);
+              } else if ("setFillStyle" in child) {
+                child.setFillStyle(newColor);
+              }
+            }
+          );
+        }
+
+        this.lastColor = newColor;
+      }
+
+      // Update scale of graphic
+      if ("setScale" in this.graphic) {
+        if (
+          this.graphic.scaleX !== this.scale.x ||
+          this.graphic.scaleY !== this.scale.y
+        ) {
+          this.graphic.setScale(this.scale.x, this.scale.y);
+        }
+      }
     }
   }
 

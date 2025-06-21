@@ -83,8 +83,8 @@ const Dropdown: React.FC<DropdownProps> = ({
       {isOpen && (
         <ul
           id="dropdown-list"
-          className="w-full absolute p-2 list-none mt-1 bg-button-color-light dark:bg-button-color 
-        rounded-sm shadow-lg overflow-hidden z-50"
+          className="z-40 w-full absolute p-2 list-none mt-1 bg-button-color-light dark:bg-button-color 
+        rounded-sm shadow-lg overflow-hidden"
           role="listbox"
         >
           {options.map((option) => (

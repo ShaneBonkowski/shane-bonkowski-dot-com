@@ -1,6 +1,9 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Vec2 } from "@/src/utils/vector";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchCloseLoadingScreenEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import { Tile } from "@/src/games/flip-tile/tile";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import {
@@ -13,6 +16,7 @@ import {
   sharedTileAttrs,
 } from "@/src/games/flip-tile/tile-utils";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
+import { gameDataStore, GameData } from "@/src/games/flip-tile/game-data-store";
 
 export let tiles: Tile[][] = [];
 
@@ -22,14 +26,15 @@ export class MainGameScene extends Generic2DGameScene {
   private resizeObserver: ResizeObserver | null = null;
   public lastKnownWindowSize: Vec2 | null = null;
   private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 250;
+  private windowResizeInterval: number = 2000;
   public canClickTile: boolean;
   public disableClickID: number;
-  public score: number;
-  public solutionRevealed: boolean;
   public revealedAtLeastOnceThisLevel: boolean;
   private solvedTimeoutID: NodeJS.Timeout | null = null;
   public uiMenuOpen: boolean = false;
+
+  public score: number = 0;
+  public solutionRevealed: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -39,9 +44,13 @@ export class MainGameScene extends Generic2DGameScene {
     // Constructor logic for this scene
     this.canClickTile = true;
     this.disableClickID = 0;
-    this.score = 0;
-    this.solutionRevealed = false;
+
     this.revealedAtLeastOnceThisLevel = false;
+
+    // Last thing we do is set the lastKnownWindowSize to the current screen size
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
   preload() {
@@ -56,15 +65,35 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
+    this.setupSyncedGameData();
 
     // Spawn in tiles in a grid
     this.newTilePattern();
 
     this.gameStarted = true;
+    dispatchCloseLoadingScreenEvent("flip tile");
     dispatchGameStartedEvent("flip tile");
+  }
+
+  setupSyncedGameData() {
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    const gameData = gameDataStore.getSnapshot();
+
+    this.setGameDataFromStore(gameData);
+
+    gameDataStore.subscribe(() => {
+      const newGameData = gameDataStore.getSnapshot();
+      this.handleGameDataChange(newGameData);
+    });
+  }
+
+  handleGameDataChange = (gameData: GameData) => {
+    this.setGameDataFromStore(gameData);
+  };
+
+  setGameDataFromStore(gameData: GameData) {
+    this.score = gameData.score;
+    this.solutionRevealed = gameData.solutionRevealed;
   }
 
   update(time: number, delta: number) {
@@ -129,8 +158,10 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   resetRevealSolutionToggle() {
-    // UI listens for this and manually resets it
-    document.dispatchEvent(new CustomEvent("overrideToggleSolutionOff"));
+    // If the solution is revealed, we need to reset it to false
+    if (this.solutionRevealed) {
+      gameDataStore.setSolutionRevealed(false);
+    }
   }
 
   handleResetTilePattern = () => {
@@ -224,19 +255,20 @@ export class MainGameScene extends Generic2DGameScene {
       // Update score..
       // Only give score if solution is not revealed
       if (!this.solutionRevealed && !this.revealedAtLeastOnceThisLevel) {
+        let desiredScore = this.score;
         if (tilePatternAttrs.difficultyLevel == difficulty.EASY) {
-          this.score += scoring.EASY;
+          desiredScore += scoring.EASY;
         } else if (tilePatternAttrs.difficultyLevel == difficulty.HARD) {
-          this.score += scoring.HARD;
+          desiredScore += scoring.HARD;
         } else if (tilePatternAttrs.difficultyLevel == difficulty.EXPERT) {
-          this.score += scoring.EXPERT;
+          desiredScore += scoring.EXPERT;
         } else {
           console.log("ERROR: difficulty not listed");
         }
 
-        document.dispatchEvent(
-          new CustomEvent("scoreChange", { detail: { score: this.score } })
-        );
+        // Update the game data store with the new score
+        gameDataStore.setScore(desiredScore);
+        document.dispatchEvent(new CustomEvent("scoreChange"));
       }
 
       // After x seconds, reveal the next puzzle
@@ -250,7 +282,7 @@ export class MainGameScene extends Generic2DGameScene {
   handleToggleSolution = (event: Event) => {
     const customEvent = event as CustomEvent<{ state: string }>;
     if (customEvent.detail.state === "on") {
-      this.solutionRevealed = true;
+      gameDataStore.setSolutionRevealed(true);
       this.revealedAtLeastOnceThisLevel = true;
 
       // Show the solution for all tiles
@@ -264,7 +296,7 @@ export class MainGameScene extends Generic2DGameScene {
         }
       }
     } else {
-      this.solutionRevealed = false;
+      gameDataStore.setSolutionRevealed(false);
 
       // Hide the solution for all tiles
       for (let row = 0; row < tiles.length; row++) {
@@ -385,6 +417,8 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn(
         "lastKnownWindowSize is not properly initialized. Skipping resize handling."
       );
+      this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
+      return;
     } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
@@ -416,6 +450,9 @@ export class MainGameScene extends Generic2DGameScene {
   shutdown() {
     super.shutdown();
 
+    // reset the store
+    gameDataStore.resetData();
+
     // Clear the solved timeout if it exists
     if (this.solvedTimeoutID) {
       clearTimeout(this.solvedTimeoutID);
@@ -432,5 +469,6 @@ export class MainGameScene extends Generic2DGameScene {
         }
       }
     }
+    tiles.length = 0; // Clear the tiles array
   }
 }

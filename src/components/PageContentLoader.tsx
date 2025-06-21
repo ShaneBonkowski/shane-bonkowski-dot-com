@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
 import { ContentDataProps } from "@/src/types/data-props";
+import DOMPurify from "dompurify";
 
 const PageContentLoader: React.FC<{
   contentData: ContentDataProps[];
@@ -24,7 +26,14 @@ const PageContentLoader: React.FC<{
               <p
                 key={index}
                 className="leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: item.text || "" }}
+                // eslint-disable-next-line no-restricted-syntax
+                dangerouslySetInnerHTML={{
+                  __html: item.text
+                    ? DOMPurify.sanitize(item.text, {
+                        ADD_ATTR: ["target", "rel"],
+                      })
+                    : "",
+                }}
               />
             );
           case "list":
@@ -34,7 +43,14 @@ const PageContentLoader: React.FC<{
                   <li
                     key={listIndex}
                     className="leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: listItem }}
+                    // eslint-disable-next-line no-restricted-syntax
+                    dangerouslySetInnerHTML={{
+                      __html: listItem
+                        ? DOMPurify.sanitize(listItem, {
+                            ADD_ATTR: ["target", "rel"],
+                          })
+                        : "",
+                    }}
                   />
                 ))}
               </ul>
