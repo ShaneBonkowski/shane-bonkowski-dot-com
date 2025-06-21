@@ -689,7 +689,8 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
-    settingsStore.resetData(); // reset settings in the store
+    settingsStore.resetData();
+    gameDataStore.resetData();
     this.destroyTiles();
     this.gestureManager.destroy();
   }
