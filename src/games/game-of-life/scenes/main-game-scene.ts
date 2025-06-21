@@ -21,7 +21,10 @@ import {
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { GestureManager } from "@/src/utils/gesture-manager";
 import { Tile } from "@/src/games/game-of-life/tile";
-import { settings } from "@/src/games/game-of-life/SettingsContainer";
+import {
+  settingsStore,
+  Settings,
+} from "@/src/games/game-of-life/settings-store";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 export let tiles: Tile[][] = [];
@@ -45,6 +48,16 @@ export class MainGameScene extends Generic2DGameScene {
   private currentBackgroundColor: string | null = null;
   private lastManualWindowResizeTime: number = 0;
   private windowResizeInterval: number = 2000;
+
+  // Settings
+  public updateInterval: number = 0;
+  public underpopulation: number = 0;
+  public overpopulation: number = 0;
+  public reproduction: number = 0;
+  public colorTheme: number = 0;
+  public autoPause: boolean = true;
+  public infiniteEdges: boolean = true;
+  public diagonalNeighbors: boolean = true;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -80,6 +93,8 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
+    this.setupSettings();
+
     // (setting tile layout creates the tiles)
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
@@ -92,18 +107,6 @@ export class MainGameScene extends Generic2DGameScene {
       this.setLayoutForComputer();
     }
 
-    // If there is local storage with currentColorThemeIndex, set
-    // color theme to that to start!
-    if (localStorage.getItem("currentColorThemeIndex")) {
-      settings.colorTheme.value = parseInt(
-        localStorage.getItem("currentColorThemeIndex") as string
-      );
-    }
-
-    // Dispatch a custom event saying that color change just occured
-    // due to the game class, not the slider.
-    document.dispatchEvent(new CustomEvent("changeColorThemeFromMainGame"));
-
     // After everything is loaded in, begin the game
     this.gameStarted = true;
     this.paused = true; // start off paused
@@ -112,16 +115,40 @@ export class MainGameScene extends Generic2DGameScene {
     dispatchGameStartedEvent("Game of Life");
   }
 
+  setupSettings() {
+    // Get snapshot of the game of life settings, then load them in and subscribe to changes.
+    const settings = settingsStore.getSnapshot();
+
+    this.setSettingsFromStore(settings);
+
+    settingsStore.subscribe(() => {
+      const newSettings = settingsStore.getSnapshot();
+      this.handleSettingsChange(newSettings);
+    });
+  }
+
+  handleSettingsChange = (settings: Settings) => {
+    this.setSettingsFromStore(settings);
+  };
+
+  setSettingsFromStore(settings: Settings) {
+    this.updateInterval = settings.updateInterval;
+    this.underpopulation = settings.underpopulation;
+    this.overpopulation = settings.overpopulation;
+    this.reproduction = settings.reproduction;
+    this.colorTheme = settings.colorTheme;
+    this.autoPause = settings.autoPause;
+    this.infiniteEdges = settings.infiniteEdges;
+    this.diagonalNeighbors = settings.diagonalNeighbors;
+  }
+
   update(time: number, delta: number) {
     super.update(time, delta);
 
     if (this.gameStarted) {
       if (this.paused == false) {
         // Perform tile grid updates on tile updateInterval
-        if (
-          time - this.lastGameStateUpdateTime >=
-          settings.updateInterval.value
-        ) {
+        if (time - this.lastGameStateUpdateTime >= this.updateInterval) {
           this.lastGameStateUpdateTime = time;
 
           // Auto mode: automatically place shapes if the criteria fits
@@ -150,12 +177,6 @@ export class MainGameScene extends Generic2DGameScene {
             ) {
               this.discoModeLastUpdateTime = time;
               this.advanceToNextColorTheme();
-
-              // Dispatch a custom event saying that disco mode just caused
-              // a color change.
-              document.dispatchEvent(
-                new CustomEvent("changeColorThemeFromMainGame")
-              );
 
               // // Play a vignette animation (make it nearly as long as the disco mode interval)
               // vignetteFade(this.discoModeUpdateInterval); // ms
@@ -194,7 +215,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Only update the background color if it has changed
     const newBackgroundColor = this.hexToCssColor(
-      tileAndBackgroundColors[settings.colorTheme.value][2]
+      tileAndBackgroundColors[this.colorTheme][2]
     );
 
     if (
@@ -209,8 +230,8 @@ export class MainGameScene extends Generic2DGameScene {
   runGameOfLifeIteration() {
     // Run the life iteration
     const toCheckTileGridSpaceLocs = this.checkForNeighborTiles(
-      settings.diagonalNeighbors.value,
-      settings.infiniteEdges.value
+      this.diagonalNeighbors,
+      this.infiniteEdges
     );
 
     if (this.gameOfLifeType == gameOfLifeTypes.CONWAY) {
@@ -338,10 +359,6 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.addEventListener("clickAdvance", this.handleClickAdvance);
     document.addEventListener("resetTiles", this.handleResetTiles);
-    document.addEventListener(
-      "changeColorThemeFromSettings",
-      this.handleUpdateColorThemeFromSettings
-    );
   }
 
   /*
@@ -362,10 +379,6 @@ export class MainGameScene extends Generic2DGameScene {
     document.removeEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.removeEventListener("clickAdvance", this.handleClickAdvance);
     document.removeEventListener("resetTiles", this.handleResetTiles);
-    document.removeEventListener(
-      "changeColorThemeFromSettings",
-      this.handleUpdateColorThemeFromSettings
-    );
   }
 
   handleTogglePause = () => {
@@ -628,33 +641,22 @@ export class MainGameScene extends Generic2DGameScene {
     return `#${hex.toString(16).padStart(6, "0")}`;
   }
 
-  handleUpdateColorThemeFromSettings = () => {
-    this.updateColorThemeCookie();
-  };
-
   advanceToNextColorTheme() {
-    settings.colorTheme.value++;
-    if (settings.colorTheme.value > tileAndBackgroundColors.length - 1) {
-      settings.colorTheme.value = 0;
+    let desiredColorTheme = this.colorTheme + 1;
+    if (desiredColorTheme > tileAndBackgroundColors.length - 1) {
+      desiredColorTheme = 0;
     }
-    this.updateColorThemeCookie();
+
+    settingsStore.setColorTheme(desiredColorTheme);
   }
 
   decreaseToPreviousColorTheme() {
-    settings.colorTheme.value--;
-    if (settings.colorTheme.value < 0) {
-      settings.colorTheme.value = tileAndBackgroundColors.length - 1;
+    let desiredColorTheme = this.colorTheme - 1;
+    if (desiredColorTheme < 0) {
+      desiredColorTheme = tileAndBackgroundColors.length - 1;
     }
-    this.updateColorThemeCookie();
-  }
 
-  updateColorThemeCookie() {
-    // Write color theme to localStorage so that the color theme persists on
-    // page reload etc.
-    localStorage.setItem(
-      "currentColorThemeIndex",
-      settings.colorTheme.value.toString()
-    );
+    settingsStore.setColorTheme(desiredColorTheme);
   }
 
   destroyTiles() {

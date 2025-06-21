@@ -7,7 +7,6 @@ import {
   tileAndBackgroundColors,
 } from "@/src/games/game-of-life/tile-utils";
 import { MainGameScene } from "@/src/games/game-of-life/scenes/main-game-scene";
-import { settings } from "@/src/games/game-of-life/SettingsContainer.tsx";
 
 const TILE_ON_SCALE_FACTOR = 1.2;
 
@@ -49,7 +48,7 @@ export class Tile extends GameObject {
       this.onClickToggleTileState();
 
       // Autopause the game if specified to do such
-      if (!this.scene.paused && settings.autoPause.value) {
+      if (!this.scene.paused && this.scene.autoPause) {
         this.scene.togglePause();
         document.dispatchEvent(new CustomEvent("manualPause"));
       }
@@ -360,13 +359,13 @@ export class Tile extends GameObject {
     // - Dead cell with 3 neighbors becomes alive (reproduction).
     if (this.tileState == tileStates.ON) {
       if (
-        this.qtyLivingNeighbors < settings.underpopulation.value ||
-        this.qtyLivingNeighbors > settings.overpopulation.value
+        this.qtyLivingNeighbors < this.scene.underpopulation ||
+        this.qtyLivingNeighbors > this.scene.overpopulation
       ) {
         this.changeState(tileStates.OFF);
       }
     } else if (this.tileState == tileStates.OFF) {
-      if (this.qtyLivingNeighbors == settings.reproduction.value) {
+      if (this.qtyLivingNeighbors == this.scene.reproduction) {
         this.changeState(tileStates.ON);
       }
     }
@@ -404,9 +403,9 @@ export class Tile extends GameObject {
   renderTileGraphics() {
     this.updateVisualAttrs();
     if (this.tileState == tileStates.OFF) {
-      this.updateGraphic(tileAndBackgroundColors[settings.colorTheme.value][1]);
+      this.updateGraphic(tileAndBackgroundColors[this.scene.colorTheme][1]);
     } else {
-      this.updateGraphic(tileAndBackgroundColors[settings.colorTheme.value][0]);
+      this.updateGraphic(tileAndBackgroundColors[this.scene.colorTheme][0]);
     }
   }
 
