@@ -12,6 +12,7 @@ export const UseGameData = () => {
     ...gameData,
     // Actions
     setScore: gameDataStore.setScore.bind(gameDataStore),
+    setSolutionRevealed: gameDataStore.setSolutionRevealed.bind(gameDataStore),
     resetData: gameDataStore.resetData.bind(gameDataStore),
   };
 };

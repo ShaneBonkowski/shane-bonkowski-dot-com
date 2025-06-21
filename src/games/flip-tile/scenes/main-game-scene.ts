@@ -29,11 +29,12 @@ export class MainGameScene extends Generic2DGameScene {
   private windowResizeInterval: number = 2000;
   public canClickTile: boolean;
   public disableClickID: number;
-  public score: number;
-  public solutionRevealed: boolean;
   public revealedAtLeastOnceThisLevel: boolean;
   private solvedTimeoutID: NodeJS.Timeout | null = null;
   public uiMenuOpen: boolean = false;
+
+  public score: number = 0;
+  public solutionRevealed: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -43,8 +44,7 @@ export class MainGameScene extends Generic2DGameScene {
     // Constructor logic for this scene
     this.canClickTile = true;
     this.disableClickID = 0;
-    this.score = 0;
-    this.solutionRevealed = false;
+
     this.revealedAtLeastOnceThisLevel = false;
 
     // Last thing we do is set the lastKnownWindowSize to the current screen size
@@ -93,6 +93,7 @@ export class MainGameScene extends Generic2DGameScene {
 
   setGameDataFromStore(gameData: GameData) {
     this.score = gameData.score;
+    this.solutionRevealed = gameData.solutionRevealed;
   }
 
   update(time: number, delta: number) {
@@ -157,8 +158,10 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   resetRevealSolutionToggle() {
-    // UI listens for this and manually resets it
-    document.dispatchEvent(new CustomEvent("overrideToggleSolutionOff"));
+    // If the solution is revealed, we need to reset it to false
+    if (this.solutionRevealed) {
+      gameDataStore.setSolutionRevealed(false);
+    }
   }
 
   handleResetTilePattern = () => {
@@ -279,7 +282,7 @@ export class MainGameScene extends Generic2DGameScene {
   handleToggleSolution = (event: Event) => {
     const customEvent = event as CustomEvent<{ state: string }>;
     if (customEvent.detail.state === "on") {
-      this.solutionRevealed = true;
+      gameDataStore.setSolutionRevealed(true);
       this.revealedAtLeastOnceThisLevel = true;
 
       // Show the solution for all tiles
@@ -293,7 +296,7 @@ export class MainGameScene extends Generic2DGameScene {
         }
       }
     } else {
-      this.solutionRevealed = false;
+      gameDataStore.setSolutionRevealed(false);
 
       // Hide the solution for all tiles
       for (let row = 0; row < tiles.length; row++) {

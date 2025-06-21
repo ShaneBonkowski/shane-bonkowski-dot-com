@@ -15,8 +15,7 @@ import { UseGameData } from "@/src/games/flip-tile/UseGameData";
 const UiOverlay: React.FC = () => {
   const [isUiVisible, setIsUiVisible] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
-  const { score } = UseGameData();
+  const { score, solutionRevealed } = UseGameData();
   const [isPulsing, setIsPulsing] = useState<boolean>(false);
 
   const handleScoreChange = () => {
@@ -29,8 +28,7 @@ const UiOverlay: React.FC = () => {
   };
 
   const handleToggleSolution = () => {
-    const newState = !isSolutionVisible;
-    setIsSolutionVisible(newState);
+    const newState = !solutionRevealed;
 
     document.dispatchEvent(
       new CustomEvent("toggleSolution", {
@@ -61,23 +59,8 @@ const UiOverlay: React.FC = () => {
       setIsUiVisible(true);
     };
 
-    const handleOverrideToggleSolutionOff = () => {
-      setIsSolutionVisible(false);
-
-      document.dispatchEvent(
-        new CustomEvent("toggleSolution", {
-          detail: { state: "off" },
-        })
-      );
-    };
-
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
-
-    document.addEventListener(
-      "overrideToggleSolutionOff",
-      handleOverrideToggleSolutionOff
-    );
 
     document.addEventListener(
       "scoreChange",
@@ -87,11 +70,6 @@ const UiOverlay: React.FC = () => {
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
-
-      document.removeEventListener(
-        "overrideToggleSolutionOff",
-        handleOverrideToggleSolutionOff
-      );
 
       document.removeEventListener(
         "scoreChange",
@@ -138,7 +116,7 @@ const UiOverlay: React.FC = () => {
         <GameIconButton
           onPointerDown={handleToggleSolution}
           icon={
-            isSolutionVisible ? <FaEyeSlash size={30} /> : <FaEye size={30} />
+            solutionRevealed ? <FaEyeSlash size={30} /> : <FaEye size={30} />
           }
           ariaLabel="Toggle Solution Visibility"
         />
