@@ -33,8 +33,8 @@ const UpgradeButton = ({
         min-w-32 min-h-20 border-2 bg-black bg-opacity-50 
         ${
           upgradePoints > 0
-            ? `border-${borderColor} hover:bg-opacity-40 cursor-pointer`
-            : "border-gray-500 cursor-not-allowed opacity-60"
+            ? `${borderColor} hover:bg-opacity-40 cursor-pointer`
+            : "border-gray-400 cursor-not-allowed opacity-60"
         }
         flex flex-col items-center justify-center p-2 text-white text-sm
       `}
@@ -45,7 +45,7 @@ const UpgradeButton = ({
     <div className="text-lg mb-1">{icon}</div>
     <div>Level {level}</div>
     {upgradePoints > 0 && (
-      <div className={`text-xs text-${textColor}`}>{`+1 ${type}`}</div>
+      <div className={`text-xs ${textColor}`}>{`+1 ${type}`}</div>
     )}
   </button>
 );
@@ -233,8 +233,8 @@ const SettingsContainer: React.FC = () => {
                 icon={<FaHeart size={30} />}
                 level={permaHealthLevel}
                 upgradePoints={playerUpgradePoints}
-                borderColor="green-500"
-                textColor="green-400"
+                borderColor="border-green-500"
+                textColor="text-green-400"
                 onPointerDown={handlePermaHealthUpgrade}
               />
 
@@ -243,37 +243,16 @@ const SettingsContainer: React.FC = () => {
                 icon={<GiCrossedSwords size={30} />}
                 level={permaDamageLevel}
                 upgradePoints={playerUpgradePoints}
-                borderColor="red-500"
-                textColor="red-400"
+                borderColor="border-red-500"
+                textColor="text-red-400"
                 onPointerDown={handlePermaDamageUpgrade}
-              />
-            </div>
-          </div>
-
-          {/* Currently Equipped Section */}
-          <div id="equipped-items">
-            <h2 className="text-center">Currently Equipped</h2>
-            <div className="flex flex-row justify-center gap-6">
-              <LootContainer
-                lootId={playerEquippedHatId}
-                lootType="hat"
-                isEquipped={true}
-                isNew={isHatNew(playerEquippedHatId)}
-                onPointerDown={() => {}} // No-op for equipped items
-              />
-              <LootContainer
-                lootId={playerEquippedGunId}
-                lootType="gun"
-                isEquipped={true}
-                isNew={isGunNew(playerEquippedGunId)}
-                onPointerDown={() => {}} // No-op for equipped items
               />
             </div>
           </div>
 
           {/* Owned Guns Section */}
           <div id="owned-guns">
-            <h2 className="text-center">Owned Guns</h2>
+            <h2 className="text-center">Guns</h2>
             <div className="flex flex-row flex-wrap justify-center gap-3">
               {playerOwnedGunIds.map((gunId) => (
                 <LootContainer
@@ -290,7 +269,7 @@ const SettingsContainer: React.FC = () => {
 
           {/* Owned Hats Section */}
           <div id="owned-hats">
-            <h2 className="text-center">Owned Hats</h2>
+            <h2 className="text-center">Hats</h2>
             <div className="flex flex-row flex-wrap justify-center gap-3">
               {playerOwnedHatIds.map((hatId) => (
                 <LootContainer

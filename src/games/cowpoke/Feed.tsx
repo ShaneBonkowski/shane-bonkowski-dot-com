@@ -115,7 +115,7 @@ export default function Feed({
 
   return (
     <div
-      className={`z-20 fixed bottom-1 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl 
+      className={`z-20 w-full 
             ${
               isVisible ? "" : "hidden"
             } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border-2 border-black`}

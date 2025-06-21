@@ -10,7 +10,6 @@ import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/cowpoke/SettingsContainer";
-import Feed from "@/src/games/cowpoke/Feed";
 import UpperHud from "@/src/games/cowpoke/UpperHud";
 import GameControls from "@/src/games/cowpoke/GameControls";
 import StartEndMenu from "@/src/games/cowpoke/StartEndMenu";
@@ -122,7 +121,6 @@ const GameComponent: React.FC = () => {
       ></GameInfoContainer>
       <UpperHud></UpperHud>
       <GameControls></GameControls>
-      <Feed></Feed>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game"></div>

@@ -9,6 +9,7 @@ import {
 } from "react-icons/gi";
 import MovingSliderBar from "@/src/components/MovingSliderBar";
 import GameIconButton from "@/src/components/GameIconButton";
+import Feed from "@/src/games/cowpoke/Feed";
 
 export default function GameControls() {
   const [isVisible, setIsVisible] = useState(true);
@@ -120,9 +121,12 @@ export default function GameControls() {
   return (
     <div
       className={`z-20 w-[55vw] fixed top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 
-        flex flex-col gap-4 p-4 h-[20vh] ${isVisible ? "" : "hidden"}`}
+        flex flex-col justify-center gap-4 p-4 h-[20vh] ${
+          isVisible ? "" : "hidden"
+        }`}
     >
-      <div className="flex flex-row gap-4 items-center justify-center">
+      {/* Controls */}
+      <div className="flex flex-row gap-4 justify-center">
         <MovingSliderBar sliderId={"win-element"}></MovingSliderBar>
         <div
           className="flex flex-row gap-4 items-center justify-center"
@@ -152,7 +156,7 @@ export default function GameControls() {
         </div>
       </div>
 
-      <div className="flex flex-row gap-4 items-center justify-center">
+      <div className="flex flex-row gap-4 justify-center">
         <MovingSliderBar sliderId={"win-combat"}></MovingSliderBar>
         <div
           className="flex flex-row gap-4 items-center justify-center"
@@ -181,6 +185,9 @@ export default function GameControls() {
           />
         </div>
       </div>
+
+      {/* Feed */}
+      <Feed></Feed>
     </div>
   );
 }

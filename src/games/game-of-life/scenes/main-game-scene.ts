@@ -560,7 +560,7 @@ export class MainGameScene extends Generic2DGameScene {
     >;
     const randomShapeIndex = unseededRandom.getRandomInt(
       0,
-      cgolTileShapeKeys.length - 1
+      cgolTileShapeKeys.length
     );
     const randomShape = new gameOfLifeShape(
       cgolTileShapeKeys[randomShapeIndex]

@@ -318,7 +318,7 @@ export class MainGameScene extends Generic2DGameScene {
     for (let i = 0; i < propSpawnOptionsPercentViewportWidth.length; i++) {
       const spawnPercents = propSpawnOptionsPercentViewportWidth[i];
       const chosenPercent =
-        spawnPercents[this.random.getRandomInt(0, spawnPercents.length - 1)];
+        spawnPercents[this.random.getRandomInt(0, spawnPercents.length)];
       const xPosition = screenWidth * chosenPercent;
 
       this.decorations.push(
@@ -329,7 +329,7 @@ export class MainGameScene extends Generic2DGameScene {
           DECOR_TYPES.FRONT,
           // Start with a random cactus decoration. Other props will get added in as the
           // game progresses.
-          "bkg-front-cactus-" + this.random.getRandomInt(1, 7).toString(10)
+          this.getRandomCactusSprite()
         )
       );
     }
@@ -349,6 +349,13 @@ export class MainGameScene extends Generic2DGameScene {
       screenHeight,
       CHARACTER_TYPES.ENEMY
     );
+  }
+
+  getRandomCactusSprite() {
+    const cactusSprites = this.textures
+      .getTextureKeys()
+      .filter((key: string) => key.startsWith("bkg-front-cactus-"));
+    return cactusSprites[this.random.getRandomInt(0, cactusSprites.length)];
   }
 
   update(time: number, delta: number) {
@@ -812,7 +819,7 @@ export class MainGameScene extends Generic2DGameScene {
         (choice) => choice !== beatenChoice
       );
       return choicesToPickFrom[
-        this.random.getRandomInt(0, choicesToPickFrom.length - 1)
+        this.random.getRandomInt(0, choicesToPickFrom.length)
       ];
     }
   }
