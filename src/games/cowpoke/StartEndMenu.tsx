@@ -45,6 +45,14 @@ const StartEndMenu: React.FC = () => {
 
   const updatePlayerName = useCallback(
     (name: string) => {
+      if (name.length > 10) {
+        name = name.slice(0, 10);
+      }
+
+      if (name.trim() === "") {
+        name = "Shaner";
+      }
+
       // Update the player name in the game data store
       setPlayerName(name);
     },

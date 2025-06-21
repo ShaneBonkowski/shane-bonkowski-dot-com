@@ -13,6 +13,7 @@ export const UseGameData = () => {
     // Actions
     setScore: gameDataStore.setPopulation.bind(gameDataStore),
     setGeneration: gameDataStore.setGeneration.bind(gameDataStore),
+    setDiscoMode: gameDataStore.setDiscoMode.bind(gameDataStore),
     resetData: gameDataStore.resetData.bind(gameDataStore),
   };
 };

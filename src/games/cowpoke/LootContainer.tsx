@@ -9,10 +9,6 @@ import {
 } from "@/src/games/cowpoke/loot";
 import ImageCropper from "@/src/components/ImageCropper";
 
-// FIXME:
-// - Display names and rarity etc. of items on their respective containers
-// - Implement isNew for items... need to figure out how to set new and when to unset it so it goes away.. like when upgrade menu is closed
-//   Maybe upgrade menu stores ones it has seen before? Thats how it can decide new/old.. Adds to seen before list on close
 interface LootContainerProps {
   lootId: number;
   lootType: "hat" | "gun";

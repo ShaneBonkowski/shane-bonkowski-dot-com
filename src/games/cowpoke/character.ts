@@ -190,14 +190,17 @@ export class Character extends GameObject {
   }
 
   subscribeToEvents() {
-    document.addEventListener("equipmentChanged", this.handleEquipmentChanged);
+    document.addEventListener(
+      "playerEquipmentChanged",
+      this.handlePlayerEquipmentChanged
+    );
     document.addEventListener("permanentUpgrade", this.handlePermanentUpgrade);
   }
 
   unsubscribeFromEvents() {
     document.removeEventListener(
-      "equipmentChanged",
-      this.handleEquipmentChanged
+      "playerEquipmentChanged",
+      this.handlePlayerEquipmentChanged
     );
     document.removeEventListener(
       "permanentUpgrade",
@@ -219,13 +222,17 @@ export class Character extends GameObject {
     this.physicsBody2D!.position.y = newY;
   }
 
-  handleEquipmentChanged = (event: Event) => {
+  handlePlayerEquipmentChanged = (event: Event) => {
     const customEvent = event as CustomEvent;
     const { type, id } = customEvent.detail;
-    if (type === "hat") {
-      this.equipHat(id);
-    } else if (type === "gun") {
-      this.equipGun(id);
+
+    // Only handle equipment changes for the player character
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      if (type === "hat") {
+        this.equipHat(id);
+      } else if (type === "gun") {
+        this.equipGun(id);
+      }
     }
   };
 
@@ -321,15 +328,6 @@ export class Character extends GameObject {
     );
     this.headSprite!.setDepth(7);
 
-    // Set default name, or load from localStorage if available
-    const storedName = localStorage.getItem("cowpokePlayerName");
-    if (storedName) {
-      this.updateName(storedName);
-    } else {
-      // If no name is stored, set a default name
-      this.updateName("Shaner");
-    }
-
     // Set default hat and gun when new player character is spawned
     this.equipHat(0);
     this.equipGun(0);
@@ -400,7 +398,9 @@ export class Character extends GameObject {
       0,
       randomNameOptions.length
     );
-    this.updateName(
+
+    // Update name
+    gameDataStore.setEnemyName(
       `${randomTitleOptions[randomTitleIndex]} ${randomNameOptions[randomNameIndex]}`
     );
 
@@ -778,18 +778,6 @@ export class Character extends GameObject {
     this.tweenFloatingText();
   }
 
-  updateName(newName: string) {
-    if (newName.length === 0) {
-      newName = "Shaner";
-    }
-
-    if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerName(newName);
-    } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyName(newName);
-    }
-  }
-
   updateHealth(newHealth: number) {
     if (newHealth < 0) {
       newHealth = 0;
@@ -888,7 +876,7 @@ export class Character extends GameObject {
 
   handleKill(otherCharacter: Character) {
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerKills((this.kills += 1));
+      gameDataStore.setPlayerKills(this.kills + 1);
 
       const addXp = Math.floor(otherCharacter.level * 1.2);
 
@@ -956,7 +944,7 @@ export class Character extends GameObject {
         }
       }
     } else {
-      gameDataStore.setEnemyKills((this.kills += 1));
+      gameDataStore.setEnemyKills(this.kills + 1);
 
       // Enemy says a quip when killing player
       sendFeedMessage(

@@ -79,6 +79,7 @@ class GameDataStore extends SyncedStore<GameData> {
   }
 
   private loadFromLocalStorage() {
+    const savedPlayerName = this.getLocalStorage("cowpokePlayerName", "");
     const savedLifetimeKills = this.getLocalStorage("cowpokeLifetimeKills", 0);
     const savedLifetimeFurthestLevel = this.getLocalStorage(
       "cowpokeLifetimeFurthestLevel",
@@ -117,6 +118,7 @@ class GameDataStore extends SyncedStore<GameData> {
       []
     );
 
+    this.setPlayerName(savedPlayerName);
     this.setLifetimeKills(savedLifetimeKills);
     this.setLifetimeFurthestLevel(savedLifetimeFurthestLevel);
     this.setPlayerEquippedHatId(savedPlayerEquippedHatId);
@@ -136,6 +138,7 @@ class GameDataStore extends SyncedStore<GameData> {
   // Player methods
   public setPlayerName(value: string) {
     this.data.playerName = value;
+    this.setLocalStorage("cowpokePlayerName", value);
     this.notify();
   }
 
@@ -304,6 +307,7 @@ class GameDataStore extends SyncedStore<GameData> {
     // Reset session data but preserve persistent player data
     this.data = {
       ...this.defaultData,
+      playerName: this.data.playerName,
       lifetimeKills: this.data.lifetimeKills,
       lifetimeFurthestLevel: this.data.lifetimeFurthestLevel,
       playerEquippedHatId: this.data.playerEquippedHatId,

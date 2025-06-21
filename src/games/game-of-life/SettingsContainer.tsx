@@ -7,6 +7,7 @@ import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { tileAndBackgroundColors } from "@/src/games/game-of-life/tile-utils";
 import { UseSettings } from "@/src/games/game-of-life/UseSettings";
+import { UseGameData } from "@/src/games/game-of-life/UseGameData";
 
 const settingsConfig = {
   updateInterval: {
@@ -72,6 +73,7 @@ const SettingsContainer: React.FC = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const settings = UseSettings();
+  const { discoMode, setDiscoMode } = UseGameData();
 
   const openWindow = () => {
     // Add a small delay before revealing.
@@ -108,7 +110,13 @@ const SettingsContainer: React.FC = () => {
         break;
       case "colorTheme":
         settings.setColorTheme(value);
-        document.dispatchEvent(new CustomEvent("changeColorThemeFromSettings"));
+
+        // If the color theme changes from the settings screen and disco mode is
+        // on, we should disable disco mode.
+        if (discoMode) {
+          setDiscoMode(!discoMode);
+        }
+
         break;
     }
   };

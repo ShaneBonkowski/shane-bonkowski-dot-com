@@ -73,7 +73,7 @@ const SettingsContainer: React.FC = () => {
     if (hatId !== playerEquippedHatId) {
       // Dispatch event to notify game
       document.dispatchEvent(
-        new CustomEvent("equipmentChanged", {
+        new CustomEvent("playerEquipmentChanged", {
           detail: { type: "hat", id: hatId },
         })
       );
@@ -84,7 +84,7 @@ const SettingsContainer: React.FC = () => {
     if (gunId !== playerEquippedGunId) {
       // Dispatch event to notify game
       document.dispatchEvent(
-        new CustomEvent("equipmentChanged", {
+        new CustomEvent("playerEquipmentChanged", {
           detail: { type: "gun", id: gunId },
         })
       );
@@ -122,10 +122,6 @@ const SettingsContainer: React.FC = () => {
     // Update state
     setSettingsSeenHatIds(currentSeenHats);
     setSettingsSeenGunIds(currentSeenGuns);
-
-    // Persist to localStorage
-    localStorage.setItem("cowpoke-seen-hats", JSON.stringify(currentSeenHats));
-    localStorage.setItem("cowpoke-seen-guns", JSON.stringify(currentSeenGuns));
   };
 
   // Helper functions to check if loot is new

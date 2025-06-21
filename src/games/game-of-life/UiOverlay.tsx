@@ -15,8 +15,14 @@ import { UseGameData } from "@/src/games/game-of-life/UseGameData";
 
 const UiOverlay: React.FC = () => {
   const [isUiVisible, setIsUiVisible] = useState(true);
-  const { population, generation, paused, autoPlayMode, discoMode } =
-    UseGameData();
+  const {
+    population,
+    generation,
+    paused,
+    autoPlayMode,
+    discoMode,
+    setDiscoMode,
+  } = UseGameData();
 
   const handleToggleAutoMode = () => {
     document.dispatchEvent(new CustomEvent("toggleAutomatic"));
@@ -35,7 +41,7 @@ const UiOverlay: React.FC = () => {
   };
 
   const handleToggleDisco = () => {
-    document.dispatchEvent(new CustomEvent("toggleDisco"));
+    setDiscoMode(!discoMode);
   };
 
   useEffect(() => {
@@ -46,32 +52,16 @@ const UiOverlay: React.FC = () => {
       setIsUiVisible(true);
     };
 
-    const handleManualColorChange = () => {
-      // If the color theme changes from the settings screen and disco mode is
-      // on, we should disable disco mode.
-      if (discoMode) {
-        document.dispatchEvent(new CustomEvent("toggleDisco"));
-      }
-    };
-
     // Add event listeners
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
-    document.addEventListener(
-      "changeColorThemeFromSettings",
-      handleManualColorChange as EventListener
-    );
 
     // Cleanup event listeners on component unmount
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
-      document.removeEventListener(
-        "changeColorThemeFromSettings",
-        handleManualColorChange as EventListener
-      );
     };
-  }, [discoMode]);
+  }, [discoMode, setDiscoMode]);
 
   return (
     // z-20 so that its behind z-30 windows, but above mostly everything else

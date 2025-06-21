@@ -163,8 +163,6 @@ export class Tile extends GameObject {
   }
 
   playClickSpinAnim() {
-    document.dispatchEvent(new CustomEvent("tileSpin"));
-
     // cannot click during animation
     this.scene.tryToDisableClick();
     this.animationPlaying = true;

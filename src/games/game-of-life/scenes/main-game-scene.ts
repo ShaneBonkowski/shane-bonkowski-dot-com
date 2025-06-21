@@ -36,6 +36,7 @@ export let tiles: Tile[][] = [];
 const unseededRandom = new SeededRandom();
 
 export class MainGameScene extends Generic2DGameScene {
+  public paused: boolean = false;
   private resizeObserver: ResizeObserver | null = null;
   public uiMenuOpen: boolean = false;
   public discoModeUpdateInterval: number;
@@ -366,7 +367,6 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
 
     document.addEventListener("togglePause", this.handleTogglePause);
-    document.addEventListener("toggleDisco", this.handleToggleDisco);
     document.addEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.addEventListener("clickAdvance", this.handleClickAdvance);
     document.addEventListener("resetTiles", this.handleResetTiles);
@@ -386,7 +386,6 @@ export class MainGameScene extends Generic2DGameScene {
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
 
     document.removeEventListener("togglePause", this.handleTogglePause);
-    document.removeEventListener("toggleDisco", this.handleToggleDisco);
     document.removeEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.removeEventListener("clickAdvance", this.handleClickAdvance);
     document.removeEventListener("resetTiles", this.handleResetTiles);
@@ -394,10 +393,6 @@ export class MainGameScene extends Generic2DGameScene {
 
   handleTogglePause = () => {
     this.togglePause();
-  };
-
-  handleToggleDisco = () => {
-    this.toggleDisco();
   };
 
   handleToggleAutomatic = () => {
@@ -639,10 +634,6 @@ export class MainGameScene extends Generic2DGameScene {
     if (this.paused && this.autoPlayMode) {
       this.togglePause();
     }
-  }
-
-  toggleDisco() {
-    gameDataStore.setDiscoMode(!this.discoMode);
   }
 
   hexToCssColor(hex: number): string {
