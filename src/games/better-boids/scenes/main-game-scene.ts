@@ -9,6 +9,7 @@ import {
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
+import { settingsStore } from "@/src/games/better-boids/settings-store";
 
 // Used to determine if pointer is held down
 const holdThreshold: number = 0.1; // seconds
@@ -337,6 +338,8 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
+    settingsStore.resetData();
+
     for (const boid of this.boids) {
       boid.destroy();
     }

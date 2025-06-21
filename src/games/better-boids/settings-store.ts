@@ -1,92 +1,66 @@
 import { SyncedStore } from "@/src/utils/synced-store";
 
 export interface Settings {
-  updateInterval: number;
-  underpopulation: number;
-  overpopulation: number;
-  reproduction: number;
-  colorTheme: number;
-  autoPause: boolean;
-  infiniteEdges: boolean;
-  diagonalNeighbors: boolean;
+  alignmentFactor: number;
+  cohesionFactor: number;
+  separationFactor: number;
+  speed: number;
+  flockSearchRadius: number;
+  leaderBoidEnabled: boolean;
 }
 
 class SettingsStore extends SyncedStore<Settings> {
   private defaultData: Settings = {
-    updateInterval: 200,
-    underpopulation: 2,
-    overpopulation: 3,
-    reproduction: 3,
-    colorTheme: 0,
-    autoPause: true,
-    infiniteEdges: true,
-    diagonalNeighbors: true,
+    alignmentFactor: 0.3,
+    cohesionFactor: 0.054,
+    separationFactor: 0.935,
+    speed: 0.6,
+    flockSearchRadius: 90,
+    leaderBoidEnabled: true,
   };
 
   private data: Settings = { ...this.defaultData };
 
   constructor() {
     super();
-    this.loadFromLocalStorage();
-  }
-
-  private loadFromLocalStorage() {
-    const savedColorTheme = this.getLocalStorage("gameOfLifeColorTheme", 0);
-    this.setColorTheme(savedColorTheme);
   }
 
   protected getData(): Settings {
     return { ...this.data };
   }
 
-  public setUpdateInterval(value: number) {
-    this.data.updateInterval = value;
+  public setAlignmentFactor(value: number) {
+    this.data.alignmentFactor = value;
     this.notify();
   }
 
-  public setUnderpopulation(value: number) {
-    this.data.underpopulation = value;
+  public setCohesionFactor(value: number) {
+    this.data.cohesionFactor = value;
     this.notify();
   }
 
-  public setOverpopulation(value: number) {
-    this.data.overpopulation = value;
+  public setSeparationFactor(value: number) {
+    this.data.separationFactor = value;
     this.notify();
   }
 
-  public setReproduction(value: number) {
-    this.data.reproduction = value;
+  public setSpeed(value: number) {
+    this.data.speed = value;
     this.notify();
   }
 
-  public setColorTheme(value: number) {
-    this.data.colorTheme = value;
-    this.setLocalStorage("gameOfLifeColorTheme", value);
+  public setFlockSearchRadius(value: number) {
+    this.data.flockSearchRadius = value;
     this.notify();
   }
 
-  public setAutoPause(value: boolean) {
-    this.data.autoPause = value;
-    this.notify();
-  }
-
-  public setInfiniteEdges(value: boolean) {
-    this.data.infiniteEdges = value;
-    this.notify();
-  }
-
-  public setDiagonalNeighbors(value: boolean) {
-    this.data.diagonalNeighbors = value;
+  public setLeaderBoidEnabled(value: boolean) {
+    this.data.leaderBoidEnabled = value;
     this.notify();
   }
 
   public resetData() {
-    // Reset to base defaults
     this.data = { ...this.defaultData };
-
-    // Override to local storage defaults
-    this.loadFromLocalStorage();
-
     this.notify();
   }
 }

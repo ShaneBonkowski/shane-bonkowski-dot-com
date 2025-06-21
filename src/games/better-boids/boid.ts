@@ -3,7 +3,7 @@ import { Vec2 } from "@/src/utils/vector";
 import { MoreMath } from "@/src/utils/more-math";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { MainGameScene } from "@/src/games/better-boids/scenes/main-game-scene";
-import { settings } from "@/src/games/better-boids/SettingsContainer";
+import { settingsStore } from "@/src/games/better-boids/settings-store";
 
 const seededRandom = new SeededRandom(1234);
 
@@ -109,10 +109,9 @@ export class Boid extends GameObject {
   };
 
   handlePointerHoldClick = () => {
-    if (
-      settings.leaderBoidEnabled.value == true &&
-      this.scene.uiMenuOpen == false
-    ) {
+    const settings = settingsStore.getSnapshot();
+
+    if (settings.leaderBoidEnabled == true && this.scene.uiMenuOpen == false) {
       this.enable();
     }
   };
@@ -225,18 +224,17 @@ export class Boid extends GameObject {
   };
 
   clampVelocity(velocityDesired: Vec2): Vec2 {
+    const settings = settingsStore.getSnapshot();
+
     // Cleans up velocity such if the provided value is not within min and max speed,
     // it is normalized and then set in magnitude to the speed limit it is at.
     const normalizedVelocity = Vec2.normalize(velocityDesired);
-    if (Vec2.magnitude(velocityDesired) > settings.speed.value) {
-      velocityDesired = Vec2.scale(normalizedVelocity, settings.speed.value);
+    if (Vec2.magnitude(velocityDesired) > settings.speed) {
+      velocityDesired = Vec2.scale(normalizedVelocity, settings.speed);
     }
     // Min speed is defined at 10% max speed
-    else if (Vec2.magnitude(velocityDesired) < settings.speed.value * 0.1) {
-      velocityDesired = Vec2.scale(
-        normalizedVelocity,
-        settings.speed.value * 0.1
-      );
+    else if (Vec2.magnitude(velocityDesired) < settings.speed * 0.1) {
+      velocityDesired = Vec2.scale(normalizedVelocity, settings.speed * 0.1);
     }
 
     return velocityDesired;
@@ -280,6 +278,8 @@ export class Boid extends GameObject {
   }
 
   handleBoidFlocking(boids: Boid[]): Vec2 {
+    const settings = settingsStore.getSnapshot();
+
     // Initialize variables to compute the new velocity based on boid rules
     let velocSum = new Vec2(0, 0);
     let positionSum = new Vec2(0, 0);
@@ -319,7 +319,7 @@ export class Boid extends GameObject {
           // Update boid flock measurements if otherBoid is within search radius
           if (
             distanceSquared <
-            settings.flockSearchRadius.value * settings.flockSearchRadius.value
+            settings.flockSearchRadius * settings.flockSearchRadius
           ) {
             const distance = Math.sqrt(distanceSquared);
             if (distance > 0) {
@@ -352,7 +352,7 @@ export class Boid extends GameObject {
         else if (this.boidType != otherBoid.boidType) {
           if (
             distanceSquared <
-            settings.flockSearchRadius.value * settings.flockSearchRadius.value
+            settings.flockSearchRadius * settings.flockSearchRadius
           ) {
             opposingNeighborsCount += 1;
             opposingPositionSum = Vec2.add(
@@ -382,10 +382,10 @@ export class Boid extends GameObject {
       );
       desiredVelocity.x +=
         (avgVeloc.x - this.physicsBody2D!.velocity.x) *
-        settings.alignmentFactor.value;
+        settings.alignmentFactor;
       desiredVelocity.y +=
         (avgVeloc.y - this.physicsBody2D!.velocity.y) *
-        settings.alignmentFactor.value;
+        settings.alignmentFactor;
 
       // Cohesion: Steer toward average neighboring boid position (aka center of mass)
       let avgPos = new Vec2(0, 0);
@@ -401,15 +401,15 @@ export class Boid extends GameObject {
       desiredVelocity.x +=
         Math.abs(avgPos.x - this.physicsBody2D!.position.x) *
         directionObj.directionX *
-        settings.cohesionFactor.value;
+        settings.cohesionFactor;
       desiredVelocity.y +=
         Math.abs(avgPos.y - this.physicsBody2D!.position.y) *
         directionObj.directionY *
-        settings.cohesionFactor.value;
+        settings.cohesionFactor;
 
       // Separation: boids steer away from boids within their boidProtectedRadius
-      desiredVelocity.x += separation.x * settings.separationFactor.value;
-      desiredVelocity.y += separation.y * settings.separationFactor.value;
+      desiredVelocity.x += separation.x * settings.separationFactor;
+      desiredVelocity.y += separation.y * settings.separationFactor;
     }
 
     // Follow the leader if told to do so!
