@@ -45,14 +45,6 @@ const StartEndMenu: React.FC = () => {
 
   const updatePlayerName = useCallback(
     (name: string) => {
-      if (name.length > 10) {
-        name = name.slice(0, 10);
-      }
-
-      if (name.trim() === "") {
-        name = "Shaner";
-      }
-
       // Update the player name in the game data store
       setPlayerName(name);
     },
@@ -64,7 +56,19 @@ const StartEndMenu: React.FC = () => {
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
-      updatePlayerName(playerName);
+      // Clean up the player name before loading the game..
+      // Do this here instead of in the input change handler
+      // so that the name is only cleaned on submit.
+      let cleanedName = playerName.trim();
+      if (cleanedName.length > 10) {
+        cleanedName = cleanedName.slice(0, 10);
+      }
+
+      if (cleanedName.trim() === "") {
+        cleanedName = "Shaner";
+      }
+
+      updatePlayerName(cleanedName);
 
       // Tell the main-game-scene to start loading the game
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
