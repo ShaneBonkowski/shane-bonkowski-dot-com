@@ -50,7 +50,6 @@ export class Tile extends GameObject {
       // Autopause the game if specified to do such
       if (!this.scene.paused && this.scene.autoPause) {
         this.scene.togglePause();
-        document.dispatchEvent(new CustomEvent("manualPause"));
       }
     }
 

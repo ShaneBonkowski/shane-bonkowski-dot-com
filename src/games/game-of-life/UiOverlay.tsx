@@ -15,18 +15,14 @@ import { UseGameData } from "@/src/games/game-of-life/UseGameData";
 
 const UiOverlay: React.FC = () => {
   const [isUiVisible, setIsUiVisible] = useState(true);
-  const [isAutoMode, setIsAutoMode] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
-  const [isDiscoMode, setIsDiscoMode] = useState(false);
-  const { population, generation } = UseGameData();
+  const { population, generation, paused, autoPlayMode, discoMode } =
+    UseGameData();
 
   const handleToggleAutoMode = () => {
-    setIsAutoMode((prev) => !prev);
     document.dispatchEvent(new CustomEvent("toggleAutomatic"));
   };
 
   const handleTogglePause = () => {
-    setIsPaused((prev) => !prev);
     document.dispatchEvent(new CustomEvent("togglePause"));
   };
 
@@ -39,7 +35,6 @@ const UiOverlay: React.FC = () => {
   };
 
   const handleToggleDisco = () => {
-    setIsDiscoMode((prev) => !prev);
     document.dispatchEvent(new CustomEvent("toggleDisco"));
   };
 
@@ -51,19 +46,10 @@ const UiOverlay: React.FC = () => {
       setIsUiVisible(true);
     };
 
-    const handleManualUnpause = () => {
-      setIsPaused(false);
-    };
-
-    const handleManualPause = () => {
-      setIsPaused(true);
-    };
-
     const handleManualColorChange = () => {
       // If the color theme changes from the settings screen and disco mode is
       // on, we should disable disco mode.
-      if (isDiscoMode) {
-        setIsDiscoMode(false);
+      if (discoMode) {
         document.dispatchEvent(new CustomEvent("toggleDisco"));
       }
     };
@@ -71,14 +57,6 @@ const UiOverlay: React.FC = () => {
     // Add event listeners
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
-    document.addEventListener(
-      "manualUnpause",
-      handleManualUnpause as EventListener
-    );
-    document.addEventListener(
-      "manualPause",
-      handleManualPause as EventListener
-    );
     document.addEventListener(
       "changeColorThemeFromSettings",
       handleManualColorChange as EventListener
@@ -89,19 +67,11 @@ const UiOverlay: React.FC = () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
       document.removeEventListener(
-        "manualUnpause",
-        handleManualUnpause as EventListener
-      );
-      document.removeEventListener(
-        "manualPause",
-        handleManualPause as EventListener
-      );
-      document.removeEventListener(
         "changeColorThemeFromSettings",
         handleManualColorChange as EventListener
       );
     };
-  }, [isDiscoMode]);
+  }, [discoMode]);
 
   return (
     // z-20 so that its behind z-30 windows, but above mostly everything else
@@ -131,8 +101,8 @@ const UiOverlay: React.FC = () => {
         {/* Disco Button */}
         <GameIconButton
           onPointerDown={handleToggleDisco}
-          icon={isDiscoMode ? <FaBan size={30} /> : <FaMagic size={30} />}
-          ariaLabel={isDiscoMode ? "Disable Disco Mode" : "Enable Disco Mode"}
+          icon={discoMode ? <FaBan size={30} /> : <FaMagic size={30} />}
+          ariaLabel={discoMode ? "Disable Disco Mode" : "Enable Disco Mode"}
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
         />
 
@@ -140,7 +110,7 @@ const UiOverlay: React.FC = () => {
         <GameIconButton
           onPointerDown={handleToggleAutoMode}
           icon={
-            isAutoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />
+            autoPlayMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />
           }
           ariaLabel="Toggle Auto Mode"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
@@ -149,8 +119,8 @@ const UiOverlay: React.FC = () => {
         {/* Pause/Play Button */}
         <GameIconButton
           onPointerDown={handleTogglePause}
-          icon={isPaused ? <FaPlay size={30} /> : <FaPause size={30} />}
-          ariaLabel={isPaused ? "Play" : "Pause"}
+          icon={paused ? <FaPlay size={30} /> : <FaPause size={30} />}
+          ariaLabel={paused ? "Play" : "Pause"}
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
         />
 

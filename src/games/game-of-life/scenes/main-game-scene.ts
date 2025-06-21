@@ -43,9 +43,7 @@ export class MainGameScene extends Generic2DGameScene {
   public lastRenderUpdateTime: number;
   public lastGameStateUpdateTime: number;
   public gameOfLifeType: string;
-  public discoMode: boolean;
   public discoModeLastUpdateTime: number;
-  public autoPlayMode: boolean;
   public autoPlayModeLastUpdateTime: number;
   public livingTilespaceSet: LivingTilespaceSet;
   public gestureManager: GestureManager;
@@ -66,6 +64,8 @@ export class MainGameScene extends Generic2DGameScene {
   // Game data
   public population: number = 0;
   public generation: number = 0;
+  public autoPlayMode: boolean = false;
+  public discoMode: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -79,9 +79,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.lastGameStateUpdateTime = 0;
 
     this.gameOfLifeType = gameOfLifeTypes.CONWAY;
-    this.discoMode = false;
     this.discoModeLastUpdateTime = 0;
-    this.autoPlayMode = false;
     this.autoPlayModeLastUpdateTime = 0;
 
     this.livingTilespaceSet = new LivingTilespaceSet();
@@ -118,7 +116,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     // After everything is loaded in, begin the game
     this.gameStarted = true;
-    this.paused = true; // start off paused
 
     dispatchCloseLoadingScreenEvent("Game of Life");
     dispatchGameStartedEvent("Game of Life");
@@ -170,13 +167,16 @@ export class MainGameScene extends Generic2DGameScene {
   setGameDataFromStore(gameData: GameData) {
     this.population = gameData.population;
     this.generation = gameData.generation;
+    this.paused = gameData.paused;
+    this.autoPlayMode = gameData.autoPlayMode;
+    this.discoMode = gameData.discoMode;
   }
 
   update(time: number, delta: number) {
     super.update(time, delta);
 
     if (this.gameStarted) {
-      if (this.paused == false) {
+      if (!this.paused) {
         // Perform tile grid updates on tile updateInterval
         if (time - this.lastGameStateUpdateTime >= this.updateInterval) {
           this.lastGameStateUpdateTime = time;
@@ -296,7 +296,6 @@ export class MainGameScene extends Generic2DGameScene {
     if (newPopulationVal == 0 && !this.autoPlayMode) {
       if (!this.paused) {
         this.togglePause();
-        document.dispatchEvent(new CustomEvent("manualPause"));
       }
     }
   }
@@ -414,7 +413,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     if (!this.paused) {
       this.togglePause();
-      document.dispatchEvent(new CustomEvent("manualPause"));
     }
   };
 
@@ -543,7 +541,7 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   togglePause() {
-    this.paused = !this.paused;
+    gameDataStore.setPaused(!this.paused);
   }
 
   clickAdvance() {
@@ -552,7 +550,6 @@ export class MainGameScene extends Generic2DGameScene {
     } else {
       // Manually pause on advance if playing already
       this.togglePause();
-      document.dispatchEvent(new CustomEvent("manualPause"));
     }
   }
 
@@ -636,17 +633,16 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   toggleAutoPlay() {
-    this.autoPlayMode = !this.autoPlayMode;
+    gameDataStore.setAutoPlayMode(!this.autoPlayMode);
 
     // If the game is paused, unpause it if autoplay is turned on
     if (this.paused && this.autoPlayMode) {
       this.togglePause();
-      document.dispatchEvent(new CustomEvent("manualUnpause"));
     }
   }
 
   toggleDisco() {
-    this.discoMode = !this.discoMode;
+    gameDataStore.setDiscoMode(!this.discoMode);
   }
 
   hexToCssColor(hex: number): string {
