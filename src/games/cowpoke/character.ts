@@ -336,7 +336,7 @@ export class Character extends GameObject {
 
     // Set level, this will set max health, xp, etc.
     this.updateLevel(5, true);
-    // gameDataStore.setPlayerUpgradePoints(0); // player should start with 0 upgrade points
+    gameDataStore.setPlayerUpgradePoints(0); // player should start with 0 upgrade points
 
     // Setup the character
     this.spawnCharacterSetup();
@@ -915,8 +915,6 @@ export class Character extends GameObject {
           gunDropOdds = 0.05;
         }
 
-        gunDropOdds = 1; // DEBUGGGGGGGG
-
         if (this.scene.random.getRandomFloat(0, 1) < gunDropOdds) {
           // Only drop if player doesn't already own it
           if (!this.ownedGunIds.includes(otherCharacter.equippedGunId)) {
@@ -942,26 +940,9 @@ export class Character extends GameObject {
           hatDropOdds = 0.05;
         }
 
-        hatDropOdds = 1; // DEBUGGGGGGGG
-        console.log(
-          `DEBUG: hatDropOdds for ${
-            HAT_LOOT_MAP[otherCharacter.equippedHatId].name
-          } is ${hatDropOdds}`
-        );
-
         if (this.scene.random.getRandomFloat(0, 1) < hatDropOdds) {
-          console.log(
-            `DEBUG: Dropping hat ${
-              HAT_LOOT_MAP[otherCharacter.equippedHatId].name
-            }`
-          );
           // Only drop if player doesn't already own it
           if (!this.ownedHatIds.includes(otherCharacter.equippedHatId)) {
-            console.log(
-              `DEBUG: Player doesn't own hat ${
-                HAT_LOOT_MAP[otherCharacter.equippedHatId].name
-              }, dropping it`
-            );
             sendFeedMessage(
               `Look's like that foe dropped <b>${
                 HAT_LOOT_MAP[otherCharacter.equippedHatId].name
@@ -971,15 +952,6 @@ export class Character extends GameObject {
             );
 
             this.addNewOwnedHat(otherCharacter.equippedHatId);
-          } else {
-            console.log(
-              `DEBUG: Player already owns hat ${
-                HAT_LOOT_MAP[otherCharacter.equippedHatId].name
-              }, not dropping it`
-            );
-            console.log(
-              `DEBUG: Player's owned hats: ${this.ownedHatIds.join(", ")}`
-            );
           }
         }
       }

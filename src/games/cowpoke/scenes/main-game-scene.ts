@@ -239,6 +239,7 @@ export class MainGameScene extends Generic2DGameScene {
     setTimeout(() => {
       // End game
       this.gameStarted = false;
+      this.resetGameData();
       this.destroyGameObjects();
       document.dispatchEvent(new Event("clearFeed"));
 
@@ -1081,6 +1082,10 @@ export class MainGameScene extends Generic2DGameScene {
     this.enemy = null;
   }
 
+  resetGameData() {
+    gameDataStore.resetData();
+  }
+
   /*
    * Note that this function is called by GameScene2D during shutdown,
    * so no need to call it! That is handled automatically.
@@ -1089,7 +1094,7 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
-    gameDataStore.resetData();
+    this.resetGameData();
     this.destroyGameObjects();
   }
 }
