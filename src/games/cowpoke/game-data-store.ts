@@ -10,6 +10,12 @@ export interface GameData {
   playerMaxXp: number;
   playerUpgradePoints: number;
   playerKills: number;
+  playerEquippedHatId: number;
+  playerEquippedGunId: number;
+  playerOwnedHatIds: number[];
+  playerOwnedGunIds: number[];
+  permaDamageLevel: number;
+  permaHealthLevel: number;
   enemyName: string;
   enemyLevel: number;
   enemyHealth: number;
@@ -18,6 +24,8 @@ export interface GameData {
   enemyMaxXp: number;
   enemyUpgradePoints: number;
   enemyKills: number;
+  enemyEquippedHatId: number;
+  enemyEquippedGunId: number;
   // Game modes
   autoMode: boolean;
   fastMode: boolean;
@@ -36,6 +44,12 @@ class GameDataStore extends SyncedStore<GameData> {
     playerMaxXp: 0,
     playerUpgradePoints: 0,
     playerKills: 0,
+    playerEquippedHatId: 0,
+    playerEquippedGunId: 0,
+    playerOwnedHatIds: [0],
+    playerOwnedGunIds: [0],
+    permaDamageLevel: 0,
+    permaHealthLevel: 0,
     enemyName: "Bandit",
     enemyLevel: 1,
     enemyHealth: 0,
@@ -44,6 +58,8 @@ class GameDataStore extends SyncedStore<GameData> {
     enemyMaxXp: 0,
     enemyUpgradePoints: 0,
     enemyKills: 0,
+    enemyEquippedHatId: 0,
+    enemyEquippedGunId: 0,
     autoMode: false,
     fastMode: false,
     lifetimeKills: 0,
@@ -63,9 +79,39 @@ class GameDataStore extends SyncedStore<GameData> {
       "cowpokeLifetimeFurthestLevel",
       1
     );
+    const savedPlayerEquippedHatId = this.getLocalStorage(
+      "cowpokePlayerEquippedHatId",
+      0
+    );
+    const savedPlayerEquippedGunId = this.getLocalStorage(
+      "cowpokePlayerEquippedGunId",
+      0
+    );
+    const savedPlayerOwnedHatIds = this.getLocalStorage(
+      "cowpokePlayerOwnedHatIds",
+      [0]
+    );
+    const savedPlayerOwnedGunIds = this.getLocalStorage(
+      "cowpokePlayerOwnedGunIds",
+      [0]
+    );
+    const savedPermaDamageLevel = this.getLocalStorage(
+      "cowpokePlayerPermaDamageLevel",
+      0
+    );
+    const savedPermaHealthLevel = this.getLocalStorage(
+      "cowpokePlayerPermaHealthLevel",
+      0
+    );
 
     this.setLifetimeKills(savedLifetimeKills);
     this.setLifetimeFurthestLevel(savedLifetimeFurthestLevel);
+    this.setPlayerEquippedHatId(savedPlayerEquippedHatId);
+    this.setPlayerEquippedGunId(savedPlayerEquippedGunId);
+    this.setPlayerOwnedHatIds(savedPlayerOwnedHatIds);
+    this.setPlayerOwnedGunIds(savedPlayerOwnedGunIds);
+    this.setPermaDamageLevel(savedPermaDamageLevel);
+    this.setPermaHealthLevel(savedPermaHealthLevel);
   }
 
   protected getData(): GameData {
@@ -113,6 +159,42 @@ class GameDataStore extends SyncedStore<GameData> {
     this.notify();
   }
 
+  public setPlayerEquippedHatId(value: number) {
+    this.data.playerEquippedHatId = value;
+    this.setLocalStorage("cowpokePlayerEquippedHatId", value);
+    this.notify();
+  }
+
+  public setPlayerEquippedGunId(value: number) {
+    this.data.playerEquippedGunId = value;
+    this.setLocalStorage("cowpokePlayerEquippedGunId", value);
+    this.notify();
+  }
+
+  public setPlayerOwnedHatIds(value: number[]) {
+    this.data.playerOwnedHatIds = value;
+    this.setLocalStorage("cowpokePlayerOwnedHatIds", value);
+    this.notify();
+  }
+
+  public setPlayerOwnedGunIds(value: number[]) {
+    this.data.playerOwnedGunIds = value;
+    this.setLocalStorage("cowpokePlayerOwnedGunIds", value);
+    this.notify();
+  }
+
+  public setPermaDamageLevel(value: number) {
+    this.data.permaDamageLevel = value;
+    this.setLocalStorage("cowpokePlayerPermaDamageLevel", value);
+    this.notify();
+  }
+
+  public setPermaHealthLevel(value: number) {
+    this.data.permaHealthLevel = value;
+    this.setLocalStorage("cowpokePlayerPermaHealthLevel", value);
+    this.notify();
+  }
+
   // Enemy methods
   public setEnemyName(value: string) {
     this.data.enemyName = value;
@@ -154,6 +236,18 @@ class GameDataStore extends SyncedStore<GameData> {
     this.notify();
   }
 
+  public setEnemyEquippedHatId(value: number) {
+    // Not saved to localStorage as enemies don't have persistent data
+    this.data.enemyEquippedHatId = value;
+    this.notify();
+  }
+
+  public setEnemyEquippedGunId(value: number) {
+    // Not saved to localStorage as enemies don't have persistent data
+    this.data.enemyEquippedGunId = value;
+    this.notify();
+  }
+
   // Game mode methods
   public setAutoMode(value: boolean) {
     this.data.autoMode = value;
@@ -179,11 +273,17 @@ class GameDataStore extends SyncedStore<GameData> {
   }
 
   public resetData() {
-    // Reset session data but preserve lifetime stats
+    // Reset session data but preserve persistent player data
     this.data = {
       ...this.defaultData,
       lifetimeKills: this.data.lifetimeKills,
       lifetimeFurthestLevel: this.data.lifetimeFurthestLevel,
+      playerEquippedHatId: this.data.playerEquippedHatId,
+      playerEquippedGunId: this.data.playerEquippedGunId,
+      playerOwnedHatIds: this.data.playerOwnedHatIds,
+      playerOwnedGunIds: this.data.playerOwnedGunIds,
+      permaDamageLevel: this.data.permaDamageLevel,
+      permaHealthLevel: this.data.permaHealthLevel,
     };
     this.notify();
   }

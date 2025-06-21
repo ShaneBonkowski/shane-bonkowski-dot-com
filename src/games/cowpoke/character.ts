@@ -168,6 +168,12 @@ export class Character extends GameObject {
       this.maxXp = gameData.playerMaxXp;
       this.upgradePoints = gameData.playerUpgradePoints;
       this.kills = gameData.playerKills;
+      this.equippedHatId = gameData.playerEquippedHatId;
+      this.equippedGunId = gameData.playerEquippedGunId;
+      this.ownedHatIds = gameData.playerOwnedHatIds || [];
+      this.ownedGunIds = gameData.playerOwnedGunIds || [];
+      this.permanentHealthBonus = gameData.permaHealthLevel || 0;
+      this.permanentDamageBonus = gameData.permaDamageLevel || 0;
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
       this.name = gameData.enemyName;
       this.level = gameData.enemyLevel;
@@ -182,10 +188,7 @@ export class Character extends GameObject {
 
   subscribeToEvents() {
     document.addEventListener("equipmentChanged", this.handleEquipmentChanged);
-    document.addEventListener(
-      "permanentUpgradeChanged",
-      this.handlePermanentUpgradeChanged
-    );
+    document.addEventListener("permanentUpgrade", this.handlePermanentUpgrade);
   }
 
   unsubscribeFromEvents() {
@@ -194,8 +197,8 @@ export class Character extends GameObject {
       this.handleEquipmentChanged
     );
     document.removeEventListener(
-      "permanentUpgradeChanged",
-      this.handlePermanentUpgradeChanged
+      "permanentUpgrade",
+      this.handlePermanentUpgrade
     );
   }
 
@@ -223,19 +226,19 @@ export class Character extends GameObject {
     }
   };
 
-  handlePermanentUpgradeChanged = (event: Event) => {
+  handlePermanentUpgrade = (event: Event) => {
     if (this.type === CHARACTER_TYPES.PLAYER) {
       const customEvent = event as CustomEvent;
-      const { type, upgradePointsRemaining } = customEvent.detail;
+      const { type } = customEvent.detail;
 
       if (type === "health") {
-        this.permanentHealthBonus += 1;
+        gameDataStore.setPermaHealthLevel(this.permanentHealthBonus + 1);
       } else if (type === "damage") {
-        this.permanentDamageBonus += 1;
+        gameDataStore.setPermaDamageLevel(this.permanentDamageBonus + 1);
       }
 
       // Update upgrade points
-      this.upgradePoints = upgradePointsRemaining;
+      gameDataStore.setPlayerUpgradePoints(this.upgradePoints - 1);
     }
   };
 
@@ -314,10 +317,6 @@ export class Character extends GameObject {
       "head-chill-guy"
     );
     this.headSprite!.setDepth(7);
-
-    // Load in saved state from localStorage
-    this.loadGunsAndHats();
-    this.loadPermanentUpgrades();
 
     // Set default name, or load from localStorage if available
     const storedName = localStorage.getItem("cowpokePlayerName");
@@ -426,39 +425,6 @@ export class Character extends GameObject {
     );
   }
 
-  private loadGunsAndHats() {
-    // Read in hats + guns from localStorage if there are any
-    const storedHatIds = localStorage.getItem("cowpokeOwnedHatIds");
-    if (storedHatIds) {
-      this.ownedHatIds = JSON.parse(storedHatIds);
-      this.updateOwnedHatsUiAndStorage();
-    }
-
-    const storedGunIds = localStorage.getItem("cowpokeOwnedGunIds");
-    if (storedGunIds) {
-      this.ownedGunIds = JSON.parse(storedGunIds);
-      this.updateOwnedGunsUiAndStorage();
-    }
-  }
-
-  private loadPermanentUpgrades() {
-    const savedPermaHealth = localStorage.getItem("cowpoke-perma-health");
-    const savedPermaDamage = localStorage.getItem("cowpoke-perma-damage");
-
-    if (savedPermaHealth) {
-      const healthLevel = parseInt(savedPermaHealth);
-      this.permanentHealthBonus = healthLevel;
-    }
-
-    if (savedPermaDamage) {
-      const damageLevel = parseInt(savedPermaDamage);
-      this.permanentDamageBonus = damageLevel;
-    }
-
-    // Refresh health, since permanent upgrades can add health
-    this.updateMaxHealth();
-  }
-
   equipHat(id: number) {
     // -1 means randomly select a hat
     if (id === -1) {
@@ -496,7 +462,11 @@ export class Character extends GameObject {
     this.hatStarSprite!.y = (-520 / 600) * this.bodySprite!.displayHeight;
     this.hatStarSprite!.setScale(0.7, 0.7);
 
-    this.equippedHatId = id;
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerEquippedHatId(id);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyEquippedHatId(id);
+    }
     this.addNewOwnedHat(id);
 
     // Refresh health, since hats can add health
@@ -539,7 +509,12 @@ export class Character extends GameObject {
     this.gunStarSprite!.y = (-290 / 600) * this.bodySprite!.displayHeight;
     this.gunStarSprite!.setScale(0.6, 0.6);
 
-    this.equippedGunId = id;
+    if (this.type === CHARACTER_TYPES.PLAYER) {
+      gameDataStore.setPlayerEquippedGunId(id);
+    } else if (this.type === CHARACTER_TYPES.ENEMY) {
+      gameDataStore.setEnemyEquippedGunId(id);
+    }
+
     this.addNewOwnedGun(id);
 
     // Refresh health, since guns can add health
@@ -613,55 +588,23 @@ export class Character extends GameObject {
 
   addNewOwnedHat(id: number) {
     if (!this.ownedHatIds.includes(id)) {
-      this.ownedHatIds.push(id);
-      this.updateOwnedHatsUiAndStorage();
-    }
-  }
+      const newOwnedHatIds = [...this.ownedHatIds];
+      newOwnedHatIds.push(id);
 
-  updateOwnedHatsUiAndStorage() {
-    // Only update player-owned hats
-    if (this.type === CHARACTER_TYPES.PLAYER) {
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(
-          "cowpokeOwnedHatIds",
-          JSON.stringify(this.ownedHatIds)
-        );
+      if (this.type === CHARACTER_TYPES.PLAYER) {
+        gameDataStore.setPlayerOwnedHatIds(newOwnedHatIds);
       }
-
-      // Dispatch event to update owned hats in the game
-      document.dispatchEvent(
-        new CustomEvent("updateOwnedHats", {
-          detail: { ownedHatIds: this.ownedHatIds },
-        })
-      );
     }
   }
 
   addNewOwnedGun(id: number) {
     if (!this.ownedGunIds.includes(id)) {
-      this.ownedGunIds.push(id);
-      this.updateOwnedGunsUiAndStorage();
-    }
-  }
+      const newOwnedGunIds = [...this.ownedGunIds];
+      newOwnedGunIds.push(id);
 
-  updateOwnedGunsUiAndStorage() {
-    // Only update player-owned guns
-    if (this.type === CHARACTER_TYPES.PLAYER) {
-      // Save to localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem(
-          "cowpokeOwnedGunIds",
-          JSON.stringify(this.ownedGunIds)
-        );
+      if (this.type === CHARACTER_TYPES.PLAYER) {
+        gameDataStore.setPlayerOwnedGunIds(newOwnedGunIds);
       }
-
-      // Dispatch event to update owned guns in the game
-      document.dispatchEvent(
-        new CustomEvent("updateOwnedGuns", {
-          detail: { ownedGunIds: this.ownedGunIds },
-        })
-      );
     }
   }
 

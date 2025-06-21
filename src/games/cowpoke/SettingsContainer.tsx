@@ -7,7 +7,7 @@ import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import LootContainer from "@/src/games/cowpoke/LootContainer";
-import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
+import { UseGameData } from "@/src/games/cowpoke/UseGameData";
 
 const UpgradeButton = ({
   type,
@@ -53,20 +53,22 @@ const UpgradeButton = ({
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [upgradePoints, setUpgradePoints] = useState(0);
-  const [equippedHatId, setEquippedHatId] = useState(0);
-  const [equippedGunId, setEquippedGunId] = useState(0);
-  const [ownedHatIds, setOwnedHatIds] = useState<number[]>([]);
-  const [ownedGunIds, setOwnedGunIds] = useState<number[]>([]);
   const [seenHatIds, setSeenHatIds] = useState<number[]>([]);
   const [seenGunIds, setSeenGunIds] = useState<number[]>([]);
-  const [permaHealthLevel, setPermaHealthLevel] = useState(0);
-  const [permaDamageLevel, setPermaDamageLevel] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const {
+    playerUpgradePoints,
+    playerEquippedHatId,
+    playerEquippedGunId,
+    playerOwnedHatIds,
+    playerOwnedGunIds,
+    permaHealthLevel,
+    permaDamageLevel,
+  } = UseGameData();
+
   const handleEquipHat = (hatId: number) => {
-    if (hatId !== equippedHatId) {
-      setEquippedHatId(hatId);
+    if (hatId !== playerEquippedHatId) {
       // Dispatch event to notify game
       document.dispatchEvent(
         new CustomEvent("equipmentChanged", {
@@ -77,8 +79,7 @@ const SettingsContainer: React.FC = () => {
   };
 
   const handleEquipGun = (gunId: number) => {
-    if (gunId !== equippedGunId) {
-      setEquippedGunId(gunId);
+    if (gunId !== playerEquippedGunId) {
       // Dispatch event to notify game
       document.dispatchEvent(
         new CustomEvent("equipmentChanged", {
@@ -96,34 +97,8 @@ const SettingsContainer: React.FC = () => {
       setIsButtonVisible(true);
     };
 
-    const handleCharacterLevelUpdate = (event: Event) => {
-      const customEvent = event as CustomEvent;
-
-      // If player levels up, update the upgrade points
-      if (customEvent.detail?.characterType === CHARACTER_TYPES.PLAYER) {
-        if (customEvent.detail?.upgradePoints)
-          setUpgradePoints(customEvent.detail.upgradePoints);
-      }
-    };
-
-    const handleUpdateOwnedHats = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      if (customEvent.detail?.ownedHatIds) {
-        setOwnedHatIds(customEvent.detail.ownedHatIds);
-      }
-    };
-
-    const handleUpdateOwnedGuns = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      if (customEvent.detail?.ownedGunIds) {
-        setOwnedGunIds(customEvent.detail.ownedGunIds);
-      }
-    };
-
     const savedSeenHats = localStorage.getItem("cowpoke-seen-hats");
     const savedSeenGuns = localStorage.getItem("cowpoke-seen-guns");
-    const savedPermaHealth = localStorage.getItem("cowpoke-perma-health");
-    const savedPermaDamage = localStorage.getItem("cowpoke-perma-damage");
 
     if (savedSeenHats) {
       setSeenHatIds(JSON.parse(savedSeenHats));
@@ -131,31 +106,13 @@ const SettingsContainer: React.FC = () => {
     if (savedSeenGuns) {
       setSeenGunIds(JSON.parse(savedSeenGuns));
     }
-    if (savedPermaHealth) {
-      setPermaHealthLevel(parseInt(savedPermaHealth));
-    }
-    if (savedPermaDamage) {
-      setPermaDamageLevel(parseInt(savedPermaDamage));
-    }
 
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
-    document.addEventListener(
-      "characterLevelUpdate",
-      handleCharacterLevelUpdate
-    );
-    document.addEventListener("updateOwnedHats", handleUpdateOwnedHats);
-    document.addEventListener("updateOwnedGuns", handleUpdateOwnedGuns);
 
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
-      document.removeEventListener(
-        "characterLevelUpdate",
-        handleCharacterLevelUpdate
-      );
-      document.removeEventListener("updateOwnedHats", handleUpdateOwnedHats);
-      document.removeEventListener("updateOwnedGuns", handleUpdateOwnedGuns);
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -167,8 +124,8 @@ const SettingsContainer: React.FC = () => {
   // Function to update seen loot
   const updateSeenLoot = () => {
     // Create snapshot of current owned items
-    const currentSeenHats = [...ownedHatIds];
-    const currentSeenGuns = [...ownedGunIds];
+    const currentSeenHats = [...playerOwnedHatIds];
+    const currentSeenGuns = [...playerOwnedGunIds];
 
     // Update state
     setSeenHatIds(currentSeenHats);
@@ -204,37 +161,26 @@ const SettingsContainer: React.FC = () => {
   };
 
   const getNewItemsCount = () => {
-    const newHats = ownedHatIds.filter(
+    const newHats = playerOwnedHatIds.filter(
       (hatId) => !seenHatIds.includes(hatId)
     ).length;
-    const newGuns = ownedGunIds.filter(
+    const newGuns = playerOwnedGunIds.filter(
       (gunId) => !seenGunIds.includes(gunId)
     ).length;
     return newHats + newGuns;
   };
 
   const getTotalNotificationCount = () => {
-    return upgradePoints + getNewItemsCount();
+    return playerUpgradePoints + getNewItemsCount();
   };
 
   const handlePermaHealthUpgrade = () => {
-    if (upgradePoints > 0) {
-      const newLevel = permaHealthLevel + 1;
-      const newUpgradePoints = upgradePoints - 1;
-
-      // Update local state
-      setPermaHealthLevel(newLevel);
-      setUpgradePoints(newUpgradePoints);
-
-      // Persist to localStorage
-      localStorage.setItem("cowpoke-perma-health", newLevel.toString());
-
+    if (playerUpgradePoints > 0) {
       // Notify game
       document.dispatchEvent(
-        new CustomEvent("permanentUpgradeChanged", {
+        new CustomEvent("permanentUpgrade", {
           detail: {
             type: "health",
-            upgradePointsRemaining: newUpgradePoints,
           },
         })
       );
@@ -242,24 +188,12 @@ const SettingsContainer: React.FC = () => {
   };
 
   const handlePermaDamageUpgrade = () => {
-    if (upgradePoints > 0) {
-      const newLevel = permaDamageLevel + 1;
-      const newUpgradePoints = upgradePoints - 1;
-
-      // Update local state
-      setPermaDamageLevel(newLevel);
-      setUpgradePoints(newUpgradePoints);
-
-      // Persist to localStorage
-      localStorage.setItem("cowpoke-perma-damage", newLevel.toString());
-
+    if (playerUpgradePoints > 0) {
       // Notify game
       document.dispatchEvent(
-        new CustomEvent("permanentUpgradeChanged", {
+        new CustomEvent("permanentUpgrade", {
           detail: {
             type: "damage",
-            level: newLevel,
-            upgradePointsRemaining: newUpgradePoints,
           },
         })
       );
@@ -294,9 +228,9 @@ const SettingsContainer: React.FC = () => {
           {/* Upgrades Section */}
           <div>
             <h2 className="text-center">Permanent Upgrades</h2>
-            {upgradePoints > 0 ? (
+            {playerUpgradePoints > 0 ? (
               <p className="text-center">
-                Upgrade Points Available: {upgradePoints}
+                Upgrade Points Available: {playerUpgradePoints}
               </p>
             ) : (
               <p className="text-center">Level up to earn upgrade points!</p>
@@ -306,7 +240,7 @@ const SettingsContainer: React.FC = () => {
                 type="Health"
                 icon={<FaHeart size={30} />}
                 level={permaHealthLevel}
-                upgradePoints={upgradePoints}
+                upgradePoints={playerUpgradePoints}
                 borderColor="green-500"
                 textColor="green-400"
                 onPointerDown={handlePermaHealthUpgrade}
@@ -316,7 +250,7 @@ const SettingsContainer: React.FC = () => {
                 type="Damage"
                 icon={<GiCrossedSwords size={30} />}
                 level={permaDamageLevel}
-                upgradePoints={upgradePoints}
+                upgradePoints={playerUpgradePoints}
                 borderColor="red-500"
                 textColor="red-400"
                 onPointerDown={handlePermaDamageUpgrade}
@@ -329,17 +263,17 @@ const SettingsContainer: React.FC = () => {
             <h2 className="text-center">Currently Equipped</h2>
             <div className="flex flex-row justify-center gap-6">
               <LootContainer
-                lootId={equippedHatId}
+                lootId={playerEquippedHatId}
                 lootType="hat"
                 isEquipped={true}
-                isNew={isHatNew(equippedHatId)}
+                isNew={isHatNew(playerEquippedHatId)}
                 onPointerDown={() => {}} // No-op for equipped items
               />
               <LootContainer
-                lootId={equippedGunId}
+                lootId={playerEquippedGunId}
                 lootType="gun"
                 isEquipped={true}
-                isNew={isGunNew(equippedGunId)}
+                isNew={isGunNew(playerEquippedGunId)}
                 onPointerDown={() => {}} // No-op for equipped items
               />
             </div>
@@ -349,12 +283,12 @@ const SettingsContainer: React.FC = () => {
           <div id="owned-guns">
             <h2 className="text-center">Owned Guns</h2>
             <div className="flex flex-row flex-wrap justify-center gap-3">
-              {ownedGunIds.map((gunId) => (
+              {playerOwnedGunIds.map((gunId) => (
                 <LootContainer
                   key={`gun-${gunId}`}
                   lootId={gunId}
                   lootType="gun"
-                  isEquipped={gunId === equippedGunId}
+                  isEquipped={gunId === playerEquippedGunId}
                   isNew={isGunNew(gunId)}
                   onPointerDown={() => handleEquipGun(gunId)}
                 />
@@ -366,12 +300,12 @@ const SettingsContainer: React.FC = () => {
           <div id="owned-hats">
             <h2 className="text-center">Owned Hats</h2>
             <div className="flex flex-row flex-wrap justify-center gap-3">
-              {ownedHatIds.map((hatId) => (
+              {playerOwnedHatIds.map((hatId) => (
                 <LootContainer
                   key={`hat-${hatId}`}
                   lootId={hatId}
                   lootType="hat"
-                  isEquipped={hatId === equippedHatId}
+                  isEquipped={hatId === playerEquippedHatId}
                   isNew={isHatNew(hatId)}
                   onPointerDown={() => handleEquipHat(hatId)}
                 />
