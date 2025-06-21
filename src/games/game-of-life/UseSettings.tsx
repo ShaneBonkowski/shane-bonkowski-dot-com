@@ -20,5 +20,6 @@ export const UseSettings = () => {
     setInfiniteEdges: settingsStore.setInfiniteEdges.bind(settingsStore),
     setDiagonalNeighbors:
       settingsStore.setDiagonalNeighbors.bind(settingsStore),
+    resetData: settingsStore.resetData.bind(settingsStore),
   };
 };

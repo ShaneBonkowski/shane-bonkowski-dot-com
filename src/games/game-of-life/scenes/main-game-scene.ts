@@ -25,6 +25,10 @@ import {
   settingsStore,
   Settings,
 } from "@/src/games/game-of-life/settings-store";
+import {
+  gameDataStore,
+  GameData,
+} from "@/src/games/game-of-life/game-data-store";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 export let tiles: Tile[][] = [];
@@ -58,6 +62,10 @@ export class MainGameScene extends Generic2DGameScene {
   public autoPause: boolean = true;
   public infiniteEdges: boolean = true;
   public diagonalNeighbors: boolean = true;
+
+  // Game data
+  public population: number = 0;
+  public generation: number = 0;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -93,7 +101,8 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
-    this.setupSettings();
+    this.setupSyncedSettings();
+    this.setupSyncedGameData();
 
     // (setting tile layout creates the tiles)
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -115,7 +124,7 @@ export class MainGameScene extends Generic2DGameScene {
     dispatchGameStartedEvent("Game of Life");
   }
 
-  setupSettings() {
+  setupSyncedSettings() {
     // Get snapshot of the game of life settings, then load them in and subscribe to changes.
     const settings = settingsStore.getSnapshot();
 
@@ -140,6 +149,27 @@ export class MainGameScene extends Generic2DGameScene {
     this.autoPause = settings.autoPause;
     this.infiniteEdges = settings.infiniteEdges;
     this.diagonalNeighbors = settings.diagonalNeighbors;
+  }
+
+  setupSyncedGameData() {
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    const gameData = gameDataStore.getSnapshot();
+
+    this.setGameDataFromStore(gameData);
+
+    gameDataStore.subscribe(() => {
+      const newGameData = gameDataStore.getSnapshot();
+      this.handleGameDataChange(newGameData);
+    });
+  }
+
+  handleGameDataChange = (gameData: GameData) => {
+    this.setGameDataFromStore(gameData);
+  };
+
+  setGameDataFromStore(gameData: GameData) {
+    this.population = gameData.population;
+    this.generation = gameData.generation;
   }
 
   update(time: number, delta: number) {
@@ -250,16 +280,7 @@ export class MainGameScene extends Generic2DGameScene {
       newGenerationVal = 0;
     }
 
-    // Only fire an event if the generation value actually changed
-    if (newGenerationVal != this.generation) {
-      document.dispatchEvent(
-        new CustomEvent("genChange", {
-          detail: { message: newGenerationVal.toString() },
-        })
-      );
-    }
-
-    this.generation = newGenerationVal;
+    gameDataStore.setGeneration(newGenerationVal);
   }
 
   updatePopulation(newPopulationVal: number) {
@@ -268,20 +289,11 @@ export class MainGameScene extends Generic2DGameScene {
       newPopulationVal = 0;
     }
 
-    // Only fire an event if the population value actually changed
-    if (newPopulationVal != this.population) {
-      document.dispatchEvent(
-        new CustomEvent("popChange", {
-          detail: { message: newPopulationVal.toString() },
-        })
-      );
-    }
-
-    this.population = newPopulationVal;
+    gameDataStore.setPopulation(newPopulationVal);
 
     // If the population is 0, pause the game if it is not already.
     // ONLY IF NOT IN AUTOPLAY MODE!
-    if (this.population == 0 && !this.autoPlayMode) {
+    if (newPopulationVal == 0 && !this.autoPlayMode) {
       if (!this.paused) {
         this.togglePause();
         document.dispatchEvent(new CustomEvent("manualPause"));
@@ -677,6 +689,7 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
+    settingsStore.resetData(); // reset settings in the store
     this.destroyTiles();
     this.gestureManager.destroy();
   }

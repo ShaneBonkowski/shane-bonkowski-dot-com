@@ -1,12 +1,14 @@
 import { SyncedStore } from "@/src/utils/synced-store";
 
 export interface GameData {
-  score: number;
+  population: number;
+  generation: number;
 }
 
 class GameDataStore extends SyncedStore<GameData> {
   private defaultData: GameData = {
-    score: 0,
+    population: 0,
+    generation: 0,
   };
 
   private data: GameData = { ...this.defaultData };
@@ -19,8 +21,13 @@ class GameDataStore extends SyncedStore<GameData> {
     return { ...this.data };
   }
 
-  public setScore(value: number) {
-    this.data.score = value;
+  public setPopulation(value: number) {
+    this.data.population = value;
+    this.notify();
+  }
+
+  public setGeneration(value: number) {
+    this.data.generation = value;
     this.notify();
   }
 

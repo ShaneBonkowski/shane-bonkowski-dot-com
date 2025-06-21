@@ -10,25 +10,22 @@ import {
 } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
+import { UseGameData } from "@/src/games/flip-tile/UseGameData";
 
 const UiOverlay: React.FC = () => {
   const [isUiVisible, setIsUiVisible] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
-  const [score, setScore] = useState<number>(0);
+  const { score } = UseGameData();
   const [isPulsing, setIsPulsing] = useState<boolean>(false);
 
-  const handleScoreChange = (event: CustomEvent) => {
-    if (event.detail && typeof event.detail.score === "number") {
-      setScore(event.detail.score);
-
-      // Trigger the pulse effect, and remove it after 500ms
-      // which is the same duration as the CSS animation
-      setIsPulsing(true);
-      timeoutRef.current = setTimeout(() => {
-        setIsPulsing(false);
-      }, 500);
-    }
+  const handleScoreChange = () => {
+    // Trigger the pulse effect, and remove it after 500ms
+    // which is the same duration as the CSS animation
+    setIsPulsing(true);
+    timeoutRef.current = setTimeout(() => {
+      setIsPulsing(false);
+    }, 500);
   };
 
   const handleToggleSolution = () => {

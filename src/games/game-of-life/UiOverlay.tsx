@@ -11,14 +11,14 @@ import {
 } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
+import { UseGameData } from "@/src/games/game-of-life/UseGameData";
 
 const UiOverlay: React.FC = () => {
   const [isUiVisible, setIsUiVisible] = useState(true);
   const [isAutoMode, setIsAutoMode] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
   const [isDiscoMode, setIsDiscoMode] = useState(false);
-  const [population, setPopulation] = useState(0);
-  const [generation, setGeneration] = useState(0);
+  const { population, generation } = UseGameData();
 
   const handleToggleAutoMode = () => {
     setIsAutoMode((prev) => !prev);
@@ -51,14 +51,6 @@ const UiOverlay: React.FC = () => {
       setIsUiVisible(true);
     };
 
-    const handlePopChange = (event: CustomEvent) => {
-      setPopulation(parseInt(event.detail.message, 10));
-    };
-
-    const handleGenChange = (event: CustomEvent) => {
-      setGeneration(parseInt(event.detail.message, 10));
-    };
-
     const handleManualUnpause = () => {
       setIsPaused(false);
     };
@@ -79,8 +71,6 @@ const UiOverlay: React.FC = () => {
     // Add event listeners
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
-    document.addEventListener("popChange", handlePopChange as EventListener);
-    document.addEventListener("genChange", handleGenChange as EventListener);
     document.addEventListener(
       "manualUnpause",
       handleManualUnpause as EventListener
@@ -98,14 +88,6 @@ const UiOverlay: React.FC = () => {
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
-      document.removeEventListener(
-        "popChange",
-        handlePopChange as EventListener
-      );
-      document.removeEventListener(
-        "genChange",
-        handleGenChange as EventListener
-      );
       document.removeEventListener(
         "manualUnpause",
         handleManualUnpause as EventListener

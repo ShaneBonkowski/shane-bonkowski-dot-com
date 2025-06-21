@@ -16,6 +16,7 @@ import {
   sharedTileAttrs,
 } from "@/src/games/flip-tile/tile-utils";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
+import { gameDataStore, GameData } from "@/src/games/flip-tile/game-data-store";
 
 export let tiles: Tile[][] = [];
 
@@ -64,12 +65,34 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
+    this.setupSyncedGameData();
+
     // Spawn in tiles in a grid
     this.newTilePattern();
 
     this.gameStarted = true;
     dispatchCloseLoadingScreenEvent("flip tile");
     dispatchGameStartedEvent("flip tile");
+  }
+
+  setupSyncedGameData() {
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    const gameData = gameDataStore.getSnapshot();
+
+    this.setGameDataFromStore(gameData);
+
+    gameDataStore.subscribe(() => {
+      const newGameData = gameDataStore.getSnapshot();
+      this.handleGameDataChange(newGameData);
+    });
+  }
+
+  handleGameDataChange = (gameData: GameData) => {
+    this.setGameDataFromStore(gameData);
+  };
+
+  setGameDataFromStore(gameData: GameData) {
+    this.score = gameData.score;
   }
 
   update(time: number, delta: number) {
@@ -229,19 +252,20 @@ export class MainGameScene extends Generic2DGameScene {
       // Update score..
       // Only give score if solution is not revealed
       if (!this.solutionRevealed && !this.revealedAtLeastOnceThisLevel) {
+        let desiredScore = this.score;
         if (tilePatternAttrs.difficultyLevel == difficulty.EASY) {
-          this.score += scoring.EASY;
+          desiredScore += scoring.EASY;
         } else if (tilePatternAttrs.difficultyLevel == difficulty.HARD) {
-          this.score += scoring.HARD;
+          desiredScore += scoring.HARD;
         } else if (tilePatternAttrs.difficultyLevel == difficulty.EXPERT) {
-          this.score += scoring.EXPERT;
+          desiredScore += scoring.EXPERT;
         } else {
           console.log("ERROR: difficulty not listed");
         }
 
-        document.dispatchEvent(
-          new CustomEvent("scoreChange", { detail: { score: this.score } })
-        );
+        // Update the game data store with the new score
+        gameDataStore.setScore(desiredScore);
+        document.dispatchEvent(new CustomEvent("scoreChange"));
       }
 
       // After x seconds, reveal the next puzzle
@@ -422,6 +446,9 @@ export class MainGameScene extends Generic2DGameScene {
    */
   shutdown() {
     super.shutdown();
+
+    // reset the store
+    gameDataStore.resetData();
 
     // Clear the solved timeout if it exists
     if (this.solvedTimeoutID) {

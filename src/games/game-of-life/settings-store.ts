@@ -12,7 +12,7 @@ export interface Settings {
 }
 
 class SettingsStore extends SyncedStore<Settings> {
-  private data: Settings = {
+  private defaultData: Settings = {
     updateInterval: 200,
     underpopulation: 2,
     overpopulation: 3,
@@ -23,19 +23,20 @@ class SettingsStore extends SyncedStore<Settings> {
     diagonalNeighbors: true,
   };
 
+  private data: Settings = { ...this.defaultData };
+
   constructor() {
     super();
     this.loadFromLocalStorage();
   }
 
   private loadFromLocalStorage() {
-    // Load all data stored in localStorage
     const savedColorTheme = this.getLocalStorage("gameOfLifeColorTheme", 0);
-    this.data.colorTheme = savedColorTheme;
+    this.setColorTheme(savedColorTheme);
   }
 
   protected getData(): Settings {
-    return { ...this.data }; // Just return a copy, base class handles caching
+    return { ...this.data };
   }
 
   public setUpdateInterval(value: number) {
@@ -76,6 +77,16 @@ class SettingsStore extends SyncedStore<Settings> {
 
   public setDiagonalNeighbors(value: boolean) {
     this.data.diagonalNeighbors = value;
+    this.notify();
+  }
+
+  public resetData() {
+    // Reset to base defaults
+    this.data = { ...this.defaultData };
+
+    // Override to local storage defaults
+    this.loadFromLocalStorage();
+
     this.notify();
   }
 }
