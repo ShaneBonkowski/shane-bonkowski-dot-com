@@ -96,6 +96,10 @@ export class Character extends GameObject {
   ) {
     // Initialize GameObject with physics, and rigid body
     super("Character", new Vec2(0, 0), true, true);
+
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    this.setupSyncedGameData();
+
     this.scene = scene;
     this.type = type;
 
@@ -134,9 +138,6 @@ export class Character extends GameObject {
     // Place character just below top of floor.
     this.physicsBody2D!.position.y =
       screenHeight - screenHeight * (100 / REFERENCE_BKG_SIZE.y);
-
-    // Get snapshot of the game data, then load them in and subscribe to changes.
-    this.setupSyncedGameData();
 
     // Subscribe to game data changes
     this.subscribeToEvents();
@@ -333,6 +334,7 @@ export class Character extends GameObject {
 
     // Set level, this will set max health, xp, etc.
     this.updateLevel(5, true);
+    gameDataStore.setPlayerUpgradePoints(0); // player should start with 0 upgrade points
 
     // Setup the character
     this.spawnCharacterSetup();
@@ -869,7 +871,7 @@ export class Character extends GameObject {
     }
 
     // Level up!
-    if (this.xp >= this.maxXp) {
+    if (this.xp >= this.maxXp && this.maxXp > 0) {
       this.updateLevel(this.level + 1);
     }
   }

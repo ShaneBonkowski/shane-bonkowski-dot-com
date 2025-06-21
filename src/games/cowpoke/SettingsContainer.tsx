@@ -53,8 +53,6 @@ const UpgradeButton = ({
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [seenHatIds, setSeenHatIds] = useState<number[]>([]);
-  const [seenGunIds, setSeenGunIds] = useState<number[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const {
@@ -65,6 +63,10 @@ const SettingsContainer: React.FC = () => {
     playerOwnedGunIds,
     permaHealthLevel,
     permaDamageLevel,
+    settingsSeenHatIds,
+    settingsSeenGunIds,
+    setSettingsSeenHatIds,
+    setSettingsSeenGunIds,
   } = UseGameData();
 
   const handleEquipHat = (hatId: number) => {
@@ -97,16 +99,6 @@ const SettingsContainer: React.FC = () => {
       setIsButtonVisible(true);
     };
 
-    const savedSeenHats = localStorage.getItem("cowpoke-seen-hats");
-    const savedSeenGuns = localStorage.getItem("cowpoke-seen-guns");
-
-    if (savedSeenHats) {
-      setSeenHatIds(JSON.parse(savedSeenHats));
-    }
-    if (savedSeenGuns) {
-      setSeenGunIds(JSON.parse(savedSeenGuns));
-    }
-
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
 
@@ -128,8 +120,8 @@ const SettingsContainer: React.FC = () => {
     const currentSeenGuns = [...playerOwnedGunIds];
 
     // Update state
-    setSeenHatIds(currentSeenHats);
-    setSeenGunIds(currentSeenGuns);
+    setSettingsSeenHatIds(currentSeenHats);
+    setSettingsSeenGunIds(currentSeenGuns);
 
     // Persist to localStorage
     localStorage.setItem("cowpoke-seen-hats", JSON.stringify(currentSeenHats));
@@ -137,8 +129,8 @@ const SettingsContainer: React.FC = () => {
   };
 
   // Helper functions to check if loot is new
-  const isHatNew = (hatId: number) => !seenHatIds.includes(hatId);
-  const isGunNew = (gunId: number) => !seenGunIds.includes(gunId);
+  const isHatNew = (hatId: number) => !settingsSeenHatIds.includes(hatId);
+  const isGunNew = (gunId: number) => !settingsSeenGunIds.includes(gunId);
 
   const openWindow = () => {
     // Add a small delay before revealing.
@@ -162,10 +154,10 @@ const SettingsContainer: React.FC = () => {
 
   const getNewItemsCount = () => {
     const newHats = playerOwnedHatIds.filter(
-      (hatId) => !seenHatIds.includes(hatId)
+      (hatId) => !settingsSeenHatIds.includes(hatId)
     ).length;
     const newGuns = playerOwnedGunIds.filter(
-      (gunId) => !seenGunIds.includes(gunId)
+      (gunId) => !settingsSeenGunIds.includes(gunId)
     ).length;
     return newHats + newGuns;
   };

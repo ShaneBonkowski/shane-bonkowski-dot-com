@@ -43,18 +43,25 @@ const StartEndMenu: React.FC = () => {
     dispatchMenuEvent("Start/End", "close");
   };
 
+  const updatePlayerName = useCallback(
+    (name: string) => {
+      // Update the player name in the game data store
+      setPlayerName(name);
+    },
+    [setPlayerName]
+  );
+
   const handleStartLoadingGame = useCallback(() => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
-      // Update the player name in the game data store
-      setPlayerName(playerName);
+      updatePlayerName(playerName);
 
       // Tell the main-game-scene to start loading the game
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
     }, 150);
-  }, [playerName, setPlayerName]);
+  }, [playerName, updatePlayerName]);
 
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
@@ -145,6 +152,7 @@ const StartEndMenu: React.FC = () => {
             type="text"
             placeholder="Yer name here..."
             value={playerName}
+            onChange={(e) => updatePlayerName(e.target.value)}
             maxLength={10}
             className="p-2 text-small flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
             aria-label="Player name input"

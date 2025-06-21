@@ -32,16 +32,19 @@ export interface GameData {
   // Player stats
   lifetimeKills: number;
   lifetimeFurthestLevel: number;
+  // Settings seen items
+  settingsSeenHatIds: number[];
+  settingsSeenGunIds: number[];
 }
 
 class GameDataStore extends SyncedStore<GameData> {
   private defaultData: GameData = {
-    playerName: "Cowpoke",
+    playerName: "",
     playerLevel: 1,
     playerHealth: 0,
-    playerMaxHealth: 0,
+    playerMaxHealth: 100,
     playerXp: 0,
-    playerMaxXp: 0,
+    playerMaxXp: 100,
     playerUpgradePoints: 0,
     playerKills: 0,
     playerEquippedHatId: 0,
@@ -50,12 +53,12 @@ class GameDataStore extends SyncedStore<GameData> {
     playerOwnedGunIds: [0],
     permaDamageLevel: 0,
     permaHealthLevel: 0,
-    enemyName: "Bandit",
+    enemyName: "",
     enemyLevel: 1,
     enemyHealth: 0,
-    enemyMaxHealth: 0,
+    enemyMaxHealth: 100,
     enemyXp: 0,
-    enemyMaxXp: 0,
+    enemyMaxXp: 100,
     enemyUpgradePoints: 0,
     enemyKills: 0,
     enemyEquippedHatId: 0,
@@ -64,6 +67,8 @@ class GameDataStore extends SyncedStore<GameData> {
     fastMode: false,
     lifetimeKills: 0,
     lifetimeFurthestLevel: 1,
+    settingsSeenHatIds: [],
+    settingsSeenGunIds: [],
   };
 
   private data: GameData = { ...this.defaultData };
@@ -103,6 +108,14 @@ class GameDataStore extends SyncedStore<GameData> {
       "cowpokePlayerPermaHealthLevel",
       0
     );
+    const savedSettingsSeenHatIds = this.getLocalStorage(
+      "cowpokeSettingsSeenHatIds",
+      []
+    );
+    const savedSettingsSeenGunIds = this.getLocalStorage(
+      "cowpokeSettingsSeenGunIds",
+      []
+    );
 
     this.setLifetimeKills(savedLifetimeKills);
     this.setLifetimeFurthestLevel(savedLifetimeFurthestLevel);
@@ -112,6 +125,8 @@ class GameDataStore extends SyncedStore<GameData> {
     this.setPlayerOwnedGunIds(savedPlayerOwnedGunIds);
     this.setPermaDamageLevel(savedPermaDamageLevel);
     this.setPermaHealthLevel(savedPermaHealthLevel);
+    this.setSettingsSeenHatIds(savedSettingsSeenHatIds);
+    this.setSettingsSeenGunIds(savedSettingsSeenGunIds);
   }
 
   protected getData(): GameData {
@@ -272,6 +287,19 @@ class GameDataStore extends SyncedStore<GameData> {
     this.notify();
   }
 
+  // Settings seen methods
+  public setSettingsSeenHatIds(value: number[]) {
+    this.data.settingsSeenHatIds = value;
+    this.setLocalStorage("cowpokeSettingsSeenHatIds", value);
+    this.notify();
+  }
+
+  public setSettingsSeenGunIds(value: number[]) {
+    this.data.settingsSeenGunIds = value;
+    this.setLocalStorage("cowpokeSettingsSeenGunIds", value);
+    this.notify();
+  }
+
   public resetData() {
     // Reset session data but preserve persistent player data
     this.data = {
@@ -284,6 +312,8 @@ class GameDataStore extends SyncedStore<GameData> {
       playerOwnedGunIds: this.data.playerOwnedGunIds,
       permaDamageLevel: this.data.permaDamageLevel,
       permaHealthLevel: this.data.permaHealthLevel,
+      settingsSeenHatIds: this.data.settingsSeenHatIds,
+      settingsSeenGunIds: this.data.settingsSeenGunIds,
     };
     this.notify();
   }

@@ -31,6 +31,10 @@ export const UseGameData = () => {
     // Game Actions
     setAutoMode: gameDataStore.setAutoMode.bind(gameDataStore),
     setFastMode: gameDataStore.setFastMode.bind(gameDataStore),
+    setSettingsSeenHatIds:
+      gameDataStore.setSettingsSeenHatIds.bind(gameDataStore),
+    setSettingsSeenGunIds:
+      gameDataStore.setSettingsSeenGunIds.bind(gameDataStore),
     resetData: gameDataStore.resetData.bind(gameDataStore),
   };
 };
