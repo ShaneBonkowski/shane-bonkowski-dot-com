@@ -2,12 +2,15 @@ type Listener = () => void;
 
 export abstract class SyncedStore<T = Record<string, unknown>> {
   private listeners = new Set<Listener>();
+  private cachedSnapshot: T | null = null;
 
   /**
    * Notify all subscribers that the data has changed.
    * This method should be called whenever the data changes.
    */
   protected notify(): void {
+    // Clear cache when data changes
+    this.cachedSnapshot = null;
     this.listeners.forEach((listener) => listener());
   }
 
@@ -29,7 +32,11 @@ export abstract class SyncedStore<T = Record<string, unknown>> {
    * @returns The current data in the store.
    */
   public getSnapshot(): T {
-    return this.getData();
+    // Return cached snapshot if available, otherwise create and cache new one
+    if (!this.cachedSnapshot) {
+      this.cachedSnapshot = this.getData();
+    }
+    return this.cachedSnapshot;
   }
 
   /**

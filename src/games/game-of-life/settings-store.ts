@@ -23,8 +23,6 @@ class SettingsStore extends SyncedStore<Settings> {
     diagonalNeighbors: true,
   };
 
-  private cachedSnapshot: Settings | null = null;
-
   constructor() {
     super();
     this.loadFromLocalStorage();
@@ -37,17 +35,7 @@ class SettingsStore extends SyncedStore<Settings> {
   }
 
   protected getData(): Settings {
-    // Return cached snapshot if available, otherwise create and cache new one
-    if (!this.cachedSnapshot) {
-      this.cachedSnapshot = { ...this.data };
-    }
-    return this.cachedSnapshot;
-  }
-
-  protected notify(): void {
-    // Clear cache when data changes
-    this.cachedSnapshot = null;
-    super.notify();
+    return { ...this.data }; // Just return a copy, base class handles caching
   }
 
   public setUpdateInterval(value: number) {
