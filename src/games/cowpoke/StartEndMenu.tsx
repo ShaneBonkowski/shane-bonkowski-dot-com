@@ -2,22 +2,26 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { FaPlay } from "react-icons/fa";
+import { FaPlay, FaRedo } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { UseGameData } from "@/src/games/cowpoke/UseGameData";
+import YesNoBox from "@/src/components/YesNoBox";
 
 const StartEndMenu: React.FC = () => {
   const {
     playerName,
     playerLevel,
     playerKills,
-    lifetimeFurthestLevel,
+    lifetimeFurthestLevelInPlaythrough,
+    lifetimeMostKillsInPlaythrough,
     lifetimeKills,
     setPlayerName,
+    resetPermanentData,
   } = UseGameData();
   const [isVisible, setIsVisible] = useState(false);
+  const [resetStatsVisible, setResetStatsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -74,6 +78,36 @@ const StartEndMenu: React.FC = () => {
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
     }, 150);
   }, [playerName, updatePlayerName]);
+
+  const handleTryToResetStats = () => {
+    // Add a small delay before revealing.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setResetStatsVisible(true);
+    }, 150);
+  };
+
+  const onYesReset = () => {
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setResetStatsVisible(false);
+
+      // Reset the lifetime stats and permanent upgrades
+      resetPermanentData();
+    }, 150);
+  };
+
+  const onNoReset = () => {
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setResetStatsVisible(false);
+    }, 150);
+  };
 
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
@@ -140,13 +174,30 @@ const StartEndMenu: React.FC = () => {
           {menuType === "end" && (
             <>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Level:</b> {playerLevel}
+                <b>Playthrough Level:</b> {playerLevel}
+                {playerLevel >= lifetimeFurthestLevelInPlaythrough &&
+                  playerLevel != 0 && (
+                    <span className="text-red-500 font-bold ml-2">
+                      NEW RECORD!
+                    </span>
+                  )}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Kills:</b> {playerKills}
+                <b>Playthrough Kills:</b> {playerKills}
+                {playerKills >= lifetimeMostKillsInPlaythrough &&
+                  playerKills != 0 && (
+                    <span className="text-red-500 font-bold ml-2">
+                      NEW RECORD!
+                    </span>
+                  )}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
-                <b>Lifetime Highest Level:</b> {lifetimeFurthestLevel}
+                <b>Lifetime Highest Level Reached:</b>{" "}
+                {lifetimeFurthestLevelInPlaythrough}
+              </p>
+              <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
+                <b>Lifetime Most Kills in a Playthrough:</b>{" "}
+                {lifetimeMostKillsInPlaythrough}
               </p>
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
                 <b>Lifetime Total Kills:</b> {lifetimeKills}
@@ -177,7 +228,32 @@ const StartEndMenu: React.FC = () => {
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
           />
         </div>
+
+        {/* Reset Lifetime Stats Button */}
+        <GameIconButton
+          onPointerDown={handleTryToResetStats}
+          icon={<FaRedo size={30} />}
+          ariaLabel="Reset Lifetime Stats"
+          darkModeLight={true} // Want the black buttons this game! Since bkg is light.
+          className={`fixed bottom-5 left-5`}
+        ></GameIconButton>
       </GameUiWindow>
+
+      {/* Reset Stats Popup */}
+      {resetStatsVisible && (
+        <YesNoBox
+          yesButtonText="Reset Stats"
+          noButtonText="Cancel"
+          onYes={onYesReset}
+          onNo={onNoReset}
+          id="reset-lifetime-stats"
+        >
+          <p className="text-left">
+            Are you sure you want to reset your lifetime stats, perma upgrades
+            and loot? This action cannot be undone.
+          </p>
+        </YesNoBox>
+      )}
     </>
   );
 };

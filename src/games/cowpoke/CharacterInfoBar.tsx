@@ -55,7 +55,7 @@ export default function CharacterInfoBar({
             {health}/{maxHealth} HP
           </span>
         )}
-        <div className="relative w-[20vw] h-5 bg-transparent overflow-hidden">
+        <div className="relative w-[26vw] h-5 bg-transparent overflow-hidden">
           {/* Max Health bar (background) */}
           <div
             className="absolute left-0 top-0 h-3 bg-red-900"
@@ -66,7 +66,6 @@ export default function CharacterInfoBar({
             className="absolute left-0 top-0 h-3 bg-red-500"
             style={{ width: `${healthPercent * 100}%`, zIndex: 2 }}
           />
-
           {/* Max XP bar (background) */}
           <div
             className="absolute left-0 bottom-0 h-2 bg-gray-300"

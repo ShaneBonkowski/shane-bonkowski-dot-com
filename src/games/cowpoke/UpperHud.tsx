@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CharacterInfoBar from "@/src/games/cowpoke/CharacterInfoBar";
 import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
 import { FaRobot, FaHandPointer, FaSkull } from "react-icons/fa";
-import { GiRabbit, GiSnail } from "react-icons/gi";
+import { GiRabbit, GiSnail, GiCoffin } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 import { UseGameData } from "@/src/games/cowpoke/UseGameData";
+import YesNoBox from "@/src/components/YesNoBox";
 
 export default function UpperHud() {
   const [isVisible, setIsVisible] = useState(true);
+  const [selectGameOverVisible, setSelectGameOverVisible] = useState(false);
   const { autoMode, fastMode, playerKills } = UseGameData();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleToggleAutoMode = () => {
     document.dispatchEvent(new CustomEvent("toggleAutomatic"));
@@ -21,6 +24,36 @@ export default function UpperHud() {
 
   const handleToggleFastMode = () => {
     document.dispatchEvent(new CustomEvent("toggleFastMode"));
+  };
+
+  const handleTryToEndGame = () => {
+    // Add a small delay before revealing.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setSelectGameOverVisible(true);
+    }, 150);
+  };
+
+  const onYesGameOver = () => {
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setSelectGameOverVisible(false);
+
+      // Dispatch the event to end the game manually
+      document.dispatchEvent(new CustomEvent("manualEndGame"));
+    }, 150);
+  };
+
+  const onNoGameOver = () => {
+    // Add a small delay before hiding the box.
+    // This is a hack b/c phones sometimes double click and
+    // click on the box behind the button.
+    timeoutRef.current = setTimeout(() => {
+      setSelectGameOverVisible(false);
+    }, 150);
   };
 
   useEffect(() => {
@@ -37,13 +70,18 @@ export default function UpperHud() {
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
     };
   }, []);
 
   return (
     <div
       id="upper-hud"
-      className={`absolute flex flex-row items-center justify-between gap-20 top-5 right-5 ${
+      className={`absolute flex flex-row items-center justify-between gap-8 top-5 right-5 ${
         isVisible ? "" : "hidden"
       }`}
       aria-label="Game upper HUD"
@@ -58,6 +96,12 @@ export default function UpperHud() {
         id="hud-controls"
         aria-label="HUD controls"
       >
+        <GameIconButton
+          onPointerDown={handleTryToEndGame}
+          icon={<GiCoffin size={30} />}
+          ariaLabel="Bite the Dust - End Game"
+          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+        ></GameIconButton>
         <GameIconButton
           onPointerDown={handleToggleAutoMode}
           icon={autoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />}
@@ -84,6 +128,19 @@ export default function UpperHud() {
         characterType={CHARACTER_TYPES.ENEMY}
         position="top-right"
       ></CharacterInfoBar>
+
+      {/* End Game Popup */}
+      {selectGameOverVisible && (
+        <YesNoBox
+          yesButtonText="Yes"
+          noButtonText="No"
+          onYes={onYesGameOver}
+          onNo={onNoGameOver}
+          id="select-end-game"
+        >
+          <p className="text-left">Are you sure you want to bite the dust?</p>
+        </YesNoBox>
+      )}
     </div>
   );
 }

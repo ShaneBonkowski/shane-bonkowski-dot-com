@@ -36,5 +36,6 @@ export const UseGameData = () => {
     setSettingsSeenGunIds:
       gameDataStore.setSettingsSeenGunIds.bind(gameDataStore),
     resetData: gameDataStore.resetData.bind(gameDataStore),
+    resetPermanentData: gameDataStore.resetPermanentData.bind(gameDataStore),
   };
 };

@@ -190,6 +190,9 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   startGame = () => {
+    // Ensure fresh starting data/state
+    this.resetGameData();
+
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
 
@@ -224,10 +227,19 @@ export class MainGameScene extends Generic2DGameScene {
   endGame() {
     // Lifetime stats
     const gameData = gameDataStore.getSnapshot();
-    gameDataStore.setLifetimeKills(gameData.lifetimeKills + this.player!.kills);
 
-    if (this.player!.level > gameData.lifetimeFurthestLevel) {
-      gameDataStore.setLifetimeFurthestLevel(this.player!.level);
+    if (this.player) {
+      gameDataStore.setLifetimeKills(
+        gameData.lifetimeKills + this.player.kills
+      );
+
+      if (this.player.level > gameData.lifetimeFurthestLevelInPlaythrough) {
+        gameDataStore.setLifetimeFurthestLevelInPlaythrough(this.player.level);
+      }
+
+      if (this.player.kills > gameData.lifetimeMostKillsInPlaythrough) {
+        gameDataStore.setLifetimeMostKillsInPlaythrough(this.player.kills);
+      }
     }
 
     // Tell the game that ui menu was opened so that it
@@ -239,7 +251,6 @@ export class MainGameScene extends Generic2DGameScene {
     setTimeout(() => {
       // End game
       this.gameStarted = false;
-      this.resetGameData();
       this.destroyGameObjects();
       document.dispatchEvent(new Event("clearFeed"));
 
@@ -433,6 +444,7 @@ export class MainGameScene extends Generic2DGameScene {
       this.handleExecuteLastCombat
     );
     document.addEventListener("postCombat", this.handlePostCombat);
+    document.addEventListener("manualEndGame", this.handleManualEndGame);
   }
 
   ready = (event: Event) => {
@@ -790,6 +802,22 @@ export class MainGameScene extends Generic2DGameScene {
         `Unknown sliderId "${sliderId}" in handleMovingSliderResult. Expected "win-element" or "win-combat".`
       );
     }
+  };
+
+  handleManualEndGame = () => {
+    sendFeedMessage(
+      `Look who's takin' the easy way out`,
+      "Cowpoke Jack's Ghost",
+      "center"
+    );
+
+    // Kill player if they press end game
+    if (this.player && !this.player.dead) {
+      this.player!.handleDeath();
+    }
+
+    // Handle the end game
+    this.endGame();
   };
 
   /**

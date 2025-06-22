@@ -33,7 +33,8 @@ export interface GameData {
   fastMode: boolean;
   // Player stats
   lifetimeKills: number;
-  lifetimeFurthestLevel: number;
+  lifetimeFurthestLevelInPlaythrough: number;
+  lifetimeMostKillsInPlaythrough: number;
   // Settings seen items
   settingsSeenHatIds: number[];
   settingsSeenGunIds: number[];
@@ -42,11 +43,11 @@ export interface GameData {
 class GameDataStore extends SyncedStore<GameData> {
   private defaultData: GameData = {
     playerName: "",
-    playerLevel: 1,
+    playerLevel: 0,
     playerHealth: 0,
-    playerMaxHealth: 100,
+    playerMaxHealth: 0,
     playerXp: 0,
-    playerMaxXp: 100,
+    playerMaxXp: 0,
     playerUpgradePoints: 0,
     playerKills: 0,
     playerEquippedHatId: 0,
@@ -58,11 +59,11 @@ class GameDataStore extends SyncedStore<GameData> {
     permaCombatLevel: 0,
     permaElementLevel: 0,
     enemyName: "",
-    enemyLevel: 1,
+    enemyLevel: 0,
     enemyHealth: 0,
-    enemyMaxHealth: 100,
+    enemyMaxHealth: 0,
     enemyXp: 0,
-    enemyMaxXp: 100,
+    enemyMaxXp: 0,
     enemyUpgradePoints: 0,
     enemyKills: 0,
     enemyEquippedHatId: 0,
@@ -70,7 +71,8 @@ class GameDataStore extends SyncedStore<GameData> {
     autoMode: false,
     fastMode: false,
     lifetimeKills: 0,
-    lifetimeFurthestLevel: 1,
+    lifetimeFurthestLevelInPlaythrough: 0,
+    lifetimeMostKillsInPlaythrough: 0,
     settingsSeenHatIds: [],
     settingsSeenGunIds: [],
   };
@@ -85,9 +87,13 @@ class GameDataStore extends SyncedStore<GameData> {
   private loadFromLocalStorage() {
     const savedPlayerName = this.getLocalStorage("cowpokePlayerName", "");
     const savedLifetimeKills = this.getLocalStorage("cowpokeLifetimeKills", 0);
-    const savedLifetimeFurthestLevel = this.getLocalStorage(
-      "cowpokeLifetimeFurthestLevel",
+    const savedLifetimeFurthestLevelInPlaythrough = this.getLocalStorage(
+      "cowpokeLifetimeFurthestLevelInPlaythrough",
       1
+    );
+    const savedLifetimeMostKillsInPlaythrough = this.getLocalStorage(
+      "cowpokeLifetimeMostKillsInPlaythrough",
+      0
     );
     const savedPlayerEquippedHatId = this.getLocalStorage(
       "cowpokePlayerEquippedHatId",
@@ -130,9 +136,46 @@ class GameDataStore extends SyncedStore<GameData> {
       []
     );
 
+    this.setLocalStorageFields(
+      savedPlayerName,
+      savedLifetimeKills,
+      savedLifetimeFurthestLevelInPlaythrough,
+      savedLifetimeMostKillsInPlaythrough,
+      savedPlayerEquippedHatId,
+      savedPlayerEquippedGunId,
+      savedPlayerOwnedHatIds,
+      savedPlayerOwnedGunIds,
+      savedPermaDamageLevel,
+      savedPermaHealthLevel,
+      savedPermaCombatLevel,
+      savedPermaElementLevel,
+      savedSettingsSeenHatIds,
+      savedSettingsSeenGunIds
+    );
+  }
+
+  private setLocalStorageFields(
+    savedPlayerName: string,
+    savedLifetimeKills: number,
+    savedLifetimeFurthestLevelInPlaythrough: number,
+    savedLifetimeMostKillsInPlaythrough: number,
+    savedPlayerEquippedHatId: number,
+    savedPlayerEquippedGunId: number,
+    savedPlayerOwnedHatIds: number[],
+    savedPlayerOwnedGunIds: number[],
+    savedPermaDamageLevel: number,
+    savedPermaHealthLevel: number,
+    savedPermaCombatLevel: number,
+    savedPermaElementLevel: number,
+    savedSettingsSeenHatIds: number[],
+    savedSettingsSeenGunIds: number[]
+  ) {
     this.setPlayerName(savedPlayerName);
     this.setLifetimeKills(savedLifetimeKills);
-    this.setLifetimeFurthestLevel(savedLifetimeFurthestLevel);
+    this.setLifetimeFurthestLevelInPlaythrough(
+      savedLifetimeFurthestLevelInPlaythrough
+    );
+    this.setLifetimeMostKillsInPlaythrough(savedLifetimeMostKillsInPlaythrough);
     this.setPlayerEquippedHatId(savedPlayerEquippedHatId);
     this.setPlayerEquippedGunId(savedPlayerEquippedGunId);
     this.setPlayerOwnedHatIds(savedPlayerOwnedHatIds);
@@ -310,9 +353,15 @@ class GameDataStore extends SyncedStore<GameData> {
     this.notify();
   }
 
-  public setLifetimeFurthestLevel(value: number) {
-    this.data.lifetimeFurthestLevel = value;
-    this.setLocalStorage("cowpokeLifetimeFurthestLevel", value);
+  public setLifetimeFurthestLevelInPlaythrough(value: number) {
+    this.data.lifetimeFurthestLevelInPlaythrough = value;
+    this.setLocalStorage("cowpokeLifetimeFurthestLevelInPlaythrough", value);
+    this.notify();
+  }
+
+  public setLifetimeMostKillsInPlaythrough(value: number) {
+    this.data.lifetimeMostKillsInPlaythrough = value;
+    this.setLocalStorage("cowpokeLifetimeMostKillsInPlaythrough", value);
     this.notify();
   }
 
@@ -335,7 +384,9 @@ class GameDataStore extends SyncedStore<GameData> {
       ...this.defaultData,
       playerName: this.data.playerName,
       lifetimeKills: this.data.lifetimeKills,
-      lifetimeFurthestLevel: this.data.lifetimeFurthestLevel,
+      lifetimeFurthestLevelInPlaythrough:
+        this.data.lifetimeFurthestLevelInPlaythrough,
+      lifetimeMostKillsInPlaythrough: this.data.lifetimeMostKillsInPlaythrough,
       playerEquippedHatId: this.data.playerEquippedHatId,
       playerEquippedGunId: this.data.playerEquippedGunId,
       playerOwnedHatIds: this.data.playerOwnedHatIds,
@@ -347,6 +398,33 @@ class GameDataStore extends SyncedStore<GameData> {
       settingsSeenHatIds: this.data.settingsSeenHatIds,
       settingsSeenGunIds: this.data.settingsSeenGunIds,
     };
+    this.notify();
+  }
+
+  public resetPermanentData() {
+    // Reset data
+    this.data = {
+      ...this.defaultData,
+    };
+
+    // Reset all data that writes to localStorage
+    this.setLocalStorageFields(
+      this.defaultData.playerName,
+      this.defaultData.lifetimeKills,
+      this.defaultData.lifetimeFurthestLevelInPlaythrough,
+      this.defaultData.lifetimeMostKillsInPlaythrough,
+      this.defaultData.playerEquippedHatId,
+      this.defaultData.playerEquippedGunId,
+      this.defaultData.playerOwnedHatIds,
+      this.defaultData.playerOwnedGunIds,
+      this.defaultData.permaDamageLevel,
+      this.defaultData.permaHealthLevel,
+      this.defaultData.permaCombatLevel,
+      this.defaultData.permaElementLevel,
+      this.defaultData.settingsSeenHatIds,
+      this.defaultData.settingsSeenGunIds
+    );
+
     this.notify();
   }
 }
