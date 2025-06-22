@@ -171,6 +171,11 @@ export class MainGameScene extends Generic2DGameScene {
     this.paused = gameData.paused;
     this.autoPlayMode = gameData.autoPlayMode;
     this.discoMode = gameData.discoMode;
+
+    // If the game is paused, unpause it if autoplay is turned on
+    if (this.paused && this.autoPlayMode) {
+      gameDataStore.setPaused(false);
+    }
   }
 
   update(time: number, delta: number) {
@@ -296,7 +301,7 @@ export class MainGameScene extends Generic2DGameScene {
     // ONLY IF NOT IN AUTOPLAY MODE!
     if (newPopulationVal == 0 && !this.autoPlayMode) {
       if (!this.paused) {
-        this.togglePause();
+        gameDataStore.setPaused(true);
       }
     }
   }
@@ -366,8 +371,6 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
 
-    document.addEventListener("togglePause", this.handleTogglePause);
-    document.addEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.addEventListener("clickAdvance", this.handleClickAdvance);
     document.addEventListener("resetTiles", this.handleResetTiles);
   }
@@ -385,19 +388,9 @@ export class MainGameScene extends Generic2DGameScene {
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
 
-    document.removeEventListener("togglePause", this.handleTogglePause);
-    document.removeEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.removeEventListener("clickAdvance", this.handleClickAdvance);
     document.removeEventListener("resetTiles", this.handleResetTiles);
   }
-
-  handleTogglePause = () => {
-    this.togglePause();
-  };
-
-  handleToggleAutomatic = () => {
-    this.toggleAutoPlay();
-  };
 
   handleClickAdvance = () => {
     this.clickAdvance();
@@ -407,7 +400,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.resetTiles();
 
     if (!this.paused) {
-      this.togglePause();
+      gameDataStore.setPaused(true);
     }
   };
 
@@ -535,16 +528,12 @@ export class MainGameScene extends Generic2DGameScene {
     this.updateGeneration(0);
   }
 
-  togglePause() {
-    gameDataStore.setPaused(!this.paused);
-  }
-
   clickAdvance() {
     if (this.paused) {
       this.runGameOfLifeIteration();
     } else {
       // Manually pause on advance if playing already
-      this.togglePause();
+      gameDataStore.setPaused(true);
     }
   }
 
@@ -625,15 +614,6 @@ export class MainGameScene extends Generic2DGameScene {
         tile.changeState(tileStates.ON);
       }
     });
-  }
-
-  toggleAutoPlay() {
-    gameDataStore.setAutoPlayMode(!this.autoPlayMode);
-
-    // If the game is paused, unpause it if autoplay is turned on
-    if (this.paused && this.autoPlayMode) {
-      this.togglePause();
-    }
   }
 
   hexToCssColor(hex: number): string {

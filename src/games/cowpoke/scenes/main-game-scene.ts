@@ -31,6 +31,13 @@ const ELEMENT_BEATEN_BY_MAP: Record<string, string> = {
   scissors: "rock", // rock beats scissors
 };
 
+const MOVING_DURATION_DEFAULT: number = 1250;
+const MOVING_DURATION_FAST_MODE: number = 500;
+const COMBAT_DURATION_DEFAULT: number = 500;
+const COMBAT_DURATION_FAST_MODE: number = 250;
+const UPDATE_FAVORED_INTERVAL_DEFAULT: number = 1450;
+const UPDATE_FAVORED_INTERVAL_FAST_MODE: number = 500;
+
 export class MainGameScene extends Generic2DGameScene {
   private decorations: Decoration[] = [];
   private player: Character | null = null;
@@ -50,15 +57,15 @@ export class MainGameScene extends Generic2DGameScene {
   public uiMenuOpen: boolean = false;
   public moving: boolean = false;
   private movingStartTime: number = 0;
-  private movingDuration: number = 1250; // ms
-  public combatDuration = 500; // ms
+  private movingDuration: number = MOVING_DURATION_DEFAULT; // ms
+  public combatDuration = COMBAT_DURATION_DEFAULT; // ms
 
   public autoMode: boolean = false;
   public fastMode: boolean = false;
   public favoredElement: null | "rock" | "paper" | "scissors" = null;
   public favoredCombat: null | "attack" | "defend" | "counter" = null;
   private lastUpdateFavoredTime: number = 0;
-  private updateFavoredInterval: number = 1450; // ms
+  private updateFavoredInterval: number = UPDATE_FAVORED_INTERVAL_DEFAULT; // ms
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -190,9 +197,21 @@ export class MainGameScene extends Generic2DGameScene {
 
   setGameDataFromStore(gameData: GameData) {
     this.autoMode = gameData.autoMode;
-    this.fastMode = gameData.fastMode;
     this.favoredElement = gameData.favoredElement;
     this.favoredCombat = gameData.favoredCombat;
+
+    // Update fast mode + durations
+    this.fastMode = gameData.fastMode;
+
+    if (this.fastMode) {
+      this.combatDuration = COMBAT_DURATION_FAST_MODE;
+      this.updateFavoredInterval = UPDATE_FAVORED_INTERVAL_FAST_MODE;
+      this.movingDuration = MOVING_DURATION_FAST_MODE;
+    } else {
+      this.combatDuration = COMBAT_DURATION_DEFAULT;
+      this.updateFavoredInterval = UPDATE_FAVORED_INTERVAL_DEFAULT;
+      this.movingDuration = MOVING_DURATION_DEFAULT;
+    }
   }
 
   startGame = () => {
@@ -461,8 +480,6 @@ export class MainGameScene extends Generic2DGameScene {
     this.setUpWindowResizeHandling();
 
     document.addEventListener("startLoadingGame", this.startGame);
-    document.addEventListener("toggleAutomatic", this.handleToggleAutomatic);
-    document.addEventListener("toggleFastMode", this.handleToggleFastMode);
 
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
@@ -974,14 +991,6 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
-  handleToggleAutomatic = () => {
-    gameDataStore.setAutoMode(!this.autoMode);
-  };
-
-  handleToggleFastMode = () => {
-    gameDataStore.setFastMode(!this.fastMode);
-  };
-
   /*
    * Note that this function is called in the shutdown() method for GameScene2D,
    * so no need to call it! That is handled automatically.
@@ -993,8 +1002,6 @@ export class MainGameScene extends Generic2DGameScene {
     this.tearDownWindowResizeHandling();
 
     document.removeEventListener("startLoadingGame", this.startGame);
-    document.removeEventListener("toggleAutomatic", this.handleToggleAutomatic);
-    document.removeEventListener("toggleFastMode", this.handleToggleFastMode);
 
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);

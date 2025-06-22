@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import CharacterInfoBar from "@/src/games/cowpoke/components/CharacterInfoBar";
 import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
-import { FaRobot, FaHandPointer, FaSkull } from "react-icons/fa";
+import { FaSkull } from "react-icons/fa";
 import { GiRabbit, GiSnail, GiCoffin } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
@@ -10,20 +10,11 @@ import YesNoBox from "@/src/components/YesNoBox";
 export default function UpperHud() {
   const [isVisible, setIsVisible] = useState(true);
   const [selectGameOverVisible, setSelectGameOverVisible] = useState(false);
-  const { autoMode, fastMode, playerKills } = UseGameData();
+  const { fastMode, playerKills, setFastMode } = UseGameData();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleToggleAutoMode = () => {
-    document.dispatchEvent(new CustomEvent("toggleAutomatic"));
-
-    // If auto mode is turned off, also turn off speed up mode
-    if (autoMode) {
-      document.dispatchEvent(new CustomEvent("toggleFastMode"));
-    }
-  };
-
   const handleToggleFastMode = () => {
-    document.dispatchEvent(new CustomEvent("toggleFastMode"));
+    setFastMode(!fastMode);
   };
 
   const handleTryToEndGame = () => {
@@ -96,19 +87,19 @@ export default function UpperHud() {
         id="hud-controls"
         aria-label="HUD controls"
       >
-        <GameIconButton
+        {/* FIXME: Implement this here: https://github.com/ShaneBonkowski/shane-bonkowski-dot-com/issues/121 */}
+        {/* <GameIconButton
           onPointerDown={handleToggleAutoMode}
           icon={autoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />}
           ariaLabel="Toggle Auto Mode"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           title="Toggle Auto Mode"
-        />
+        /> */}
         <GameIconButton
           onPointerDown={handleToggleFastMode}
           icon={fastMode ? <GiSnail size={30} /> : <GiRabbit size={30} />}
           ariaLabel="Toggle Fast Mode"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-          disabled={!autoMode} // Disable speed up if auto mode is off
           title="Toggle Fast Mode"
         />
         <GameIconButton

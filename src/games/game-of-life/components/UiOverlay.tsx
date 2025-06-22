@@ -22,14 +22,16 @@ const UiOverlay: React.FC = () => {
     autoPlayMode,
     discoMode,
     setDiscoMode,
+    setAutoPlayMode,
+    setPaused,
   } = UseGameData();
 
   const handleToggleAutoMode = () => {
-    document.dispatchEvent(new CustomEvent("toggleAutomatic"));
+    setAutoPlayMode(!autoPlayMode);
   };
 
   const handleTogglePause = () => {
-    document.dispatchEvent(new CustomEvent("togglePause"));
+    setPaused(!paused);
   };
 
   const handleAdvance = () => {

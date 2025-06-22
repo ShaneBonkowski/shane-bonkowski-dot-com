@@ -14,6 +14,8 @@ export const UseGameData = () => {
     setScore: gameDataStore.setPopulation.bind(gameDataStore),
     setGeneration: gameDataStore.setGeneration.bind(gameDataStore),
     setDiscoMode: gameDataStore.setDiscoMode.bind(gameDataStore),
+    setAutoPlayMode: gameDataStore.setAutoPlayMode.bind(gameDataStore),
+    setPaused: gameDataStore.setPaused.bind(gameDataStore),
     resetData: gameDataStore.resetData.bind(gameDataStore),
   };
 };

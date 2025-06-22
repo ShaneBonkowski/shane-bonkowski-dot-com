@@ -114,7 +114,7 @@ const SettingsContainer: React.FC = () => {
         // If the color theme changes from the settings screen and disco mode is
         // on, we should disable disco mode.
         if (discoMode) {
-          setDiscoMode(!discoMode);
+          setDiscoMode(false);
         }
 
         break;

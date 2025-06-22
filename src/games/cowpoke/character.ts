@@ -298,7 +298,7 @@ export class Character extends GameObject {
 
   handleBounceAnim() {
     // Create a subtle bounce anim on a sin wave
-    this.bounceTime += 0.05; // Adjust speed as needed
+    this.bounceTime += 0.05 * (this.scene.fastMode ? 3 : 1); // faster if fast mode
     const minScale = 0.98;
     const maxScale = 1.02;
     const amplitude = (maxScale - minScale) / 2;

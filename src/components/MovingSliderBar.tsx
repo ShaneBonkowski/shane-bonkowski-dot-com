@@ -5,9 +5,13 @@ const random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
 
 type MovingSliderBarProps = {
   sliderId: string;
+  speed?: number;
 };
 
-export default function MovingSliderBar({ sliderId }: MovingSliderBarProps) {
+export default function MovingSliderBar({
+  sliderId,
+  speed = 0.9, // percent distance traveled per second
+}: MovingSliderBarProps) {
   const [targetPos, setTargetPos] = useState(random.getRandomFloat(0.5, 0.8)); // 0-1, as percent of width
   const [moving, setMoving] = useState(false);
   const [barPos, setBarPos] = useState(random.getRandomFloat(0.1, 0.4)); // 0-1, as percent of width
@@ -67,7 +71,6 @@ export default function MovingSliderBar({ sliderId }: MovingSliderBarProps) {
   useEffect(() => {
     if (!moving) return;
     let lastTime = performance.now();
-    const speed = 0.9; // percent per second
 
     const animate = (now: number) => {
       const dt = (now - lastTime) / 1000;
@@ -89,7 +92,7 @@ export default function MovingSliderBar({ sliderId }: MovingSliderBarProps) {
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [moving, direction]);
+  }, [moving, direction, speed]);
 
   // Position the moving and target bars
   const barLeft = `calc(${barPos * 100}% - 2px)`;

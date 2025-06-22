@@ -7,6 +7,7 @@ import {
   tileAndBackgroundColors,
 } from "@/src/games/game-of-life/tile-utils";
 import { MainGameScene } from "@/src/games/game-of-life/scenes/main-game-scene";
+import { gameDataStore } from "@/src/games/game-of-life/game-data-store";
 
 const TILE_ON_SCALE_FACTOR = 1.2;
 
@@ -49,7 +50,7 @@ export class Tile extends GameObject {
 
       // Autopause the game if specified to do such
       if (!this.scene.paused && this.scene.autoPause) {
-        this.scene.togglePause();
+        gameDataStore.setPaused(true);
       }
     }
 

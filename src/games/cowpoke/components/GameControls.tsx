@@ -16,7 +16,7 @@ export default function GameControls() {
   const [isVisible, setIsVisible] = useState(true);
   const [elementDisabled, setElementDisabled] = useState(true);
   const [combatDisabled, setCombatDisabled] = useState(true);
-  const { favoredElement, favoredCombat } = UseGameData();
+  const { fastMode, favoredElement, favoredCombat } = UseGameData();
 
   const selectRock = () => {
     const event = new CustomEvent("selectElement", {
@@ -129,7 +129,10 @@ export default function GameControls() {
     >
       {/* Controls */}
       <div className="flex flex-row gap-4 justify-center">
-        <MovingSliderBar sliderId={"win-element"}></MovingSliderBar>
+        <MovingSliderBar
+          sliderId={"win-element"}
+          speed={fastMode ? 1.7 : 0.9}
+        ></MovingSliderBar>
         <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectRock}
@@ -174,7 +177,10 @@ export default function GameControls() {
       </div>
 
       <div className="flex flex-row gap-4 justify-center">
-        <MovingSliderBar sliderId={"win-combat"}></MovingSliderBar>
+        <MovingSliderBar
+          sliderId={"win-combat"}
+          speed={fastMode ? 1.7 : 0.9}
+        ></MovingSliderBar>
         <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectAttack}
