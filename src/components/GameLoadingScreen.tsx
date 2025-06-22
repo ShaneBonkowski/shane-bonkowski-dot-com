@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Fade from "@/src/components/Fade";
+import GameLogoImageWithBackgroundProps from "@/src/components/GameLogoImageWithBackground";
 
 interface LoadingScreenProps {
   coverImage: string;
@@ -52,30 +52,10 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       id="game-loading-screen"
       aria-label="Game loading screen"
     >
-      {/* Background Image */}
-      <Image
-        src="/webps/sky-starry-bkg.webp"
-        alt="Background Image"
-        className="relative inset-0 w-full h-full object-cover z-0"
-        fill
-        priority
-        id="game-loading-screen-background-image"
-        aria-hidden="true"
-      />
-
-      {/* Main Cover Image */}
-      <div
-        className="relative z-10 w-full h-full max-w-[75%] max-h-[75%]"
-        id="game-loading-screen-cover-image-container"
-      >
-        <Image
-          src={coverImage}
-          alt="Game Cover Image"
-          className="object-contain"
-          fill
-          id="game-loading-screen-cover-image"
-        />
-      </div>
+      {/* Game Logo Image */}
+      <GameLogoImageWithBackgroundProps
+        coverImage={coverImage}
+      ></GameLogoImageWithBackgroundProps>
 
       {/* Loading Text */}
       <p

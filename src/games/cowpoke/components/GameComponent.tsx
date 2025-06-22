@@ -13,6 +13,7 @@ import SettingsContainer from "@/src/games/cowpoke/components/SettingsContainer"
 import UpperHud from "@/src/games/cowpoke/components/UpperHud";
 import GameControls from "@/src/games/cowpoke/components/GameControls";
 import StartEndMenu from "@/src/games/cowpoke/components/StartEndMenu";
+import GamePreventPortraitOrLandscapeMode from "@/src/components/GamePreventPortraitOrLandscapeMode";
 
 export const gameInfoData: ContentDataProps[] = [
   {
@@ -154,6 +155,12 @@ const GameComponent: React.FC = () => {
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}
+
+      {/* Prevent Portrait Mode */}
+      <GamePreventPortraitOrLandscapeMode
+        coverImage="/webps/games/cowpoke-game-cover.webp"
+        preventMode="portrait"
+      />
     </>
   );
 };
