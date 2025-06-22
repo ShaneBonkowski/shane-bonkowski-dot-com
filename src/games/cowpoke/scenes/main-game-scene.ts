@@ -55,6 +55,10 @@ export class MainGameScene extends Generic2DGameScene {
 
   public autoMode: boolean = false;
   public fastMode: boolean = false;
+  public favoredElement: null | "rock" | "paper" | "scissors" = null;
+  public favoredCombat: null | "attack" | "defend" | "counter" = null;
+  private lastUpdateFavoredTime: number = 0;
+  private updateFavoredInterval: number = 1450; // ms
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -187,6 +191,8 @@ export class MainGameScene extends Generic2DGameScene {
   setGameDataFromStore(gameData: GameData) {
     this.autoMode = gameData.autoMode;
     this.fastMode = gameData.fastMode;
+    this.favoredElement = gameData.favoredElement;
+    this.favoredCombat = gameData.favoredCombat;
   }
 
   startGame = () => {
@@ -404,6 +410,34 @@ export class MainGameScene extends Generic2DGameScene {
         if (time - this.movingStartTime >= this.movingDuration) {
           this.stopMoving();
         }
+      }
+
+      // Update the favored element/combat every so often
+      if (time - this.lastUpdateFavoredTime >= this.updateFavoredInterval) {
+        // Update the favored element/combat.
+        // Randomly set to the remaining element/combat type.
+        const gameData = gameDataStore.getSnapshot();
+        const elementTypes = ["rock", "paper", "scissors"];
+        const remainingElementTypes = elementTypes.filter(
+          (type) => type !== gameData.favoredElement
+        );
+        gameDataStore.setFavoredElement(
+          remainingElementTypes[
+            this.random.getRandomInt(0, remainingElementTypes.length)
+          ] as "rock" | "paper" | "scissors"
+        );
+
+        const combatTypes = ["attack", "defend", "counter"];
+        const remainingCombatTypes = combatTypes.filter(
+          (type) => type !== gameData.favoredCombat
+        );
+        gameDataStore.setFavoredCombat(
+          remainingCombatTypes[
+            this.random.getRandomInt(0, remainingCombatTypes.length)
+          ] as "attack" | "defend" | "counter"
+        );
+
+        this.lastUpdateFavoredTime = time;
       }
     }
 
@@ -656,6 +690,23 @@ export class MainGameScene extends Generic2DGameScene {
       }
     }
 
+    // Favored element and combat multipliers. More dmg if you select the
+    // favored element
+    if (this.favoredElement) {
+      if (this.player!.elementSelected === this.favoredElement) {
+        playerExtraDamageMultiplier *= 1.2;
+      } else if (this.enemy!.elementSelected === this.favoredElement) {
+        enemyExtraDamageMultiplier *= 1.2;
+      }
+    }
+    if (this.favoredCombat) {
+      if (this.player!.combatSelected === this.favoredCombat) {
+        playerExtraDamageMultiplier *= 1.2;
+      } else if (this.enemy!.combatSelected === this.favoredCombat) {
+        enemyExtraDamageMultiplier *= 1.2;
+      }
+    }
+
     // Update the multipliers for the player and enemy
     this.playerExtraDamageMultiplier = playerExtraDamageMultiplier;
     this.enemyExtraDamageMultiplier = enemyExtraDamageMultiplier;
@@ -718,7 +769,7 @@ export class MainGameScene extends Generic2DGameScene {
         winElementChance,
         ["rock", "paper", "scissors"],
         ELEMENT_BEATEN_BY_MAP
-      );
+      ) as "rock" | "paper" | "scissors";
 
       // Send the message for the player and enemy's element choice
       this.sendElementMessage(
@@ -759,7 +810,7 @@ export class MainGameScene extends Generic2DGameScene {
         winCombatChance,
         ["attack", "defend", "counter"],
         COMBAT_BEATEN_BY_MAP
-      );
+      ) as "attack" | "defend" | "counter";
 
       // Send the message for the winner's combat action choice, then the loser, or if
       // its a draw, do player first, then enemy.

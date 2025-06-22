@@ -59,8 +59,8 @@ export class Character extends GameObject {
   public maxHealth: number = 0;
   public xp: number = 0;
   public maxXp: number = 0;
-  public elementSelected: string | null = null; // rock, paper, or scissors
-  public combatSelected: string | null = null; // attack, defend, or counter
+  public elementSelected: null | "rock" | "paper" | "scissors" = null;
+  public combatSelected: null | "attack" | "defend" | "counter" = null;
   public kills: number = 0;
   public dead: boolean = false;
 

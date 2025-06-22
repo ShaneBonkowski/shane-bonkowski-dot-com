@@ -10,11 +10,13 @@ import {
 import MovingSliderBar from "@/src/components/MovingSliderBar";
 import GameIconButton from "@/src/components/GameIconButton";
 import Feed from "@/src/games/cowpoke/Feed";
+import { UseGameData } from "@/src/games/cowpoke/UseGameData";
 
 export default function GameControls() {
   const [isVisible, setIsVisible] = useState(true);
   const [elementDisabled, setElementDisabled] = useState(true);
   const [combatDisabled, setCombatDisabled] = useState(true);
+  const { favoredElement, favoredCombat } = UseGameData();
 
   const selectRock = () => {
     const event = new CustomEvent("selectElement", {
@@ -90,11 +92,11 @@ export default function GameControls() {
           selectScissors();
         }
       } else if (!combatDisabled) {
-        if (e.key === "4") {
+        if (e.key === "1") {
           selectAttack();
-        } else if (e.key === "5") {
+        } else if (e.key === "2") {
           selectDefend();
-        } else if (e.key === "6") {
+        } else if (e.key === "3") {
           selectCounter();
         }
       }
@@ -128,16 +130,19 @@ export default function GameControls() {
       {/* Controls */}
       <div className="flex flex-row gap-4 justify-center">
         <MovingSliderBar sliderId={"win-element"}></MovingSliderBar>
-        <div
-          className="flex flex-row gap-4 items-center justify-center"
-          title="Shortcut: Press 1, 2, or 3" // tooltip
-        >
+        <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectRock}
             icon={<GiRock size={30} />}
             ariaLabel="Select Rock"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
             disabled={elementDisabled}
+            className={
+              favoredElement === "rock" && !elementDisabled
+                ? "ring-2 ring-green-500 ring-offset-2"
+                : ""
+            }
+            title="Shortcut: Press 1" // tooltip
           />
           <GameIconButton
             onPointerDown={selectPaper}
@@ -145,6 +150,12 @@ export default function GameControls() {
             ariaLabel="Select Paper"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
             disabled={elementDisabled}
+            className={
+              favoredElement === "paper" && !elementDisabled
+                ? "ring-2 ring-green-500 ring-offset-2"
+                : ""
+            }
+            title="Shortcut: Press 2" // tooltip
           />
           <GameIconButton
             onPointerDown={selectScissors}
@@ -152,22 +163,31 @@ export default function GameControls() {
             ariaLabel="Select Scissors"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
             disabled={elementDisabled}
+            className={
+              favoredElement === "scissors" && !elementDisabled
+                ? "ring-2 ring-green-500 ring-offset-2"
+                : ""
+            }
+            title="Shortcut: Press 3" // tooltip
           />
         </div>
       </div>
 
       <div className="flex flex-row gap-4 justify-center">
         <MovingSliderBar sliderId={"win-combat"}></MovingSliderBar>
-        <div
-          className="flex flex-row gap-4 items-center justify-center"
-          title="Shortcut: Press 4, 5, or 6" // tooltip
-        >
+        <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectAttack}
             icon={<GiCrossedSwords size={30} />}
             ariaLabel="Select Attack"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
             disabled={combatDisabled}
+            className={
+              favoredCombat === "attack" && !combatDisabled
+                ? "ring-2 ring-green-500 ring-offset-2"
+                : ""
+            }
+            title="Shortcut: Press 1" // tooltip
           />
           <GameIconButton
             onPointerDown={selectDefend}
@@ -175,6 +195,12 @@ export default function GameControls() {
             ariaLabel="Select Defend"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
             disabled={combatDisabled}
+            className={
+              favoredCombat === "defend" && !combatDisabled
+                ? "ring-2 ring-green-500 ring-offset-2"
+                : ""
+            }
+            title="Shortcut: Press 2" // tooltip
           />
           <GameIconButton
             onPointerDown={selectCounter}
@@ -182,6 +208,12 @@ export default function GameControls() {
             ariaLabel="Select Counter"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
             disabled={combatDisabled}
+            className={
+              favoredCombat === "counter" && !combatDisabled
+                ? "ring-2 ring-green-500 ring-offset-2"
+                : ""
+            }
+            title="Shortcut: Press 3" // tooltip
           />
         </div>
       </div>

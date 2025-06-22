@@ -11,6 +11,7 @@ interface GameIconButtonProps {
   darkModeLight?: boolean;
   whiteBackground?: boolean;
   disabled?: boolean;
+  title?: string;
 }
 
 const GameIconButton: React.FC<GameIconButtonProps> = ({
@@ -22,6 +23,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
   darkModeLight = false, // true -> make the dark mode be the light mode colors
   whiteBackground = false, // true -> use a white background for the button
   disabled = false, // Whether the button is disabled
+  title = undefined, // Optional tooltip text
 }) => {
   const [isHoverable, setIsHoverable] = useState(false);
 
@@ -65,6 +67,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
       onPointerDown={disabled ? undefined : onPointerDown}
       aria-label={ariaLabel}
       disabled={disabled}
+      title={title}
     >
       {icon}
     </button>

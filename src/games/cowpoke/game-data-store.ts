@@ -31,6 +31,8 @@ export interface GameData {
   // Game modes
   autoMode: boolean;
   fastMode: boolean;
+  favoredElement: null | "rock" | "paper" | "scissors";
+  favoredCombat: null | "attack" | "defend" | "counter";
   // Player stats
   lifetimeKills: number;
   lifetimeFurthestLevelInPlaythrough: number;
@@ -70,6 +72,8 @@ class GameDataStore extends SyncedStore<GameData> {
     enemyEquippedGunId: 0,
     autoMode: false,
     fastMode: false,
+    favoredElement: null,
+    favoredCombat: null,
     lifetimeKills: 0,
     lifetimeFurthestLevelInPlaythrough: 0,
     lifetimeMostKillsInPlaythrough: 0,
@@ -343,6 +347,16 @@ class GameDataStore extends SyncedStore<GameData> {
 
   public setFastMode(value: boolean) {
     this.data.fastMode = value;
+    this.notify();
+  }
+
+  public setFavoredElement(value: null | "rock" | "paper" | "scissors") {
+    this.data.favoredElement = value;
+    this.notify();
+  }
+
+  public setFavoredCombat(value: null | "attack" | "defend" | "counter") {
+    this.data.favoredCombat = value;
     this.notify();
   }
 

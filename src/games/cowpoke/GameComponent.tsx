@@ -28,14 +28,36 @@ export const gameInfoData: ContentDataProps[] = [
     text: "Keyboard Shortcuts",
   },
   {
+    type: "paragraph",
+    text: "In element mode:",
+  },
+  {
     type: "list",
     items: [
       "<b>1</b>: Select Rock",
       "<b>2</b>: Select Paper",
       "<b>3</b>: Select Scissors",
-      "<b>4</b>: Select Attack",
-      "<b>5</b>: Select Defend",
-      "<b>6</b>: Select Counter",
+    ],
+  },
+  {
+    type: "paragraph",
+    text: "In combat mode:",
+  },
+  {
+    type: "list",
+    items: [
+      "<b>1</b>: Select Attack",
+      "<b>2</b>: Select Defend",
+      "<b>3</b>: Select Counter",
+    ],
+  },
+  {
+    type: "paragraph",
+    text: "General:",
+  },
+  {
+    type: "list",
+    items: [
       "<b>Up Arrow</b>: Scroll up in the feed",
       "<b>Down Arrow</b>: Scroll down in the feed",
     ],

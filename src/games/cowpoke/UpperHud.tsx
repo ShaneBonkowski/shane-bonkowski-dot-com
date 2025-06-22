@@ -97,12 +97,6 @@ export default function UpperHud() {
         aria-label="HUD controls"
       >
         <GameIconButton
-          onPointerDown={handleTryToEndGame}
-          icon={<GiCoffin size={30} />}
-          ariaLabel="Bite the Dust - End Game"
-          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-        ></GameIconButton>
-        <GameIconButton
           onPointerDown={handleToggleAutoMode}
           icon={autoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />}
           ariaLabel="Toggle Auto Mode"
@@ -115,6 +109,12 @@ export default function UpperHud() {
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           disabled={!autoMode} // Disable speed up if auto mode is off
         />
+        <GameIconButton
+          onPointerDown={handleTryToEndGame}
+          icon={<GiCoffin size={30} />}
+          ariaLabel="Bite the Dust - End Game"
+          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+        ></GameIconButton>
         <div className="z-20 flex flex-row items-center">
           <FaSkull size={25} className="text-primary-text-color-light" />
           <span className="ml-1 font-bold text-primary-text-color-light">
