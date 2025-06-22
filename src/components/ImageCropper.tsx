@@ -177,7 +177,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         ref={canvasRef}
         style={{ display: "none" }}
         id="leftover-image-cropper-canvas-tool"
-      ></canvas>
+      />
       {croppedImage && (
         <NextImage
           src={croppedImage}

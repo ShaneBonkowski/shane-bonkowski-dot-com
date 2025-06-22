@@ -76,7 +76,7 @@ const GameInfoContainer: React.FC<{
         onClose={closeInfoWindow}
         infoData={infoData}
         aria-label="Game information window"
-      ></GameInfoWindow>
+      />
     </>
   );
 };

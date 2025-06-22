@@ -237,7 +237,7 @@ const StartEndMenu: React.FC = () => {
           darkModeLight={true} // Want the black buttons this game! Since bkg is light.
           className={`fixed bottom-5 left-5`}
           title="Reset Lifetime Stats"
-        ></GameIconButton>
+        />
       </GameUiWindow>
 
       {/* Reset Stats Popup */}

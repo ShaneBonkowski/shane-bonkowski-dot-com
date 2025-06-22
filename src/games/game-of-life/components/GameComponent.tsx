@@ -107,19 +107,19 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <UiOverlay></UiOverlay>
+      <UiOverlay />
       <GameMessagePopup
         message="Warning: This game is not fully optimized and may experience lag, especially on mobile."
         bottom={true}
-      ></GameMessagePopup>
-      <SettingsContainer></SettingsContainer>
+      />
+      <SettingsContainer />
       <GameInfoContainer
         infoData={gameInfoData}
         lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
-      ></GameInfoContainer>
+      />
 
       {/* Phaser Game Container */}
-      <div className="absolute inset-0" id="phaser-game"></div>
+      <div className="absolute inset-0" id="phaser-game" />
 
       {/* Loading Screen */}
       {isLoading && (

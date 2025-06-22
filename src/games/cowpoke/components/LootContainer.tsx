@@ -69,7 +69,7 @@ const LootContainer: React.FC<LootContainerProps> = ({
               alt={lootItem.name}
               className=""
               draggable={false}
-            ></ImageCropper>
+            />
           </div>
 
           {/* Equipped Indicator */}

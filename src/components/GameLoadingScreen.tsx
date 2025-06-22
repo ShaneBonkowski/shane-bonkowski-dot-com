@@ -53,9 +53,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       aria-label="Game loading screen"
     >
       {/* Game Logo Image */}
-      <GameLogoImageWithBackgroundProps
-        coverImage={coverImage}
-      ></GameLogoImageWithBackgroundProps>
+      <GameLogoImageWithBackgroundProps coverImage={coverImage} />
 
       {/* Loading Text */}
       <p

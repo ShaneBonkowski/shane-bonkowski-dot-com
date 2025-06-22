@@ -80,7 +80,7 @@ export default function UpperHud() {
       <CharacterInfoBar
         characterType={CHARACTER_TYPES.PLAYER}
         position="top-left"
-      ></CharacterInfoBar>
+      />
 
       <div
         className="flex flex-row items-center gap-5"
@@ -108,7 +108,7 @@ export default function UpperHud() {
           ariaLabel="End Game"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           title="End Game"
-        ></GameIconButton>
+        />
         <div className="z-20 flex flex-row items-center">
           <FaSkull size={25} className="text-primary-text-color-light" />
           <span className="ml-1 font-bold text-primary-text-color-light">
@@ -121,7 +121,7 @@ export default function UpperHud() {
       <CharacterInfoBar
         characterType={CHARACTER_TYPES.ENEMY}
         position="top-right"
-      ></CharacterInfoBar>
+      />
 
       {/* End Game Popup */}
       {selectGameOverVisible && (

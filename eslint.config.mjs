@@ -28,6 +28,17 @@ Replacement (HMR).
           message:
             'Use of dangerouslySetInnerHTML detected. Make sure to sanitize HTML with DOMPurify.sanitize() (only allowed for client side rendering with "use client" files). Add an eslint-disable comment if this is safe. Make sure to add {ADD_ATTR: ["target", "rel"]} to the DOMPurify.sanitize() call to prevent blocking links openning in new tab.',
         },
+        {
+          selector: "JSXElement[children.length=0][closingElement]",
+          message:
+            "Empty JSX elements should use self-closing syntax (/>) instead of separate opening and closing tags.",
+        },
+        {
+          selector:
+            "JSXElement[children.length=1][closingElement] > JSXText[value=/^\\s*$/]",
+          message:
+            "JSX elements containing only whitespace should use self-closing syntax (/>).",
+        },
       ],
     },
   },

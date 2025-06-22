@@ -135,18 +135,18 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <StartEndMenu></StartEndMenu>
-      <SettingsContainer></SettingsContainer>
+      <StartEndMenu />
+      <SettingsContainer />
       <GameInfoContainer
         infoData={gameInfoData}
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
-      ></GameInfoContainer>
-      <UpperHud></UpperHud>
-      <GameControls></GameControls>
+      />
+      <UpperHud />
+      <GameControls />
 
       {/* Phaser Game Container */}
-      <div className="absolute inset-0" id="phaser-game"></div>
+      <div className="absolute inset-0" id="phaser-game" />
 
       {/* Loading Screen */}
       {isLoading && (

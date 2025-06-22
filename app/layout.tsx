@@ -44,10 +44,7 @@ export default function RootLayout({
     // Add the dark class to the html so we can toggle light and dark mode
     <html lang="en" className="dark">
       <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-        ></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       {/* Add components to the body of the website */}
       <body className="flex flex-col min-h-screen" id="website-body">
