@@ -166,14 +166,21 @@ export class MainGameScene extends Generic2DGameScene {
   };
 
   setGameDataFromStore(gameData: GameData) {
+    const incomingAutoPlayMode = this.autoPlayMode;
+    const incomingDiscoMode = this.discoMode;
+
     this.population = gameData.population;
     this.generation = gameData.generation;
     this.paused = gameData.paused;
     this.autoPlayMode = gameData.autoPlayMode;
     this.discoMode = gameData.discoMode;
 
-    // If the game is paused, unpause it if autoplay is turned on
-    if (this.paused && this.autoPlayMode) {
+    // If the game is paused, unpause it if autoplay is turned on (false -> true)
+    if (this.paused && !incomingAutoPlayMode && this.autoPlayMode) {
+      gameDataStore.setPaused(false);
+    }
+    // If the game is paused, unpause it if disco mode is turned on (false -> true)
+    if (this.paused && !incomingDiscoMode && this.discoMode) {
       gameDataStore.setPaused(false);
     }
   }
@@ -295,8 +302,6 @@ export class MainGameScene extends Generic2DGameScene {
       newPopulationVal = 0;
     }
 
-    gameDataStore.setPopulation(newPopulationVal);
-
     // If the population is 0, pause the game if it is not already.
     // ONLY IF NOT IN AUTOPLAY MODE!
     if (newPopulationVal == 0 && !this.autoPlayMode) {
@@ -304,6 +309,8 @@ export class MainGameScene extends Generic2DGameScene {
         gameDataStore.setPaused(true);
       }
     }
+
+    gameDataStore.setPopulation(newPopulationVal);
   }
 
   checkForNeighborTiles(
