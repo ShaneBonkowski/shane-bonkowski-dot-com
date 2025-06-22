@@ -142,7 +142,7 @@ export default function GameControls() {
                 ? "ring-2 ring-green-500 ring-offset-2"
                 : ""
             }
-            title="Shortcut: Press 1" // tooltip
+            title="Shortcut: Press 1 for rock" // tooltip
           />
           <GameIconButton
             onPointerDown={selectPaper}
@@ -155,7 +155,7 @@ export default function GameControls() {
                 ? "ring-2 ring-green-500 ring-offset-2"
                 : ""
             }
-            title="Shortcut: Press 2" // tooltip
+            title="Shortcut: Press 2 for paper" // tooltip
           />
           <GameIconButton
             onPointerDown={selectScissors}
@@ -168,7 +168,7 @@ export default function GameControls() {
                 ? "ring-2 ring-green-500 ring-offset-2"
                 : ""
             }
-            title="Shortcut: Press 3" // tooltip
+            title="Shortcut: Press 3 for scissors" // tooltip
           />
         </div>
       </div>
@@ -187,7 +187,7 @@ export default function GameControls() {
                 ? "ring-2 ring-green-500 ring-offset-2"
                 : ""
             }
-            title="Shortcut: Press 1" // tooltip
+            title="Shortcut: Press 1 to attack" // tooltip
           />
           <GameIconButton
             onPointerDown={selectDefend}
@@ -200,7 +200,7 @@ export default function GameControls() {
                 ? "ring-2 ring-green-500 ring-offset-2"
                 : ""
             }
-            title="Shortcut: Press 2" // tooltip
+            title="Shortcut: Press 2 to defend" // tooltip
           />
           <GameIconButton
             onPointerDown={selectCounter}
@@ -213,7 +213,7 @@ export default function GameControls() {
                 ? "ring-2 ring-green-500 ring-offset-2"
                 : ""
             }
-            title="Shortcut: Press 3" // tooltip
+            title="Shortcut: Press 3 to counter" // tooltip
           />
         </div>
       </div>
