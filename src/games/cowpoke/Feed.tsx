@@ -118,7 +118,7 @@ export default function Feed({
       className={`z-20 w-full 
             ${
               isVisible ? "" : "hidden"
-            } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border-2 border-black`}
+            } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border border-black`}
       aria-label="Feed Container"
     >
       <div className="flex flex-col w-full gap-1" aria-label="Feed Content">

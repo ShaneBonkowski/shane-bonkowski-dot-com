@@ -66,6 +66,8 @@ export class Character extends GameObject {
 
   public permanentHealthBonus: number = 0;
   public permanentDamageBonus: number = 0;
+  public permanentCombatBonus: number = 0;
+  public permanentElementBonus: number = 0;
 
   private bounceTime: number = 0;
   private animScaleFactorX: number = 1;
@@ -175,6 +177,8 @@ export class Character extends GameObject {
       this.ownedGunIds = gameData.playerOwnedGunIds || [];
       this.permanentHealthBonus = gameData.permaHealthLevel || 0;
       this.permanentDamageBonus = gameData.permaDamageLevel || 0;
+      this.permanentCombatBonus = gameData.permaCombatLevel || 0;
+      this.permanentElementBonus = gameData.permaElementLevel || 0;
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
       this.name = gameData.enemyName;
       this.level = gameData.enemyLevel;
@@ -186,6 +190,12 @@ export class Character extends GameObject {
       this.kills = gameData.enemyKills;
       this.equippedHatId = gameData.enemyEquippedHatId;
       this.equippedGunId = gameData.enemyEquippedGunId;
+      this.ownedHatIds = [];
+      this.ownedGunIds = [];
+      this.permanentHealthBonus = 0;
+      this.permanentDamageBonus = 0;
+      this.permanentCombatBonus = 0;
+      this.permanentElementBonus = 0;
     }
   }
 
@@ -237,6 +247,7 @@ export class Character extends GameObject {
   };
 
   handlePermanentUpgrade = (event: Event) => {
+    // Only player perma upgrades
     if (this.type === CHARACTER_TYPES.PLAYER) {
       const customEvent = event as CustomEvent;
       const { type } = customEvent.detail;
@@ -245,6 +256,10 @@ export class Character extends GameObject {
         gameDataStore.setPermaHealthLevel(this.permanentHealthBonus + 1);
       } else if (type === "damage") {
         gameDataStore.setPermaDamageLevel(this.permanentDamageBonus + 1);
+      } else if (type === "combat") {
+        gameDataStore.setPermaCombatLevel(this.permanentCombatBonus + 1);
+      } else if (type === "element") {
+        gameDataStore.setPermaElementLevel(this.permanentElementBonus + 1);
       }
 
       // Update upgrade points
@@ -610,21 +625,25 @@ export class Character extends GameObject {
     }
   }
 
-  getCombatIncreaseFromLoot() {
+  getCombatIncrease() {
     // +10% win chance per addCombat bonus from gun and hat
+    // +1% per permanentCombatBonus
     return (
       0.1 *
-      (GUN_LOOT_MAP[this.equippedGunId].addCombat +
-        HAT_LOOT_MAP[this.equippedHatId].addCombat)
+        (GUN_LOOT_MAP[this.equippedGunId].addCombat +
+          HAT_LOOT_MAP[this.equippedHatId].addCombat) +
+      0.01 * this.permanentCombatBonus
     );
   }
 
-  getElementIncreaseFromLoot() {
+  getElementIncrease() {
     // +10% win chance per addElement bonus from gun and hat
+    // +1% per permanentElementBonus
     return (
       0.1 *
-      (GUN_LOOT_MAP[this.equippedGunId].addElement +
-        HAT_LOOT_MAP[this.equippedHatId].addElement)
+        (GUN_LOOT_MAP[this.equippedGunId].addElement +
+          HAT_LOOT_MAP[this.equippedHatId].addElement) +
+      0.01 * this.permanentElementBonus
     );
   }
 

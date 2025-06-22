@@ -697,8 +697,8 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // Add any element inc/dec from player and enemy loot, if applicable
-      winElementChance += this.player!.getElementIncreaseFromLoot();
-      winElementChance -= this.enemy!.getElementIncreaseFromLoot();
+      winElementChance += this.player!.getElementIncrease();
+      winElementChance -= this.enemy!.getElementIncrease();
       winElementChance = Math.max(0, Math.min(1, winElementChance));
 
       this.enemy!.elementSelected = this.pickEnemyChoice(
@@ -738,8 +738,8 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // Add any combat inc/dec from player and enemy loot, if applicable
-      winCombatChance += this.player!.getCombatIncreaseFromLoot();
-      winCombatChance -= this.enemy!.getCombatIncreaseFromLoot();
+      winCombatChance += this.player!.getCombatIncrease();
+      winCombatChance -= this.enemy!.getCombatIncrease();
       winCombatChance = Math.max(0, Math.min(1, winCombatChance));
 
       this.enemy!.combatSelected = this.pickEnemyChoice(

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { FaCog, FaHeart } from "react-icons/fa";
-import { GiCrossedSwords } from "react-icons/gi";
+import { GiCrossedSwords, GiRock, GiSprint } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
@@ -18,7 +18,7 @@ const UpgradeButton = ({
   textColor,
   onPointerDown,
 }: {
-  type: "Health" | "Damage";
+  type: "Health" | "Damage" | "Combat" | "Element";
   icon: React.ReactNode;
   level: number;
   upgradePoints: number;
@@ -44,9 +44,11 @@ const UpgradeButton = ({
   >
     <div className="text-lg mb-1">{icon}</div>
     <div>Level {level}</div>
-    {upgradePoints > 0 && (
-      <div className={`text-xs ${textColor}`}>{`+1 ${type}`}</div>
-    )}
+    <div
+      className={`text-xs ${upgradePoints > 0 ? textColor : "text-gray-400"}`}
+    >
+      {`+1 ${type}`}
+    </div>
   </button>
 );
 
@@ -63,6 +65,8 @@ const SettingsContainer: React.FC = () => {
     playerOwnedGunIds,
     permaHealthLevel,
     permaDamageLevel,
+    permaCombatLevel,
+    permaElementLevel,
     settingsSeenHatIds,
     settingsSeenGunIds,
     setSettingsSeenHatIds,
@@ -188,6 +192,32 @@ const SettingsContainer: React.FC = () => {
     }
   };
 
+  const handlePermaCombatUpgrade = () => {
+    if (playerUpgradePoints > 0) {
+      // Notify game
+      document.dispatchEvent(
+        new CustomEvent("permanentUpgrade", {
+          detail: {
+            type: "combat",
+          },
+        })
+      );
+    }
+  };
+
+  const handlePermaElementUpgrade = () => {
+    if (playerUpgradePoints > 0) {
+      // Notify game
+      document.dispatchEvent(
+        new CustomEvent("permanentUpgrade", {
+          detail: {
+            type: "element",
+          },
+        })
+      );
+    }
+  };
+
   return (
     <>
       <div className="z-20 fixed bottom-5 left-5 flex flex-row items-center gap-2">
@@ -242,6 +272,26 @@ const SettingsContainer: React.FC = () => {
                 borderColor="border-red-500"
                 textColor="text-red-400"
                 onPointerDown={handlePermaDamageUpgrade}
+              />
+
+              <UpgradeButton
+                type="Element"
+                icon={<GiRock size={30} />}
+                level={permaElementLevel}
+                upgradePoints={playerUpgradePoints}
+                borderColor="border-purple-500"
+                textColor="text-purple-400"
+                onPointerDown={handlePermaElementUpgrade}
+              />
+
+              <UpgradeButton
+                type="Combat"
+                icon={<GiSprint size={30} />}
+                level={permaCombatLevel}
+                upgradePoints={playerUpgradePoints}
+                borderColor="border-blue-500"
+                textColor="text-blue-400"
+                onPointerDown={handlePermaCombatUpgrade}
               />
             </div>
           </div>

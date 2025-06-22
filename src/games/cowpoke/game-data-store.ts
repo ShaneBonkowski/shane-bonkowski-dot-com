@@ -16,6 +16,8 @@ export interface GameData {
   playerOwnedGunIds: number[];
   permaDamageLevel: number;
   permaHealthLevel: number;
+  permaCombatLevel: number;
+  permaElementLevel: number;
   enemyName: string;
   enemyLevel: number;
   enemyHealth: number;
@@ -53,6 +55,8 @@ class GameDataStore extends SyncedStore<GameData> {
     playerOwnedGunIds: [0],
     permaDamageLevel: 0,
     permaHealthLevel: 0,
+    permaCombatLevel: 0,
+    permaElementLevel: 0,
     enemyName: "",
     enemyLevel: 1,
     enemyHealth: 0,
@@ -109,6 +113,14 @@ class GameDataStore extends SyncedStore<GameData> {
       "cowpokePlayerPermaHealthLevel",
       0
     );
+    const savedPermaCombatLevel = this.getLocalStorage(
+      "cowpokePlayerPermaCombatLevel",
+      0
+    );
+    const savedPermaElementLevel = this.getLocalStorage(
+      "cowpokePlayerPermaElementLevel",
+      0
+    );
     const savedSettingsSeenHatIds = this.getLocalStorage(
       "cowpokeSettingsSeenHatIds",
       []
@@ -127,6 +139,8 @@ class GameDataStore extends SyncedStore<GameData> {
     this.setPlayerOwnedGunIds(savedPlayerOwnedGunIds);
     this.setPermaDamageLevel(savedPermaDamageLevel);
     this.setPermaHealthLevel(savedPermaHealthLevel);
+    this.setPermaCombatLevel(savedPermaCombatLevel);
+    this.setPermaElementLevel(savedPermaElementLevel);
     this.setSettingsSeenHatIds(savedSettingsSeenHatIds);
     this.setSettingsSeenGunIds(savedSettingsSeenGunIds);
   }
@@ -210,6 +224,18 @@ class GameDataStore extends SyncedStore<GameData> {
   public setPermaHealthLevel(value: number) {
     this.data.permaHealthLevel = value;
     this.setLocalStorage("cowpokePlayerPermaHealthLevel", value);
+    this.notify();
+  }
+
+  public setPermaCombatLevel(value: number) {
+    this.data.permaCombatLevel = value;
+    this.setLocalStorage("cowpokePlayerPermaCombatLevel", value);
+    this.notify();
+  }
+
+  public setPermaElementLevel(value: number) {
+    this.data.permaElementLevel = value;
+    this.setLocalStorage("cowpokePlayerPermaElementLevel", value);
     this.notify();
   }
 
@@ -316,6 +342,8 @@ class GameDataStore extends SyncedStore<GameData> {
       playerOwnedGunIds: this.data.playerOwnedGunIds,
       permaDamageLevel: this.data.permaDamageLevel,
       permaHealthLevel: this.data.permaHealthLevel,
+      permaCombatLevel: this.data.permaCombatLevel,
+      permaElementLevel: this.data.permaElementLevel,
       settingsSeenHatIds: this.data.settingsSeenHatIds,
       settingsSeenGunIds: this.data.settingsSeenGunIds,
     };
