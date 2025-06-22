@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import "@/src/games/flip-tile/styles/game.css";
-import { UseGameData } from "@/src/games/game-of-life/UseGameData";
+import { UseGameData } from "@/src/games/game-of-life/components/UseGameData";
 
 const UiOverlay: React.FC = () => {
   const [isUiVisible, setIsUiVisible] = useState(true);

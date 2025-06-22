@@ -1,39 +1,28 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/game-of-life/styles/game.css";
+import "@/src/games/flip-tile/styles/game.css";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
-import GameMessagePopup from "@/src/components/GameMessagePopup";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
-import UiOverlay from "@/src/games/game-of-life/UiOverlay";
-import SettingsContainer from "@/src/games/game-of-life/SettingsContainer";
+import UiOverlay from "@/src/games/flip-tile/components/UiOverlay";
 
 export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
-    text: "Game of Life",
+    text: "Flip Tile",
   },
   {
     type: "paragraph",
-    text: 'Modern adaptation of the classic 1970 cellular automaton game <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener noreferrer">Conway`s Game of Life</a>. The game is typically played on an infinite, two-dimensional grid. Each cell can exist in one of two states (alive or dead) and interacts with its eight neighboring cells as follows:',
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Underpopulation</b>: Any live cell with fewer than two live neighbors dies.",
-      "<b>Persistence</b>: Any live cell with two or three live neighbors lives on.",
-      "<b>Overpopulation</b>: Any live cell with more than three live neighbors dies.",
-      "<b>Reproduction</b>: Any dead cell with exactly three live neighbors becomes a live cell.",
-    ],
+    text: 'Inspired by the classic <a href="https://en.wikipedia.org/wiki/Lights_Out_(game)" target="_blank" rel="noopener noreferrer">Lights Out</a> game, Flip Tile brings a fresh twist to the familiar puzzle concept, offering three distinct levels of difficulty to challenge players of all skill levels.',
   },
   {
     type: "paragraph",
-    text: "From these simple rules, complex patterns can emerge. New shapes are still being discovered to this day!",
+    text: 'I created this game mostly as an exercise to re-learn linear algebra concepts. Watch <a href="https://www.youtube.com/watch?v=0fHkKcy0x_U" target="_blank" rel="noopener noreferrer">Solving the "Lights Out" Problem</a> for more context on how linear algebra can be used to automatically solve this game!',
   },
 ];
 
@@ -50,7 +39,7 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    document.body.classList.add("game-of-life-game-background");
+    document.body.classList.add("flip-tile-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {
@@ -71,7 +60,7 @@ const GameComponent: React.FC = () => {
 
       try {
         const { MainGameScene } = await import(
-          "@/src/games/game-of-life/scenes/main-game-scene"
+          "@/src/games/flip-tile/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -108,15 +97,7 @@ const GameComponent: React.FC = () => {
     <>
       {/* UI */}
       <UiOverlay></UiOverlay>
-      <GameMessagePopup
-        message="Warning: This game is not fully optimized and may experience lag, especially on mobile."
-        bottom={true}
-      ></GameMessagePopup>
-      <SettingsContainer></SettingsContainer>
-      <GameInfoContainer
-        infoData={gameInfoData}
-        lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
-      ></GameInfoContainer>
+      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game"></div>
@@ -124,7 +105,7 @@ const GameComponent: React.FC = () => {
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/game-of-life-cover.webp"
+          coverImage="/webps/games/flip-tile-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}

@@ -1,8 +1,8 @@
 import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { StoryDataProps } from "@/src/types/data-props";
+import { StoryMetadataProps } from "@/src/types/data-props";
 import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 
-const storyData: StoryDataProps = {
+const storyData: StoryMetadataProps = {
   title: "Before the World Dried Up",
   subtitle: "Shane Bonkowski",
   date: "June 20, 2024",

@@ -6,8 +6,8 @@ import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { tileAndBackgroundColors } from "@/src/games/game-of-life/tile-utils";
-import { UseSettings } from "@/src/games/game-of-life/UseSettings";
-import { UseGameData } from "@/src/games/game-of-life/UseGameData";
+import { UseSettings } from "@/src/games/game-of-life/components/UseSettings";
+import { UseGameData } from "@/src/games/game-of-life/components/UseGameData";
 
 const settingsConfig = {
   updateInterval: {

@@ -5,7 +5,7 @@ import {
   REFERENCE_BKG_SIZE,
 } from "@/src/games/cowpoke/scenes/main-game-scene";
 import { GUN_LOOT_MAP, HAT_LOOT_MAP, RARITY } from "@/src/games/cowpoke/loot";
-import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
+import { sendFeedMessage } from "@/src/games/cowpoke/components/Feed";
 import { gameDataStore, GameData } from "@/src/games/cowpoke/game-data-store";
 
 export enum CHARACTER_TYPES {

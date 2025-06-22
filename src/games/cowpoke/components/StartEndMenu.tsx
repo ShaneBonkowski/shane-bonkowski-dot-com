@@ -6,7 +6,7 @@ import { FaPlay, FaRedo } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
-import { UseGameData } from "@/src/games/cowpoke/UseGameData";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 import YesNoBox from "@/src/components/YesNoBox";
 
 const StartEndMenu: React.FC = () => {

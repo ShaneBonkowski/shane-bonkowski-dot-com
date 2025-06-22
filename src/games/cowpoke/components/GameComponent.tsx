@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/flip-tile/styles/game.css";
+import "@/src/games/cowpoke/styles/game.css";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
@@ -9,20 +9,58 @@ import {
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
-import UiOverlay from "@/src/games/flip-tile/UiOverlay";
+import SettingsContainer from "@/src/games/cowpoke/components/SettingsContainer";
+import UpperHud from "@/src/games/cowpoke/components/UpperHud";
+import GameControls from "@/src/games/cowpoke/components/GameControls";
+import StartEndMenu from "@/src/games/cowpoke/components/StartEndMenu";
 
 export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
-    text: "Flip Tile",
+    text: "Cowpoke",
   },
   {
     type: "paragraph",
-    text: 'Inspired by the classic <a href="https://en.wikipedia.org/wiki/Lights_Out_(game)" target="_blank" rel="noopener noreferrer">Lights Out</a> game, Flip Tile brings a fresh twist to the familiar puzzle concept, offering three distinct levels of difficulty to challenge players of all skill levels.',
+    text: "Follow'n in the footsteps of Cowpoke Jack, you're headin' out west to find your place in this here frontier.",
+  },
+  {
+    type: "h2",
+    text: "Keyboard Shortcuts",
   },
   {
     type: "paragraph",
-    text: 'I created this game mostly as an exercise to re-learn linear algebra concepts. Watch <a href="https://www.youtube.com/watch?v=0fHkKcy0x_U" target="_blank" rel="noopener noreferrer">Solving the "Lights Out" Problem</a> for more context on how linear algebra can be used to automatically solve this game!',
+    text: "In element mode:",
+  },
+  {
+    type: "list",
+    items: [
+      "<b>1</b>: Select Rock",
+      "<b>2</b>: Select Paper",
+      "<b>3</b>: Select Scissors",
+    ],
+  },
+  {
+    type: "paragraph",
+    text: "In combat mode:",
+  },
+  {
+    type: "list",
+    items: [
+      "<b>1</b>: Select Attack",
+      "<b>2</b>: Select Defend",
+      "<b>3</b>: Select Counter",
+    ],
+  },
+  {
+    type: "paragraph",
+    text: "General:",
+  },
+  {
+    type: "list",
+    items: [
+      "<b>Up Arrow</b>: Scroll up in the feed",
+      "<b>Down Arrow</b>: Scroll down in the feed",
+    ],
   },
 ];
 
@@ -39,7 +77,7 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    document.body.classList.add("flip-tile-game-background");
+    document.body.classList.add("cowpoke-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {
@@ -60,7 +98,7 @@ const GameComponent: React.FC = () => {
 
       try {
         const { MainGameScene } = await import(
-          "@/src/games/flip-tile/scenes/main-game-scene"
+          "@/src/games/cowpoke/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -96,8 +134,15 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <UiOverlay></UiOverlay>
-      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
+      <StartEndMenu></StartEndMenu>
+      <SettingsContainer></SettingsContainer>
+      <GameInfoContainer
+        infoData={gameInfoData}
+        darkModeLight={true} // Want the black buttons this game! Since bkg is light.
+        whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
+      ></GameInfoContainer>
+      <UpperHud></UpperHud>
+      <GameControls></GameControls>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game"></div>
@@ -105,7 +150,7 @@ const GameComponent: React.FC = () => {
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/flip-tile-cover.webp"
+          coverImage="/webps/games/cowpoke-game-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}

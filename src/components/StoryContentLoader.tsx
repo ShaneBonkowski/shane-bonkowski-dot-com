@@ -1,13 +1,16 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { StoryDataProps, StoryDataContentProps } from "@/src/types/data-props";
+import {
+  StoryMetadataProps,
+  StoryContentDataProps,
+} from "@/src/types/data-props";
 import DOMPurify from "dompurify";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
 const avgWPMReading = 238;
 
-const StoryContentLoader: React.FC<StoryDataProps> = ({
+const StoryContentLoader: React.FC<StoryMetadataProps> = ({
   title,
   subtitle,
   date,
@@ -24,7 +27,7 @@ const StoryContentLoader: React.FC<StoryDataProps> = ({
   const totalReadDurationMinutes =
     Math.ceil(totalWordCount / avgWPMReading) + 1;
 
-  function renderParagraph(paragraph: StoryDataContentProps, pIndex: number) {
+  function renderParagraph(paragraph: StoryContentDataProps, pIndex: number) {
     // No margin top on first index, no margin bottom on the last
     const isFirst = pIndex === 0;
     const isLast = pIndex === body.length - 1;

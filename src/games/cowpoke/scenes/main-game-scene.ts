@@ -10,7 +10,7 @@ import { Decoration, DECOR_TYPES } from "@/src/games/cowpoke/decoration";
 import { Physics } from "@/src/utils/physics";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Character, CHARACTER_TYPES } from "@/src/games/cowpoke/character";
-import { sendFeedMessage } from "@/src/games/cowpoke/Feed";
+import { sendFeedMessage } from "@/src/games/cowpoke/components/Feed";
 import { gameDataStore, GameData } from "@/src/games/cowpoke/game-data-store";
 
 // Bkg art was drawn at 1920x1080, so we use that as the reference size.

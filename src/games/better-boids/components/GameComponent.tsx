@@ -1,25 +1,36 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/game-template/styles/game.css"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC CSS
+import "@/src/games/better-boids/styles/game.css";
+import GameInfoContainer from "@/src/components/GameInfoContainer";
+import SettingsContainer from "@/src/games/better-boids/components/SettingsContainer";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
-import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
-import GameInfoContainer from "@/src/components/GameInfoContainer";
-import SettingsContainer from "@/src/games/game-template/SettingsContainer"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC SETTINGS CONTAINER
+import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 
-// FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO
 export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
-    text: "<Game Name>",
+    text: "Better Boids",
   },
   {
     type: "paragraph",
-    text: "Fill in information about the game here",
+    text: 'The <a href="https://en.wikipedia.org/wiki/Boids" target="_blank" rel="noopener noreferrer">Boids algorithm</a>, devised by Craig Reynolds, mimics the flocking behavior seen in birds and other animals. In general, Boids follow three rules:',
+  },
+  {
+    type: "list",
+    items: [
+      "<b>Alignment:</b> Boids try to align their direction with other nearby Boids.",
+      "<b>Cohesion:</b> Boids move towards the average position of nearby Boids.",
+      "<b>Separation:</b> Boids avoid crowding near other Boids.",
+    ],
+  },
+  {
+    type: "paragraph",
+    text: "From these three simple rules, complex emergent behavior and intricate patterns can arise. This little game is an attempt to display the beauty in the Boids algorithm, while expanding on it with novel concepts where applicable.",
   },
 ];
 
@@ -36,8 +47,7 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    // FIXME: UPDATE THIS TO THE GAME-SPECIFIC BACKGROUND CLASS
-    document.body.classList.add("game-name-game-background");
+    document.body.classList.add("better-boids-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {
@@ -57,9 +67,8 @@ const GameComponent: React.FC = () => {
       }
 
       try {
-        // FIXME: UPDATE IMPORT PATH FOR THE GAME-SPECIFIC SCENE
         const { MainGameScene } = await import(
-          "@/src/games/game-template/scenes/main-game-scene"
+          "@/src/games/better-boids/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -104,7 +113,7 @@ const GameComponent: React.FC = () => {
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/better-boids-cover.webp" // FIXME: UPDATE THIS TO THE GAME-SPECIFIC COVER IMAGE
+          coverImage="/webps/games/better-boids-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}

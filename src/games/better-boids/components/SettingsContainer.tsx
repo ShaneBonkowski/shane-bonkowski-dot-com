@@ -5,7 +5,7 @@ import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
-import { UseSettings } from "@/src/games/better-boids/UseSettings";
+import { UseSettings } from "@/src/games/better-boids/components/UseSettings";
 import Image from "next/image";
 
 const settingsConfig = {

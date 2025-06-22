@@ -1,66 +1,39 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/cowpoke/styles/game.css";
+import "@/src/games/game-of-life/styles/game.css";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
+import GameMessagePopup from "@/src/components/GameMessagePopup";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
-import SettingsContainer from "@/src/games/cowpoke/SettingsContainer";
-import UpperHud from "@/src/games/cowpoke/UpperHud";
-import GameControls from "@/src/games/cowpoke/GameControls";
-import StartEndMenu from "@/src/games/cowpoke/StartEndMenu";
+import UiOverlay from "@/src/games/game-of-life/components/UiOverlay";
+import SettingsContainer from "@/src/games/game-of-life/components/SettingsContainer";
 
 export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
-    text: "Cowpoke",
+    text: "Game of Life",
   },
   {
     type: "paragraph",
-    text: "Follow'n in the footsteps of Cowpoke Jack, you're headin' out west to find your place in this here frontier.",
-  },
-  {
-    type: "h2",
-    text: "Keyboard Shortcuts",
-  },
-  {
-    type: "paragraph",
-    text: "In element mode:",
+    text: 'Modern adaptation of the classic 1970 cellular automaton game <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener noreferrer">Conway`s Game of Life</a>. The game is typically played on an infinite, two-dimensional grid. Each cell can exist in one of two states (alive or dead) and interacts with its eight neighboring cells as follows:',
   },
   {
     type: "list",
     items: [
-      "<b>1</b>: Select Rock",
-      "<b>2</b>: Select Paper",
-      "<b>3</b>: Select Scissors",
+      "<b>Underpopulation</b>: Any live cell with fewer than two live neighbors dies.",
+      "<b>Persistence</b>: Any live cell with two or three live neighbors lives on.",
+      "<b>Overpopulation</b>: Any live cell with more than three live neighbors dies.",
+      "<b>Reproduction</b>: Any dead cell with exactly three live neighbors becomes a live cell.",
     ],
   },
   {
     type: "paragraph",
-    text: "In combat mode:",
-  },
-  {
-    type: "list",
-    items: [
-      "<b>1</b>: Select Attack",
-      "<b>2</b>: Select Defend",
-      "<b>3</b>: Select Counter",
-    ],
-  },
-  {
-    type: "paragraph",
-    text: "General:",
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Up Arrow</b>: Scroll up in the feed",
-      "<b>Down Arrow</b>: Scroll down in the feed",
-    ],
+    text: "From these simple rules, complex patterns can emerge. New shapes are still being discovered to this day!",
   },
 ];
 
@@ -77,7 +50,7 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    document.body.classList.add("cowpoke-game-background");
+    document.body.classList.add("game-of-life-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {
@@ -98,7 +71,7 @@ const GameComponent: React.FC = () => {
 
       try {
         const { MainGameScene } = await import(
-          "@/src/games/cowpoke/scenes/main-game-scene"
+          "@/src/games/game-of-life/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -134,15 +107,16 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <StartEndMenu></StartEndMenu>
+      <UiOverlay></UiOverlay>
+      <GameMessagePopup
+        message="Warning: This game is not fully optimized and may experience lag, especially on mobile."
+        bottom={true}
+      ></GameMessagePopup>
       <SettingsContainer></SettingsContainer>
       <GameInfoContainer
         infoData={gameInfoData}
-        darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-        whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
+        lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
       ></GameInfoContainer>
-      <UpperHud></UpperHud>
-      <GameControls></GameControls>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game"></div>
@@ -150,7 +124,7 @@ const GameComponent: React.FC = () => {
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/cowpoke-game-cover.webp"
+          coverImage="/webps/games/game-of-life-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}

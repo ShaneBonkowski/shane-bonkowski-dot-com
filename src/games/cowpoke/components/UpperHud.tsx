@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import CharacterInfoBar from "@/src/games/cowpoke/CharacterInfoBar";
+import CharacterInfoBar from "@/src/games/cowpoke/components/CharacterInfoBar";
 import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
 import { FaRobot, FaHandPointer, FaSkull } from "react-icons/fa";
 import { GiRabbit, GiSnail, GiCoffin } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
-import { UseGameData } from "@/src/games/cowpoke/UseGameData";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 import YesNoBox from "@/src/components/YesNoBox";
 
 export default function UpperHud() {

@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
-import { GameDataProps } from "@/src/types/data-props";
-import GameComponent from "@/src/games/cowpoke/GameComponent";
+import { GameMetadataProps } from "@/src/types/data-props";
+import GameComponent from "@/src/games/cowpoke/components/GameComponent";
 
-const gameData: GameDataProps = {
+const gameMetadata: GameMetadataProps = {
   title: "Cowpoke",
   description: "A game by Shane Bonkowski.",
   logoImageUrl: "/webps/mars-logo-large.webp",
@@ -10,16 +10,16 @@ const gameData: GameDataProps = {
 };
 
 export const metadata = {
-  title: gameData.title,
-  description: gameData.description,
+  title: gameMetadata.title,
+  description: gameMetadata.description,
   openGraph: {
-    title: gameData.title,
-    description: gameData.description,
+    title: gameMetadata.title,
+    description: gameMetadata.description,
     url: "https://shanebonkowski.com",
     images: [
       {
-        url: `https://shanebonkowski.com${gameData.logoImageUrl}`,
-        alt: gameData.imageAlt,
+        url: `https://shanebonkowski.com${gameMetadata.logoImageUrl}`,
+        alt: gameMetadata.imageAlt,
       },
     ],
     type: "website",
@@ -27,10 +27,10 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@ShaneBonkowski",
-    title: gameData.title,
-    description: gameData.description,
-    image: `https://shanebonkowski.com${gameData.logoImageUrl}`,
-    imageAlt: gameData.imageAlt,
+    title: gameMetadata.title,
+    description: gameMetadata.description,
+    image: `https://shanebonkowski.com${gameMetadata.logoImageUrl}`,
+    imageAlt: gameMetadata.imageAlt,
   },
 };
 

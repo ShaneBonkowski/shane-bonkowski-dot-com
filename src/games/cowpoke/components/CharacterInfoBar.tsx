@@ -1,6 +1,6 @@
 import React from "react";
 import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
-import { UseGameData } from "@/src/games/cowpoke/UseGameData";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
 type CharacterInfoBarProps = {
   characterType: CHARACTER_TYPES.PLAYER | CHARACTER_TYPES.ENEMY;

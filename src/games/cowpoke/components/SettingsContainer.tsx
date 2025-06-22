@@ -6,8 +6,8 @@ import { GiCrossedSwords, GiRock, GiSprint } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
-import LootContainer from "@/src/games/cowpoke/LootContainer";
-import { UseGameData } from "@/src/games/cowpoke/UseGameData";
+import LootContainer from "@/src/games/cowpoke/components/LootContainer";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
 const UpgradeButton = ({
   type,

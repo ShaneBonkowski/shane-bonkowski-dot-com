@@ -9,8 +9,8 @@ import {
 } from "react-icons/gi";
 import MovingSliderBar from "@/src/components/MovingSliderBar";
 import GameIconButton from "@/src/components/GameIconButton";
-import Feed from "@/src/games/cowpoke/Feed";
-import { UseGameData } from "@/src/games/cowpoke/UseGameData";
+import Feed from "@/src/games/cowpoke/components/Feed";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
 export default function GameControls() {
   const [isVisible, setIsVisible] = useState(true);
