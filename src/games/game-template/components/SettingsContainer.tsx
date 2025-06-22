@@ -57,8 +57,9 @@ const SettingsContainer: React.FC = () => {
       <GameIconButton
         onPointerDown={openWindow}
         icon={<FaCog size={30} />}
-        ariaLabel="<GAME-NAME> Settings" // FIXME: Replace with actual game name
+        ariaLabel="Settings"
         className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
+        title="Settings"
       />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         {/* FIXME: Replace id with actual game name */}

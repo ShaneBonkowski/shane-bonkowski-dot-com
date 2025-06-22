@@ -224,10 +224,11 @@ const SettingsContainer: React.FC = () => {
         <GameIconButton
           onPointerDown={openWindow}
           icon={<FaCog size={30} />}
-          ariaLabel="Cowpoke Settings"
+          ariaLabel="Settings"
           className={`${isButtonVisible ? "" : "hidden"}`}
           darkModeLight={true}
           whiteBackground={true}
+          title="Settings"
         />
 
         {/* Notification count */}

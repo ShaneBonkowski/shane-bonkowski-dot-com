@@ -101,19 +101,22 @@ export default function UpperHud() {
           icon={autoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />}
           ariaLabel="Toggle Auto Mode"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+          title="Toggle Auto Mode"
         />
         <GameIconButton
           onPointerDown={handleToggleFastMode}
           icon={fastMode ? <GiSnail size={30} /> : <GiRabbit size={30} />}
-          ariaLabel="Speed Up or Slow Down"
+          ariaLabel="Toggle Fast Mode"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           disabled={!autoMode} // Disable speed up if auto mode is off
+          title="Toggle Fast Mode"
         />
         <GameIconButton
           onPointerDown={handleTryToEndGame}
           icon={<GiCoffin size={30} />}
-          ariaLabel="Bite the Dust - End Game"
+          ariaLabel="End Game"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
+          title="End Game"
         ></GameIconButton>
         <div className="z-20 flex flex-row items-center">
           <FaSkull size={25} className="text-primary-text-color-light" />

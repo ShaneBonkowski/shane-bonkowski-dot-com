@@ -118,7 +118,8 @@ const UiOverlay: React.FC = () => {
           icon={
             solutionRevealed ? <FaEyeSlash size={30} /> : <FaEye size={30} />
           }
-          ariaLabel="Toggle Solution Visibility"
+          ariaLabel="Toggle Solution"
+          title="Toggle Solution"
         />
 
         {/* Tile Reset Button */}
@@ -126,13 +127,15 @@ const UiOverlay: React.FC = () => {
           onPointerDown={handleResetTilePattern}
           icon={<FaRedo size={30} />}
           ariaLabel="Reset Tiles"
+          title="Reset Tiles"
         />
 
         {/* New Tile Layout Button */}
         <GameIconButton
           onPointerDown={handleNewTilePattern}
           icon={<FaThLarge size={30} />}
-          ariaLabel="Generate New Tile Layout"
+          ariaLabel="New Tile Layout"
+          title="New Tile Layout"
         />
       </div>
 
@@ -152,6 +155,7 @@ const UiOverlay: React.FC = () => {
             onPointerDown={() => handleDifficultyChange(difficulty)}
             icon={icon}
             ariaLabel={`Select ${difficulty} difficulty`}
+            title={`Select ${difficulty} difficulty`}
           />
         ))}
       </div>

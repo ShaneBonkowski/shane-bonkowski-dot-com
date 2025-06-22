@@ -92,8 +92,9 @@ const UiOverlay: React.FC = () => {
         <GameIconButton
           onPointerDown={handleToggleDisco}
           icon={discoMode ? <FaBan size={30} /> : <FaMagic size={30} />}
-          ariaLabel={discoMode ? "Disable Disco Mode" : "Enable Disco Mode"}
+          ariaLabel="Toggle Disco Mode"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          title="Toggle Disco Mode"
         />
 
         {/* Auto Mode Button */}
@@ -104,6 +105,7 @@ const UiOverlay: React.FC = () => {
           }
           ariaLabel="Toggle Auto Mode"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          title="Toggle Auto Mode"
         />
 
         {/* Pause/Play Button */}
@@ -112,6 +114,7 @@ const UiOverlay: React.FC = () => {
           icon={paused ? <FaPlay size={30} /> : <FaPause size={30} />}
           ariaLabel={paused ? "Play" : "Pause"}
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          title={paused ? "Play" : "Pause"}
         />
 
         {/* Advance Button */}
@@ -120,6 +123,7 @@ const UiOverlay: React.FC = () => {
           icon={<FaGreaterThan size={30} />}
           ariaLabel="Advance to Next Generation"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          title="Advance to Next Generation"
         />
 
         {/* Reset Button */}
@@ -128,6 +132,7 @@ const UiOverlay: React.FC = () => {
           icon={<FaRedo size={30} />}
           ariaLabel="Reset Tiles"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          title="Reset Tiles"
         />
       </div>
     </div>

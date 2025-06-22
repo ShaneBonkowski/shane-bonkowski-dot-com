@@ -158,9 +158,10 @@ const SettingsContainer: React.FC = () => {
       <GameIconButton
         onPointerDown={openWindow}
         icon={<FaCog size={30} />}
-        ariaLabel="Game of Life Settings"
+        ariaLabel="Settings"
         className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
         lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+        title="Settings"
       />
 
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>

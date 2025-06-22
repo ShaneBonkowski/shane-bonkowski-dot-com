@@ -223,7 +223,7 @@ const StartEndMenu: React.FC = () => {
           <GameIconButton
             onPointerDown={handleStartLoadingGame}
             icon={<FaPlay size={25} />}
-            ariaLabel="Cowpoke Start Loading Game"
+            ariaLabel="Start Loading Game"
             className={""}
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
           />
@@ -236,6 +236,7 @@ const StartEndMenu: React.FC = () => {
           ariaLabel="Reset Lifetime Stats"
           darkModeLight={true} // Want the black buttons this game! Since bkg is light.
           className={`fixed bottom-5 left-5`}
+          title="Reset Lifetime Stats"
         ></GameIconButton>
       </GameUiWindow>
 
