@@ -1,3 +1,5 @@
+"use client";
+
 import { useSyncExternalStore } from "react";
 import { gameDataStore } from "@/src/games/game-of-life/game-data-store";
 

@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import { ContentDataProps } from "@/src/types/data-props";
 import { sanitizeHtml } from "@/src/utils/sanitize";

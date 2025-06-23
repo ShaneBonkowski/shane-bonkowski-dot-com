@@ -1,4 +1,4 @@
-"use client";
+"use client"; // need this since this component uses useState
 
 import React, { useState } from "react";
 import ContentSearchBar from "@/src/components/ContentSearchBar";

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import Fade from "@/src/components/Fade";
 import GameLogoImageWithBackgroundProps from "@/src/components/GameLogoImageWithBackground";

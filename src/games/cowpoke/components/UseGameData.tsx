@@ -1,3 +1,5 @@
+"use client";
+
 import { useSyncExternalStore } from "react";
 import { gameDataStore } from "@/src/games/cowpoke/game-data-store";
 

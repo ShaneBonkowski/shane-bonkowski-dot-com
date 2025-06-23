@@ -1,4 +1,4 @@
-"use client"; // Enables client-side rendering.. Required for using useState
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";

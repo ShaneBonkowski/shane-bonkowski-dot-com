@@ -1,3 +1,5 @@
+"use client";
+
 import { useSyncExternalStore } from "react";
 import { settingsStore } from "@/src/games/game-of-life/settings-store";
 
