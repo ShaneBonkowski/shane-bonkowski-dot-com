@@ -86,26 +86,30 @@ const Header: React.FC = () => {
             alt="Logo"
             width={120}
             height={120}
-            className="w-9 h-9 sm:w-14 sm:h-14"
+            className={`${
+              isGamesPath ? "w-6 h-6 sm:w-8 sm:h-8" : "w-9 h-9 sm:w-14 sm:h-14"
+            }`}
           />
-          <div>
-            <h1
-              className={`text-logo-title sm:text-logo-title-sm text-right m-0 ${
-                isGamesPath ? "text-outline-light dark:text-outline-dark" : ""
-              }`}
-            >
-              SHANES GAMES
-            </h1>
-            <p
-              className={`text-logo-subtitle sm:text-logo-subtitle-sm text-right m-0 ${
-                isGamesPath
-                  ? "text-outline-light dark:text-outline-dark text-primary-text-color-light dark:text-primary-text-color"
-                  : "text-secondary-text-color-light dark:text-secondary-text-color"
-              }`}
-            >
-              Black Hole Reject
-            </p>
-          </div>
+          {!isGamesPath && (
+            <div>
+              <h1
+                className={`text-logo-title sm:text-logo-title-sm text-right m-0 ${
+                  isGamesPath ? "text-outline-light dark:text-outline-dark" : ""
+                }`}
+              >
+                SHANES GAMES
+              </h1>
+              <p
+                className={`text-logo-subtitle sm:text-logo-subtitle-sm text-right m-0 ${
+                  isGamesPath
+                    ? "text-outline-light dark:text-outline-dark text-primary-text-color-light dark:text-primary-text-color"
+                    : "text-secondary-text-color-light dark:text-secondary-text-color"
+                }`}
+              >
+                Black Hole Reject
+              </p>
+            </div>
+          )}
         </div>
       </Link>
 

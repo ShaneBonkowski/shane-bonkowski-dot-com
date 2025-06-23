@@ -434,27 +434,43 @@ export class MainGameScene extends Generic2DGameScene {
       // Update the favored element/combat every so often
       if (time - this.lastUpdateFavoredTime >= this.updateFavoredInterval) {
         // Update the favored element/combat.
-        // Randomly set to the remaining element/combat type.
         const gameData = gameDataStore.getSnapshot();
-        const elementTypes = ["rock", "paper", "scissors"];
-        const remainingElementTypes = elementTypes.filter(
-          (type) => type !== gameData.favoredElement
-        );
-        gameDataStore.setFavoredElement(
-          remainingElementTypes[
-            this.random.getRandomInt(0, remainingElementTypes.length)
-          ] as "rock" | "paper" | "scissors"
-        );
 
-        const combatTypes = ["attack", "defend", "counter"];
-        const remainingCombatTypes = combatTypes.filter(
-          (type) => type !== gameData.favoredCombat
-        );
-        gameDataStore.setFavoredCombat(
-          remainingCombatTypes[
-            this.random.getRandomInt(0, remainingCombatTypes.length)
-          ] as "attack" | "defend" | "counter"
-        );
+        // Cycle through elements: rock -> paper -> scissors -> rock
+        let nextElement: "rock" | "paper" | "scissors";
+        switch (gameData.favoredElement) {
+          case "rock":
+            nextElement = "paper";
+            break;
+          case "paper":
+            nextElement = "scissors";
+            break;
+          case "scissors":
+            nextElement = "rock";
+            break;
+          default:
+            nextElement = "rock"; // fallback if null or undefined
+            break;
+        }
+        gameDataStore.setFavoredElement(nextElement);
+
+        // Cycle through combat: attack -> defend -> counter -> attack
+        let nextCombat: "attack" | "defend" | "counter";
+        switch (gameData.favoredCombat) {
+          case "attack":
+            nextCombat = "defend";
+            break;
+          case "defend":
+            nextCombat = "counter";
+            break;
+          case "counter":
+            nextCombat = "attack";
+            break;
+          default:
+            nextCombat = "attack"; // fallback if null or undefined
+            break;
+        }
+        gameDataStore.setFavoredCombat(nextCombat);
 
         this.lastUpdateFavoredTime = time;
       }

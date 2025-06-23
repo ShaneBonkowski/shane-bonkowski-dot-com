@@ -553,17 +553,17 @@ export class Character extends GameObject {
     let legendaryChance = 0;
 
     if (this.scene.gameRound >= 40) {
-      commonChance = 0.7;
-      rareChance = 0.2;
-      legendaryChance = 0.1;
+      commonChance = 0.2;
+      rareChance = 0.5;
+      legendaryChance = 0.3;
     } else if (this.scene.gameRound >= 20) {
-      commonChance = 0.8;
-      rareChance = 0.15;
-      legendaryChance = 0.05;
+      commonChance = 0.4;
+      rareChance = 0.4;
+      legendaryChance = 0.2;
     } else {
-      commonChance = 0.86;
-      rareChance = 0.12;
-      legendaryChance = 0.02;
+      commonChance = 0.6;
+      rareChance = 0.3;
+      legendaryChance = 0.1;
     }
 
     // Normalize in case of rounding errors
@@ -929,13 +929,13 @@ export class Character extends GameObject {
       // 50/50 chance to try to drop either gun or hat
       if (this.scene.random.getRandomFloat(0, 1) < 0.5) {
         // Random chance to get enemy's gun
-        let gunDropOdds = 0.2;
+        let gunDropOdds = 0.6;
         if (GUN_LOOT_MAP[otherCharacter.equippedGunId].rarity === RARITY.RARE) {
-          gunDropOdds = 0.1;
+          gunDropOdds = 0.4;
         } else if (
           GUN_LOOT_MAP[otherCharacter.equippedGunId].rarity === RARITY.LEGENDARY
         ) {
-          gunDropOdds = 0.05;
+          gunDropOdds = 0.25;
         }
 
         if (this.scene.random.getRandomFloat(0, 1) < gunDropOdds) {
@@ -954,13 +954,13 @@ export class Character extends GameObject {
         }
       } else {
         // Random chance to get enemy's hat
-        let hatDropOdds = 0.2;
+        let hatDropOdds = 0.6;
         if (HAT_LOOT_MAP[otherCharacter.equippedHatId].rarity === RARITY.RARE) {
-          hatDropOdds = 0.1;
+          hatDropOdds = 0.4;
         } else if (
           HAT_LOOT_MAP[otherCharacter.equippedHatId].rarity === RARITY.LEGENDARY
         ) {
-          hatDropOdds = 0.05;
+          hatDropOdds = 0.25;
         }
 
         if (this.scene.random.getRandomFloat(0, 1) < hatDropOdds) {

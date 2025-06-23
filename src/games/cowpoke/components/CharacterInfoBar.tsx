@@ -41,7 +41,7 @@ export default function CharacterInfoBar({
 
   return (
     <div
-      className={`relative z-20 p-2 flex flex-col ${positionClasses}`}
+      className={`relative w-full z-20 p-2 flex flex-col ${positionClasses}`}
       style={{ minWidth: "240px" }}
       id="character-info-bar"
       aria-label="Character Info Bar"
@@ -55,11 +55,11 @@ export default function CharacterInfoBar({
             {health}/{maxHealth} HP
           </span>
         )}
-        <div className="relative w-[26vw] h-5 bg-transparent overflow-hidden">
+        <div className="relative h-5 bg-transparent overflow-hidden flex-1">
           {/* Max Health bar (background) */}
           <div
-            className="absolute left-0 top-0 h-3 bg-red-900"
-            style={{ width: "100%", zIndex: 1 }}
+            className="absolute left-0 top-0 h-3 bg-red-900 w-full"
+            style={{ zIndex: 1 }}
           />
           {/* Current Health bar (foreground) */}
           <div
@@ -68,8 +68,8 @@ export default function CharacterInfoBar({
           />
           {/* Max XP bar (background) */}
           <div
-            className="absolute left-0 bottom-0 h-2 bg-gray-300"
-            style={{ width: "100%", zIndex: 3 }}
+            className="absolute left-0 bottom-0 h-2 bg-gray-300 w-full"
+            style={{ zIndex: 3 }}
           />
           {/* Current XP bar (foreground) */}
           <div

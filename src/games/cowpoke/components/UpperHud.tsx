@@ -72,7 +72,7 @@ export default function UpperHud() {
   return (
     <div
       id="upper-hud"
-      className={`absolute flex flex-row items-center justify-between gap-8 top-5 right-5 ${
+      className={`w-full max-w-[85vw] flex flex-row items-center justify-between gap-5 ${
         isVisible ? "" : "hidden"
       }`}
       aria-label="Game upper HUD"

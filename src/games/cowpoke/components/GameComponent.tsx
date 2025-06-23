@@ -142,8 +142,10 @@ const GameComponent: React.FC = () => {
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
       />
-      <UpperHud />
-      <GameControls />
+      <div className="relative top-5 flex flex-col gap-4 justify-center items-center">
+        <UpperHud />
+        <GameControls />
+      </div>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game" />

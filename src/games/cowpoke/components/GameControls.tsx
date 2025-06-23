@@ -122,13 +122,12 @@ export default function GameControls() {
 
   return (
     <div
-      className={`z-20 w-[55vw] fixed top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 
-        flex flex-col justify-center gap-4 p-4 h-[20vh] ${
-          isVisible ? "" : "hidden"
-        }`}
+      className={`z-20 w-full max-w-[55vw] h-full flex flex-col justify-center gap-4 ${
+        isVisible ? "" : "hidden"
+      }`}
     >
       {/* Controls */}
-      <div className="flex flex-row gap-4 justify-center">
+      <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
         <MovingSliderBar
           sliderId={"win-element"}
           speed={fastMode ? 1.7 : 0.9}
@@ -176,7 +175,7 @@ export default function GameControls() {
         </div>
       </div>
 
-      <div className="flex flex-row gap-4 justify-center">
+      <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
         <MovingSliderBar sliderId={"win-combat"} speed={fastMode ? 1.7 : 0.9} />
         <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
