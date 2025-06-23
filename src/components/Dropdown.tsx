@@ -6,12 +6,14 @@ interface DropdownProps {
   options: { value: string; label: string }[];
   selected: string;
   setSelected: (value: string) => void;
+  title?: string | undefined;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
   options,
   selected,
   setSelected,
+  title = undefined,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -56,6 +58,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       id="dropdown"
       aria-haspopup="listbox"
       aria-expanded={isOpen}
+      title={title}
     >
       {/* Selected Value */}
       <button

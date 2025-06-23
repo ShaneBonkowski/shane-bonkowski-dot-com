@@ -55,6 +55,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
         selected={searchContentType}
         setSelected={setSearchContentType}
         aria-label="Filter by content type"
+        title="Filter by Content Type"
       />
       {/* Search Input */}
       <input
@@ -72,6 +73,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
         placeholder:text-secondary-text-color-light dark:placeholder:text-secondary-text-color
         "
         aria-label="Search content"
+        title="Search content"
       />
     </div>
   );

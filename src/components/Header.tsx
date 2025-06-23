@@ -74,7 +74,8 @@ const Header: React.FC = () => {
         className={`link pointer-events-auto no-underline ${
           isHoverable ? "hover:no-underline" : ""
         } active:no-underline`}
-        aria-label="Home"
+        aria-label="Shane's Games Home"
+        title="Shane's Games Home"
       >
         <div
           className="shanes-games-logo space-x-1 sm:space-x-3"
@@ -122,11 +123,17 @@ const Header: React.FC = () => {
                 : ""
             } active:text-secondary-text-color-light dark:active:text-secondary-text-color cursor-pointer`}
             aria-label="Toggle Dark Mode"
+            title="Toggle Dark Mode"
           >
             {isDarkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
           </button>
 
-          <Link href="/main/about" className="link" aria-label="About">
+          <Link
+            href="/main/about"
+            className="link"
+            aria-label="About"
+            title="About"
+          >
             <div
               className={`text-primary-text-color-light dark:text-primary-text-color ${
                 isHoverable
@@ -147,12 +154,18 @@ const Header: React.FC = () => {
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
             } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
-            aria-label="GitHub Profile"
+            aria-label="Shane's GitHub"
+            title="Shane's GitHub"
           >
             <FaGithub size={24} />
           </a>
 
-          <Link href="/" className="link" aria-label="Home">
+          <Link
+            href="/"
+            className="link"
+            aria-label="Shane's Games Home"
+            title="Shane's Games Home"
+          >
             <div
               className={`text-primary-text-color-light dark:text-primary-text-color ${
                 isHoverable

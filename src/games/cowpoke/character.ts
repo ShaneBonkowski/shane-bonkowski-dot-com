@@ -649,7 +649,13 @@ export class Character extends GameObject {
 
   getDamageAmount() {
     // base dmg + gun and hat bonuses
-    const baseDmg = 1 + this.level * 0.6;
+    let baseDmg = 1 + this.level * 0.6;
+
+    // If in GOD_MODE, set base dmg to 999,999
+    if (this.name === "GOD_MODE") {
+      baseDmg = 999999;
+    }
+
     return (
       baseDmg +
       GUN_LOOT_MAP[this.equippedGunId].addDmg +
@@ -821,6 +827,11 @@ export class Character extends GameObject {
       HAT_LOOT_MAP[this.equippedHatId].addHealth +
       GUN_LOOT_MAP[this.equippedGunId].addHealth;
 
+    // If in GOD_MODE, set max health to 999,999
+    if (this.name === "GOD_MODE") {
+      newMaxHealth = 999999;
+    }
+
     // Ensure max health is an int
     newMaxHealth = Math.round(newMaxHealth);
 
@@ -834,6 +845,11 @@ export class Character extends GameObject {
   updateLevel(newLevel: number, skipMsg: boolean = false) {
     if (newLevel < 0) {
       newLevel = 0;
+    }
+
+    // If in GOD_MODE, set level to 999
+    if (this.name === "GOD_MODE") {
+      newLevel = 999;
     }
 
     if (this.type === CHARACTER_TYPES.PLAYER) {

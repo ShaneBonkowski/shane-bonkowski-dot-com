@@ -130,34 +130,40 @@ export class Decoration extends GameObject {
       // to create a parallax effect.
       switch (this.type) {
         case DECOR_TYPES.BACK:
-          this.physicsBody2D!.position.x -= 0;
           break;
         case DECOR_TYPES.MID:
           this.physicsBody2D!.position.x -= (midSpeed * delta) / 1000; // Convert delta to seconds
+          this.physicsBody2D!.position.x = Math.round(
+            this.physicsBody2D!.position.x
+          );
 
           // if the mid decor goes off screen, reset it to the right side
           if (
-            this.physicsBody2D!.position.x <
+            this.physicsBody2D!.position.x <=
             -this.graphic!.displayWidth / 2
           ) {
-            this.physicsBody2D!.position.x =
-              screenWidth + this.graphic!.displayWidth / 2;
+            this.physicsBody2D!.position.x = Math.round(
+              screenWidth + this.graphic!.displayWidth / 2
+            );
           }
 
           break;
         case DECOR_TYPES.FLOOR:
-          this.physicsBody2D!.position.x -= 0;
           break;
         case DECOR_TYPES.FRONT:
           this.physicsBody2D!.position.x -= (frontSpeed * delta) / 1000; // Convert delta to seconds
+          this.physicsBody2D!.position.x = Math.round(
+            this.physicsBody2D!.position.x
+          );
 
           // if the front decor goes off screen, reset it to the right side
           if (
-            this.physicsBody2D!.position.x <
+            this.physicsBody2D!.position.x <=
             -this.graphic!.displayWidth / 2
           ) {
-            this.physicsBody2D!.position.x =
-              screenWidth + this.graphic!.displayWidth / 2;
+            this.physicsBody2D!.position.x = Math.round(
+              screenWidth + this.graphic!.displayWidth / 2
+            );
 
             // Also update it to a random new decor graphic sprite to keep it fresh
             const randomSpriteName = this.getRandomSprite(

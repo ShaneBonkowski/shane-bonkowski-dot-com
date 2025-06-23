@@ -306,7 +306,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.decorations.push(
       new Decoration(
         this,
-        screenWidth / 2,
+        Math.round(screenWidth / 2),
         screenHeight,
         DECOR_TYPES.BACK,
         "bkg-back"
@@ -318,7 +318,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.decorations.push(
       new Decoration(
         this,
-        screenWidth / 2,
+        Math.round(screenWidth / 2),
         screenHeight,
         DECOR_TYPES.MID,
         "bkg-mid-1"
@@ -327,7 +327,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.decorations.push(
       new Decoration(
         this,
-        screenWidth / 2 + screenWidth,
+        Math.round(screenWidth / 2 + screenWidth),
         screenHeight,
         DECOR_TYPES.MID,
         "bkg-mid-2"
@@ -338,7 +338,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.decorations.push(
       new Decoration(
         this,
-        screenWidth / 2,
+        Math.round(screenWidth / 2),
         screenHeight,
         DECOR_TYPES.FLOOR,
         "bkg-floor"
@@ -361,7 +361,7 @@ export class MainGameScene extends Generic2DGameScene {
       this.decorations.push(
         new Decoration(
           this,
-          xPosition,
+          Math.round(xPosition),
           screenHeight,
           DECOR_TYPES.FRONT,
           // Start with a random cactus decoration. Other props will get added in as the
