@@ -5,7 +5,7 @@ import {
   StoryMetadataProps,
   StoryContentDataProps,
 } from "@/src/types/data-props";
-import DOMPurify from "dompurify";
+import { sanitizeHtml } from "@/src/utils/sanitize";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
 const avgWPMReading = 238;
@@ -45,11 +45,7 @@ const StoryContentLoader: React.FC<StoryMetadataProps> = ({
           style={{ fontStyle: paragraph.fontStyle }}
           // eslint-disable-next-line no-restricted-syntax
           dangerouslySetInnerHTML={{
-            __html: paraContent
-              ? DOMPurify.sanitize(paraContent, {
-                  ADD_ATTR: ["target", "rel"],
-                })
-              : "",
+            __html: paraContent ? sanitizeHtml(paraContent) : "",
           }}
         />
       ));
@@ -67,11 +63,7 @@ const StoryContentLoader: React.FC<StoryMetadataProps> = ({
           style={{ fontStyle: paragraph.fontStyle }}
           // eslint-disable-next-line no-restricted-syntax
           dangerouslySetInnerHTML={{
-            __html: contentWithBr
-              ? DOMPurify.sanitize(contentWithBr, {
-                  ADD_ATTR: ["target", "rel"],
-                })
-              : "",
+            __html: contentWithBr ? sanitizeHtml(contentWithBr) : "",
           }}
         />
       );
