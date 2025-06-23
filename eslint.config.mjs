@@ -26,7 +26,7 @@ Replacement (HMR).
         {
           selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
           message:
-            'Use of dangerouslySetInnerHTML detected. Make sure to sanitize HTML with DOMPurify.sanitize() (only allowed for client side rendering with "use client" files). Add an eslint-disable comment if this is safe. Make sure to add {ADD_ATTR: ["target", "rel"]} to the DOMPurify.sanitize() call to prevent blocking links openning in new tab.',
+            'Use of dangerouslySetInnerHTML detected. Make sure to sanitize HTML with sanitizeHtml() (only allowed for client side rendering with "use client" files). Add an eslint-disable comment if this is safe. Make sure to use sanitizeHtml() instead of DOMPurify.sanitize() to ensure client-side is handled properly.',
         },
         {
           selector: "JSXElement[children.length=0][closingElement]",

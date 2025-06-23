@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import DOMPurify from "dompurify";
+import { sanitizeHtml } from "@/src/utils/sanitize";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 
@@ -138,16 +138,12 @@ export default function Feed({
                 item.msg === ""
                   ? "&nbsp;" // Use non-breaking space for empty messages
                   : item.align === "right"
-                  ? `${DOMPurify.sanitize(item.msg, {
-                      ADD_ATTR: ["target", "rel"],
-                    })}<b> — ${DOMPurify.sanitize(item.sender, {
-                      ADD_ATTR: ["target", "rel"],
-                    })}</b>`
-                  : `<b>${DOMPurify.sanitize(item.sender, {
-                      ADD_ATTR: ["target", "rel"],
-                    })} — </b>${DOMPurify.sanitize(item.msg, {
-                      ADD_ATTR: ["target", "rel"],
-                    })}`,
+                  ? `${sanitizeHtml(item.msg)}<b> — ${sanitizeHtml(
+                      item.sender
+                    )}</b>`
+                  : `<b>${sanitizeHtml(item.sender)} — </b>${sanitizeHtml(
+                      item.msg
+                    )}`,
             }}
           />
         ))}
