@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState, useEffect } from "react";
 import NextImage from "next/image"; // need to rename so that it doesnt override the Image() namespace
 

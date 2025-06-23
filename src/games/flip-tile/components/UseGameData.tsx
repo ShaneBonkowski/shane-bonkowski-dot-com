@@ -1,3 +1,5 @@
+"use client";
+
 import { useSyncExternalStore } from "react";
 import { gameDataStore } from "@/src/games/flip-tile/game-data-store";
 

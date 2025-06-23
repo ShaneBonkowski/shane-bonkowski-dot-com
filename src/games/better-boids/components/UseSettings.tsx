@@ -1,3 +1,5 @@
+"use client";
+
 import { useSyncExternalStore } from "react";
 import { settingsStore } from "@/src/games/better-boids/settings-store";
 
