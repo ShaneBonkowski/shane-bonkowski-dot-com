@@ -1,7 +1,7 @@
 import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { StoryDataProps } from "@/src/types/data-props";
+import { StoryMetadataProps } from "@/src/types/data-props";
 
-const imageData: StoryDataProps = {
+const imageData: StoryMetadataProps = {
   title: "Strange Love",
   subtitle: "Shane Bonkowski",
   date: "April 6, 2022",

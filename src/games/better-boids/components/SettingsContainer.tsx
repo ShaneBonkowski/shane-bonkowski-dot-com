@@ -5,15 +5,15 @@ import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
+import { UseSettings } from "@/src/games/better-boids/components/UseSettings";
 import Image from "next/image";
 
-export const settings = {
+const settingsConfig = {
   alignmentFactor: {
     title: "Alignment",
     desc: "Determines how much boids align with their neighbors.",
     image: "/webps/games/better-boids-alignment-graphic.webp",
-    type: "slider",
-    value: 0.3,
+    type: "slider" as const,
     lowerBound: 0.1,
     upperBound: 1,
     step: 0.1,
@@ -22,8 +22,7 @@ export const settings = {
     title: "Cohesion",
     desc: "Controls how strongly boids move toward the center of their group.",
     image: "/webps/games/better-boids-cohesion-graphic.webp",
-    type: "slider",
-    value: 0.054,
+    type: "slider" as const,
     lowerBound: 0.01,
     upperBound: 0.1,
     step: 0.01,
@@ -32,8 +31,7 @@ export const settings = {
     title: "Separation",
     desc: "Determines how much boids avoid crowding each other.",
     image: "/webps/games/better-boids-separation-graphic.webp",
-    type: "slider",
-    value: 0.935,
+    type: "slider" as const,
     lowerBound: 0.5,
     upperBound: 1,
     step: 0.01,
@@ -42,8 +40,7 @@ export const settings = {
     title: "Speed",
     desc: "Controls how fast the boids move.",
     image: "/webps/games/better-boids-velocity-graphic.webp",
-    type: "slider",
-    value: 0.6,
+    type: "slider" as const,
     lowerBound: 0.1,
     upperBound: 5,
     step: 0.1,
@@ -52,8 +49,7 @@ export const settings = {
     title: "Flock Radius",
     desc: "Defines the radius within which boids consider their neighbors.",
     image: "/webps/games/better-boids-search-radius-graphic.webp",
-    type: "slider",
-    value: 90,
+    type: "slider" as const,
     lowerBound: 10,
     upperBound: 100,
     step: 1,
@@ -62,11 +58,7 @@ export const settings = {
     title: "Leader Boid",
     desc: "Enables or disables the leader boid follow behavior on hold and drag.",
     image: "/webps/games/better-boids-leader-follow-graphic.webp",
-    type: "checkbox",
-    value: true,
-    lowerBound: null,
-    upperBound: null,
-    step: null,
+    type: "checkbox" as const,
   },
 };
 
@@ -74,17 +66,17 @@ const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
-  const [, forceUpdate] = useState(0); // Dummy state to force re-renders
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const settings = UseSettings();
 
   const openWindow = () => {
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
+      dispatchMenuEvent("Settings", "open");
     }, 150);
-
-    dispatchMenuEvent("Info", "open");
   };
 
   const closeWindow = () => {
@@ -93,19 +85,36 @@ const SettingsContainer: React.FC = () => {
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
+      dispatchMenuEvent("Settings", "close");
     }, 150);
-
-    dispatchMenuEvent("Info", "close");
   };
 
   const handleSliderChange = (key: string, value: number) => {
-    settings[key as keyof typeof settings].value = value;
-    forceUpdate((prev) => prev + 1); // Force a re-render
+    switch (key) {
+      case "alignmentFactor":
+        settings.setAlignmentFactor(value);
+        break;
+      case "cohesionFactor":
+        settings.setCohesionFactor(value);
+        break;
+      case "separationFactor":
+        settings.setSeparationFactor(value);
+        break;
+      case "speed":
+        settings.setSpeed(value);
+        break;
+      case "flockSearchRadius":
+        settings.setFlockSearchRadius(value);
+        break;
+    }
   };
 
   const handleCheckboxChange = (key: string, value: boolean) => {
-    settings[key as keyof typeof settings].value = value;
-    forceUpdate((prev) => prev + 1); // Force a re-render
+    switch (key) {
+      case "leaderBoidEnabled":
+        settings.setLeaderBoidEnabled(value);
+        break;
+    }
   };
 
   useEffect(() => {
@@ -133,26 +142,25 @@ const SettingsContainer: React.FC = () => {
 
   return (
     <>
-      {isButtonVisible && (
-        <GameIconButton
-          onPointerDown={openWindow}
-          icon={<FaCog size={30} />}
-          ariaLabel="Boid Settings"
-          className="fixed bottom-5 left-5"
-        />
-      )}
+      <GameIconButton
+        onPointerDown={openWindow}
+        icon={<FaCog size={30} />}
+        ariaLabel="Settings"
+        className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
+        title="Settings"
+      />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         <div className="w-full h-full p-4" id="boids-settings-container">
           {/* Top Section: Settings Info */}
           <div className="p-2" id="boids-settings-description">
             <div className="flex flex-col items-center">
               <h1 className="text-center my-0">
-                {settings[selectedSetting as keyof typeof settings]?.title ||
-                  "Settings"}
+                {settingsConfig[selectedSetting as keyof typeof settingsConfig]
+                  ?.title || "Settings"}
               </h1>
               <p className="text-center mb-0">
-                {settings[selectedSetting as keyof typeof settings]?.desc ||
-                  "Select a setting to view its description."}
+                {settingsConfig[selectedSetting as keyof typeof settingsConfig]
+                  ?.desc || "Select a setting to view its description."}
               </p>
             </div>
           </div>
@@ -169,8 +177,8 @@ const SettingsContainer: React.FC = () => {
             >
               <Image
                 src={
-                  settings[selectedSetting as keyof typeof settings]?.image ||
-                  settings.alignmentFactor.image
+                  settingsConfig[selectedSetting as keyof typeof settingsConfig]
+                    ?.image || settingsConfig.alignmentFactor.image
                 }
                 alt={selectedSetting || "Description Image"}
                 fill
@@ -183,17 +191,19 @@ const SettingsContainer: React.FC = () => {
               className="w-full landscape:sm:w-1/2 p-4 landscape:sm:p-8 flex flex-col gap-4"
               id="boids-settings-controls"
             >
-              {Object.entries(settings).map(([key, setting]) => {
+              {Object.entries(settingsConfig).map(([key, config]) => {
+                const currentValue = settings[key as keyof typeof settings];
+
                 return (
                   <div key={key}>
-                    {setting?.type === "checkbox" ? (
+                    {config.type === "checkbox" ? (
                       <div className="flex items-center gap-4">
                         <label className="text-sm font-medium">
-                          {setting?.title}
+                          {config.title}
                         </label>
                         <input
                           type="checkbox"
-                          checked={setting.value as boolean}
+                          checked={currentValue as boolean}
                           onChange={(e) => {
                             handleCheckboxChange(key, e.target.checked);
                             // set selected onChange, rather than onPointerDown like
@@ -206,14 +216,14 @@ const SettingsContainer: React.FC = () => {
                     ) : (
                       <>
                         <label className="block text-sm font-medium mb-2">
-                          {setting?.title}: {setting?.value}
+                          {config.title}: {currentValue as number}
                         </label>
                         <input
                           type="range"
-                          min={setting?.lowerBound || 0}
-                          max={setting?.upperBound || 10}
-                          step={setting?.step || 1}
-                          value={setting.value as number}
+                          min={config.lowerBound}
+                          max={config.upperBound}
+                          step={config.step}
+                          value={currentValue as number}
                           onChange={(e) =>
                             handleSliderChange(key, parseFloat(e.target.value))
                           }

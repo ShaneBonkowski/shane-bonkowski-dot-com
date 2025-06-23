@@ -7,7 +7,9 @@ import {
   tileAndBackgroundColors,
 } from "@/src/games/game-of-life/tile-utils";
 import { MainGameScene } from "@/src/games/game-of-life/scenes/main-game-scene";
-import { settings } from "@/src/games/game-of-life/SettingsContainer.tsx";
+import { gameDataStore } from "@/src/games/game-of-life/game-data-store";
+
+const TILE_ON_SCALE_FACTOR = 1.2;
 
 export class Tile extends GameObject {
   public scene: MainGameScene;
@@ -15,14 +17,14 @@ export class Tile extends GameObject {
   public initialClickOnThisTile: boolean = false;
   public qtyLivingNeighbors: number = 0;
   public canClick: boolean = true;
-  public currentTileAnim: Phaser.Tweens.Tween | null = null;
+  public currentTileTween: Phaser.Tweens.Tween | null = null;
   public tileState: number = tileStates.OFF;
 
   constructor(scene: MainGameScene, gridX: number, gridY: number) {
     super(
       "Tile",
-      // init size just so its set, will reset to something else later
-      1,
+      // init scale just so its set, will reset to something else later
+      new Vec2(1, 1),
       // Add physicsBody2D (even though it doesnt "move", it still has a position
       // when screen resizes occur etc.)
       true,
@@ -47,9 +49,8 @@ export class Tile extends GameObject {
       this.onClickToggleTileState();
 
       // Autopause the game if specified to do such
-      if (!this.scene.paused && settings.autoPause.value) {
-        this.scene.togglePause();
-        document.dispatchEvent(new CustomEvent("manualPause"));
+      if (!this.scene.paused && this.scene.autoPause) {
+        gameDataStore.setPaused(true);
       }
     }
 
@@ -101,12 +102,16 @@ export class Tile extends GameObject {
     this.initialClickOnThisTile = false;
     this.qtyLivingNeighbors = 0; // For storing qty of neighbors prior to update loop
     this.canClick = true;
-    this.currentTileAnim = null;
+    this.currentTileTween = null;
 
     // Init the graphics
     const tileSpriteName = "Tile Blank";
-    this.graphic = this.scene.add.sprite(0, 0, tileSpriteName); // spawn at 0,0 to start
-    this.graphic!.setOrigin(0.5, 0.5); // Set the anchor point to the center
+    this.graphic = this.scene.add.sprite(
+      0,
+      0,
+      tileSpriteName
+    ) as Phaser.GameObjects.Sprite; // spawn at 0,0 to start
+    this.graphic.setOrigin(0.5, 0.5); // Set the anchor point to the center
     this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
 
     // Start in off and then change to off. This is so that any necc. vars are updated, without
@@ -114,17 +119,17 @@ export class Tile extends GameObject {
     this.tileState = tileStates.OFF;
     this.changeState(tileStates.OFF);
 
-    // Set position and size
+    // Set position and scale
     const initialPos = this.calculateTilePosition();
     this.physicsBody2D!.position.x = initialPos.x;
     this.physicsBody2D!.position.y = initialPos.y;
-    this.size = this.calculateSize();
+    this.scale = this.calculateScale();
   }
 
   resetTile() {
     this.qtyLivingNeighbors = 0;
     this.canClick = true;
-    this.currentTileAnim = null;
+    this.currentTileTween = null;
 
     // Start in off and then change to off. This is so that any necc. vars are updated, without
     // the game thinking the state "changed" from ON to OFF for e.g.
@@ -132,29 +137,33 @@ export class Tile extends GameObject {
     this.changeState(tileStates.OFF);
   }
 
-  updateSize() {
-    const targetSize = this.calculateSize();
-    if (this.size != null) {
-      this.size = MoreMath.lerpWithThreshold(this.size, targetSize, 1, 1.5);
+  updateScale() {
+    const targetScale = this.calculateScale();
+    if (this.scale != null) {
+      this.scale = new Vec2(
+        MoreMath.lerpWithThreshold(this.scale.x, targetScale.x, 1, 1.5),
+        MoreMath.lerpWithThreshold(this.scale.y, targetScale.y, 1, 1.5)
+      );
     } else {
-      this.size = targetSize;
+      this.scale = targetScale;
     }
   }
 
-  calculateSize(): number {
-    let size = this.calculateDefaultSize();
+  calculateScale(): Vec2 {
+    let scale = this.calculateDefaultScale();
 
     // Add extra for a tile in the ON state
     if (this.tileState == tileStates.ON) {
-      size = this.calculateMaxSize(size);
+      scale = scale * TILE_ON_SCALE_FACTOR;
     }
 
-    return size;
+    return new Vec2(scale, scale);
   }
 
-  calculateDefaultSize(): number {
-    // Calculate the size based on the screen width
-    let size = (window.visualViewport?.height || window.innerHeight) * 0.035;
+  calculateDefaultScale(): number {
+    // Calculate the scale based on the screen width
+    let scale =
+      ((window.visualViewport?.height || window.innerHeight) * 0.035) / 600;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger
@@ -162,18 +171,14 @@ export class Tile extends GameObject {
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
-      size = (window.visualViewport?.height || window.innerHeight) * 0.022;
+      scale =
+        ((window.visualViewport?.height || window.innerHeight) * 0.022) / 600;
     }
 
     // Scale according to zoom!
-    size = size * this.scene.gestureManager.zoomOffset;
+    scale = scale * this.scene.gestureManager.zoomOffset;
 
-    return size;
-  }
-
-  calculateMaxSize(size: number): number {
-    // "max" size is just the size of an ON state tile since it is larger
-    return size * 1.15;
+    return scale;
   }
 
   updatePosition() {
@@ -234,7 +239,9 @@ export class Tile extends GameObject {
     );
 
     // Calculate the starting position for the bottom-left tile in the grid
-    const maxSize = this.calculateMaxSize(this.calculateDefaultSize());
+    // max size = size of tile png which is 600px * max scale
+    const maxSize = 600 * this.calculateDefaultScale() * TILE_ON_SCALE_FACTOR;
+
     const tileSpacing = maxSize + smallAmountForGrid;
     let startGridX, startGridY;
 
@@ -352,13 +359,13 @@ export class Tile extends GameObject {
     // - Dead cell with 3 neighbors becomes alive (reproduction).
     if (this.tileState == tileStates.ON) {
       if (
-        this.qtyLivingNeighbors < settings.underpopulation.value ||
-        this.qtyLivingNeighbors > settings.overpopulation.value
+        this.qtyLivingNeighbors < this.scene.underpopulation ||
+        this.qtyLivingNeighbors > this.scene.overpopulation
       ) {
         this.changeState(tileStates.OFF);
       }
     } else if (this.tileState == tileStates.OFF) {
-      if (this.qtyLivingNeighbors == settings.reproduction.value) {
+      if (this.qtyLivingNeighbors == this.scene.reproduction) {
         this.changeState(tileStates.ON);
       }
     }
@@ -377,7 +384,7 @@ export class Tile extends GameObject {
 
   changeState(newState: number) {
     // Make sure no anim is playing prior to updating tile state!
-    this.stopCurrentTileAnim();
+    this.stopCurrentTileTween();
 
     // If state changed, update population.
     if (this.tileState != newState) {
@@ -396,39 +403,39 @@ export class Tile extends GameObject {
   renderTileGraphics() {
     this.updateVisualAttrs();
     if (this.tileState == tileStates.OFF) {
-      this.updateGraphic(tileAndBackgroundColors[settings.colorTheme.value][1]);
+      this.updateGraphic(tileAndBackgroundColors[this.scene.colorTheme][1]);
     } else {
-      this.updateGraphic(tileAndBackgroundColors[settings.colorTheme.value][0]);
+      this.updateGraphic(tileAndBackgroundColors[this.scene.colorTheme][0]);
     }
   }
 
   updateVisualAttrs() {
     this.updatePosition();
-    this.updateSize();
+    this.updateScale();
   }
 
   playSpinAnim() {
-    this.stopCurrentTileAnim();
+    this.stopCurrentTileTween();
     this.canClick = false;
 
     // Rotate the graphic 360 degrees
-    this.currentTileAnim = this.scene.tweens.add({
+    this.currentTileTween = this.scene.tweens.add({
       targets: this.graphic,
       angle: "+=360",
       duration: 220,
       ease: "Linear",
       repeat: 0, // Do not repeat
       onComplete: () => {
-        this.stopCurrentTileAnim();
+        this.stopCurrentTileTween();
       },
     });
   }
 
-  stopCurrentTileAnim() {
+  stopCurrentTileTween() {
     // Stop the anim if there is one
-    if (this.currentTileAnim) {
-      this.currentTileAnim.stop();
-      this.currentTileAnim = null;
+    if (this.currentTileTween) {
+      this.currentTileTween.stop();
+      this.currentTileTween = null;
 
       // Ensure attrs that may have changed in the anim are reset
       this.graphic!.angle = 0;

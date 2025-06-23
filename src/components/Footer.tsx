@@ -41,7 +41,8 @@ const Footer: React.FC = () => {
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
             } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
-            aria-label="LinkedIn Profile"
+            aria-label="Shane's LinkedIn"
+            title="Shane's LinkedIn"
           >
             <FaLinkedin size={24} />
           </a>
@@ -54,11 +55,17 @@ const Footer: React.FC = () => {
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
             } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
-            aria-label="GitHub Profile"
+            aria-label="Shane's GitHub"
+            title="Shane's GitHub"
           >
             <FaGithub size={24} />
           </a>
-          <Link href="/" className="link" aria-label="Home">
+          <Link
+            href="/"
+            className="link"
+            aria-label="Shane's Games Home"
+            title="Shane's Games Home"
+          >
             <div
               className={`text-primary-text-color-light dark:text-primary-text-color ${
                 isHoverable
@@ -82,6 +89,7 @@ const Footer: React.FC = () => {
           onPointerEnter={() => isHoverable && setIsHovered(true)}
           onPointerLeave={() => isHoverable && setIsHovered(false)}
           aria-label="Privacy Policy"
+          title="Privacy Policy"
         >
           <p
             className={`text-secondary-text-color-light dark:text-secondary-text-color ${

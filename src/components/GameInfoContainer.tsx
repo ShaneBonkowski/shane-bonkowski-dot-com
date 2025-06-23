@@ -1,13 +1,22 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import InfoButton from "@/src/components/InfoButton";
+import GameIconButton from "@/src/components/GameIconButton";
 import GameInfoWindow from "@/src/components/GameInfoWindow";
 import { ContentDataProps } from "@/src/types/data-props";
 import { dispatchMenuEvent } from "@/src/events/game-events";
+import { FaInfoCircle } from "react-icons/fa";
 
-const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
+const GameInfoContainer: React.FC<{
+  infoData: ContentDataProps[];
+  lightModeDark?: boolean;
+  darkModeLight?: boolean;
+  whiteBackground?: boolean;
+}> = ({
   infoData,
+  lightModeDark = false,
+  darkModeLight = false,
+  whiteBackground = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
@@ -18,9 +27,8 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
+      dispatchMenuEvent("Info", "open");
     }, 150);
-
-    dispatchMenuEvent("Info", "open");
   };
 
   const closeInfoWindow = () => {
@@ -29,9 +37,8 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
     // click on the box behind the button.
     timeoutRef.current = setTimeout(() => {
       setIsVisible(false);
+      dispatchMenuEvent("Info", "close");
     }, 150);
-
-    dispatchMenuEvent("Info", "close");
   };
 
   useEffect(() => {
@@ -54,18 +61,22 @@ const GameInfoContainer: React.FC<{ infoData: ContentDataProps[] }> = ({
 
   return (
     <>
-      {isButtonVisible && (
-        <InfoButton
-          onPointerDown={openInfoWindow}
-          aria-label="Open information window"
-        />
-      )}
+      <GameIconButton
+        onPointerDown={openInfoWindow}
+        icon={<FaInfoCircle size={30} />}
+        ariaLabel="Game Information"
+        className={`fixed bottom-5 right-5 ${isButtonVisible ? "" : "hidden"}`}
+        lightModeDark={lightModeDark}
+        darkModeLight={darkModeLight}
+        whiteBackground={whiteBackground}
+        title="Game Information"
+      />
       <GameInfoWindow
         isVisible={isVisible}
         onClose={closeInfoWindow}
         infoData={infoData}
         aria-label="Game information window"
-      ></GameInfoWindow>
+      />
     </>
   );
 };

@@ -1,5 +1,8 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchCloseLoadingScreenEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import {
   instantiateTiles,
   tileGridAttrs,
@@ -18,7 +21,14 @@ import {
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { GestureManager } from "@/src/utils/gesture-manager";
 import { Tile } from "@/src/games/game-of-life/tile";
-import { settings } from "@/src/games/game-of-life/SettingsContainer";
+import {
+  settingsStore,
+  Settings,
+} from "@/src/games/game-of-life/settings-store";
+import {
+  gameDataStore,
+  GameData,
+} from "@/src/games/game-of-life/game-data-store";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 export let tiles: Tile[][] = [];
@@ -26,6 +36,7 @@ export let tiles: Tile[][] = [];
 const unseededRandom = new SeededRandom();
 
 export class MainGameScene extends Generic2DGameScene {
+  public paused: boolean = false;
   private resizeObserver: ResizeObserver | null = null;
   public uiMenuOpen: boolean = false;
   public discoModeUpdateInterval: number;
@@ -33,15 +44,29 @@ export class MainGameScene extends Generic2DGameScene {
   public lastRenderUpdateTime: number;
   public lastGameStateUpdateTime: number;
   public gameOfLifeType: string;
-  public discoMode: boolean;
   public discoModeLastUpdateTime: number;
-  public autoPlayMode: boolean;
   public autoPlayModeLastUpdateTime: number;
   public livingTilespaceSet: LivingTilespaceSet;
   public gestureManager: GestureManager;
   private currentBackgroundColor: string | null = null;
   private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 250;
+  private windowResizeInterval: number = 2000;
+
+  // Settings
+  public updateInterval: number = 0;
+  public underpopulation: number = 0;
+  public overpopulation: number = 0;
+  public reproduction: number = 0;
+  public colorTheme: number = 0;
+  public autoPause: boolean = true;
+  public infiniteEdges: boolean = true;
+  public diagonalNeighbors: boolean = true;
+
+  // Game data
+  public population: number = 0;
+  public generation: number = 0;
+  public autoPlayMode: boolean = false;
+  public discoMode: boolean = false;
 
   constructor() {
     // Call the parent Generic2DGameScene's constructor with
@@ -55,9 +80,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.lastGameStateUpdateTime = 0;
 
     this.gameOfLifeType = gameOfLifeTypes.CONWAY;
-    this.discoMode = false;
     this.discoModeLastUpdateTime = 0;
-    this.autoPlayMode = false;
     this.autoPlayModeLastUpdateTime = 0;
 
     this.livingTilespaceSet = new LivingTilespaceSet();
@@ -77,6 +100,9 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
+    this.setupSyncedSettings();
+    this.setupSyncedGameData();
+
     // (setting tile layout creates the tiles)
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
@@ -89,30 +115,73 @@ export class MainGameScene extends Generic2DGameScene {
       this.setLayoutForComputer();
     }
 
-    // If there is local storage with currentColorThemeIndex, set
-    // color theme to that to start!
-    if (localStorage.getItem("currentColorThemeIndex")) {
-      settings.colorTheme.value = parseInt(
-        localStorage.getItem("currentColorThemeIndex") as string
-      );
-    }
-
-    // Dispatch a custom event saying that color change just occured
-    // due to the game class, not the slider.
-    document.dispatchEvent(new CustomEvent("changeColorThemeFromMainGame"));
-
     // After everything is loaded in, begin the game
     this.gameStarted = true;
-    this.paused = true; // start off paused
 
+    dispatchCloseLoadingScreenEvent("Game of Life");
     dispatchGameStartedEvent("Game of Life");
+  }
 
-    // DEBUG
-    console.log("Game of Life scene created with tiles: ");
-    for (let row = 0; row < tiles.length; row++) {
-      for (let col = 0; col < tiles[row].length; col++) {
-        console.log(tiles[row][col]);
-      }
+  setupSyncedSettings() {
+    // Get snapshot of the game of life settings, then load them in and subscribe to changes.
+    const settings = settingsStore.getSnapshot();
+
+    this.setSettingsFromStore(settings);
+
+    settingsStore.subscribe(() => {
+      const newSettings = settingsStore.getSnapshot();
+      this.handleSettingsChange(newSettings);
+    });
+  }
+
+  handleSettingsChange = (settings: Settings) => {
+    this.setSettingsFromStore(settings);
+  };
+
+  setSettingsFromStore(settings: Settings) {
+    this.updateInterval = settings.updateInterval;
+    this.underpopulation = settings.underpopulation;
+    this.overpopulation = settings.overpopulation;
+    this.reproduction = settings.reproduction;
+    this.colorTheme = settings.colorTheme;
+    this.autoPause = settings.autoPause;
+    this.infiniteEdges = settings.infiniteEdges;
+    this.diagonalNeighbors = settings.diagonalNeighbors;
+  }
+
+  setupSyncedGameData() {
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    const gameData = gameDataStore.getSnapshot();
+
+    this.setGameDataFromStore(gameData);
+
+    gameDataStore.subscribe(() => {
+      const newGameData = gameDataStore.getSnapshot();
+      this.handleGameDataChange(newGameData);
+    });
+  }
+
+  handleGameDataChange = (gameData: GameData) => {
+    this.setGameDataFromStore(gameData);
+  };
+
+  setGameDataFromStore(gameData: GameData) {
+    const incomingAutoPlayMode = this.autoPlayMode;
+    const incomingDiscoMode = this.discoMode;
+
+    this.population = gameData.population;
+    this.generation = gameData.generation;
+    this.paused = gameData.paused;
+    this.autoPlayMode = gameData.autoPlayMode;
+    this.discoMode = gameData.discoMode;
+
+    // If the game is paused, unpause it if autoplay is turned on (false -> true)
+    if (this.paused && !incomingAutoPlayMode && this.autoPlayMode) {
+      gameDataStore.setPaused(false);
+    }
+    // If the game is paused, unpause it if disco mode is turned on (false -> true)
+    if (this.paused && !incomingDiscoMode && this.discoMode) {
+      gameDataStore.setPaused(false);
     }
   }
 
@@ -120,12 +189,9 @@ export class MainGameScene extends Generic2DGameScene {
     super.update(time, delta);
 
     if (this.gameStarted) {
-      if (this.paused == false) {
+      if (!this.paused) {
         // Perform tile grid updates on tile updateInterval
-        if (
-          time - this.lastGameStateUpdateTime >=
-          settings.updateInterval.value
-        ) {
+        if (time - this.lastGameStateUpdateTime >= this.updateInterval) {
           this.lastGameStateUpdateTime = time;
 
           // Auto mode: automatically place shapes if the criteria fits
@@ -154,12 +220,6 @@ export class MainGameScene extends Generic2DGameScene {
             ) {
               this.discoModeLastUpdateTime = time;
               this.advanceToNextColorTheme();
-
-              // Dispatch a custom event saying that disco mode just caused
-              // a color change.
-              document.dispatchEvent(
-                new CustomEvent("changeColorThemeFromMainGame")
-              );
 
               // // Play a vignette animation (make it nearly as long as the disco mode interval)
               // vignetteFade(this.discoModeUpdateInterval); // ms
@@ -198,7 +258,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Only update the background color if it has changed
     const newBackgroundColor = this.hexToCssColor(
-      tileAndBackgroundColors[settings.colorTheme.value][2]
+      tileAndBackgroundColors[this.colorTheme][2]
     );
 
     if (
@@ -213,8 +273,8 @@ export class MainGameScene extends Generic2DGameScene {
   runGameOfLifeIteration() {
     // Run the life iteration
     const toCheckTileGridSpaceLocs = this.checkForNeighborTiles(
-      settings.diagonalNeighbors.value,
-      settings.infiniteEdges.value
+      this.diagonalNeighbors,
+      this.infiniteEdges
     );
 
     if (this.gameOfLifeType == gameOfLifeTypes.CONWAY) {
@@ -233,16 +293,7 @@ export class MainGameScene extends Generic2DGameScene {
       newGenerationVal = 0;
     }
 
-    // Only fire an event if the generation value actually changed
-    if (newGenerationVal != this.generation) {
-      document.dispatchEvent(
-        new CustomEvent("genChange", {
-          detail: { message: newGenerationVal.toString() },
-        })
-      );
-    }
-
-    this.generation = newGenerationVal;
+    gameDataStore.setGeneration(newGenerationVal);
   }
 
   updatePopulation(newPopulationVal: number) {
@@ -251,25 +302,15 @@ export class MainGameScene extends Generic2DGameScene {
       newPopulationVal = 0;
     }
 
-    // Only fire an event if the population value actually changed
-    if (newPopulationVal != this.population) {
-      document.dispatchEvent(
-        new CustomEvent("popChange", {
-          detail: { message: newPopulationVal.toString() },
-        })
-      );
-    }
-
-    this.population = newPopulationVal;
-
     // If the population is 0, pause the game if it is not already.
     // ONLY IF NOT IN AUTOPLAY MODE!
-    if (this.population == 0 && !this.autoPlayMode) {
+    if (newPopulationVal == 0 && !this.autoPlayMode) {
       if (!this.paused) {
-        this.togglePause();
-        document.dispatchEvent(new CustomEvent("manualPause"));
+        gameDataStore.setPaused(true);
       }
     }
+
+    gameDataStore.setPopulation(newPopulationVal);
   }
 
   checkForNeighborTiles(
@@ -337,15 +378,8 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
 
-    document.addEventListener("togglePause", this.handleTogglePause);
-    document.addEventListener("toggleDisco", this.handleToggleDisco);
-    document.addEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.addEventListener("clickAdvance", this.handleClickAdvance);
     document.addEventListener("resetTiles", this.handleResetTiles);
-    document.addEventListener(
-      "changeColorThemeFromSettings",
-      this.handleUpdateColorThemeFromSettings
-    );
   }
 
   /*
@@ -361,28 +395,9 @@ export class MainGameScene extends Generic2DGameScene {
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
 
-    document.removeEventListener("togglePause", this.handleTogglePause);
-    document.removeEventListener("toggleDisco", this.handleToggleDisco);
-    document.removeEventListener("toggleAutomatic", this.handleToggleAutomatic);
     document.removeEventListener("clickAdvance", this.handleClickAdvance);
     document.removeEventListener("resetTiles", this.handleResetTiles);
-    document.removeEventListener(
-      "changeColorThemeFromSettings",
-      this.handleUpdateColorThemeFromSettings
-    );
   }
-
-  handleTogglePause = () => {
-    this.togglePause();
-  };
-
-  handleToggleDisco = () => {
-    this.toggleDisco();
-  };
-
-  handleToggleAutomatic = () => {
-    this.toggleAutoPlay();
-  };
 
   handleClickAdvance = () => {
     this.clickAdvance();
@@ -392,8 +407,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.resetTiles();
 
     if (!this.paused) {
-      this.togglePause();
-      document.dispatchEvent(new CustomEvent("manualPause"));
+      gameDataStore.setPaused(true);
     }
   };
 
@@ -521,17 +535,12 @@ export class MainGameScene extends Generic2DGameScene {
     this.updateGeneration(0);
   }
 
-  togglePause() {
-    this.paused = !this.paused;
-  }
-
   clickAdvance() {
     if (this.paused) {
       this.runGameOfLifeIteration();
     } else {
       // Manually pause on advance if playing already
-      this.togglePause();
-      document.dispatchEvent(new CustomEvent("manualPause"));
+      gameDataStore.setPaused(true);
     }
   }
 
@@ -542,7 +551,7 @@ export class MainGameScene extends Generic2DGameScene {
     >;
     const randomShapeIndex = unseededRandom.getRandomInt(
       0,
-      cgolTileShapeKeys.length - 1
+      cgolTileShapeKeys.length
     );
     const randomShape = new gameOfLifeShape(
       cgolTileShapeKeys[randomShapeIndex]
@@ -614,51 +623,26 @@ export class MainGameScene extends Generic2DGameScene {
     });
   }
 
-  toggleAutoPlay() {
-    this.autoPlayMode = !this.autoPlayMode;
-
-    // If the game is paused, unpause it if autoplay is turned on
-    if (this.paused && this.autoPlayMode) {
-      this.togglePause();
-      document.dispatchEvent(new CustomEvent("manualUnpause"));
-    }
-  }
-
-  toggleDisco() {
-    this.discoMode = !this.discoMode;
-  }
-
   hexToCssColor(hex: number): string {
     return `#${hex.toString(16).padStart(6, "0")}`;
   }
 
-  handleUpdateColorThemeFromSettings = () => {
-    this.updateColorThemeCookie();
-  };
-
   advanceToNextColorTheme() {
-    settings.colorTheme.value++;
-    if (settings.colorTheme.value > tileAndBackgroundColors.length - 1) {
-      settings.colorTheme.value = 0;
+    let desiredColorTheme = this.colorTheme + 1;
+    if (desiredColorTheme > tileAndBackgroundColors.length - 1) {
+      desiredColorTheme = 0;
     }
-    this.updateColorThemeCookie();
+
+    settingsStore.setColorTheme(desiredColorTheme);
   }
 
   decreaseToPreviousColorTheme() {
-    settings.colorTheme.value--;
-    if (settings.colorTheme.value < 0) {
-      settings.colorTheme.value = tileAndBackgroundColors.length - 1;
+    let desiredColorTheme = this.colorTheme - 1;
+    if (desiredColorTheme < 0) {
+      desiredColorTheme = tileAndBackgroundColors.length - 1;
     }
-    this.updateColorThemeCookie();
-  }
 
-  updateColorThemeCookie() {
-    // Write color theme to localStorage so that the color theme persists on
-    // page reload etc.
-    localStorage.setItem(
-      "currentColorThemeIndex",
-      settings.colorTheme.value.toString()
-    );
+    settingsStore.setColorTheme(desiredColorTheme);
   }
 
   destroyTiles() {
@@ -679,6 +663,8 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
+    settingsStore.resetData();
+    gameDataStore.resetData();
     this.destroyTiles();
     this.gestureManager.destroy();
   }

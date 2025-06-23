@@ -24,7 +24,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     // If the user has scrolled past a given threshold on a previous site visit,
     // show the popup asking if they would like to pick up where they left off.
     const savedScrollProgress = localStorage.getItem(
-      `${pageName}-scroll-progress`
+      `${pageName}-scrollProgress`
     );
 
     if (savedScrollProgress) {
@@ -51,7 +51,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
       ) {
         const scrollPosition = window.scrollY;
         localStorage.setItem(
-          `${pageName}-scroll-progress`,
+          `${pageName}-scrollProgress`,
           scrollPosition.toString()
         );
       }

@@ -38,6 +38,17 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
+    imageUrl: "/webps/games/cowpoke-game-cover.webp",
+    linkUrl: "/games/cowpoke",
+    title: "Cowpoke",
+    description:
+      "Endless wild west side-scroller with turn-based combat. Face ruthless outlaws, scavenge powerful loot, and grow stronger with every showdown.",
+    searchTags:
+      "cowpoke, cow, poke, western, wild, west, side-scroller, fighting, fight",
+    contentType: "games",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/games/flip-tile-cover.webp",
     linkUrl: "/games/flip-tile",
     title: "Flip Tile",

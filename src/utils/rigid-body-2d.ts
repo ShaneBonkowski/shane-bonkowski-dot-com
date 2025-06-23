@@ -11,7 +11,7 @@ export class RigidBody2D {
   /**
    * Create a RigidBody2D.
    * @param {GameObject} gameObject - Parent game obj
-   * @param {Vec2} hitboxSize - Size of the hitbox for collision
+   * @param {Vec2} hitboxSize - Size of the hitbox for collision in px.
    */
   constructor(gameObject: GameObject, hitboxSize: Vec2 = new Vec2(1, 1)) {
     this.gameObject = gameObject;

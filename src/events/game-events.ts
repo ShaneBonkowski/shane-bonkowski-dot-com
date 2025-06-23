@@ -47,3 +47,18 @@ export const dispatchGameStartedEvent = (gameName: string) => {
     })
   );
 };
+
+/**
+ * Dispatches a custom event for when loading screen can be closed.
+ *
+ * @param gameName - The name of the game (e.g. "Better Boids").
+ */
+export const dispatchCloseLoadingScreenEvent = (gameName: string) => {
+  document.dispatchEvent(
+    new CustomEvent("closeLoadingScreen", {
+      detail: {
+        message: `${gameName} Hide Loading Screen`,
+      },
+    })
+  );
+};

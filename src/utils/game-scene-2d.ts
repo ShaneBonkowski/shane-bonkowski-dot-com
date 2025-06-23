@@ -5,7 +5,6 @@ import Phaser from "@/public/js/phaser.min.js";
  */
 export class Generic2DGameScene extends Phaser.Scene {
   public gameStarted: boolean;
-  public paused: boolean;
   public isInitialized: boolean;
 
   /**
@@ -17,7 +16,6 @@ export class Generic2DGameScene extends Phaser.Scene {
     super({ key: sceneName });
 
     this.gameStarted = false;
-    this.paused = false;
     this.isInitialized = true;
   }
 

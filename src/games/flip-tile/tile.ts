@@ -15,6 +15,9 @@ export class Tile extends GameObject {
   public tileSpaceCoord: Vec2;
   public gridSize: number;
   public tileState: number;
+
+  public celebrationTween: Phaser.Tweens.Tween | null = null;
+  public spinTween: Phaser.Tweens.Tween | null = null;
   public animationPlaying: boolean;
 
   constructor(
@@ -27,8 +30,8 @@ export class Tile extends GameObject {
     // Set some properties on the parent GameObject class
     super(
       "Tile",
-      // init size just so its set, will reset to something else later
-      1,
+      // init scale just so its set, will reset to something else later
+      new Vec2(1, 1),
       // physicsBody2D
       true,
       // rigidBody2D
@@ -60,11 +63,15 @@ export class Tile extends GameObject {
   }
 
   initTile() {
-    this.size = this.calculateTileSize();
-    this.graphic = this.scene.add.sprite(0, 0, "Tile Red"); // init, will be changed in updateTileColor
+    this.scale = this.calculateTileScale();
+    this.graphic = this.scene.add.sprite(
+      0,
+      0,
+      "Tile Red"
+    ) as Phaser.GameObjects.Sprite;
     this.graphic!.setInteractive(); // make it so this graphic can be clicked on etc.
     this.updateTileColor();
-    this.graphic!.setOrigin(0.5, 0.5); // Set the anchor point to the center
+    this.graphic.setOrigin(0.5, 0.5); // Set the anchor point to the center
   }
 
   addText() {
@@ -117,9 +124,10 @@ export class Tile extends GameObject {
   }
 
   updateTextPos() {
+    // Set pos wrt to calculated tile size (200px sprite * scale)
     this.text!.setPosition(
-      this.physicsBody2D!.position.x + this.graphic!.displayWidth / 2,
-      this.physicsBody2D!.position.y - this.graphic!.displayHeight / 2
+      this.physicsBody2D!.position.x + (200 * this.scale.x) / 2,
+      this.physicsBody2D!.position.y - (200 * this.scale.y) / 2
     );
   }
 
@@ -155,14 +163,16 @@ export class Tile extends GameObject {
   }
 
   playClickSpinAnim() {
-    document.dispatchEvent(new CustomEvent("tileSpin"));
-
     // cannot click during animation
     this.scene.tryToDisableClick();
     this.animationPlaying = true;
 
     // Rotate the graphic 360 degrees
-    this.scene.tweens.add({
+    if (this.spinTween) {
+      this.spinTween.stop();
+    }
+
+    this.spinTween = this.scene.tweens.add({
       targets: this.graphic,
       angle: "+=360",
       duration: 1000 * sharedTileAttrs.clickTimer,
@@ -189,11 +199,15 @@ export class Tile extends GameObject {
     this.animationPlaying = true;
 
     // Play animation
-    this.scene.tweens.add({
+    if (this.celebrationTween) {
+      this.celebrationTween.stop();
+    }
+
+    this.celebrationTween = this.scene.tweens.add({
       targets: this.graphic,
       //angle: "+=360",
-      displayWidth: this.size * sharedTileAttrs.tileSpacingFactor,
-      displayHeight: this.size * sharedTileAttrs.tileSpacingFactor,
+      scaleX: this.calculateTileScale().x * sharedTileAttrs.tileSpacingFactor,
+      scaleY: this.calculateTileScale().y * sharedTileAttrs.tileSpacingFactor,
       duration: duration / 2, // /2 since yoyo doubles the time
       ease: "Sine.easeInOut",
       yoyo: true, // Return to original scale and rotation after the animation
@@ -201,8 +215,9 @@ export class Tile extends GameObject {
         tween: Phaser.Tweens.Tween,
         target: Phaser.GameObjects.Sprite
       ) => {
-        // Ensures that the size variable reflects the scale as it changes with the tween
-        this.size = target.displayWidth; // Assuming width == height
+        // Ensures that the scale variable reflects the scale as it changes with the tween
+        this.scale.x = target.scaleX;
+        this.scale.y = target.scaleY;
       },
       onComplete: () => {
         // Can click after all animations are done
@@ -272,31 +287,37 @@ export class Tile extends GameObject {
   findTileLocFromTileSpace(): Vec2 {
     const centerX = (window.visualViewport?.width || window.innerWidth) / 2;
     const centerY = (window.visualViewport?.height || window.innerHeight) / 2;
-    const tileSpacing = this.size * sharedTileAttrs.tileSpacingFactor;
+
+    // Original tile is 200px, so spacing is og tile sprite size * scale * spacing factor
+    const tileSpacingX =
+      200 * this.calculateTileScale().x * sharedTileAttrs.tileSpacingFactor;
+    const tileSpacingY =
+      200 * this.calculateTileScale().y * sharedTileAttrs.tileSpacingFactor;
 
     // Calculate the starting position for the top-left tile in the grid
     let startGridX, startGridY;
 
     if (this.gridSize % 2 === 0) {
       // Even grid size
-      startGridX = centerX - (this.gridSize / 2 - 0.5) * tileSpacing;
-      startGridY = centerY - (this.gridSize / 2 - 0.5) * tileSpacing;
+      startGridX = centerX - (this.gridSize / 2 - 0.5) * tileSpacingX;
+      startGridY = centerY - (this.gridSize / 2 - 0.5) * tileSpacingY;
     } else {
       // Odd grid size
-      startGridX = centerX - ((this.gridSize - 1) / 2) * tileSpacing;
-      startGridY = centerY - ((this.gridSize - 1) / 2) * tileSpacing;
+      startGridX = centerX - ((this.gridSize - 1) / 2) * tileSpacingX;
+      startGridY = centerY - ((this.gridSize - 1) / 2) * tileSpacingY;
     }
 
     // Calculate the position of the current tile in the grid
-    const tileX = startGridX + this.tileSpaceCoord.x * tileSpacing;
-    const tileY = startGridY + this.tileSpaceCoord.y * tileSpacing;
+    const tileX = startGridX + this.tileSpaceCoord.x * tileSpacingX;
+    const tileY = startGridY + this.tileSpaceCoord.y * tileSpacingY;
 
     return new Vec2(tileX, tileY);
   }
 
-  calculateTileSize(): number {
-    // Calculate the tile size based on the screen width
-    let tileSize = (window.visualViewport?.height || window.innerHeight) * 0.15;
+  calculateTileScale(): Vec2 {
+    // Calculate the tile scale based on the screen width
+    let tileScale =
+      ((window.visualViewport?.height || window.innerHeight) * 0.15) / 200;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // Phone screen has larger tile
@@ -304,15 +325,16 @@ export class Tile extends GameObject {
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
-      tileSize = (window.visualViewport?.height || window.innerHeight) * 0.09;
+      tileScale =
+        ((window.visualViewport?.height || window.innerHeight) * 0.09) / 200;
     }
 
-    return tileSize;
+    return new Vec2(tileScale, tileScale);
   }
 
   handleWindowResize() {
     // Reinitialize the tile and its graphic on resize
-    this.size = this.calculateTileSize();
+    this.scale = this.calculateTileScale();
 
     // Init at provided location, and centered
     const spawnLoc = this.findTileLocFromTileSpace();

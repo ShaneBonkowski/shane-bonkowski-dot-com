@@ -4,7 +4,7 @@
 
 - Duplicate one of the existing games in `/app/games` (ideally `game-template`).
 - Rename the duplicated game directory to `{game-name}`.
-- Update the `gameData` variable.
+- Update the `gameMetadata` variable.
 - Replace the title, description, etc.
 
 ### 2. Create a cover image for the game.

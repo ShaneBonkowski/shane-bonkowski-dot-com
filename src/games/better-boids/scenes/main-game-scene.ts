@@ -4,8 +4,12 @@ import { Physics } from "@/src/utils/physics";
 import { Vec2 } from "@/src/utils/vector";
 import { instantiateBoids } from "@/src/games/better-boids/boid-utils";
 import { GameObject } from "@/src/utils/game-object";
-import { dispatchGameStartedEvent } from "@/src/events/game-events";
+import {
+  dispatchCloseLoadingScreenEvent,
+  dispatchGameStartedEvent,
+} from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
+import { settingsStore } from "@/src/games/better-boids/settings-store";
 
 // Used to determine if pointer is held down
 const holdThreshold: number = 0.1; // seconds
@@ -17,7 +21,7 @@ export class MainGameScene extends Generic2DGameScene {
   private resizeObserver: ResizeObserver | null = null;
   public lastKnownWindowSize: Vec2 | null = null;
   private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 250;
+  private windowResizeInterval: number = 2000;
   public uiMenuOpen: boolean = false;
 
   constructor() {
@@ -26,6 +30,9 @@ export class MainGameScene extends Generic2DGameScene {
     super("MainGameScene");
 
     // Constructor logic for this scene
+    // ...
+
+    // Last thing we do is set the lastKnownWindowSize to the current screen size
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
@@ -64,6 +71,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.boids = instantiateBoids(this, 40);
 
     this.gameStarted = true;
+    dispatchCloseLoadingScreenEvent("Better Boids");
     dispatchGameStartedEvent("Better Boids");
   }
 
@@ -221,10 +229,8 @@ export class MainGameScene extends Generic2DGameScene {
     const collidedObject = GameObject.getById(gameObjectId);
 
     // If the object is found and its name is "Boid", call onCollideScreenEdge
-    if (collidedObject instanceof Boid) {
-      if (collidedObject && collidedObject.name === "Boid") {
-        collidedObject.onCollideScreenEdge(direction);
-      }
+    if (collidedObject && collidedObject.name === "Boid") {
+      (collidedObject as Boid).onCollideScreenEdge(direction);
     }
   };
 
@@ -284,6 +290,8 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn(
         "lastKnownWindowSize is not properly initialized. Skipping resize handling."
       );
+      this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
+      return;
     } else {
       if (
         this.lastKnownWindowSize.x === screenWidth &&
@@ -330,8 +338,11 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
+    settingsStore.resetData();
+
     for (const boid of this.boids) {
       boid.destroy();
     }
+    this.boids.length = 0; // Clear the boids array
   }
 }

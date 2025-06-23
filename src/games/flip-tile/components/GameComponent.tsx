@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/game-template/styles/game.css"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC CSS
+import "@/src/games/flip-tile/styles/game.css";
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
@@ -9,16 +9,20 @@ import {
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
+import UiOverlay from "@/src/games/flip-tile/components/UiOverlay";
 
-// FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO
 export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
-    text: "<Game Name>",
+    text: "Flip Tile",
   },
   {
     type: "paragraph",
-    text: "Fill in information about the game here",
+    text: 'Inspired by the classic <a href="https://en.wikipedia.org/wiki/Lights_Out_(game)" target="_blank" rel="noopener noreferrer">Lights Out</a> game, Flip Tile brings a fresh twist to the familiar puzzle concept, offering three distinct levels of difficulty to challenge players of all skill levels.',
+  },
+  {
+    type: "paragraph",
+    text: 'I created this game mostly as an exercise to re-learn linear algebra concepts. Watch <a href="https://www.youtube.com/watch?v=0fHkKcy0x_U" target="_blank" rel="noopener noreferrer">Solving the "Lights Out" Problem</a> for more context on how linear algebra can be used to automatically solve this game!',
   },
 ];
 
@@ -35,8 +39,7 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    // FIXME: UPDATE THIS TO THE GAME-SPECIFIC BACKGROUND CLASS
-    document.body.classList.add("game-name-game-background");
+    document.body.classList.add("flip-tile-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {
@@ -56,9 +59,8 @@ const GameComponent: React.FC = () => {
       }
 
       try {
-        // FIXME: UPDATE IMPORT PATH FOR THE GAME-SPECIFIC SCENE
         const { MainGameScene } = await import(
-          "@/src/games/game-template/scenes/main-game-scene"
+          "@/src/games/flip-tile/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -94,15 +96,16 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
+      <UiOverlay />
+      <GameInfoContainer infoData={gameInfoData} />
 
       {/* Phaser Game Container */}
-      <div className="absolute inset-0" id="phaser-game"></div>
+      <div className="absolute inset-0" id="phaser-game" />
 
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/better-boids-cover.webp" // FIXME: UPDATE THIS TO THE GAME-SPECIFIC COVER IMAGE
+          coverImage="/webps/games/flip-tile-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}

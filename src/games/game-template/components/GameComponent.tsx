@@ -1,39 +1,25 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/src/games/game-of-life/styles/game.css";
+import "@/src/games/game-template/styles/game.css"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC CSS
 import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
-import GameMessagePopup from "@/src/components/GameMessagePopup";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
-import UiOverlay from "@/src/games/game-of-life/UiOverlay";
-import SettingsContainer from "@/src/games/game-of-life/SettingsContainer";
+import SettingsContainer from "@/src/games/game-template/components/SettingsContainer"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC SETTINGS CONTAINER
 
+// FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO
 export const gameInfoData: ContentDataProps[] = [
   {
     type: "h1",
-    text: "Game of Life",
+    text: "<Game Name>",
   },
   {
     type: "paragraph",
-    text: 'Modern adaptation of the classic 1970 cellular automaton game <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener noreferrer">Conway`s Game of Life</a>. The game is typically played on an infinite, two-dimensional grid. Each cell can exist in one of two states (alive or dead) and interacts with its eight neighboring cells as follows:',
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Underpopulation</b>: Any live cell with fewer than two live neighbors dies.",
-      "<b>Persistence</b>: Any live cell with two or three live neighbors lives on.",
-      "<b>Overpopulation</b>: Any live cell with more than three live neighbors dies.",
-      "<b>Reproduction</b>: Any dead cell with exactly three live neighbors becomes a live cell.",
-    ],
-  },
-  {
-    type: "paragraph",
-    text: "From these simple rules, complex patterns can emerge. New shapes are still being discovered to this day!",
+    text: "Fill in information about the game here",
   },
 ];
 
@@ -50,7 +36,8 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    document.body.classList.add("game-of-life-game-background");
+    // FIXME: UPDATE THIS TO THE GAME-SPECIFIC BACKGROUND CLASS
+    document.body.classList.add("game-name-game-background");
 
     const loadPhaserGame = async () => {
       if (!window.Phaser) {
@@ -70,8 +57,9 @@ const GameComponent: React.FC = () => {
       }
 
       try {
+        // FIXME: UPDATE IMPORT PATH FOR THE GAME-SPECIFIC SCENE
         const { MainGameScene } = await import(
-          "@/src/games/game-of-life/scenes/main-game-scene"
+          "@/src/games/game-template/scenes/main-game-scene"
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -107,21 +95,16 @@ const GameComponent: React.FC = () => {
   return (
     <>
       {/* UI */}
-      <UiOverlay></UiOverlay>
-      <GameMessagePopup
-        message="Warning: This game is not fully optimized and may experience lag, especially on mobile."
-        bottom={true}
-      ></GameMessagePopup>
-      <SettingsContainer></SettingsContainer>
-      <GameInfoContainer infoData={gameInfoData}></GameInfoContainer>
+      <SettingsContainer />
+      <GameInfoContainer infoData={gameInfoData} />
 
       {/* Phaser Game Container */}
-      <div className="absolute inset-0" id="phaser-game"></div>
+      <div className="absolute inset-0" id="phaser-game" />
 
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/game-of-life-cover.webp"
+          coverImage="/webps/games/better-boids-cover.webp" // FIXME: UPDATE THIS TO THE GAME-SPECIFIC COVER IMAGE
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}
