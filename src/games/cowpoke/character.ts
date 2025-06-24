@@ -97,11 +97,11 @@ export class Character extends GameObject {
     screenHeight: number,
     type: number
   ) {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     // Initialize GameObject with physics, and rigid body
     super("Character", new Vec2(0, 0), true, true);
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
 
     // Get snapshot of the game data, then load them in and subscribe to changes.
     this.setupSyncedGameData();

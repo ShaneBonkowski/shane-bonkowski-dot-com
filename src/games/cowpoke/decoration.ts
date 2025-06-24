@@ -25,11 +25,12 @@ export class Decoration extends GameObject {
     type: number,
     spriteName: string
   ) {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     // Initialize GameObject with physics, and rigid body
     super("Decoration", new Vec2(0, 0), true, true);
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
+
     this.scene = scene;
     this.type = type;
 

@@ -21,10 +21,10 @@ class GameDataStore extends SyncedStore<GameData> {
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     super();
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
   }
 
   protected getData(): GameData {

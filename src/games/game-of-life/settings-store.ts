@@ -27,10 +27,11 @@ class SettingsStore extends SyncedStore<Settings> {
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
-    // Return early during SSR/static generation
+    super();
+
+    // Return early during SSR/static generation (need to call super first)
     if (typeof window === "undefined") return;
 
-    super();
     this.loadFromLocalStorage();
   }
 

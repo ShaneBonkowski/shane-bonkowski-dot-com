@@ -13,11 +13,11 @@ export class Generic2DGameScene extends Phaser.Scene {
    */
   // eslint-disable-next-line no-restricted-syntax
   constructor(sceneName: string = "Generic2DGameScene") {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     // Inherit all Phaser scene attrs
     super({ key: sceneName });
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
 
     this.gameStarted = false;
     this.isInitialized = true;

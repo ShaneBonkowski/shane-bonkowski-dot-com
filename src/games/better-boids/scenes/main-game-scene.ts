@@ -26,12 +26,12 @@ export class MainGameScene extends Generic2DGameScene {
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     // Call the parent Generic2DGameScene's constructor with
     // "MainGameScene" supplied as the name of the scene.
     super("MainGameScene");
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
 
     // Constructor logic for this scene
     // ...

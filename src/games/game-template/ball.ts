@@ -9,11 +9,12 @@ export class Ball extends GameObject {
 
   // eslint-disable-next-line no-restricted-syntax
   constructor(scene: MainGameScene, spawnX: number, spawnY: number) {
-    // Return early during SSR/static generation
+    super("Ball", new Vec2(0, 0), true, true);
+
+    // Return early during SSR/static generation (need to call super first)
     if (typeof window === "undefined") return;
 
     // Initialize GameObject with physics, and rigid body
-    super("Ball", new Vec2(0, 0), true, true);
     this.updateScale(); // set the scale here!, not in GameObject
 
     this.scene = scene;
