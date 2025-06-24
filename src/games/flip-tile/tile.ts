@@ -75,8 +75,15 @@ export class Tile extends GameObject {
   }
 
   addText() {
+    // Return early during SSR/static generation.
+    // This is needed to prevent errors when using localStorage in a server-side
+    // rendered environment.
+    if (typeof window === "undefined") return;
+
     // Determine text color from theme. If no preference, assume dark since
-    // that's the default
+    // that's the default.
+
+    // eslint-disable-next-line no-restricted-syntax
     const theme = localStorage.getItem("theme");
     let textColor = "#FFFFFF"; // Default to white
 

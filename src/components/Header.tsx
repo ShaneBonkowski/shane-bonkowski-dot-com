@@ -14,9 +14,16 @@ const Header: React.FC = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(true);
 
   useEffect(() => {
+    // Return early during SSR/static generation.
+    // This is needed to prevent errors when using localStorage in a server-side
+    // rendered environment.
+    if (typeof window === "undefined") return;
+
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
 
-    // Check for saved user preference for theme
+    // Check for saved user preference for theme.
+
+    // eslint-disable-next-line no-restricted-syntax
     const theme = localStorage.getItem("theme");
     // If no preference, assume dark since that's the default
     if (theme === "dark" || !theme) {
@@ -50,10 +57,17 @@ const Header: React.FC = () => {
   }, []);
 
   const toggleDarkMode = () => {
+    // Return early during SSR/static generation.
+    // This is needed to prevent errors when using localStorage in a server-side
+    // rendered environment.
+    if (typeof window === "undefined") return;
+
     document.documentElement.classList.toggle("dark");
     const newTheme = document.documentElement.classList.contains("dark")
       ? "dark"
       : "light";
+
+    // eslint-disable-next-line no-restricted-syntax
     localStorage.setItem("theme", newTheme);
     setIsDarkMode(newTheme === "dark");
   };

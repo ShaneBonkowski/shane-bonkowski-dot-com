@@ -54,12 +54,16 @@ export abstract class SyncedStore<T = Record<string, unknown>> {
    * @param data - The new data to set in the store.
    */
   protected setLocalStorage(key: string, value: unknown): void {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(
-        key,
-        typeof value === "string" ? value : JSON.stringify(value)
-      );
-    }
+    // Return early during SSR/static generation.
+    // This is needed to prevent errors when using localStorage in a server-side
+    // rendered environment.
+    if (typeof window === "undefined") return;
+
+    // eslint-disable-next-line no-restricted-syntax
+    localStorage.setItem(
+      key,
+      typeof value === "string" ? value : JSON.stringify(value)
+    );
   }
 
   /**
@@ -71,8 +75,12 @@ export abstract class SyncedStore<T = Record<string, unknown>> {
    * @returns The parsed value from localStorage or the default value.
    */
   protected getLocalStorage<U = unknown>(key: string, defaultValue: U): U {
+    // Return early during SSR/static generation.
+    // This is needed to prevent errors when using localStorage in a server-side
+    // rendered environment.
     if (typeof window === "undefined") return defaultValue;
 
+    // eslint-disable-next-line no-restricted-syntax
     const stored = localStorage.getItem(key);
     if (!stored) return defaultValue;
 
