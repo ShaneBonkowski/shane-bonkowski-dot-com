@@ -22,9 +22,6 @@ export class Tile extends GameObject {
 
   // eslint-disable-next-line no-restricted-syntax
   constructor(scene: MainGameScene, gridX: number, gridY: number) {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     super(
       "Tile",
       // init scale just so its set, will reset to something else later
@@ -34,6 +31,9 @@ export class Tile extends GameObject {
       true,
       false
     );
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
 
     this.scene = scene;
 

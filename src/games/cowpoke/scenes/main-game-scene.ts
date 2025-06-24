@@ -69,12 +69,12 @@ export class MainGameScene extends Generic2DGameScene {
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     // Call the parent Generic2DGameScene's  with
     // this scene name supplied as the name of the scene.
     super("MainGameScene");
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
 
     // Last thing we do is set the lastKnownWindowSize to the current screen size
     const screenWidth = window.visualViewport?.width || window.innerWidth;

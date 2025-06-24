@@ -44,7 +44,7 @@ Replacement (HMR).
   {
     selector: "MethodDefinition[kind='constructor']",
     message:
-      'Constructor detected. Add "if (typeof window === \\"undefined\\") return;" at the beginning of constructor for SSR protection, or add eslint-disable comment if SSR protection is not needed (e.g., for server-side only classes) or once you added it.',
+      'Constructor detected. Add "if (typeof window === \\"undefined\\") return;" at the beginning of constructor for SSR protection, or add eslint-disable comment if SSR protection is not needed (e.g., for server-side only classes) or once you added it. NOTE: Must call "super()" first in constructor before returning if "super()" is being called.',
   },
 ];
 

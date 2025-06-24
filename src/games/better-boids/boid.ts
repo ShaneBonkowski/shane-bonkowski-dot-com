@@ -28,12 +28,12 @@ export class Boid extends GameObject {
     leaderBoid: boolean,
     boidNumber: number
   ) {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     // Set up GameObject with physics and rigid body.
     // init scale just so its set, will reset to something else later
     super("Boid", new Vec2(1, 1), true, true);
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
 
     this.scene = scene;
     this.mainBoid = leaderBoid;

@@ -28,9 +28,6 @@ export class Tile extends GameObject {
     gridSize: number,
     tileState: number
   ) {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     // Set some properties on the parent GameObject class
     super(
       "Tile",
@@ -41,6 +38,9 @@ export class Tile extends GameObject {
       // rigidBody2D
       false
     );
+
+    // Return early during SSR/static generation (need to call super first)
+    if (typeof window === "undefined") return;
 
     // Store some attributes about this tile
     this.scene = scene;
