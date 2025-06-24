@@ -42,6 +42,9 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
 
   useEffect(() => {
+    // Prevent running on server-side
+    if (typeof window === "undefined") return;
+
     // Initialize the image and canvas
     const image = new Image();
     image.crossOrigin = "anonymous";
