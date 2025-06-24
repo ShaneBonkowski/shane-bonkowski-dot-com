@@ -35,6 +35,12 @@ Replacement (HMR).
     message:
       "JSX elements containing only whitespace should use self-closing syntax (/>).",
   },
+  {
+    selector:
+      "CallExpression[callee.object.name='localStorage'][callee.property.name=/^(getItem|setItem|removeItem|clear)$/]",
+    message:
+      'localStorage usage detected. Make sure to add "if (typeof window === \\"undefined\\") return;" check before localStorage calls to prevent SSR errors. Add eslint-disable comment if already protected.',
+  },
 ];
 
 // TSX-specific rule
