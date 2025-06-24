@@ -4,14 +4,18 @@ import Phaser from "@/public/js/phaser.min.js";
  * Class representing a generic 2D game scene, which can be extended.
  */
 export class Generic2DGameScene extends Phaser.Scene {
-  public gameStarted: boolean;
-  public isInitialized: boolean;
+  public gameStarted: boolean = false;
+  public isInitialized: boolean = false;
 
   /**
    * Create a Generic2DGameScene.
    * @param {string} sceneName - The name of the scene.
    */
+  // eslint-disable-next-line no-restricted-syntax
   constructor(sceneName: string = "Generic2DGameScene") {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Inherit all Phaser scene attrs
     super({ key: sceneName });
 

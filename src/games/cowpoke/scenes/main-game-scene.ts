@@ -67,8 +67,12 @@ export class MainGameScene extends Generic2DGameScene {
   private lastUpdateFavoredTime: number = 0;
   private updateFavoredInterval: number = UPDATE_FAVORED_INTERVAL_DEFAULT; // ms
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor() {
-    // Call the parent Generic2DGameScene's constructor with
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
+    // Call the parent Generic2DGameScene's  with
     // this scene name supplied as the name of the scene.
     super("MainGameScene");
 
@@ -512,6 +516,35 @@ export class MainGameScene extends Generic2DGameScene {
     );
     document.addEventListener("postCombat", this.handlePostCombat);
     document.addEventListener("manualEndGame", this.handleManualEndGame);
+  }
+
+  /*
+   * Note that this function is called in the shutdown() method for GameScene2D,
+   * so no need to call it! That is handled automatically.
+   */
+  unsubscribeFromEvents() {
+    super.unsubscribeFromEvents();
+
+    // Unsubscribe from events for this scene
+    this.tearDownWindowResizeHandling();
+
+    document.removeEventListener("startLoadingGame", this.startGame);
+
+    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
+
+    document.removeEventListener("selectElement", this.ready);
+    document.removeEventListener("selectCombat", this.draw);
+    document.removeEventListener(
+      "movingSliderResult",
+      this.handleMovingSliderResult
+    );
+    document.removeEventListener(
+      "executeLastCombat",
+      this.handleExecuteLastCombat
+    );
+    document.removeEventListener("postCombat", this.handlePostCombat);
+    document.removeEventListener("manualEndGame", this.handleManualEndGame);
   }
 
   ready = (event: Event) => {
@@ -1005,34 +1038,6 @@ export class MainGameScene extends Generic2DGameScene {
         );
         break;
     }
-  }
-
-  /*
-   * Note that this function is called in the shutdown() method for GameScene2D,
-   * so no need to call it! That is handled automatically.
-   */
-  unsubscribeFromEvents() {
-    super.unsubscribeFromEvents();
-
-    // Unsubscribe from events for this scene
-    this.tearDownWindowResizeHandling();
-
-    document.removeEventListener("startLoadingGame", this.startGame);
-
-    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
-
-    document.removeEventListener("selectElement", this.ready);
-    document.removeEventListener("selectCombat", this.draw);
-    document.removeEventListener(
-      "movingSliderResult",
-      this.handleMovingSliderResult
-    );
-    document.removeEventListener(
-      "executeLastCombat",
-      this.handleExecuteLastCombat
-    );
-    document.removeEventListener("postCombat", this.handlePostCombat);
   }
 
   // Using Arrow Function to bind the context of "this" to the class instance.

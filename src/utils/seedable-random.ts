@@ -6,12 +6,16 @@ export const randomType = {
  * Generates pseudo-random numbers with optional seed for reproducibility.
  */
 export class SeededRandom {
-  public seed: number;
+  public seed: number = 0;
   /**
    * Creates a new SeededRandom instance with the specified seed.
    * @param {number} seed - The seed value. Use randomType.UNSEEDED_RANDOM for "real", unseeded randomness.
    */
+  // eslint-disable-next-line no-restricted-syntax
   constructor(seed: number = randomType.UNSEEDED_RANDOM) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     this.seed = seed;
   }
 

@@ -14,6 +14,9 @@ const GamePreventPortraitOrLandscapeMode: React.FC<
   const [shouldShow, setShouldShow] = useState(false);
 
   useEffect(() => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     const checkOrientation = () => {
       const isPortrait = window.innerHeight > window.innerWidth;
 

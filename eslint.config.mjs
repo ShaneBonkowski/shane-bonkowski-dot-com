@@ -39,7 +39,12 @@ Replacement (HMR).
     selector:
       "CallExpression[callee.object.name='localStorage'][callee.property.name=/^(getItem|setItem|removeItem|clear)$/]",
     message:
-      'localStorage usage detected. Make sure to add "if (typeof window === \\"undefined\\") return;" check before localStorage calls to prevent SSR errors. Add eslint-disable comment if already protected.',
+      'localStorage usage detected. Make sure to check to see if it is necc. to add "if (typeof window === \\"undefined\\") return;" before localStorage calls to prevent SSR errors. Add eslint-disable comment if already protected, or if not necc.',
+  },
+  {
+    selector: "MethodDefinition[kind='constructor']",
+    message:
+      'Constructor detected. Add "if (typeof window === \\"undefined\\") return;" at the beginning of constructor for SSR protection, or add eslint-disable comment if SSR protection is not needed (e.g., for server-side only classes) or once you added it.',
   },
 ];
 

@@ -27,16 +27,20 @@ export class MainGameScene extends Generic2DGameScene {
   public lastKnownWindowSize: Vec2 | null = null;
   private lastManualWindowResizeTime: number = 0;
   private windowResizeInterval: number = 2000;
-  public canClickTile: boolean;
-  public disableClickID: number;
-  public revealedAtLeastOnceThisLevel: boolean;
+  public canClickTile: boolean = true;
+  public disableClickID: number = 0;
+  public revealedAtLeastOnceThisLevel: boolean = false;
   private solvedTimeoutID: NodeJS.Timeout | null = null;
   public uiMenuOpen: boolean = false;
 
   public score: number = 0;
   public solutionRevealed: boolean = false;
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor() {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Call the parent Generic2DGameScene's constructor with
     // this scene name supplied as the name of the scene.
     super("MainGameScene");

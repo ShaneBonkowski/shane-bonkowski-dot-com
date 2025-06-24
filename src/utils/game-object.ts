@@ -10,17 +10,17 @@ export class GameObject {
   static currentId: number = 0; // Static property to keep track of the current ID
   static instances: GameObject[] = []; // Static array to hold all GameObject instances
 
-  public id: number;
-  public name: string;
-  public disabled: boolean;
-  public scale: Vec2;
+  public id: number = 0;
+  public name: string = "";
+  public disabled: boolean = false;
+  public scale: Vec2 = new Vec2(1, 1);
   public graphic:
     | Phaser.GameObjects.Sprite
     | Phaser.GameObjects.Shape
     | Phaser.GameObjects.Container
-    | null;
-  public physicsBody2D: PhysicsBody2D | null;
-  public rigidBody2D: RigidBody2D | null;
+    | null = null;
+  public physicsBody2D: PhysicsBody2D | null = null;
+  public rigidBody2D: RigidBody2D | null = null;
 
   // Keep track of last color so we dont have to set it every frame
   private lastColor: number | null = null;
@@ -32,12 +32,16 @@ export class GameObject {
    * @param {boolean} hasPhysicsBody2D - Does the GameObject have PhysicsBody2D base class?
    * @param {boolean} hasRigidBody2D - Does the GameObject have RigidBody2D base class?
    */
+  // eslint-disable-next-line no-restricted-syntax
   constructor(
     name: string,
     scale: Vec2 = new Vec2(1, 1),
     hasPhysicsBody2D: boolean = false,
     hasRigidBody2D: boolean = false
   ) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // State and idenitifiers
     this.id = GameObject.currentId++; // Assign and increment the ID
     this.name = name;

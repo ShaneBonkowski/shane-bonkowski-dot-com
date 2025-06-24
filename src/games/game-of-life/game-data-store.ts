@@ -19,7 +19,11 @@ class GameDataStore extends SyncedStore<GameData> {
 
   private data: GameData = { ...this.defaultData };
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor() {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     super();
   }
 

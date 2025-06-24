@@ -1,25 +1,29 @@
 import { MoreMath } from "@/src/utils/more-math";
 
 export class GestureManager {
-  public activePointers: Record<number, { x: number; y: number }>;
-  public pointerCount: number;
-  public dragRate: number;
-  public zoomRate: number;
-  public dragOffsetX: number;
-  public dragOffsetY: number;
-  public zoomOffset: number;
-  public isDragging: boolean;
-  public isZooming: boolean;
-  public dragBlocked: boolean;
-  public zoomBlocked: boolean;
-  public dragStartX: number;
-  public dragStartY: number;
-  public initialPinchDistance: number | null;
+  public activePointers: Record<number, { x: number; y: number }> = {};
+  public pointerCount: number = 0;
+  public dragRate: number = 0;
+  public zoomRate: number = 0;
+  public dragOffsetX: number = 0;
+  public dragOffsetY: number = 0;
+  public zoomOffset: number = 0;
+  public isDragging: boolean = false;
+  public isZooming: boolean = false;
+  public dragBlocked: boolean = false;
+  public zoomBlocked: boolean = false;
+  public dragStartX: number = 0;
+  public dragStartY: number = 0;
+  public initialPinchDistance: number | null = null;
   private rafId: number | null = null;
   private lastFrameTime: number = 0;
   private minInterval: number = 50; // ~20 FPS
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(dragRate = 0.75, zoomRate = 0.05) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     this.activePointers = {};
     this.pointerCount = 0;
     this.dragRate = dragRate;

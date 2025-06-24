@@ -39,15 +39,15 @@ export class MainGameScene extends Generic2DGameScene {
   public paused: boolean = false;
   private resizeObserver: ResizeObserver | null = null;
   public uiMenuOpen: boolean = false;
-  public discoModeUpdateInterval: number;
-  public renderUpdateInterval: number;
-  public lastRenderUpdateTime: number;
-  public lastGameStateUpdateTime: number;
-  public gameOfLifeType: string;
-  public discoModeLastUpdateTime: number;
-  public autoPlayModeLastUpdateTime: number;
-  public livingTilespaceSet: LivingTilespaceSet;
-  public gestureManager: GestureManager;
+  public discoModeUpdateInterval: number = 0;
+  public renderUpdateInterval: number = 0;
+  public lastRenderUpdateTime: number = 0;
+  public lastGameStateUpdateTime: number = 0;
+  public gameOfLifeType: string = "";
+  public discoModeLastUpdateTime: number = 0;
+  public autoPlayModeLastUpdateTime: number = 0;
+  public livingTilespaceSet: LivingTilespaceSet = new LivingTilespaceSet();
+  public gestureManager: GestureManager = new GestureManager();
   private currentBackgroundColor: string | null = null;
   private lastManualWindowResizeTime: number = 0;
   private windowResizeInterval: number = 2000;
@@ -68,7 +68,11 @@ export class MainGameScene extends Generic2DGameScene {
   public autoPlayMode: boolean = false;
   public discoMode: boolean = false;
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor() {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Call the parent Generic2DGameScene's constructor with
     // this scene name supplied as the name of the scene.
     super("MainGameScene");

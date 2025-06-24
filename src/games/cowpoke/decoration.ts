@@ -14,9 +14,10 @@ export const DECOR_TYPES = {
 };
 
 export class Decoration extends GameObject {
-  private scene: MainGameScene;
+  private scene: MainGameScene | null = null;
   public type: number = DECOR_TYPES.UNASSIGNED;
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(
     scene: MainGameScene,
     spawnX: number,
@@ -24,13 +25,16 @@ export class Decoration extends GameObject {
     type: number,
     spriteName: string
   ) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Initialize GameObject with physics, and rigid body
     super("Decoration", new Vec2(0, 0), true, true);
     this.scene = scene;
     this.type = type;
 
     // Set the sprite
-    this.graphic = this.scene.add.sprite(0, 0, spriteName);
+    this.graphic = this.scene!.add.sprite(0, 0, spriteName);
 
     // Update scale at the end of sprite init, since it relies on sprite size etc.
     this.updateScale(); // set the scale here!, not in GameObject
@@ -168,8 +172,8 @@ export class Decoration extends GameObject {
             // Also update it to a random new decor graphic sprite to keep it fresh
             const randomSpriteName = this.getRandomSprite(
               "bkg-front-",
-              this.scene.textures.getTextureKeys(),
-              this.scene.random
+              this.scene!.textures.getTextureKeys(),
+              this.scene!.random
             );
 
             if (randomSpriteName != null) {

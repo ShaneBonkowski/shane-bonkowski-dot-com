@@ -49,11 +49,6 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
 
     // Set up handler to save scroll progress to localStorage on scroll
     const handleScroll = debounce(() => {
-      // Return early during SSR/static generation.
-      // This is needed to prevent errors when using localStorage in a server-side
-      // rendered environment.
-      if (typeof window === "undefined") return;
-
       // Only save position if user is ON this specific page.
       // Prevents the debouncing from causing the scroll position to be saved
       // on other pages if a user clicks out before the debounce is complete.

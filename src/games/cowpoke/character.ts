@@ -49,7 +49,7 @@ const ENEMY_DIALOG_QUIPS: string[] = [
 ];
 
 export class Character extends GameObject {
-  private scene: MainGameScene;
+  private scene: MainGameScene | null = null;
   public type: number = CHARACTER_TYPES.UNASSIGNED;
 
   public name: string = "Character";
@@ -90,12 +90,16 @@ export class Character extends GameObject {
   public equippedGunId: number = 0;
   public ownedGunIds: number[] = [];
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(
     scene: MainGameScene,
     screenWidth: number,
     screenHeight: number,
     type: number
   ) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Initialize GameObject with physics, and rigid body
     super("Character", new Vec2(0, 0), true, true);
 
@@ -107,7 +111,7 @@ export class Character extends GameObject {
 
     // Set the sprites for the character. Each character is a container
     // full of sprites that consists of a body, head, hat, and gun.
-    this.graphic = this.scene.add.container(0, 0);
+    this.graphic = this.scene!.add.container(0, 0);
 
     switch (this.type) {
       case CHARACTER_TYPES.ENEMY:
@@ -298,7 +302,7 @@ export class Character extends GameObject {
 
   handleBounceAnim() {
     // Create a subtle bounce anim on a sin wave
-    this.bounceTime += 0.05 * (this.scene.fastMode ? 3 : 1); // faster if fast mode
+    this.bounceTime += 0.05 * (this.scene!.fastMode ? 3 : 1); // faster if fast mode
     const minScale = 0.98;
     const maxScale = 1.02;
     const amplitude = (maxScale - minScale) / 2;
@@ -316,7 +320,7 @@ export class Character extends GameObject {
       childSprite.destroy();
     }
 
-    childSprite = this.scene.add.sprite(0, 0, newSpriteName);
+    childSprite = this.scene!.add.sprite(0, 0, newSpriteName);
 
     // Add back to container
     (this.graphic as Phaser.GameObjects.Container).add(
@@ -366,8 +370,8 @@ export class Character extends GameObject {
     // Set random head
     const randomHeadSpriteName = this.getRandomSprite(
       "head-",
-      this.scene.textures.getTextureKeys(),
-      this.scene.random
+      this.scene!.textures.getTextureKeys(),
+      this.scene!.random
     );
     this.headSprite = this.updateContainerChildSprite(
       this.headSprite,
@@ -381,15 +385,15 @@ export class Character extends GameObject {
 
     // Set a random level for enemy characters, this will
     // set max health, xp, etc.
-    if (this.scene.gameRound < 5) {
-      this.updateLevel(this.scene.random.getRandomInt(1, 4), true);
-    } else if (this.scene.gameRound < 10) {
-      this.updateLevel(this.scene.random.getRandomInt(3, 8), true);
+    if (this.scene!.gameRound < 5) {
+      this.updateLevel(this.scene!.random.getRandomInt(1, 4), true);
+    } else if (this.scene!.gameRound < 10) {
+      this.updateLevel(this.scene!.random.getRandomInt(3, 8), true);
     } else {
       this.updateLevel(
-        this.scene.random.getRandomInt(
-          this.scene.gameRound - 5,
-          this.scene.gameRound
+        this.scene!.random.getRandomInt(
+          this.scene!.gameRound - 5,
+          this.scene!.gameRound
         ),
         true
       );
@@ -404,12 +408,12 @@ export class Character extends GameObject {
       "Cowpoke",
       "Ranger",
     ];
-    const randomTitleIndex = this.scene.random.getRandomInt(
+    const randomTitleIndex = this.scene!.random.getRandomInt(
       0,
       randomTitleOptions.length
     );
     const randomNameOptions = ["Bob", "Sally", "Rick", "Dan", "Gus"];
-    const randomNameIndex = this.scene.random.getRandomInt(
+    const randomNameIndex = this.scene!.random.getRandomInt(
       0,
       randomNameOptions.length
     );
@@ -552,11 +556,11 @@ export class Character extends GameObject {
     let rareChance = 0;
     let legendaryChance = 0;
 
-    if (this.scene.gameRound >= 40) {
+    if (this.scene!.gameRound >= 40) {
       commonChance = 0.2;
       rareChance = 0.5;
       legendaryChance = 0.3;
-    } else if (this.scene.gameRound >= 20) {
+    } else if (this.scene!.gameRound >= 20) {
       commonChance = 0.4;
       rareChance = 0.4;
       legendaryChance = 0.2;
@@ -572,19 +576,19 @@ export class Character extends GameObject {
     rareChance /= total;
     legendaryChance /= total;
 
-    const roll = this.scene.random.getRandomFloat(0, 1);
+    const roll = this.scene!.random.getRandomFloat(0, 1);
 
     if (roll < commonChance) {
       // Common
-      return commonLoot[this.scene.random.getRandomInt(0, commonLoot.length)]
+      return commonLoot[this.scene!.random.getRandomInt(0, commonLoot.length)]
         .id;
     } else if (roll < commonChance + rareChance) {
       // Rare
-      return rareLoot[this.scene.random.getRandomInt(0, rareLoot.length)].id;
+      return rareLoot[this.scene!.random.getRandomInt(0, rareLoot.length)].id;
     } else {
       // Legendary
       return legendaryLoot[
-        this.scene.random.getRandomInt(0, legendaryLoot.length)
+        this.scene!.random.getRandomInt(0, legendaryLoot.length)
       ].id;
     }
   }
@@ -594,7 +598,7 @@ export class Character extends GameObject {
       console.warn("getRandomMsgFromList: msgList is empty.");
     }
 
-    const randomIndex = this.scene.random.getRandomInt(0, msgList.length);
+    const randomIndex = this.scene!.random.getRandomInt(0, msgList.length);
     return msgList[randomIndex];
   }
 
@@ -783,13 +787,11 @@ export class Character extends GameObject {
   showHealDmgFloatingText(healthChangeAmount: number) {
     // Init the text object if it doesn't exist yet
     if (!this.floatingText) {
-      this.floatingText = this.scene.add
-        .text(0, 0, "", {
-          font: "bold 36px Arial",
-          color: "#fff",
-          align: "center",
-        })
-        .setOrigin(0.5, 1); // bottom middle pivot point
+      this.floatingText = this.scene!.add.text(0, 0, "", {
+        font: "bold 36px Arial",
+        color: "#fff",
+        align: "center",
+      }).setOrigin(0.5, 1); // bottom middle pivot point
       (this.graphic as Phaser.GameObjects.Container).add(this.floatingText!);
     }
 
@@ -927,7 +929,7 @@ export class Character extends GameObject {
       this.updateXp(this.xp + addXp);
 
       // 50/50 chance to try to drop either gun or hat
-      if (this.scene.random.getRandomFloat(0, 1) < 0.5) {
+      if (this.scene!.random.getRandomFloat(0, 1) < 0.5) {
         // Random chance to get enemy's gun
         let gunDropOdds = 0.6;
         if (GUN_LOOT_MAP[otherCharacter.equippedGunId].rarity === RARITY.RARE) {
@@ -938,7 +940,7 @@ export class Character extends GameObject {
           gunDropOdds = 0.25;
         }
 
-        if (this.scene.random.getRandomFloat(0, 1) < gunDropOdds) {
+        if (this.scene!.random.getRandomFloat(0, 1) < gunDropOdds) {
           // Only drop if player doesn't already own it
           if (!this.ownedGunIds.includes(otherCharacter.equippedGunId)) {
             sendFeedMessage(
@@ -963,7 +965,7 @@ export class Character extends GameObject {
           hatDropOdds = 0.25;
         }
 
-        if (this.scene.random.getRandomFloat(0, 1) < hatDropOdds) {
+        if (this.scene!.random.getRandomFloat(0, 1) < hatDropOdds) {
           // Only drop if player doesn't already own it
           if (!this.ownedHatIds.includes(otherCharacter.equippedHatId)) {
             sendFeedMessage(
@@ -1003,10 +1005,10 @@ export class Character extends GameObject {
       this.attackTween.stop();
     }
 
-    this.attackTween = this.scene.tweens.add({
+    this.attackTween = this.scene!.tweens.add({
       targets: this.graphic,
       rotation: rotationAngle * (Math.PI / 180),
-      duration: this.scene.combatDuration / 2,
+      duration: this.scene!.combatDuration / 2,
       ease: "Cubic.easeInOut",
       yoyo: true, // Go back to original rotation
     });
@@ -1019,10 +1021,10 @@ export class Character extends GameObject {
       this.attackTween.stop();
     }
 
-    this.attackTween = this.scene.tweens.add({
+    this.attackTween = this.scene!.tweens.add({
       targets: this.graphic,
       rotation: rotationAngle * (Math.PI / 180),
-      duration: this.scene.combatDuration / 2,
+      duration: this.scene!.combatDuration / 2,
       ease: "Cubic.easeInOut",
       yoyo: true, // Go back to original rotation
       onComplete: () => {
@@ -1039,10 +1041,10 @@ export class Character extends GameObject {
       this.attackTween.stop();
     }
 
-    this.attackTween = this.scene.tweens.add({
+    this.attackTween = this.scene!.tweens.add({
       targets: this,
       animScaleFactorX: -1,
-      duration: this.scene.combatDuration / 2,
+      duration: this.scene!.combatDuration / 2,
       ease: "Cubic.easeInOut",
       yoyo: true, // Go back to original animScaleFactorX (1)
       onUpdate: () => {
@@ -1060,10 +1062,10 @@ export class Character extends GameObject {
       this.visibilityTween.stop();
     }
 
-    this.visibilityTween = this.scene.tweens.add({
+    this.visibilityTween = this.scene!.tweens.add({
       targets: this.graphic,
       alpha: 1,
-      duration: this.scene.combatDuration,
+      duration: this.scene!.combatDuration,
       ease: "Cubic.easeOut",
     });
   }
@@ -1077,10 +1079,10 @@ export class Character extends GameObject {
       this.visibilityTween.stop();
     }
 
-    this.visibilityTween = this.scene.tweens.add({
+    this.visibilityTween = this.scene!.tweens.add({
       targets: this.graphic,
       alpha: 0,
-      duration: this.scene.combatDuration,
+      duration: this.scene!.combatDuration,
       ease: "Cubic.easeOut",
       onComplete: () => {
         this.graphic!.setVisible(false);
@@ -1096,10 +1098,10 @@ export class Character extends GameObject {
       this.visibilityTween.stop();
     }
 
-    this.visibilityTween = this.scene.tweens.add({
+    this.visibilityTween = this.scene!.tweens.add({
       targets: this.graphic,
       alpha: 0.5,
-      duration: this.scene.combatDuration / 4,
+      duration: this.scene!.combatDuration / 4,
       ease: "Power2.easeOut",
       yoyo: true,
     });
@@ -1121,14 +1123,14 @@ export class Character extends GameObject {
       this.floatingTextTween.stop();
     }
 
-    this.floatingTextTween = this.scene.tweens.add({
+    this.floatingTextTween = this.scene!.tweens.add({
       targets: this.floatingText,
       // Flip text on enemy across x
       scaleX: this.type === CHARACTER_TYPES.PLAYER ? 1 : -1,
       scaleY: 1,
       alpha: 0,
       y: this.floatingText!.y * 1.05,
-      duration: this.scene.combatDuration * 2,
+      duration: this.scene!.combatDuration * 2,
       ease: "Cubic.easeOut",
       onComplete: () => {
         this.floatingText?.setVisible(false);

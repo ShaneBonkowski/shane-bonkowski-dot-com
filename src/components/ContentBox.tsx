@@ -38,6 +38,9 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   const [isHoverable, setIsHoverable] = useState(false);
 
   useEffect(() => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
   }, []);
 

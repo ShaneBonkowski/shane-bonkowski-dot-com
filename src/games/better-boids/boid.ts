@@ -15,11 +15,12 @@ const BoidConstants = {
 };
 
 export class Boid extends GameObject {
-  public scene: MainGameScene;
-  public mainBoid: boolean;
-  public boidNumber: number;
-  public boidType: string;
+  public scene: MainGameScene | null = null;
+  public mainBoid: boolean = false;
+  public boidNumber: number = 0;
+  public boidType: string = "";
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(
     scene: MainGameScene,
     spawnX: number,
@@ -27,6 +28,9 @@ export class Boid extends GameObject {
     leaderBoid: boolean,
     boidNumber: number
   ) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Set up GameObject with physics and rigid body.
     // init scale just so its set, will reset to something else later
     super("Boid", new Vec2(1, 1), true, true);
@@ -78,7 +82,7 @@ export class Boid extends GameObject {
       boidAnimName = "Leader Boid Anim";
     }
 
-    this.graphic = this.scene.add.sprite(
+    this.graphic = this.scene!.add.sprite(
       0,
       0,
       boidAnimName
@@ -111,15 +115,15 @@ export class Boid extends GameObject {
   handlePointerHoldClick = () => {
     const settings = settingsStore.getSnapshot();
 
-    if (settings.leaderBoidEnabled == true && this.scene.uiMenuOpen == false) {
+    if (settings.leaderBoidEnabled == true && this.scene!.uiMenuOpen == false) {
       this.enable();
     }
   };
 
   subscribeToEvents() {
     if (this.mainBoid) {
-      this.scene.input.on("pointerdown", this.handlePointerDown, this);
-      this.scene.input.on("pointermove", this.handlePointerMove, this);
+      this.scene!.input.on("pointerdown", this.handlePointerDown, this);
+      this.scene!.input.on("pointermove", this.handlePointerMove, this);
 
       document.addEventListener(
         "pointerholdclick",
@@ -138,8 +142,8 @@ export class Boid extends GameObject {
 
   unsubscribeFromEvents() {
     if (this.mainBoid) {
-      this.scene.input.off("pointerdown", this.handlePointerDown, this);
-      this.scene.input.off("pointermove", this.handlePointerMove, this);
+      this.scene!.input.off("pointerdown", this.handlePointerDown, this);
+      this.scene!.input.off("pointermove", this.handlePointerMove, this);
 
       document.removeEventListener(
         "pointerholdclick",
@@ -301,7 +305,7 @@ export class Boid extends GameObject {
         const distanceSquared = distObj.distanceSquared;
 
         // If otherBoid is the main boid and the player is interacting (aka pointer is down), have this boid follow the leader if within leader follow radius!
-        if (otherBoid.mainBoid == true && this.scene.isInteracting) {
+        if (otherBoid.mainBoid == true && this.scene!.isInteracting) {
           if (
             distanceSquared <
             BoidConstants.leaderFollowRadius * BoidConstants.leaderFollowRadius
