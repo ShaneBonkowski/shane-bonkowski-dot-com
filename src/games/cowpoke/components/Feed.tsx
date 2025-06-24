@@ -58,6 +58,9 @@ export default function Feed({
   }, [canScrollDown]);
 
   useEffect(() => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     function updateFeed(item: FeedMsg) {
       setFeedList((prev) => {
         const newFeed = [...prev, item].slice(-maxFeedLength);

@@ -2,15 +2,19 @@
  * Class that represents a 2-dimensional vector.
  */
 export class Vec2 {
-  public x: number;
-  public y: number;
+  public x: number = 0;
+  public y: number = 0;
 
   /**
    * Initializes a new instance of the Vec2 class.
    * @param {number} x - The x-coordinate of the vector.
    * @param {number} y - The y-coordinate of the vector.
    */
+  // eslint-disable-next-line no-restricted-syntax
   constructor(x: number, y: number) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     this.x = x;
     this.y = y;
   }

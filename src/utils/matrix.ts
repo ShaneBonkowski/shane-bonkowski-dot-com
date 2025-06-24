@@ -20,12 +20,16 @@ function create2DArray(rows: number, cols: number): number[][] {
  * @param {number[][]} arr - The array representing the matrix.
  */
 export class Matrix {
-  public valid: boolean;
-  public rows: number;
-  public cols: number;
-  public mat: number[][];
+  public valid: boolean = false;
+  public rows: number = 0;
+  public cols: number = 0;
+  public mat: number[][] = [];
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(arr: number[][]) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     this.valid = true;
     this.rows = 0;
     this.cols = 0;

@@ -17,7 +17,11 @@ export class MainGameScene extends Generic2DGameScene {
   private windowResizeInterval: number = 2000;
   public uiMenuOpen: boolean = false;
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor() {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Call the parent Generic2DGameScene's constructor with
     // this scene name supplied as the name of the scene.
     super("MainGameScene");

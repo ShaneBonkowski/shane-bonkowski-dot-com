@@ -11,11 +11,6 @@ const CookieAgreement: React.FC = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const enableCookies = () => {
-    // Return early during SSR/static generation.
-    // This is needed to prevent errors when using localStorage in a server-side
-    // rendered environment.
-    if (typeof window === "undefined") return;
-
     console.log("Cookies enabled");
     // eslint-disable-next-line no-restricted-syntax
     localStorage.setItem("cookieConsent", "true");
@@ -29,11 +24,6 @@ const CookieAgreement: React.FC = () => {
   };
 
   const disableCookies = () => {
-    // Return early during SSR/static generation.
-    // This is needed to prevent errors when using localStorage in a server-side
-    // rendered environment.
-    if (typeof window === "undefined") return;
-
     console.log("Cookies disabled");
     // eslint-disable-next-line no-restricted-syntax
     localStorage.setItem("cookieConsent", "false");

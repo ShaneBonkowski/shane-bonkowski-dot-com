@@ -4,10 +4,14 @@ import { Vec2 } from "@/src/utils/vector";
 import { MainGameScene } from "@/src/games/game-template/scenes/main-game-scene";
 
 export class Ball extends GameObject {
-  private scene: MainGameScene;
-  private random: SeededRandom;
+  private scene: MainGameScene | null = null;
+  private random: SeededRandom | null = null;
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(scene: MainGameScene, spawnX: number, spawnY: number) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Initialize GameObject with physics, and rigid body
     super("Ball", new Vec2(0, 0), true, true);
     this.updateScale(); // set the scale here!, not in GameObject
@@ -28,7 +32,7 @@ export class Ball extends GameObject {
     );
 
     // Create the graphic for the ball
-    this.graphic = this.scene.add.circle(
+    this.graphic = this.scene!.add.circle(
       spawnX,
       spawnY,
       200,
@@ -67,13 +71,13 @@ export class Ball extends GameObject {
   // Using Arrow Function to bind the context of "this" to the class instance.
   // This is necc. for event handlers.
   handlePointerOver = () => {
-    this.scene.input.setDefaultCursor("pointer");
+    this.scene!.input.setDefaultCursor("pointer");
   };
 
   // Using Arrow Function to bind the context of "this" to the class instance.
   // This is necc. for event handlers.
   handlePointerOut = () => {
-    this.scene.input.setDefaultCursor("default");
+    this.scene!.input.setDefaultCursor("default");
   };
 
   // Using Arrow Function to bind the context of "this" to the class instance.

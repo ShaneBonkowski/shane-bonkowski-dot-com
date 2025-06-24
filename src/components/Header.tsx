@@ -57,11 +57,6 @@ const Header: React.FC = () => {
   }, []);
 
   const toggleDarkMode = () => {
-    // Return early during SSR/static generation.
-    // This is needed to prevent errors when using localStorage in a server-side
-    // rendered environment.
-    if (typeof window === "undefined") return;
-
     document.documentElement.classList.toggle("dark");
     const newTheme = document.documentElement.classList.contains("dark")
       ? "dark"

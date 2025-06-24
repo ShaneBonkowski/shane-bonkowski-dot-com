@@ -10,16 +10,17 @@ import { tiles } from "@/src/games/flip-tile/scenes/main-game-scene";
 import { MainGameScene } from "@/src/games/flip-tile/scenes/main-game-scene";
 
 export class Tile extends GameObject {
-  public scene: MainGameScene;
-  public text: Phaser.GameObjects.Text | null;
-  public tileSpaceCoord: Vec2;
-  public gridSize: number;
-  public tileState: number;
+  public scene: MainGameScene | null = null;
+  public text: Phaser.GameObjects.Text | null = null;
+  public tileSpaceCoord: Vec2 = new Vec2(0, 0);
+  public gridSize: number = 0;
+  public tileState: number = 0;
 
   public celebrationTween: Phaser.Tweens.Tween | null = null;
   public spinTween: Phaser.Tweens.Tween | null = null;
-  public animationPlaying: boolean;
+  public animationPlaying: boolean = false;
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(
     scene: MainGameScene,
     tileSpaceX: number,
@@ -27,6 +28,9 @@ export class Tile extends GameObject {
     gridSize: number,
     tileState: number
   ) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // Set some properties on the parent GameObject class
     super(
       "Tile",
@@ -64,7 +68,7 @@ export class Tile extends GameObject {
 
   initTile() {
     this.scale = this.calculateTileScale();
-    this.graphic = this.scene.add.sprite(
+    this.graphic = this.scene!.add.sprite(
       0,
       0,
       "Tile Red"
@@ -75,11 +79,6 @@ export class Tile extends GameObject {
   }
 
   addText() {
-    // Return early during SSR/static generation.
-    // This is needed to prevent errors when using localStorage in a server-side
-    // rendered environment.
-    if (typeof window === "undefined") return;
-
     // Determine text color from theme. If no preference, assume dark since
     // that's the default.
 
@@ -94,7 +93,7 @@ export class Tile extends GameObject {
     }
 
     // Add text to the top right corner of the graphic
-    this.text = this.scene.add.text(
+    this.text = this.scene!.add.text(
       // Position relative to graphic's top right corner
       this.physicsBody2D!.position.x + this.graphic!.displayWidth / 2,
       this.physicsBody2D!.position.y - this.graphic!.displayHeight / 2,
@@ -171,7 +170,7 @@ export class Tile extends GameObject {
 
   playClickSpinAnim() {
     // cannot click during animation
-    this.scene.tryToDisableClick();
+    this.scene!.tryToDisableClick();
     this.animationPlaying = true;
 
     // Rotate the graphic 360 degrees
@@ -179,7 +178,7 @@ export class Tile extends GameObject {
       this.spinTween.stop();
     }
 
-    this.spinTween = this.scene.tweens.add({
+    this.spinTween = this.scene!.tweens.add({
       targets: this.graphic,
       angle: "+=360",
       duration: 1000 * sharedTileAttrs.clickTimer,
@@ -188,13 +187,13 @@ export class Tile extends GameObject {
       onComplete: () => {
         // Can click after all animations are done
         this.animationPlaying = false;
-        const canEnable = this.scene.tryToEnableClick();
+        const canEnable = this.scene!.tryToEnableClick();
 
         // If we are successful in enabling click,
         // then this is the last tile to play the animation.
         // In which case, we can now check if the game has been solved!
         if (canEnable) {
-          this.scene.nextPuzzleIfSolved();
+          this.scene!.nextPuzzleIfSolved();
         }
       },
     });
@@ -202,7 +201,7 @@ export class Tile extends GameObject {
 
   celebrateTileAnim(duration = sharedTileAttrs.solvedTimer * 1000) {
     // cannot click during animation
-    this.scene.tryToDisableClick();
+    this.scene!.tryToDisableClick();
     this.animationPlaying = true;
 
     // Play animation
@@ -210,7 +209,7 @@ export class Tile extends GameObject {
       this.celebrationTween.stop();
     }
 
-    this.celebrationTween = this.scene.tweens.add({
+    this.celebrationTween = this.scene!.tweens.add({
       targets: this.graphic,
       //angle: "+=360",
       scaleX: this.calculateTileScale().x * sharedTileAttrs.tileSpacingFactor,
@@ -229,7 +228,7 @@ export class Tile extends GameObject {
       onComplete: () => {
         // Can click after all animations are done
         this.animationPlaying = false;
-        this.scene.tryToEnableClick();
+        this.scene!.tryToEnableClick();
       },
     });
   }
@@ -243,8 +242,8 @@ export class Tile extends GameObject {
     // an initial tile being clicked (aka updateNeighbors == false),
     // or if we are allowed to click. Also the uiMenu cannot be opened
     if (
-      !this.scene.uiMenuOpen &&
-      (!updateNeighbors || this.scene.canClickTile)
+      !this.scene!.uiMenuOpen &&
+      (!updateNeighbors || this.scene!.canClickTile)
     ) {
       // Advance forward one tile state
       let nextState = this.tileState + 1;
@@ -354,11 +353,11 @@ export class Tile extends GameObject {
   }
 
   handlePointerOver = () => {
-    this.scene.game.canvas.style.cursor = "pointer";
+    this.scene!.game.canvas.style.cursor = "pointer";
   };
 
   handlePointerOut = () => {
-    this.scene.game.canvas.style.cursor = "default";
+    this.scene!.game.canvas.style.cursor = "default";
   };
 
   subscribeToEvents() {

@@ -6,14 +6,14 @@ import { GameObject } from "@/src/utils/game-object";
  * Class representing a 2D physics body.
  */
 export class PhysicsBody2D {
-  public gameObject: GameObject;
-  public position: Vec2;
-  public velocity: Vec2;
-  public acceleration: Vec2;
-  public mass: number;
-  public gravity: number;
-  public friction: number;
-  public restitution: number;
+  public gameObject: GameObject | null = null;
+  public position: Vec2 = new Vec2(0, 0);
+  public velocity: Vec2 = new Vec2(0, 0);
+  public acceleration: Vec2 = new Vec2(0, 0);
+  public mass: number = 0;
+  public gravity: number = 0;
+  public friction: number = 0;
+  public restitution: number = 0;
 
   /**
    * Create a PhysicsBody2D.
@@ -26,6 +26,7 @@ export class PhysicsBody2D {
    * @param {number} friction - The friction coefficient.
    * @param {number} restitution - The restitution (bounciness) coefficient.
    */
+  // eslint-disable-next-line no-restricted-syntax
   constructor(
     gameObject: GameObject,
     position = new Vec2(0, 0),
@@ -36,6 +37,9 @@ export class PhysicsBody2D {
     friction = 0,
     restitution = 0
   ) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     this.gameObject = gameObject;
 
     // Kinematics
@@ -55,7 +59,7 @@ export class PhysicsBody2D {
    * @param {Vec2} force - The force to apply.
    */
   applyForce(force: Vec2) {
-    if (this.gameObject.disabled) {
+    if (this.gameObject!.disabled) {
       return;
     }
 
@@ -67,7 +71,7 @@ export class PhysicsBody2D {
    * Update the acceleration.
    */
   updateAcceleration() {
-    if (this.gameObject.disabled) {
+    if (this.gameObject!.disabled) {
       return;
     }
 
@@ -82,7 +86,7 @@ export class PhysicsBody2D {
    * @param {number} dt - The time delta.
    */
   updateVelocity(dt: number = Physics.physicsUpdateInterval) {
-    if (this.gameObject.disabled) {
+    if (this.gameObject!.disabled) {
       return;
     }
 
@@ -101,7 +105,7 @@ export class PhysicsBody2D {
    * @param {number} dt - The time delta.
    */
   updatePosition(dt: number = Physics.physicsUpdateInterval) {
-    if (this.gameObject.disabled) {
+    if (this.gameObject!.disabled) {
       return;
     }
 

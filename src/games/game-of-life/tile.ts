@@ -12,15 +12,19 @@ import { gameDataStore } from "@/src/games/game-of-life/game-data-store";
 const TILE_ON_SCALE_FACTOR = 1.2;
 
 export class Tile extends GameObject {
-  public scene: MainGameScene;
-  public gridSpaceLoc: Vec2;
+  public scene: MainGameScene | null = null;
+  public gridSpaceLoc: Vec2 = new Vec2(0, 0);
   public initialClickOnThisTile: boolean = false;
   public qtyLivingNeighbors: number = 0;
   public canClick: boolean = true;
   public currentTileTween: Phaser.Tweens.Tween | null = null;
   public tileState: number = tileStates.OFF;
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(scene: MainGameScene, gridX: number, gridY: number) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     super(
       "Tile",
       // init scale just so its set, will reset to something else later
@@ -42,14 +46,14 @@ export class Tile extends GameObject {
   handlePointerUp = () => {
     if (
       this.canClick &&
-      !this.scene.uiMenuOpen &&
+      !this.scene!.uiMenuOpen &&
       this.initialClickOnThisTile
     ) {
       // Toggle tile state only if the click started and ended on this tile
       this.onClickToggleTileState();
 
       // Autopause the game if specified to do such
-      if (!this.scene.paused && this.scene.autoPause) {
+      if (!this.scene!.paused && this.scene!.autoPause) {
         gameDataStore.setPaused(true);
       }
     }
@@ -82,20 +86,20 @@ export class Tile extends GameObject {
     // Make sure the canvas was clicked on! Not e.g. a ui DOM element like a button.
     // This fixes issues where you can click a tile through a button.
     if (
-      pointer.event.target == this.scene.game.canvas &&
+      pointer.event.target == this.scene!.game.canvas &&
       this.canClick &&
-      !this.scene.uiMenuOpen
+      !this.scene!.uiMenuOpen
     ) {
       this.initialClickOnThisTile = true;
     }
   };
 
   handlePointerOver = () => {
-    this.scene.game.canvas.style.cursor = "pointer";
+    this.scene!.game.canvas.style.cursor = "pointer";
   };
 
   handlePointerOut = () => {
-    this.scene.game.canvas.style.cursor = "default";
+    this.scene!.game.canvas.style.cursor = "default";
   };
 
   initTile() {
@@ -106,7 +110,7 @@ export class Tile extends GameObject {
 
     // Init the graphics
     const tileSpriteName = "Tile Blank";
-    this.graphic = this.scene.add.sprite(
+    this.graphic = this.scene!.add.sprite(
       0,
       0,
       tileSpriteName
@@ -176,7 +180,7 @@ export class Tile extends GameObject {
     }
 
     // Scale according to zoom!
-    scale = scale * this.scene.gestureManager.zoomOffset;
+    scale = scale * this.scene!.gestureManager.zoomOffset;
 
     return scale;
   }
@@ -228,12 +232,12 @@ export class Tile extends GameObject {
 
     // Add in any drag offset, but clamp to within screen bounds
     centerX = MoreMath.clamp(
-      centerX + this.scene.gestureManager.dragOffsetX,
+      centerX + this.scene!.gestureManager.dragOffsetX,
       0,
       window.visualViewport?.width || window.innerWidth
     );
     centerY = MoreMath.clamp(
-      centerY + this.scene.gestureManager.dragOffsetY,
+      centerY + this.scene!.gestureManager.dragOffsetY,
       0,
       window.visualViewport?.height || window.innerHeight
     );
@@ -359,13 +363,13 @@ export class Tile extends GameObject {
     // - Dead cell with 3 neighbors becomes alive (reproduction).
     if (this.tileState == tileStates.ON) {
       if (
-        this.qtyLivingNeighbors < this.scene.underpopulation ||
-        this.qtyLivingNeighbors > this.scene.overpopulation
+        this.qtyLivingNeighbors < this.scene!.underpopulation ||
+        this.qtyLivingNeighbors > this.scene!.overpopulation
       ) {
         this.changeState(tileStates.OFF);
       }
     } else if (this.tileState == tileStates.OFF) {
-      if (this.qtyLivingNeighbors == this.scene.reproduction) {
+      if (this.qtyLivingNeighbors == this.scene!.reproduction) {
         this.changeState(tileStates.ON);
       }
     }
@@ -389,23 +393,23 @@ export class Tile extends GameObject {
     // If state changed, update population.
     if (this.tileState != newState) {
       if (newState == tileStates.ON) {
-        this.scene.updatePopulation(this.scene.population + 1);
+        this.scene!.updatePopulation(this.scene!.population + 1);
       } else {
-        this.scene.updatePopulation(this.scene.population - 1);
+        this.scene!.updatePopulation(this.scene!.population - 1);
       }
     }
 
     // Change the state
     this.tileState = newState;
-    this.scene.livingTilespaceSet.updateLivingTilespace(this);
+    this.scene!.livingTilespaceSet.updateLivingTilespace(this);
   }
 
   renderTileGraphics() {
     this.updateVisualAttrs();
     if (this.tileState == tileStates.OFF) {
-      this.updateGraphic(tileAndBackgroundColors[this.scene.colorTheme][1]);
+      this.updateGraphic(tileAndBackgroundColors[this.scene!.colorTheme][1]);
     } else {
-      this.updateGraphic(tileAndBackgroundColors[this.scene.colorTheme][0]);
+      this.updateGraphic(tileAndBackgroundColors[this.scene!.colorTheme][0]);
     }
   }
 
@@ -419,7 +423,7 @@ export class Tile extends GameObject {
     this.canClick = false;
 
     // Rotate the graphic 360 degrees
-    this.currentTileTween = this.scene.tweens.add({
+    this.currentTileTween = this.scene!.tweens.add({
       targets: this.graphic,
       angle: "+=360",
       duration: 220,

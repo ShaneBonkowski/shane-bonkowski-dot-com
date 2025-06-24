@@ -21,7 +21,11 @@ class SettingsStore extends SyncedStore<Settings> {
 
   private data: Settings = { ...this.defaultData };
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor() {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     super();
   }
 

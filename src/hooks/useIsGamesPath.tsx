@@ -6,18 +6,18 @@ const useIsGamesPath = () => {
   const [isGamesPath, setIsGamesPath] = useState(false);
 
   useEffect(() => {
-    // Ensure this runs only in the browser
-    if (typeof window !== "undefined") {
-      const handleRouteChange = (url: string) => {
-        setIsGamesPath(url.startsWith("/games"));
-      };
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
 
-      // Initial check
-      setIsGamesPath(window.location.pathname.startsWith("/games"));
+    const handleRouteChange = (url: string) => {
+      setIsGamesPath(url.startsWith("/games"));
+    };
 
-      // Listen for route changes
-      handleRouteChange(pathname);
-    }
+    // Initial check
+    setIsGamesPath(window.location.pathname.startsWith("/games"));
+
+    // Listen for route changes
+    handleRouteChange(pathname);
   }, [pathname]);
 
   return isGamesPath;

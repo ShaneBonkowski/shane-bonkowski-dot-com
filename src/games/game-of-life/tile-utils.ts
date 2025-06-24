@@ -147,10 +147,14 @@ function createTilegrid(scene: MainGameScene): Tile[][] {
 }
 
 export class gameOfLifeShape {
-  public name: keyof typeof cgolTileShapes;
-  public shapeTileSpace: number[][];
+  public name: keyof typeof cgolTileShapes = "block";
+  public shapeTileSpace: number[][] = [];
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor(shapeName: keyof typeof cgolTileShapes) {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     this.name = shapeName;
     this.shapeTileSpace = cgolTileShapes[shapeName].shapeTileSpace;
   }
@@ -191,9 +195,13 @@ export class gameOfLifeShape {
 }
 
 export class tilespaceSet {
-  public tilespace: Set<string>;
+  public tilespace: Set<string> = new Set();
 
+  // eslint-disable-next-line no-restricted-syntax
   constructor() {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     this.tilespace = new Set();
   }
 
