@@ -78,6 +78,9 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     document.body.classList.add("cowpoke-game-background");
 
     const loadPhaserGame = async () => {

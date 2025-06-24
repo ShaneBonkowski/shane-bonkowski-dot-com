@@ -36,6 +36,9 @@ const GameComponent: React.FC = () => {
   };
 
   useEffect(() => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     // FIXME: UPDATE THIS TO THE GAME-SPECIFIC BACKGROUND CLASS
     document.body.classList.add("game-name-game-background");
 
