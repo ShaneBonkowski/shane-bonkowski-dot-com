@@ -62,8 +62,14 @@ upstream or if dispositioned.`,
   },
 ];
 
-// TSX-specific rule
-const tsxRestrictedSyntaxRules = [
+// TS-specific rule for all .ts files
+const tsRestrictedSyntaxRules = [];
+
+// TSX-specific rule for all .tsx files (including app directory)
+const tsxRestrictedSyntaxRules = [];
+
+// TSX-specific rule for all .tsx files NOT IN APP DIRECTORY
+const tsxRestrictedSyntaxRulesNotAppDir = [
   {
     selector:
       "Program:not(:has(ExpressionStatement:first-child > Literal[value='use client']))",
@@ -77,14 +83,33 @@ dispositioned.`,
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  // Apply TS-specific rules to all .ts files
   {
+    files: ["**/*.{js,ts}"],
     rules: {
-      "no-restricted-syntax": ["warn", ...commonRestrictedSyntaxRules],
+      "no-restricted-syntax": [
+        "warn",
+        ...commonRestrictedSyntaxRules,
+        ...tsRestrictedSyntaxRules,
+      ],
     },
   },
-  // Apply additional rule to all components/*.tsx files
+  // Apply TSX-specific rules to all .tsx files (excluding app directory)
   {
-    files: ["**/components/*.tsx", "**/hooks/*.tsx"],
+    files: ["**/*.tsx"],
+    ignores: ["**/app/**"],
+    rules: {
+      "no-restricted-syntax": [
+        "warn",
+        ...commonRestrictedSyntaxRules,
+        ...tsxRestrictedSyntaxRules,
+        ...tsxRestrictedSyntaxRulesNotAppDir,
+      ],
+    },
+  },
+  // Apply TSX-specific rules to app directory
+  {
+    files: ["**/app/**/*.tsx"],
     rules: {
       "no-restricted-syntax": [
         "warn",
