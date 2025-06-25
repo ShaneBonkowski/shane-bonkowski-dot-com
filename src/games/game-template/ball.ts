@@ -122,18 +122,19 @@ export class Ball extends GameObject {
   }
 
   calculateScale(): Vec2 {
-    // Calculate the scale based on the screen width
-    let newScale =
-      ((window.visualViewport?.height || window.innerHeight) * 0.07) / 200;
+    /* eslint-disable no-restricted-syntax */
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    /* eslint-enable no-restricted-syntax */
+
+    // Calculate the scale based on the screen width
+    let newScale = (screenHeight * 0.07) / 200;
 
     // Phone screen has larger objects
-    if (
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
-    ) {
-      newScale =
-        ((window.visualViewport?.height || window.innerHeight) * 0.05) / 200;
+    if (screenWidth <= 600 || isPortrait) {
+      newScale = (screenHeight * 0.05) / 200;
     }
 
     return new Vec2(newScale, newScale);

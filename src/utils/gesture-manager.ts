@@ -67,19 +67,23 @@ export class GestureManager {
   }
 
   subscribeToEvents() {
+    /* eslint-disable no-restricted-syntax */
     window.addEventListener("wheel", this.handleWheel);
     window.addEventListener("pointerdown", this.handlePointerDown);
     window.addEventListener("pointermove", this.handlePointerMove);
     window.addEventListener("pointerup", this.handlePointerUp);
     window.addEventListener("pointercancel", this.handlePointerUp);
+    /* eslint-enable no-restricted-syntax */
   }
 
   unsubscribeFromEvents() {
+    /* eslint-disable no-restricted-syntax */
     window.removeEventListener("wheel", this.handleWheel);
     window.removeEventListener("pointerdown", this.handlePointerDown);
     window.removeEventListener("pointermove", this.handlePointerMove);
     window.removeEventListener("pointerup", this.handlePointerUp);
     window.removeEventListener("pointercancel", this.handlePointerUp);
+    /* eslint-enable no-restricted-syntax */
   }
 
   handlePointerDown = (event: PointerEvent) => {

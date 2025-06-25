@@ -65,6 +65,11 @@ export class RigidBody2D {
       return;
     }
 
+    /* eslint-disable no-restricted-syntax */
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
+    /* eslint-enable no-restricted-syntax */
+
     let collisionDirection = null;
 
     // If too close to any screen edge, say which edge it is colliding with!
@@ -75,9 +80,7 @@ export class RigidBody2D {
       collisionDirection = "left";
     } else if (
       this.gameObject!.physicsBody2D!.position.x >=
-      (window.visualViewport?.width || window.innerWidth) -
-        edgeMargin -
-        this.hitboxSize.x / 2
+      screenWidth - edgeMargin - this.hitboxSize.x / 2
     ) {
       collisionDirection = "right";
     } else if (
@@ -87,9 +90,7 @@ export class RigidBody2D {
       collisionDirection = "top";
     } else if (
       this.gameObject!.physicsBody2D!.position.y >=
-      (window.visualViewport?.height || window.innerHeight) -
-        edgeMargin -
-        this.hitboxSize.y / 2
+      screenHeight - edgeMargin - this.hitboxSize.y / 2
     ) {
       collisionDirection = "bottom";
     }

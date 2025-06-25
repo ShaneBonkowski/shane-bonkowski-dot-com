@@ -111,6 +111,7 @@ export default function GameControls() {
     document.addEventListener("uiMenuClose", handleUiMenuClose);
     document.addEventListener("startMovingSlider", handleStartMovingSlider);
     document.addEventListener("stopMovingSlider", handleStopMovingSlider);
+    // eslint-disable-next-line no-restricted-syntax
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -121,6 +122,7 @@ export default function GameControls() {
         handleStartMovingSlider
       );
       document.removeEventListener("stopMovingSlider", handleStopMovingSlider);
+      // eslint-disable-next-line no-restricted-syntax
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [elementDisabled, combatDisabled]);

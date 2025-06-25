@@ -56,18 +56,21 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
         document.visibilityState === "visible" &&
         currentPageName.current === pageName
       ) {
+        /* eslint-disable no-restricted-syntax */
         const scrollPosition = window.scrollY;
-        // eslint-disable-next-line no-restricted-syntax
         localStorage.setItem(
           `${pageName}-scrollProgress`,
           scrollPosition.toString()
         );
+        /* eslint-enable no-restricted-syntax */
       }
     }, 200);
+    // eslint-disable-next-line no-restricted-syntax
     window.addEventListener("scroll", handleScroll);
 
     // Cleanup function to call when the component is unloaded...
     return () => {
+      // eslint-disable-next-line no-restricted-syntax
       window.removeEventListener("scroll", handleScroll);
 
       if (timeoutRef.current) {
@@ -78,6 +81,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
   }, [pageName, threshold]);
 
   const handleYes = () => {
+    // eslint-disable-next-line no-restricted-syntax
     window.scrollTo({ top: scrollProgress, behavior: "smooth" });
 
     // Add a small delay before hiding the box.

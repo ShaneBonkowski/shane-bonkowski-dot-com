@@ -107,12 +107,14 @@ export default function Feed({
     document.addEventListener("clearFeed", handleClearFeed);
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
+    // eslint-disable-next-line no-restricted-syntax
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("newMessage", handleNewMessage);
       document.removeEventListener("clearFeed", handleClearFeed);
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+      // eslint-disable-next-line no-restricted-syntax
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [maxFeedLength, handleScrollUp, handleScrollDown]);

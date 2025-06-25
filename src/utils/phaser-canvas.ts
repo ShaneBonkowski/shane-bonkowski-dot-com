@@ -10,6 +10,7 @@ export function resizeCanvasToParent(game: Phaser.Game) {
   const height = parent.clientHeight;
   if (width === 0 || height === 0) return; // skip if parent has no size yet
 
+  // eslint-disable-next-line no-restricted-syntax
   const dpr = window.devicePixelRatio || 1;
 
   const cssWidth = Math.floor(width);

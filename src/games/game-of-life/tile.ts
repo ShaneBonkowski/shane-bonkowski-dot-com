@@ -165,18 +165,18 @@ export class Tile extends GameObject {
   }
 
   calculateDefaultScale(): number {
-    // Calculate the scale based on the screen width
-    let scale =
-      ((window.visualViewport?.height || window.innerHeight) * 0.035) / 600;
+    /* eslint-disable no-restricted-syntax */
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    /* eslint-enable no-restricted-syntax */
+
+    // Calculate the scale based on the screen width
+    let scale = (screenHeight * 0.035) / 600;
 
     // Phone screen has larger
-    if (
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
-    ) {
-      scale =
-        ((window.visualViewport?.height || window.innerHeight) * 0.022) / 600;
+    if (screenWidth <= 600 || isPortrait) {
+      scale = (screenHeight * 0.022) / 600;
     }
 
     // Scale according to zoom!
@@ -215,18 +215,20 @@ export class Tile extends GameObject {
   }
 
   calculateTilePosition(): Vec2 {
-    // Get the tile location from the grid location and screen size
-    let centerX = (window.visualViewport?.width || window.innerWidth) / 2;
-    let centerY = (window.visualViewport?.height || window.innerHeight) / 2;
-    let smallAmountForGrid = 0; // allows me to add small amount to create a buffer for the "grid"
+    /* eslint-disable no-restricted-syntax */
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    /* eslint-enable no-restricted-syntax */
+
+    // Get the tile location from the grid location and screen size
+    let centerX = screenWidth / 2;
+    let centerY = screenHeight / 2;
+    let smallAmountForGrid = 0; // allows me to add small amount to create a buffer for the "grid"
 
     // for phones change the center location etc.
-    if (
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
-    ) {
-      centerY = (window.visualViewport?.height || window.innerHeight) * 0.47;
+    if (screenWidth <= 600 || isPortrait) {
+      centerY = screenHeight * 0.47;
       smallAmountForGrid = 0;
     }
 
@@ -234,12 +236,12 @@ export class Tile extends GameObject {
     centerX = MoreMath.clamp(
       centerX + this.scene!.gestureManager.dragOffsetX,
       0,
-      window.visualViewport?.width || window.innerWidth
+      screenWidth
     );
     centerY = MoreMath.clamp(
       centerY + this.scene!.gestureManager.dragOffsetY,
       0,
-      window.visualViewport?.height || window.innerHeight
+      screenHeight
     );
 
     // Calculate the starting position for the bottom-left tile in the grid

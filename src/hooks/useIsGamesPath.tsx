@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -14,6 +16,7 @@ const useIsGamesPath = () => {
     };
 
     // Initial check
+    // eslint-disable-next-line no-restricted-syntax
     setIsGamesPath(window.location.pathname.startsWith("/games"));
 
     // Listen for route changes

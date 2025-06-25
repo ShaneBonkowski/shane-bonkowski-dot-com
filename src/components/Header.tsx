@@ -19,12 +19,12 @@ const Header: React.FC = () => {
     // rendered environment.
     if (typeof window === "undefined") return;
 
+    /* eslint-disable no-restricted-syntax */
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
+    const theme = localStorage.getItem("theme");
+    /* eslint-enable no-restricted-syntax */
 
     // Check for saved user preference for theme.
-
-    // eslint-disable-next-line no-restricted-syntax
-    const theme = localStorage.getItem("theme");
     // If no preference, assume dark since that's the default
     if (theme === "dark" || !theme) {
       if (!document.documentElement.classList.contains("dark")) {
