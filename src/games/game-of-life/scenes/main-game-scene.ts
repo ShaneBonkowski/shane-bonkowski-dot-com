@@ -108,9 +108,11 @@ export class MainGameScene extends Generic2DGameScene {
     this.setupSyncedGameData();
 
     // (setting tile layout creates the tiles)
+    // eslint-disable-next-line no-restricted-syntax
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     if (
+      // eslint-disable-next-line no-restricted-syntax
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
@@ -443,8 +445,10 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Also checking for resize or orientation change to try to handle edge cases
     // that ResizeObserver misses!
+    /* eslint-disable no-restricted-syntax */
     window.addEventListener("resize", this.handleWindowResize);
     window.addEventListener("orientationchange", this.handleWindowResize);
+    /* eslint-enable no-restricted-syntax */
   }
 
   tearDownWindowResizeHandling() {
@@ -452,8 +456,10 @@ export class MainGameScene extends Generic2DGameScene {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
+    /* eslint-disable no-restricted-syntax */
     window.removeEventListener("resize", this.handleWindowResize);
     window.removeEventListener("orientationchange", this.handleWindowResize);
+    /* eslint-enable no-restricted-syntax */
   }
 
   // Using Arrow Function to bind the context of "this" to the class instance.
@@ -472,15 +478,19 @@ export class MainGameScene extends Generic2DGameScene {
 
     // This is a workaround for the iOS bug where address bar or "enable diction"
     // window appearing causes scroll that gets stuck.
+
+    /* eslint-disable no-restricted-syntax */
     if (window.scrollX !== 0 || window.scrollY !== 0) {
       window.scrollTo(0, 0);
     }
 
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    /* eslint-enable no-restricted-syntax */
+
     // If it switches from landscape to portrait (aka phone) or vice versa,
     // update the layout of the tile grid.
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
     if (
+      // eslint-disable-next-line no-restricted-syntax
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {

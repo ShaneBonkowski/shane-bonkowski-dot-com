@@ -77,8 +77,10 @@ export class MainGameScene extends Generic2DGameScene {
     if (typeof window === "undefined") return;
 
     // Last thing we do is set the lastKnownWindowSize to the current screen size
+    /* eslint-disable no-restricted-syntax */
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
+    /* eslint-enable no-restricted-syntax */
     this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
@@ -222,8 +224,10 @@ export class MainGameScene extends Generic2DGameScene {
     // Ensure fresh starting data/state
     this.resetGameData();
 
+    /* eslint-disable no-restricted-syntax */
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
+    /* eslint-enable no-restricted-syntax */
 
     sendFeedMessage(
       "A new cowpoke is headin' west. Best of luck, partner",
@@ -1064,8 +1068,10 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Also checking for resize or orientation change to try to handle edge cases
     // that ResizeObserver misses!
+    /* eslint-disable no-restricted-syntax */
     window.addEventListener("resize", this.handleWindowResize);
     window.addEventListener("orientationchange", this.handleWindowResize);
+    /* eslint-enable no-restricted-syntax */
   }
 
   tearDownWindowResizeHandling() {
@@ -1073,8 +1079,10 @@ export class MainGameScene extends Generic2DGameScene {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
+    /* eslint-disable no-restricted-syntax */
     window.removeEventListener("resize", this.handleWindowResize);
     window.removeEventListener("orientationchange", this.handleWindowResize);
+    /* eslint-enable no-restricted-syntax */
   }
 
   // Using Arrow Function to bind the context of "this" to the class instance.
@@ -1093,13 +1101,15 @@ export class MainGameScene extends Generic2DGameScene {
 
     // This is a workaround for the iOS bug where address bar or "enable diction"
     // window appearing causes scroll that gets stuck.
+
+    /* eslint-disable no-restricted-syntax */
     if (window.scrollX !== 0 || window.scrollY !== 0) {
       window.scrollTo(0, 0);
     }
 
-    // Get the new screen dimensions
     const screenWidth = window.visualViewport?.width || window.innerWidth;
     const screenHeight = window.visualViewport?.height || window.innerHeight;
+    /* eslint-enable no-restricted-syntax */
 
     // Handle resizing of game objs
     if (

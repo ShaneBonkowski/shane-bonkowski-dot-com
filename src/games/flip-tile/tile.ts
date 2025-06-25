@@ -117,10 +117,13 @@ export class Tile extends GameObject {
 
   updateTextSize() {
     let fontSize = 30;
+
+    // eslint-disable-next-line no-restricted-syntax
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
     // for phones change the font size
     if (
+      // eslint-disable-next-line no-restricted-syntax
       (window.visualViewport?.width || window.innerWidth) <= 600 ||
       isPortrait
     ) {
@@ -291,8 +294,10 @@ export class Tile extends GameObject {
   }
 
   findTileLocFromTileSpace(): Vec2 {
+    /* eslint-disable no-restricted-syntax */
     const centerX = (window.visualViewport?.width || window.innerWidth) / 2;
     const centerY = (window.visualViewport?.height || window.innerHeight) / 2;
+    /* eslint-enable no-restricted-syntax */
 
     // Original tile is 200px, so spacing is og tile sprite size * scale * spacing factor
     const tileSpacingX =
@@ -321,18 +326,18 @@ export class Tile extends GameObject {
   }
 
   calculateTileScale(): Vec2 {
-    // Calculate the tile scale based on the screen width
-    let tileScale =
-      ((window.visualViewport?.height || window.innerHeight) * 0.15) / 200;
+    /* eslint-disable no-restricted-syntax */
+    const screenWidth = window.visualViewport?.width || window.innerWidth;
+    const screenHeight = window.visualViewport?.height || window.innerHeight;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    /* eslint-enable no-restricted-syntax */
+
+    // Calculate the tile scale based on the screen width
+    let tileScale = (screenHeight * 0.15) / 200;
 
     // Phone screen has larger tile
-    if (
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
-    ) {
-      tileScale =
-        ((window.visualViewport?.height || window.innerHeight) * 0.09) / 200;
+    if (screenWidth <= 600 || isPortrait) {
+      tileScale = (screenHeight * 0.09) / 200;
     }
 
     return new Vec2(tileScale, tileScale);

@@ -41,6 +41,7 @@ const CookieAgreement: React.FC = () => {
     // Remove all existing cookies
     document.cookie.split(";").forEach(function (c) {
       const cookieName = c.split("=")[0].trim();
+      // eslint-disable-next-line no-restricted-syntax
       document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
     });
   };

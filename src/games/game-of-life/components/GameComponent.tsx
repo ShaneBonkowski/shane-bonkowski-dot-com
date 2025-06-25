@@ -56,6 +56,7 @@ const GameComponent: React.FC = () => {
     document.body.classList.add("game-of-life-game-background");
 
     const loadPhaserGame = async () => {
+      // eslint-disable-next-line no-restricted-syntax
       if (!window.Phaser) {
         console.error("Phaser module is not loaded yet, cannot load game.");
         return;
@@ -90,6 +91,7 @@ const GameComponent: React.FC = () => {
           parent: "phaser-game",
         };
 
+        // eslint-disable-next-line no-restricted-syntax
         game = new window.Phaser.Game(gameConfig);
         console.log(`Phaser game created successfully.`);
       } catch (error) {

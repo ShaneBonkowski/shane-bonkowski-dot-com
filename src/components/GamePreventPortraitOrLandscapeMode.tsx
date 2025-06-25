@@ -18,6 +18,7 @@ const GamePreventPortraitOrLandscapeMode: React.FC<
     if (typeof window === "undefined") return;
 
     const checkOrientation = () => {
+      // eslint-disable-next-line no-restricted-syntax
       const isPortrait = window.innerHeight > window.innerWidth;
 
       if (preventMode === "portrait") {

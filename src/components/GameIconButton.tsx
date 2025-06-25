@@ -31,6 +31,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
     // Return early during SSR/static generation
     if (typeof window === "undefined") return;
 
+    // eslint-disable-next-line no-restricted-syntax
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
   }, []);
 
