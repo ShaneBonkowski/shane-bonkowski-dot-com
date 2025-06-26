@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import CharacterInfoBar from "@/src/games/cowpoke/components/CharacterInfoBar";
-import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
+import { CHARACTER_TYPES } from "@/src/games/cowpoke/cowpoke-game-object-types";
 import { FaSkull } from "react-icons/fa";
 import { GiRabbit, GiSnail, GiCoffin } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";

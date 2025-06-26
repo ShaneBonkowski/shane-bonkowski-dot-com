@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CHARACTER_TYPES } from "@/src/games/cowpoke/character";
+import { CHARACTER_TYPES } from "@/src/games/cowpoke/cowpoke-game-object-types";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
 type CharacterInfoBarProps = {

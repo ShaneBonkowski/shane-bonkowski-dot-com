@@ -4,8 +4,8 @@ import React from "react";
 import {
   GUN_LOOT_MAP,
   HAT_LOOT_MAP,
-  RARITY,
   GIZMOS,
+  RARITY,
 } from "@/src/games/cowpoke/loot";
 import ImageCropper from "@/src/components/ImageCropper";
 
