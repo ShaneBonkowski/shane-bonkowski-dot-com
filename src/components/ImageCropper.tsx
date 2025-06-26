@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import React, { useRef, useState, useEffect } from "react";
 import NextImage from "next/image"; // need to rename so that it doesnt override the Image() namespace
 
@@ -198,4 +199,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   );
 };
 
-export default ImageCropper;
+// Dynamically import the ImageCropper component with SSR disabled.
+// This is necessary because the component relies on browser-specific APIs
+// like the Canvas API, which are not available during server-side rendering.
+export default dynamic(() => Promise.resolve(ImageCropper), { ssr: false });
