@@ -35,8 +35,7 @@ export const metadata = {
 };
 
 const Page = () => {
-  // return
-  return <></>;
+  return <GameComponent />;
 };
 
 export default dynamic(() => Promise.resolve(Page));
