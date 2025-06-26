@@ -199,7 +199,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   );
 };
 
-// Dynamically import the ImageCropper component with SSR disabled.
+// Dynamically export the ImageCropper component with SSR disabled.
 // This is necessary because the component relies on browser-specific APIs
 // like the Canvas API, which are not available during server-side rendering.
 export default dynamic(() => Promise.resolve(ImageCropper), { ssr: false });
