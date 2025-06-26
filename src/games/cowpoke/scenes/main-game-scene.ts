@@ -6,10 +6,14 @@ import {
   dispatchMenuEvent,
 } from "@/src/events/game-events";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
-import { Decoration, DECOR_TYPES } from "@/src/games/cowpoke/decoration";
+import { Decoration } from "@/src/games/cowpoke/decoration";
 import { Physics } from "@/src/utils/physics";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
-import { Character, CHARACTER_TYPES } from "@/src/games/cowpoke/character";
+import { Character } from "@/src/games/cowpoke/character";
+import {
+  CHARACTER_TYPES,
+  DECOR_TYPES,
+} from "@/src/games/cowpoke/cowpoke-game-object-types";
 import { sendFeedMessage } from "@/src/games/cowpoke/components/Feed";
 import { gameDataStore, GameData } from "@/src/games/cowpoke/game-data-store";
 

@@ -4,14 +4,7 @@ import {
   MainGameScene,
   REFERENCE_BKG_SIZE,
 } from "@/src/games/cowpoke/scenes/main-game-scene";
-
-export const DECOR_TYPES = {
-  UNASSIGNED: -1,
-  BACK: 0,
-  MID: 1,
-  FLOOR: 2,
-  FRONT: 3,
-};
+import { DECOR_TYPES } from "@/src/games/cowpoke/cowpoke-game-object-types";
 
 export class Decoration extends GameObject {
   private scene: MainGameScene | null = null;
