@@ -44,7 +44,6 @@ export default function CharacterInfoBar({
   return (
     <div
       className={`relative w-full z-20 p-2 flex flex-col ${positionClasses}`}
-      style={{ minWidth: "240px" }}
       id="character-info-bar"
       aria-label="Character Info Bar"
     >
@@ -53,7 +52,7 @@ export default function CharacterInfoBar({
       </span>
       <div className="flex flex-row items-center w-full">
         {position === "top-left" && (
-          <span className="mr-2 font-semibold text-red-700 min-w-[60px] text-right">
+          <span className="mr-2 font-semibold text-red-700 text-right">
             {health}/{maxHealth} HP
           </span>
         )}
@@ -80,7 +79,7 @@ export default function CharacterInfoBar({
           />
         </div>
         {position === "top-right" && (
-          <span className="ml-2 font-semibold text-red-700 min-w-[60px] text-right">
+          <span className="ml-2 font-semibold text-red-700 text-right">
             {health}/{maxHealth} HP
           </span>
         )}

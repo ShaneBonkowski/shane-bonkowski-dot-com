@@ -69,8 +69,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      // z-40 so its most of the way in the front.. but behind e.g. the loading screen at z-50.
-      className={`z-40 pointer-events-none flex justify-between items-center p-common-p sm:p-common-p-sm ${
+      className={`z-50 pointer-events-none flex justify-between items-center p-common-p sm:p-common-p-sm ${
         isButtonVisible ? "" : "hidden"
       } ${isGamesPath ? "absolute top-0 left-0 w-full" : ""}`}
       id="header"
@@ -96,7 +95,7 @@ const Header: React.FC = () => {
             width={120}
             height={120}
             className={`${
-              isGamesPath ? "w-6 h-6 sm:w-8 sm:h-8" : "w-9 h-9 sm:w-14 sm:h-14"
+              isGamesPath ? "w-7 h-7 sm:w-9 sm:h-9" : "w-9 h-9 sm:w-14 sm:h-14"
             }`}
           />
           {!isGamesPath && (

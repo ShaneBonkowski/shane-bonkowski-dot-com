@@ -50,7 +50,7 @@ const GamePreventPortraitOrLandscapeMode: React.FC<
 
   return (
     <div
-      className="fixed z-50 inset-0 flex items-center justify-center bg-black"
+      className="fixed z-40 inset-0 flex items-center justify-center bg-black"
       id="prevent-portrait-landscape-mode"
       aria-label="Prevent Portrait or Landscape Mode"
     >
@@ -58,7 +58,7 @@ const GamePreventPortraitOrLandscapeMode: React.FC<
       <GameLogoImageWithBackground coverImage={coverImage} />
 
       {/* Warning Text */}
-      <p className="z-20 fixed text-center bottom-5 text-primary-text-color">
+      <p className="p-common-p z-20 fixed text-center bottom-5 text-primary-text-color">
         {warningText}
       </p>
     </div>
