@@ -218,8 +218,8 @@ export class MainGameScene extends Generic2DGameScene {
     );
 
     this.initializeCharactersAndBackgroundDecorations(
-      this.scene!.screenInfo.width,
-      this.scene!.screenInfo.height
+      this.screenInfo.width,
+      this.screenInfo.height
     );
 
     this.gameStarted = true;
