@@ -48,6 +48,14 @@ export class GestureManager {
     this.subscribeToEvents();
   }
 
+  setDragRate(rate: number) {
+    this.dragRate = rate;
+  }
+
+  setZoomRate(rate: number) {
+    this.zoomRate = rate;
+  }
+
   resetDrag() {
     this.dragOffsetX = 0;
     this.dragOffsetY = 0;

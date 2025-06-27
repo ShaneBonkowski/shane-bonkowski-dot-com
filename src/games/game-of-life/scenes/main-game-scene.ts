@@ -51,6 +51,9 @@ export class MainGameScene extends Generic2DGameScene {
   private currentBackgroundColor: string | null = null;
   private lastManualWindowResizeTime: number = 0;
   private windowResizeInterval: number = 2000;
+  public screenInfo = { width: 0, height: 0, isPortrait: false };
+  private requestSetComputerLayout: boolean = false;
+  private requestSetPhoneLayout: boolean = false;
 
   // Settings
   public updateInterval: number = 0;
@@ -92,6 +95,9 @@ export class MainGameScene extends Generic2DGameScene {
     this.updateGeneration(0);
 
     this.gestureManager = new GestureManager();
+
+    // Initial screen info
+    this.updateScreenInfo();
   }
 
   preload() {
@@ -108,14 +114,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.setupSyncedGameData();
 
     // (setting tile layout creates the tiles)
-    // eslint-disable-next-line no-restricted-syntax
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
-    if (
-      // eslint-disable-next-line no-restricted-syntax
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
-    ) {
+    if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
       this.setTileLayoutForPhone();
     } else {
       this.setLayoutForComputer();
@@ -191,6 +190,16 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
+  updateScreenInfo() {
+    this.screenInfo = {
+      /* eslint-disable no-restricted-syntax */
+      width: window.visualViewport?.width || window.innerWidth,
+      height: window.visualViewport?.height || window.innerHeight,
+      isPortrait: window.matchMedia("(orientation: portrait)").matches,
+      /* eslint-enable no-restricted-syntax */
+    };
+  }
+
   update(time: number, delta: number) {
     super.update(time, delta);
 
@@ -251,6 +260,16 @@ export class MainGameScene extends Generic2DGameScene {
     if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
       this.handleWindowResize();
       this.lastManualWindowResizeTime = time;
+    }
+
+    // Perform reset/destroy of tiles if requested... Do it this way so that
+    // destruction/restructure can happen at a safe time.
+    if (this.requestSetPhoneLayout) {
+      this.setTileLayoutForPhone();
+      this.requestSetPhoneLayout = false;
+    } else if (this.requestSetComputerLayout) {
+      this.setLayoutForComputer();
+      this.requestSetComputerLayout = false;
     }
   }
 
@@ -471,6 +490,9 @@ export class MainGameScene extends Generic2DGameScene {
       return;
     }
 
+    // Get up to date screen info
+    this.updateScreenInfo();
+
     // Update canvas size to match the parent.
     // This is needed to be done manually since Phaser.AUTO does not
     // take into account some nuances of screen size on safari/iOS.
@@ -483,23 +505,18 @@ export class MainGameScene extends Generic2DGameScene {
     if (window.scrollX !== 0 || window.scrollY !== 0) {
       window.scrollTo(0, 0);
     }
-
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
     /* eslint-enable no-restricted-syntax */
 
     // If it switches from landscape to portrait (aka phone) or vice versa,
     // update the layout of the tile grid.
-    if (
-      // eslint-disable-next-line no-restricted-syntax
-      (window.visualViewport?.width || window.innerWidth) <= 600 ||
-      isPortrait
-    ) {
+    if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
       // Only update layout if it changed!
       if (
         tileGridAttrs.tileGridWidth != tileGridWidthPhone ||
         tileGridAttrs.tileGridHeight != tileGridHeightPhone
       ) {
-        this.setTileLayoutForPhone();
+        // See update loop for why we request this instead of doing it now
+        this.requestSetPhoneLayout = true;
       }
     } else {
       // Only update layout if it changed!
@@ -507,7 +524,8 @@ export class MainGameScene extends Generic2DGameScene {
         tileGridAttrs.tileGridWidth != tileGridWidthComputer ||
         tileGridAttrs.tileGridHeight != tileGridHeightComputer
       ) {
-        this.setLayoutForComputer();
+        // See update loop for why we request this instead of doing it now
+        this.requestSetComputerLayout = true;
       }
     }
   };
@@ -517,7 +535,12 @@ export class MainGameScene extends Generic2DGameScene {
     tileGridAttrs.tileGridWidth = tileGridWidthPhone;
     tileGridAttrs.tileGridHeight = tileGridHeightPhone;
 
+    // Set different zoom / drag rates on phone
+    this.gestureManager.setDragRate(0.9);
+    this.gestureManager.setZoomRate(0.07);
+
     // init or re-init all tiles
+    this.livingTilespaceSet.clear();
     this.destroyTiles();
     tiles = instantiateTiles(this);
   }
@@ -527,7 +550,12 @@ export class MainGameScene extends Generic2DGameScene {
     tileGridAttrs.tileGridWidth = tileGridWidthComputer;
     tileGridAttrs.tileGridHeight = tileGridHeightComputer;
 
+    // Set different zoom / drag rates on phone
+    this.gestureManager.setDragRate(0.85);
+    this.gestureManager.setZoomRate(0.065);
+
     // init or re-init all tiles
+    this.livingTilespaceSet.clear();
     this.destroyTiles();
     tiles = instantiateTiles(this);
   }
