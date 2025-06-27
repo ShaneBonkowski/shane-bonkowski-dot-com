@@ -29,7 +29,6 @@ import {
   gameDataStore,
   GameData,
 } from "@/src/games/game-of-life/game-data-store";
-import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 
 export let tiles: Tile[][] = [];
 
@@ -37,23 +36,21 @@ const unseededRandom = new SeededRandom();
 
 export class MainGameScene extends Generic2DGameScene {
   public paused: boolean = false;
-  private resizeObserver: ResizeObserver | null = null;
   public uiMenuOpen: boolean = false;
+  public gameOfLifeType: string = "";
+  public livingTilespaceSet: LivingTilespaceSet = new LivingTilespaceSet();
+  public gestureManager: GestureManager = new GestureManager();
+  private currentBackgroundColor: string | null = null;
+  private requestSetComputerLayout: boolean = false;
+  private requestSetPhoneLayout: boolean = false;
+
+  // Intervals
   public discoModeUpdateInterval: number = 0;
   public renderUpdateInterval: number = 0;
   public lastRenderUpdateTime: number = 0;
   public lastGameStateUpdateTime: number = 0;
-  public gameOfLifeType: string = "";
   public discoModeLastUpdateTime: number = 0;
   public autoPlayModeLastUpdateTime: number = 0;
-  public livingTilespaceSet: LivingTilespaceSet = new LivingTilespaceSet();
-  public gestureManager: GestureManager = new GestureManager();
-  private currentBackgroundColor: string | null = null;
-  private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 2000;
-  public screenInfo = { width: 0, height: 0, isPortrait: false };
-  private requestSetComputerLayout: boolean = false;
-  private requestSetPhoneLayout: boolean = false;
 
   // Settings
   public updateInterval: number = 0;
@@ -95,9 +92,6 @@ export class MainGameScene extends Generic2DGameScene {
     this.updateGeneration(0);
 
     this.gestureManager = new GestureManager();
-
-    // Initial screen info
-    this.updateScreenInfo();
   }
 
   preload() {
@@ -190,16 +184,6 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
-  updateScreenInfo() {
-    this.screenInfo = {
-      /* eslint-disable no-restricted-syntax */
-      width: window.visualViewport?.width || window.innerWidth,
-      height: window.visualViewport?.height || window.innerHeight,
-      isPortrait: window.matchMedia("(orientation: portrait)").matches,
-      /* eslint-enable no-restricted-syntax */
-    };
-  }
-
   update(time: number, delta: number) {
     super.update(time, delta);
 
@@ -249,17 +233,8 @@ export class MainGameScene extends Generic2DGameScene {
       // "render" pass to update all visuals
       if (time - this.lastRenderUpdateTime >= this.renderUpdateInterval) {
         this.lastRenderUpdateTime = time;
-
         this.renderPass();
       }
-    }
-
-    // In order to handle edge cases where the resize observer does not catch
-    // a resize (such as when iPhone toolbar changes), we also check for resize
-    // every windowResizeInterval milliseconds.
-    if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
-      this.handleWindowResize();
-      this.lastManualWindowResizeTime = time;
     }
 
     // Perform reset/destroy of tiles if requested... Do it this way so that
@@ -397,9 +372,6 @@ export class MainGameScene extends Generic2DGameScene {
   subscribeToEvents() {
     super.subscribeToEvents();
 
-    // Subscribe to events for this scene
-    this.setUpWindowResizeHandling();
-
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
 
@@ -413,9 +385,6 @@ export class MainGameScene extends Generic2DGameScene {
    */
   unsubscribeFromEvents() {
     super.unsubscribeFromEvents();
-
-    // Unsubscribe from events for this scene
-    this.tearDownWindowResizeHandling();
 
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
@@ -452,61 +421,10 @@ export class MainGameScene extends Generic2DGameScene {
     this.gestureManager.unblockZoom();
   };
 
-  setUpWindowResizeHandling() {
-    // Observe window resizing so we can adjust the position
-    // and size accordingly!
-
-    // Observe window resizing with ResizeObserver since it is good for snappy changes
-    this.resizeObserver = new ResizeObserver(() => {
-      this.handleWindowResize();
-    });
-    this.resizeObserver.observe(document.documentElement);
-
-    // Also checking for resize or orientation change to try to handle edge cases
-    // that ResizeObserver misses!
-    /* eslint-disable no-restricted-syntax */
-    window.addEventListener("resize", this.handleWindowResize);
-    window.addEventListener("orientationchange", this.handleWindowResize);
-    /* eslint-enable no-restricted-syntax */
-  }
-
-  tearDownWindowResizeHandling() {
-    if (this.resizeObserver != null) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    }
-    /* eslint-disable no-restricted-syntax */
-    window.removeEventListener("resize", this.handleWindowResize);
-    window.removeEventListener("orientationchange", this.handleWindowResize);
-    /* eslint-enable no-restricted-syntax */
-  }
-
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleWindowResize = () => {
-    // Ensure the scene is fully initialized before handling resize
-    if (!this.isInitialized) {
-      console.warn("handleWindowResize called before scene initialization.");
-      return;
-    }
-
-    // Get up to date screen info
-    this.updateScreenInfo();
-
-    // Update canvas size to match the parent.
-    // This is needed to be done manually since Phaser.AUTO does not
-    // take into account some nuances of screen size on safari/iOS.
-    resizeCanvasToParent(this.game);
-
-    // This is a workaround for the iOS bug where address bar or "enable diction"
-    // window appearing causes scroll that gets stuck.
-
-    /* eslint-disable no-restricted-syntax */
-    if (window.scrollX !== 0 || window.scrollY !== 0) {
-      window.scrollTo(0, 0);
-    }
-    /* eslint-enable no-restricted-syntax */
-
+  // Override the parent class's handleWindowResizeHook to add custom logic.
+  // This will get called automatically by the parent class's handleWindowResize()
+  // method.
+  handleWindowResizeHook() {
     // If it switches from landscape to portrait (aka phone) or vice versa,
     // update the layout of the tile grid.
     if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
@@ -528,7 +446,7 @@ export class MainGameScene extends Generic2DGameScene {
         this.requestSetComputerLayout = true;
       }
     }
-  };
+  }
 
   setTileLayoutForPhone() {
     // Update layout for phone

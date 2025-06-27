@@ -10,14 +10,9 @@ export function instantiateBoids(
 ): Boid[] {
   const boids: Boid[] = [];
 
-  /* eslint-disable no-restricted-syntax */
-  const screenWidth = window.visualViewport?.width || window.innerWidth;
-  const screenHeight = window.visualViewport?.height || window.innerHeight;
-  /* eslint-enable no-restricted-syntax */
-
   // Spawn in the main boid at the middle of the screen, it will follow pointer
-  const spawnX = screenWidth / 2;
-  const spawnY = screenHeight / 2;
+  const spawnX = scene.screenInfo.width / 2;
+  const spawnY = scene.screenInfo.height / 2;
   let leaderBoid = true;
   const mainBoid = new Boid(scene, spawnX, spawnY, leaderBoid, 0);
   boids.push(mainBoid);
@@ -25,8 +20,10 @@ export function instantiateBoids(
   // Spawn in other boids randomly to start
   leaderBoid = false;
   for (let i = 0; i < boidCount; i++) {
-    const randomX = seededRandom.getRandomFloat(0.1, 0.9) * screenWidth;
-    const randomY = seededRandom.getRandomFloat(0.1, 0.9) * screenHeight;
+    const randomX =
+      seededRandom.getRandomFloat(0.1, 0.9) * scene.screenInfo.width;
+    const randomY =
+      seededRandom.getRandomFloat(0.1, 0.9) * scene.screenInfo.height;
     const boid = new Boid(scene, randomX, randomY, leaderBoid, i + 1);
     boids.push(boid);
   }

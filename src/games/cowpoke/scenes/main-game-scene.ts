@@ -5,7 +5,6 @@ import {
   dispatchGameStartedEvent,
   dispatchMenuEvent,
 } from "@/src/events/game-events";
-import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Decoration } from "@/src/games/cowpoke/decoration";
 import { Physics } from "@/src/utils/physics";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
@@ -50,13 +49,7 @@ export class MainGameScene extends Generic2DGameScene {
   private enemyExtraDamageMultiplier: number = 1;
   public gameRound: number = 0;
   public playerGoesFirst: boolean = true;
-
   public random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
-
-  private resizeObserver: ResizeObserver | null = null;
-  public lastKnownWindowSize: Vec2 | null = null;
-  private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 2000;
 
   public uiMenuOpen: boolean = false;
   public moving: boolean = false;
@@ -79,13 +72,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Return early during SSR/static generation (need to call super first)
     if (typeof window === "undefined") return;
-
-    // Last thing we do is set the lastKnownWindowSize to the current screen size
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
   preload() {
@@ -180,9 +166,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     this.setupSyncedGameData();
 
-    // Make sure the canvas is resized to fit the parent element
-    this.handleWindowResize();
-
     // Hide loading screen so we can reveal the start menu...
     // game start is not called til after start menu is closed
     dispatchCloseLoadingScreenEvent("Cowpoke");
@@ -228,11 +211,6 @@ export class MainGameScene extends Generic2DGameScene {
     // Ensure fresh starting data/state
     this.resetGameData();
 
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
-
     sendFeedMessage(
       "A new cowpoke is headin' west. Best of luck, partner",
       "Cowpoke Jack's Ghost",
@@ -240,8 +218,8 @@ export class MainGameScene extends Generic2DGameScene {
     );
 
     this.initializeCharactersAndBackgroundDecorations(
-      screenWidth,
-      screenHeight
+      this.screenInfo.width,
+      this.screenInfo.height
     );
 
     this.gameStarted = true;
@@ -487,14 +465,6 @@ export class MainGameScene extends Generic2DGameScene {
         this.lastUpdateFavoredTime = time;
       }
     }
-
-    // In order to handle edge cases where the resize observer does not catch
-    // a resize (such as when iPhone toolbar changes), we also check for resize
-    // every windowResizeInterval milliseconds.
-    if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
-      this.handleWindowResize();
-      this.lastManualWindowResizeTime = time;
-    }
   }
 
   /*
@@ -505,8 +475,6 @@ export class MainGameScene extends Generic2DGameScene {
     super.subscribeToEvents();
 
     // Subscribe to events for this scene
-    this.setUpWindowResizeHandling();
-
     document.addEventListener("startLoadingGame", this.startGame);
 
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
@@ -534,8 +502,6 @@ export class MainGameScene extends Generic2DGameScene {
     super.unsubscribeFromEvents();
 
     // Unsubscribe from events for this scene
-    this.tearDownWindowResizeHandling();
-
     document.removeEventListener("startLoadingGame", this.startGame);
 
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
@@ -1060,61 +1026,10 @@ export class MainGameScene extends Generic2DGameScene {
     this.uiMenuOpen = false;
   };
 
-  setUpWindowResizeHandling() {
-    // Observe window resizing so we can adjust the position
-    // and size accordingly!
-
-    // Observe window resizing with ResizeObserver since it is good for snappy changes
-    this.resizeObserver = new ResizeObserver(() => {
-      this.handleWindowResize();
-    });
-    this.resizeObserver.observe(document.documentElement);
-
-    // Also checking for resize or orientation change to try to handle edge cases
-    // that ResizeObserver misses!
-    /* eslint-disable no-restricted-syntax */
-    window.addEventListener("resize", this.handleWindowResize);
-    window.addEventListener("orientationchange", this.handleWindowResize);
-    /* eslint-enable no-restricted-syntax */
-  }
-
-  tearDownWindowResizeHandling() {
-    if (this.resizeObserver != null) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    }
-    /* eslint-disable no-restricted-syntax */
-    window.removeEventListener("resize", this.handleWindowResize);
-    window.removeEventListener("orientationchange", this.handleWindowResize);
-    /* eslint-enable no-restricted-syntax */
-  }
-
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleWindowResize = () => {
-    // Ensure the scene is fully initialized before handling resize
-    if (!this.isInitialized) {
-      console.warn("handleWindowResize called before scene initialization.");
-      return;
-    }
-
-    // Update canvas size to match the parent.
-    // This is needed to be done manually since Phaser.AUTO does not
-    // take into account some nuances of screen size on safari/iOS.
-    resizeCanvasToParent(this.game);
-
-    // This is a workaround for the iOS bug where address bar or "enable diction"
-    // window appearing causes scroll that gets stuck.
-
-    /* eslint-disable no-restricted-syntax */
-    if (window.scrollX !== 0 || window.scrollY !== 0) {
-      window.scrollTo(0, 0);
-    }
-
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
-
+  // Override the parent class's handleWindowResizeHook to add custom logic.
+  // This will get called automatically by the parent class's handleWindowResize()
+  // method.
+  handleWindowResizeHook() {
     // Handle resizing of game objs
     if (
       !this.lastKnownWindowSize ||
@@ -1124,12 +1039,12 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn(
         "lastKnownWindowSize is not properly initialized. Skipping resize handling."
       );
-      this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
       return;
     } else {
+      // Do not update if screen size has not changed
       if (
-        this.lastKnownWindowSize.x === screenWidth &&
-        this.lastKnownWindowSize.y === screenHeight
+        this.lastKnownWindowSize.x === this.screenInfo.width &&
+        this.lastKnownWindowSize.y === this.screenInfo.height
       ) {
         return;
       }
@@ -1145,11 +1060,11 @@ export class MainGameScene extends Generic2DGameScene {
           newX =
             (decoration.physicsBody2D!.position.x /
               this.lastKnownWindowSize.x) *
-            screenWidth;
+            this.screenInfo.width;
           newY =
             (decoration.physicsBody2D!.position.y /
               this.lastKnownWindowSize.y) *
-            screenHeight;
+            this.screenInfo.height;
 
           decoration.handleWindowResize(newX, newY);
         }
@@ -1159,11 +1074,11 @@ export class MainGameScene extends Generic2DGameScene {
         newX =
           (this.player!.physicsBody2D!.position.x /
             this.lastKnownWindowSize.x) *
-          screenWidth;
+          this.screenInfo.width;
         newY =
           (this.player!.physicsBody2D!.position.y /
             this.lastKnownWindowSize.y) *
-          screenHeight;
+          this.screenInfo.height;
 
         this.player!.handleWindowResize(newX, newY);
       }
@@ -1171,18 +1086,15 @@ export class MainGameScene extends Generic2DGameScene {
       if (this.enemy) {
         newX =
           (this.enemy!.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
-          screenWidth;
+          this.screenInfo.width;
         newY =
           (this.enemy!.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
-          screenHeight;
+          this.screenInfo.height;
 
         this.enemy!.handleWindowResize(newX, newY);
       }
     }
-
-    // Update lastKnownWindowSize to current screen dimensions
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-  };
+  }
 
   destroyGameObjects() {
     for (const decoration of this.decorations) {

@@ -122,19 +122,15 @@ export class Ball extends GameObject {
   }
 
   calculateScale(): Vec2 {
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    /* eslint-enable no-restricted-syntax */
-
     // Calculate the scale based on the screen width
-    let newScale = (screenHeight * 0.07) / 200;
+    let newScale = (this.scene!.screenInfo.height * 0.07) / 200;
 
     // Phone screen has larger objects
-    if (screenWidth <= 600 || isPortrait) {
-      newScale = (screenHeight * 0.05) / 200;
+    if (
+      this.scene!.screenInfo.width <= 600 ||
+      this.scene!.screenInfo.isPortrait
+    ) {
+      newScale = (this.scene!.screenInfo.height * 0.05) / 200;
     }
 
     return new Vec2(newScale, newScale);
@@ -142,7 +138,11 @@ export class Ball extends GameObject {
 
   handlePhysics(delta: number) {
     this.physicsBody2D!.updatePosition(delta);
-    this.rigidBody2D!.checkCollideScreenEdge(5);
+    this.rigidBody2D!.checkCollideScreenEdge(
+      this.scene!.screenInfo.width,
+      this.scene!.screenInfo.height,
+      5
+    );
   }
 
   // Using Arrow Function to bind the context of "this" to the class instance.

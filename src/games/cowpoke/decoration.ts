@@ -94,13 +94,8 @@ export class Decoration extends GameObject {
     // Calculate the scale based on the screen width
     let newScale = new Vec2(0, 0);
 
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
-
-    const scaleX = screenWidth / REFERENCE_BKG_SIZE.x;
-    const scaleY = screenHeight / REFERENCE_BKG_SIZE.y;
+    const scaleX = this.scene!.screenInfo.width / REFERENCE_BKG_SIZE.x;
+    const scaleY = this.scene!.screenInfo.height / REFERENCE_BKG_SIZE.y;
 
     // Backgrounds are scaled to fit viewport
     if (
@@ -120,10 +115,8 @@ export class Decoration extends GameObject {
   }
 
   handlePhysics(delta: number, isMoving: boolean) {
-    // eslint-disable-next-line no-restricted-syntax
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const midSpeed = 0.2 * screenWidth; // x% of width per second
-    const frontSpeed = 0.6 * screenWidth; // x% of width per second
+    const midSpeed = 0.2 * this.scene!.screenInfo.width; // x% of width per second
+    const frontSpeed = 0.6 * this.scene!.screenInfo.width; // x% of width per second
 
     // If player is moving, move the decor accordingly.
     if (isMoving) {
@@ -144,7 +137,7 @@ export class Decoration extends GameObject {
             -this.graphic!.displayWidth / 2
           ) {
             this.physicsBody2D!.position.x = Math.round(
-              screenWidth + this.graphic!.displayWidth / 2
+              this.scene!.screenInfo.width + this.graphic!.displayWidth / 2
             );
           }
 
@@ -163,7 +156,7 @@ export class Decoration extends GameObject {
             -this.graphic!.displayWidth / 2
           ) {
             this.physicsBody2D!.position.x = Math.round(
-              screenWidth + this.graphic!.displayWidth / 2
+              this.scene!.screenInfo.width + this.graphic!.displayWidth / 2
             );
 
             // Also update it to a random new decor graphic sprite to keep it fresh

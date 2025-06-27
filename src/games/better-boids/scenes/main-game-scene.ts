@@ -1,14 +1,12 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
 import { Boid } from "@/src/games/better-boids/boid";
 import { Physics } from "@/src/utils/physics";
-import { Vec2 } from "@/src/utils/vector";
 import { instantiateBoids } from "@/src/games/better-boids/boid-utils";
 import { GameObject } from "@/src/utils/game-object";
 import {
   dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
-import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { settingsStore } from "@/src/games/better-boids/settings-store";
 
 // Used to determine if pointer is held down
@@ -18,10 +16,6 @@ let holdTimeout: NodeJS.Timeout | null = null;
 
 export class MainGameScene extends Generic2DGameScene {
   public boids: Boid[] = [];
-  private resizeObserver: ResizeObserver | null = null;
-  public lastKnownWindowSize: Vec2 | null = null;
-  private lastManualWindowResizeTime: number = 0;
-  private windowResizeInterval: number = 2000;
   public uiMenuOpen: boolean = false;
 
   // eslint-disable-next-line no-restricted-syntax
@@ -32,17 +26,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Return early during SSR/static generation (need to call super first)
     if (typeof window === "undefined") return;
-
-    // Constructor logic for this scene
-    // ...
-
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
-
-    // Last thing we do is set the lastKnownWindowSize to the current screen size
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
   }
 
   preload() {
@@ -104,14 +87,6 @@ export class MainGameScene extends Generic2DGameScene {
         boid.updateGraphic();
       }
     }
-
-    // In order to handle edge cases where the resize observer does not catch
-    // a resize (such as when iPhone toolbar changes), we also check for resize
-    // every windowResizeInterval milliseconds.
-    if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
-      this.handleWindowResize();
-      this.lastManualWindowResizeTime = time;
-    }
   }
 
   /*
@@ -122,8 +97,6 @@ export class MainGameScene extends Generic2DGameScene {
     super.subscribeToEvents();
 
     // Subscribe to events for this scene
-    this.setUpWindowResizeHandling();
-
     document.addEventListener(
       "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
@@ -158,8 +131,6 @@ export class MainGameScene extends Generic2DGameScene {
     super.unsubscribeFromEvents();
 
     // Unsubscribe from events for this scene
-    this.tearDownWindowResizeHandling();
-
     document.removeEventListener(
       "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
@@ -241,59 +212,10 @@ export class MainGameScene extends Generic2DGameScene {
     }
   };
 
-  setUpWindowResizeHandling() {
-    // Observe window resizing so we can adjust the position
-    // and size accordingly!
-
-    // Observe window resizing with ResizeObserver since it is good for snappy changes
-    this.resizeObserver = new ResizeObserver(() => {
-      this.handleWindowResize();
-    });
-    this.resizeObserver.observe(document.documentElement);
-
-    // Also checking for resize or orientation change to try to handle edge cases
-    // that ResizeObserver misses!
-    /* eslint-disable no-restricted-syntax */
-    window.addEventListener("resize", this.handleWindowResize);
-    window.addEventListener("orientationchange", this.handleWindowResize);
-    /* eslint-enable no-restricted-syntax */
-  }
-
-  tearDownWindowResizeHandling() {
-    if (this.resizeObserver != null) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    }
-    /* eslint-disable no-restricted-syntax */
-    window.removeEventListener("resize", this.handleWindowResize);
-    window.removeEventListener("orientationchange", this.handleWindowResize);
-    /* eslint-enable no-restricted-syntax */
-  }
-
-  handleWindowResize = () => {
-    // Ensure the scene is fully initialized before handling resize
-    if (!this.isInitialized) {
-      console.warn("handleWindowResize called before scene initialization.");
-      return;
-    }
-
-    // Update canvas size to match the parent.
-    // This is needed to be done manually since Phaser.AUTO does not
-    // take into account some nuances of screen size on safari/iOS.
-    resizeCanvasToParent(this.game);
-
-    // This is a workaround for the iOS bug where address bar or "enable diction"
-    // window appearing causes scroll that gets stuck.
-
-    /* eslint-disable no-restricted-syntax */
-    if (window.scrollX !== 0 || window.scrollY !== 0) {
-      window.scrollTo(0, 0);
-    }
-
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
-
+  // Override the parent class's handleWindowResizeHook to add custom logic.
+  // This will get called automatically by the parent class's handleWindowResize()
+  // method.
+  handleWindowResizeHook() {
     // Handle resizing of game objs
     if (
       !this.lastKnownWindowSize ||
@@ -303,12 +225,12 @@ export class MainGameScene extends Generic2DGameScene {
       console.warn(
         "lastKnownWindowSize is not properly initialized. Skipping resize handling."
       );
-      this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
       return;
     } else {
+      // If the window size has not changed, do nothing
       if (
-        this.lastKnownWindowSize.x === screenWidth &&
-        this.lastKnownWindowSize.y === screenHeight
+        this.lastKnownWindowSize.x === this.screenInfo.width &&
+        this.lastKnownWindowSize.y === this.screenInfo.height
       ) {
         return;
       }
@@ -321,10 +243,10 @@ export class MainGameScene extends Generic2DGameScene {
           // Calculate new position based on percentage of old position
           const newX =
             (boid.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
-            screenWidth;
+            this.screenInfo.width;
           const newY =
             (boid.physicsBody2D!.position.y / this.lastKnownWindowSize.y) *
-            screenHeight;
+            this.screenInfo.height;
 
           // handle re-sizing etc. of boid
           boid.handleWindowResize(newX, newY);
@@ -338,10 +260,7 @@ export class MainGameScene extends Generic2DGameScene {
         }
       }
     }
-
-    // Update lastKnownWindowSize to current screen dimensions
-    this.lastKnownWindowSize = new Vec2(screenWidth, screenHeight);
-  };
+  }
 
   /*
    * Note that this function is called by GameScene2D during shutdown,
