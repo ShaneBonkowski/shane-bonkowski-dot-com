@@ -145,8 +145,8 @@ export class Tile extends GameObject {
     const targetScale = this.calculateScale();
     if (this.scale != null) {
       this.scale = new Vec2(
-        MoreMath.lerpWithThreshold(this.scale.x, targetScale.x, 1, 1.5),
-        MoreMath.lerpWithThreshold(this.scale.y, targetScale.y, 1, 1.5)
+        MoreMath.lerpWithThreshold(this.scale.x, targetScale.x, 0.2, 0.5),
+        MoreMath.lerpWithThreshold(this.scale.y, targetScale.y, 0.2, 0.5)
       );
     } else {
       this.scale = targetScale;
@@ -165,18 +165,15 @@ export class Tile extends GameObject {
   }
 
   calculateDefaultScale(): number {
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    /* eslint-enable no-restricted-syntax */
-
     // Calculate the scale based on the screen width
-    let scale = (screenHeight * 0.035) / 600;
+    let scale = (this.scene!.screenInfo.height * 0.035) / 600;
 
     // Phone screen has larger
-    if (screenWidth <= 600 || isPortrait) {
-      scale = (screenHeight * 0.022) / 600;
+    if (
+      this.scene!.screenInfo.width <= 600 ||
+      this.scene!.screenInfo.isPortrait
+    ) {
+      scale = (this.scene!.screenInfo.height * 0.022) / 600;
     }
 
     // Scale according to zoom!
@@ -192,8 +189,8 @@ export class Tile extends GameObject {
       this.physicsBody2D!.position.x = MoreMath.lerpWithThreshold(
         this.physicsBody2D!.position.x,
         newPosition.x,
-        0.5,
-        0.75
+        0.65,
+        1
       );
     } else {
       this.physicsBody2D!.position.x = newPosition.x;
@@ -203,8 +200,8 @@ export class Tile extends GameObject {
       this.physicsBody2D!.position.y = MoreMath.lerpWithThreshold(
         this.physicsBody2D!.position.y,
         newPosition.y,
-        0.5,
-        0.75
+        0.65,
+        1
       );
     } else {
       this.physicsBody2D!.position.y = newPosition.y;
@@ -215,20 +212,17 @@ export class Tile extends GameObject {
   }
 
   calculateTilePosition(): Vec2 {
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    /* eslint-enable no-restricted-syntax */
-
     // Get the tile location from the grid location and screen size
-    let centerX = screenWidth / 2;
-    let centerY = screenHeight / 2;
+    let centerX = this.scene!.screenInfo.width / 2;
+    let centerY = this.scene!.screenInfo.height / 2;
     let smallAmountForGrid = 0; // allows me to add small amount to create a buffer for the "grid"
 
     // for phones change the center location etc.
-    if (screenWidth <= 600 || isPortrait) {
-      centerY = screenHeight * 0.47;
+    if (
+      this.scene!.screenInfo.width <= 600 ||
+      this.scene!.screenInfo.isPortrait
+    ) {
+      centerY = this.scene!.screenInfo.height * 0.47;
       smallAmountForGrid = 0;
     }
 
@@ -236,12 +230,12 @@ export class Tile extends GameObject {
     centerX = MoreMath.clamp(
       centerX + this.scene!.gestureManager.dragOffsetX,
       0,
-      screenWidth
+      this.scene!.screenInfo.width
     );
     centerY = MoreMath.clamp(
       centerY + this.scene!.gestureManager.dragOffsetY,
       0,
-      screenHeight
+      this.scene!.screenInfo.height
     );
 
     // Calculate the starting position for the bottom-left tile in the grid
