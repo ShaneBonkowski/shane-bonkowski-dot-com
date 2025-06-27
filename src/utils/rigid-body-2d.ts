@@ -60,15 +60,14 @@ export class RigidBody2D {
    * Check for a collision with the screen edge with this body.
    * @param {number} edgeMargin - How close to the screen edge to be considered a collision.
    */
-  checkCollideScreenEdge(edgeMargin: number = 1) {
+  checkCollideScreenEdge(
+    screenWidth: number,
+    screenHeight: number,
+    edgeMargin: number = 1
+  ) {
     if (this.gameObject!.disabled) {
       return;
     }
-
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
 
     let collisionDirection = null;
 

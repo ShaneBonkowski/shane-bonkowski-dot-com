@@ -243,14 +243,8 @@ export class Character extends GameObject {
 
   calculateScale(): Vec2 {
     // Scale w/ viewport at same scale as bkg's etc.
-
-    /* eslint-disable no-restricted-syntax */
-    const screenWidth = window.visualViewport?.width || window.innerWidth;
-    const screenHeight = window.visualViewport?.height || window.innerHeight;
-    /* eslint-enable no-restricted-syntax */
-
-    let scaleX = screenWidth / REFERENCE_BKG_SIZE.x;
-    let scaleY = screenHeight / REFERENCE_BKG_SIZE.y;
+    let scaleX = this.scene!.screenInfo.width / REFERENCE_BKG_SIZE.x;
+    let scaleY = this.scene!.screenInfo.height / REFERENCE_BKG_SIZE.y;
 
     // enemy faces left
     if (this.type === CHARACTER_TYPES.ENEMY) {
