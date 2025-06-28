@@ -9,6 +9,7 @@ export class Generic2DGameScene extends Phaser.Scene {
   // Scene state
   public gameStarted: boolean = false;
   public isInitialized: boolean = false;
+  public uiMenuOpen: boolean = false;
 
   // Window/screen info
   public screenInfo = { width: 0, height: 0, isPortrait: false };
@@ -58,10 +59,26 @@ export class Generic2DGameScene extends Phaser.Scene {
     this.handleWindowResize();
   }
 
+  update(time: number, delta: number): void {
+    // No-op to use the variables and avoid warnings...
+    // Remove these lines if delta ever gets used.
+    void delta;
+
+    // In order to handle edge cases where the resize observer does not catch
+    // a resize (such as when iPhone toolbar changes), we also check for resize
+    // every windowResizeInterval milliseconds.
+    if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
+      this.handleWindowResize();
+      this.lastManualWindowResizeTime = time;
+    }
+  }
+
   subscribeToEvents() {
     // Add event listeners for the scene
     // ...
     this.setUpWindowResizeHandling();
+    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   setUpWindowResizeHandling() {
@@ -85,6 +102,8 @@ export class Generic2DGameScene extends Phaser.Scene {
     // Remove event listeners for the scene
     // ...
     this.tearDownWindowResizeHandling();
+    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
+    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   tearDownWindowResizeHandling() {
@@ -150,18 +169,30 @@ export class Generic2DGameScene extends Phaser.Scene {
     // ...
   }
 
-  update(time: number, delta: number): void {
-    // No-op to use the variables and avoid warnings...
-    // Remove these lines if delta ever gets used.
-    void delta;
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleUiMenuOpen = () => {
+    this.uiMenuOpen = true;
+    this.handleUiMenuOpenHook();
+  };
 
-    // In order to handle edge cases where the resize observer does not catch
-    // a resize (such as when iPhone toolbar changes), we also check for resize
-    // every windowResizeInterval milliseconds.
-    if (time - this.lastManualWindowResizeTime >= this.windowResizeInterval) {
-      this.handleWindowResize();
-      this.lastManualWindowResizeTime = time;
-    }
+  handleUiMenuOpenHook() {
+    // Override this method in subclasses to add custom logic when the UI menu opens
+    // For example, pause the game or show a specific UI element
+    // ...
+  }
+
+  // Using Arrow Function to bind the context of "this" to the class instance.
+  // This is necc. for event handlers.
+  handleUiMenuClose = () => {
+    this.uiMenuOpen = false;
+    this.handleUiMenuCloseHook();
+  };
+
+  handleUiMenuCloseHook() {
+    // Override this method in subclasses to add custom logic when the UI menu closes
+    // For example, resume the game or hide a specific UI element
+    // ...
   }
 
   shutdown(): void {

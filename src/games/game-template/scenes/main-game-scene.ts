@@ -9,7 +9,6 @@ import {
 export class MainGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
   public maxBalls: number = 10;
-  public uiMenuOpen: boolean = false;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -79,8 +78,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Subscribe to events for this scene
     this.input.on("pointerdown", this.handlePointerDown, this);
-    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   /*
@@ -92,21 +89,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Unsubscribe from events for this scene
     this.input.off("pointerdown", this.handlePointerDown, this);
-    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
   }
-
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleUiMenuOpen = () => {
-    this.uiMenuOpen = true;
-  };
-
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleUiMenuClose = () => {
-    this.uiMenuOpen = false;
-  };
 
   // Override the parent class's handleWindowResizeHook to add custom logic.
   // This will get called automatically by the parent class's handleWindowResize()

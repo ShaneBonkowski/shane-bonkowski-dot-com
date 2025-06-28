@@ -25,7 +25,6 @@ export class MainGameScene extends Generic2DGameScene {
   public disableClickID: number = 0;
   public revealedAtLeastOnceThisLevel: boolean = false;
   private solvedTimeoutID: NodeJS.Timeout | null = null;
-  public uiMenuOpen: boolean = false;
 
   public score: number = 0;
   public solutionRevealed: boolean = false;
@@ -307,8 +306,6 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("resetTilePattern", this.handleResetTilePattern);
     document.addEventListener("difficultyChange", this.handleDifficultyChange);
     document.addEventListener("toggleSolution", this.handleToggleSolution);
-    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   /*
@@ -329,17 +326,7 @@ export class MainGameScene extends Generic2DGameScene {
       this.handleDifficultyChange
     );
     document.removeEventListener("toggleSolution", this.handleToggleSolution);
-    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
   }
-
-  handleUiMenuOpen = () => {
-    this.uiMenuOpen = true;
-  };
-
-  handleUiMenuClose = () => {
-    this.uiMenuOpen = false;
-  };
 
   // Override the parent class's handleWindowResizeHook to add custom logic.
   // This will get called automatically by the parent class's handleWindowResize()

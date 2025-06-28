@@ -16,7 +16,6 @@ let holdTimeout: NodeJS.Timeout | null = null;
 
 export class MainGameScene extends Generic2DGameScene {
   public boids: Boid[] = [];
-  public uiMenuOpen: boolean = false;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -118,9 +117,6 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("pointerdown", this.handleProlongedHoldCheck, {
       capture: true,
     });
-
-    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
   }
 
   /*
@@ -135,24 +131,11 @@ export class MainGameScene extends Generic2DGameScene {
       "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
-
     document.removeEventListener("pointerdown", this.handleIsInteracting);
     document.removeEventListener("pointerup", this.handleIsNotInteracting);
     document.removeEventListener("pointercancel", this.handleIsNotInteracting);
-
     document.removeEventListener("pointerdown", this.handleProlongedHoldCheck);
-
-    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
   }
-
-  handleUiMenuOpen = () => {
-    this.uiMenuOpen = true;
-  };
-
-  handleUiMenuClose = () => {
-    this.uiMenuOpen = false;
-  };
 
   handleProlongedHoldCheck = () => {
     // Define holdTimeout if it is not already (note that it gets cleared on pointerup below)
