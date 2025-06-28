@@ -11,8 +11,8 @@ import {
 } from "react-icons/gi";
 import MovingSliderBar from "@/src/components/MovingSliderBar";
 import GameIconButton from "@/src/components/GameIconButton";
-import Feed from "@/src/games/cowpoke/components/Feed";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
+import Feed from "@/src/games/cowpoke/components/Feed";
 
 export default function GameControls() {
   const [isVisible, setIsVisible] = useState(true);
@@ -129,16 +129,13 @@ export default function GameControls() {
 
   return (
     <div
-      className={`z-20 w-full max-w-[55vw] h-full flex flex-col justify-center gap-4 ${
+      className={`z-20 w-full max-w-[50vw] h-full flex flex-col justify-center gap-4 ${
         isVisible ? "" : "hidden"
       }`}
     >
       {/* Controls */}
       <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
-        <MovingSliderBar
-          sliderId={"win-element"}
-          speed={fastMode ? 1.7 : 0.9}
-        />
+        <MovingSliderBar sliderId={"win-element"} speed={fastMode ? 2 : 1.25} />
         <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectRock}
@@ -183,7 +180,7 @@ export default function GameControls() {
       </div>
 
       <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
-        <MovingSliderBar sliderId={"win-combat"} speed={fastMode ? 1.7 : 0.9} />
+        <MovingSliderBar sliderId={"win-combat"} speed={fastMode ? 2 : 1.25} />
         <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectAttack}
@@ -228,7 +225,7 @@ export default function GameControls() {
       </div>
 
       {/* Feed */}
-      <Feed />
+      <Feed heightClass="max-h-32" />
     </div>
   );
 }

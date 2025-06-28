@@ -52,17 +52,6 @@ export const gameInfoData: ContentDataProps[] = [
       "<b>3</b>: Select Counter",
     ],
   },
-  {
-    type: "paragraph",
-    text: "General:",
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Up Arrow</b>: Scroll up in the feed",
-      "<b>Down Arrow</b>: Scroll down in the feed",
-    ],
-  },
 ];
 
 // Singleton Phaser game instance
@@ -147,7 +136,7 @@ const GameComponent: React.FC = () => {
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
       />
-      <div className="relative top-5 flex flex-col gap-4 justify-center items-center">
+      <div className="relative p-5 flex flex-col gap-4 justify-center items-center">
         <UpperHud />
         <GameControls />
       </div>

@@ -43,7 +43,7 @@ export default function CharacterInfoBar({
 
   return (
     <div
-      className={`relative w-full z-20 p-2 flex flex-col ${positionClasses}`}
+      className={`relative w-full z-20 flex flex-col ${positionClasses}`}
       id="character-info-bar"
       aria-label="Character Info Bar"
     >
