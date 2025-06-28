@@ -243,7 +243,7 @@ const StartEndMenu: React.FC = () => {
       {/* Reset Stats Popup */}
       {resetStatsVisible && (
         <YesNoBox
-          yesButtonText="Reset Stats"
+          yesButtonText="Reset"
           noButtonText="Cancel"
           onYes={onYesReset}
           onNo={onNoReset}
