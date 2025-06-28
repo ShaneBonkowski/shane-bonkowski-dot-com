@@ -215,34 +215,38 @@ export class Tile extends GameObject {
     // Get the tile location from the grid location and screen size
     let centerX = this.scene!.screenInfo.width / 2;
     let centerY = this.scene!.screenInfo.height / 2;
-    let smallAmountForGrid = 0; // allows me to add small amount to create a buffer for the "grid"
+    const smallAmountForGrid = 0; // allows me to add small amount to create a buffer for the "grid"
 
-    // for phones change the center location etc.
-    if (
-      this.scene!.screenInfo.width <= 600 ||
-      this.scene!.screenInfo.isPortrait
-    ) {
-      centerY = this.scene!.screenInfo.height * 0.47;
-      smallAmountForGrid = 0;
-    }
+    // Calculate the total grid size in pixels (taking into account scale and tile "ON" size)
+    const tileScale = this.calculateDefaultScale() * TILE_ON_SCALE_FACTOR;
+    const tileSizePx = 600 * tileScale; // = size of tile png of 600px * "ON" scale
+    const gridWidthPx = tileSizePx * tileGridAttrs.tileGridWidth;
+    const gridHeightPx = tileSizePx * tileGridAttrs.tileGridHeight;
 
-    // Add in any drag offset, but clamp to within screen bounds
+    // Calculate min/max center positions so grid stays on screen (clamps so
+    // that at least 1 tile is visible)
+    const minCenterX = (-1 * gridWidthPx) / 2 + tileSizePx;
+    const maxCenterX =
+      this.scene!.screenInfo.width + gridWidthPx / 2 - tileSizePx;
+
+    const minCenterY = (-1 * gridHeightPx) / 2 + tileSizePx;
+    const maxCenterY =
+      this.scene!.screenInfo.height + gridHeightPx / 2 - tileSizePx;
+
+    // Add in the drag offset, but clamp so grid stays visible
     centerX = MoreMath.clamp(
       centerX + this.scene!.gestureManager.dragOffsetX,
-      0,
-      this.scene!.screenInfo.width
+      minCenterX,
+      maxCenterX
     );
     centerY = MoreMath.clamp(
       centerY + this.scene!.gestureManager.dragOffsetY,
-      0,
-      this.scene!.screenInfo.height
+      minCenterY,
+      maxCenterY
     );
 
     // Calculate the starting position for the bottom-left tile in the grid
-    // max size = size of tile png which is 600px * max scale
-    const maxSize = 600 * this.calculateDefaultScale() * TILE_ON_SCALE_FACTOR;
-
-    const tileSpacing = maxSize + smallAmountForGrid;
+    const tileSpacing = tileSizePx + smallAmountForGrid;
     let startGridX, startGridY;
 
     if (tileGridAttrs.tileGridWidth % 2 === 0) {
@@ -265,7 +269,7 @@ export class Tile extends GameObject {
         centerY + ((tileGridAttrs.tileGridHeight - 1) / 2) * tileSpacing;
     }
 
-    // Calculate the position of the current tile in the grid
+    // Calculate the position of the current tile in the grid from bottom-left
     const tileX = startGridX + this.gridSpaceLoc.x * tileSpacing;
     const tileY = startGridY - this.gridSpaceLoc.y * tileSpacing;
 
