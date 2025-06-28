@@ -52,17 +52,6 @@ export const gameInfoData: ContentDataProps[] = [
       "<b>3</b>: Select Counter",
     ],
   },
-  {
-    type: "paragraph",
-    text: "General:",
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Up Arrow</b>: Scroll up in the feed",
-      "<b>Down Arrow</b>: Scroll down in the feed",
-    ],
-  },
 ];
 
 // Singleton Phaser game instance
