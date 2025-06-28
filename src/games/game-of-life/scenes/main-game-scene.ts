@@ -445,8 +445,8 @@ export class MainGameScene extends Generic2DGameScene {
     tileGridAttrs.tileGridHeight = tileGridHeightPhone;
 
     // Set different zoom / drag rates on phone
-    this.gestureManager.setDragRate(0.9);
-    this.gestureManager.setZoomRate(0.07);
+    this.gestureManager.setDragRate(1.5);
+    this.gestureManager.setZoomRate(0.09);
 
     // init or re-init all tiles
     this.livingTilespaceSet.clear();
