@@ -36,7 +36,6 @@ const unseededRandom = new SeededRandom();
 
 export class MainGameScene extends Generic2DGameScene {
   public paused: boolean = false;
-  public uiMenuOpen: boolean = false;
   public gameOfLifeType: string = "";
   public livingTilespaceSet: LivingTilespaceSet = new LivingTilespaceSet();
   public gestureManager: GestureManager = new GestureManager();
@@ -372,9 +371,6 @@ export class MainGameScene extends Generic2DGameScene {
   subscribeToEvents() {
     super.subscribeToEvents();
 
-    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
-
     document.addEventListener("clickAdvance", this.handleClickAdvance);
     document.addEventListener("resetTiles", this.handleResetTiles);
   }
@@ -385,9 +381,6 @@ export class MainGameScene extends Generic2DGameScene {
    */
   unsubscribeFromEvents() {
     super.unsubscribeFromEvents();
-
-    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
 
     document.removeEventListener("clickAdvance", this.handleClickAdvance);
     document.removeEventListener("resetTiles", this.handleResetTiles);
@@ -405,18 +398,16 @@ export class MainGameScene extends Generic2DGameScene {
     }
   };
 
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleUiMenuOpen = () => {
-    this.uiMenuOpen = true;
+  // Override the parent class's handleUiMenuOpenHook to add custom logic.
+  // This will get called automatically by the parent class.
+  handleUiMenuOpenHook() {
     this.gestureManager.blockDrag();
     this.gestureManager.blockZoom();
-  };
+  }
 
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleUiMenuClose = () => {
-    this.uiMenuOpen = false;
+  // Override the parent class's handleUiMenuCloseHook to add custom logic.
+  // This will get called automatically by the parent class.
+  handleUiMenuCloseHook = () => {
     this.gestureManager.unblockDrag();
     this.gestureManager.unblockZoom();
   };

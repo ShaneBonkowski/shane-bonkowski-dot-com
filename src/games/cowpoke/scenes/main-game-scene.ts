@@ -51,7 +51,6 @@ export class MainGameScene extends Generic2DGameScene {
   public playerGoesFirst: boolean = true;
   public random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
 
-  public uiMenuOpen: boolean = false;
   public moving: boolean = false;
   private movingStartTime: number = 0;
   private movingDuration: number = MOVING_DURATION_DEFAULT; // ms
@@ -476,10 +475,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Subscribe to events for this scene
     document.addEventListener("startLoadingGame", this.startGame);
-
-    document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.addEventListener("uiMenuClose", this.handleUiMenuClose);
-
     document.addEventListener("selectElement", this.ready);
     document.addEventListener("selectCombat", this.draw);
     document.addEventListener(
@@ -503,10 +498,6 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Unsubscribe from events for this scene
     document.removeEventListener("startLoadingGame", this.startGame);
-
-    document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
-    document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
-
     document.removeEventListener("selectElement", this.ready);
     document.removeEventListener("selectCombat", this.draw);
     document.removeEventListener(
@@ -1013,18 +1004,6 @@ export class MainGameScene extends Generic2DGameScene {
         break;
     }
   }
-
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleUiMenuOpen = () => {
-    this.uiMenuOpen = true;
-  };
-
-  // Using Arrow Function to bind the context of "this" to the class instance.
-  // This is necc. for event handlers.
-  handleUiMenuClose = () => {
-    this.uiMenuOpen = false;
-  };
 
   // Override the parent class's handleWindowResizeHook to add custom logic.
   // This will get called automatically by the parent class's handleWindowResize()
