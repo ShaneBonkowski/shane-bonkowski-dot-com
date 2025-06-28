@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { sanitizeHtml } from "@/src/utils/sanitize";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
-import GameIconButton from "@/src/components/GameIconButton";
 
 type FeedMsg = {
   msg: string;
@@ -12,66 +10,35 @@ type FeedMsg = {
 };
 
 type FeedProps = {
-  initialFeedList?: FeedMsg[];
   maxFeedLength?: number;
+  heightClass?: string;
 };
 
-// // EDIT: I removed this since it doesnt look super good.
-// // Top of floor is about at 225 px on the unscaled background.
-// // Try to make feed the height of the floor, so it looks like it is on the floor nicely.
-// const heightVh = (228 / REFERENCE_BKG_SIZE.y) * 100; // 100vh is the full viewport height
-
 export default function Feed({
-  initialFeedList = [],
   maxFeedLength = 100,
+  heightClass = "h-[200px]", // e.g. "h-32", "h-[200px]", "h-full", etc.
 }: FeedProps) {
   const [isVisible, setIsVisible] = useState(true);
-  const [feedList, setFeedList] = useState<FeedMsg[]>(initialFeedList);
-  const [viewIndex, setViewIndex] = useState(0); // 0 = bottom (most recent)
+  const [feedList, setFeedList] = useState<FeedMsg[]>([]);
+  const feedRef = useRef<HTMLDivElement>(null);
 
-  // Show the x most recent messages based on viewIndex
-  const feedViewLength = 4;
-  const start = Math.max(0, feedList.length - feedViewLength - viewIndex);
-  const end = Math.max(0, feedList.length - viewIndex);
-  const visibleFeedRaw = feedList.slice(start, end);
-
-  // Pad with empty messages if less than feedViewLength
-  const missing = feedViewLength - visibleFeedRaw.length;
-  const visibleFeed =
-    missing > 0
-      ? visibleFeedRaw.concat(
-          Array(missing).fill({ msg: "", sender: "", align: "left" })
-        )
-      : visibleFeedRaw;
-
-  // Allow/disallow scrolling if on top or bottom of feed
-  const canScrollUp = viewIndex < feedList.length - feedViewLength;
-  const canScrollDown = viewIndex > 0;
-
-  const handleScrollUp = useCallback(() => {
-    if (canScrollUp)
-      setViewIndex((i) => Math.min(i + 1, feedList.length - feedViewLength));
-  }, [canScrollUp, feedList.length, feedViewLength]);
-
-  const handleScrollDown = useCallback(() => {
-    if (canScrollDown) setViewIndex((i) => Math.max(i - 1, 0));
-  }, [canScrollDown]);
+  // Scroll to bottom when feedList changes
+  useEffect(() => {
+    if (feedRef.current) {
+      feedRef.current.scrollTop = feedRef.current.scrollHeight;
+    }
+  }, [feedList]);
 
   useEffect(() => {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
     function updateFeed(item: FeedMsg) {
       setFeedList((prev) => {
         const newFeed = [...prev, item].slice(-maxFeedLength);
         return newFeed;
       });
-      setViewIndex(0); // Jump to bottom on new message
     }
 
     function handleClearFeed() {
       setFeedList([]);
-      setViewIndex(0);
     }
 
     function handleNewMessage(e: Event) {
@@ -95,42 +62,33 @@ export default function Feed({
       setIsVisible(true);
     };
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp") {
-        handleScrollUp();
-      } else if (e.key === "ArrowDown") {
-        handleScrollDown();
-      }
-    };
-
     document.addEventListener("newMessage", handleNewMessage);
     document.addEventListener("clearFeed", handleClearFeed);
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
-    // eslint-disable-next-line no-restricted-syntax
-    window.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("newMessage", handleNewMessage);
       document.removeEventListener("clearFeed", handleClearFeed);
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
-      // eslint-disable-next-line no-restricted-syntax
-      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [maxFeedLength, handleScrollUp, handleScrollDown]);
+  }, [maxFeedLength]);
 
   return (
     <div
-      className={`z-20 w-full 
-            ${
-              isVisible ? "" : "hidden"
-            } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border border-black`}
+      className={`z-20 w-full ${
+        isVisible ? "" : "hidden"
+      } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border border-black`}
       aria-label="Feed Container"
     >
-      <div className="flex flex-col w-full gap-1" aria-label="Feed Content">
-        {visibleFeed.map((item, i) => (
+      <div
+        ref={feedRef}
+        className={`flex flex-col w-full gap-1 overflow-y-auto ${heightClass}`}
+        aria-label="Feed Content"
+      >
+        {feedList.map((item, i) => (
           <div
-            key={start + i}
+            key={i}
             className={`text-primary-text-color-light text-sm ${
               item.align === "right"
                 ? "text-right"
@@ -153,26 +111,6 @@ export default function Feed({
             }}
           />
         ))}
-      </div>
-      <div
-        className="flex flex-col justify-end mb-1 gap-2"
-        aria-label="Feed Scroll Buttons Container"
-        title="Shortcut: Press UP/DOWN Arrows" // tooltip
-      >
-        <GameIconButton
-          onPointerDown={handleScrollUp}
-          icon={<FaArrowUp size={30} />}
-          ariaLabel="Scroll up"
-          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-          disabled={!canScrollUp}
-        />
-        <GameIconButton
-          onPointerDown={handleScrollDown}
-          icon={<FaArrowDown size={30} />}
-          ariaLabel="Scroll down"
-          darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
-          disabled={!canScrollDown}
-        />
       </div>
     </div>
   );

@@ -228,7 +228,7 @@ export default function GameControls() {
       </div>
 
       {/* Feed */}
-      <Feed />
+      <Feed heightClass="h-32" />
     </div>
   );
 }
