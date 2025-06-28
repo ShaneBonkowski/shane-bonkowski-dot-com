@@ -20,6 +20,10 @@ export default function MovingSliderBar({
   const [direction, setDirection] = useState(1); // 1 = right, -1 = left
   const animationRef = useRef<number | null>(null);
 
+  // Use a ref for bar position to avoid React batching issues
+  const barPosRef = useRef(barPos);
+  barPosRef.current = barPos;
+
   // Handle start/stop slider bar
   useEffect(() => {
     const startMovingSlider = () => {
@@ -77,23 +81,25 @@ export default function MovingSliderBar({
     const animate = (now: number) => {
       const dt = (now - lastTime) / 1000;
       lastTime = now;
-      setBarPos((prev) => {
-        let next = prev + direction * speed * dt;
-        if (next > 1) {
-          next = 1;
-          setDirection(-1);
-        } else if (next < 0) {
-          next = 0;
-          setDirection(1);
-        }
-        return next;
-      });
+      let next = barPosRef.current + direction * speed * dt;
+      let newDirection = direction;
+      if (next > 1) {
+        next = 1;
+        newDirection = -1;
+      } else if (next < 0) {
+        next = 0;
+        newDirection = 1;
+      }
+      barPosRef.current = next;
+      setBarPos(next); // Only for rendering
+      setDirection(newDirection);
       animationRef.current = requestAnimationFrame(animate);
     };
     animationRef.current = requestAnimationFrame(animate);
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
+    // Only re-run when moving starts/stops or speed changes
   }, [moving, direction, speed]);
 
   // Position the moving and target bars
