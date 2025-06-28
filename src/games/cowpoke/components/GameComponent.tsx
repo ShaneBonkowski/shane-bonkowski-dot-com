@@ -136,7 +136,7 @@ const GameComponent: React.FC = () => {
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
       />
-      <div className="relative top-5 flex flex-col gap-4 justify-center items-center">
+      <div className="relative p-5 flex flex-col gap-4 justify-center items-center">
         <UpperHud />
         <GameControls />
       </div>

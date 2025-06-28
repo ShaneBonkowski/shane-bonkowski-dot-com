@@ -16,7 +16,7 @@ type FeedProps = {
 
 export default function Feed({
   maxFeedLength = 100,
-  heightClass = "h-[200px]", // e.g. "h-32", "h-[200px]", "h-full", etc.
+  heightClass = "h-[200px]", // e.g. "max-h-32", "h-[200px]", "h-full", etc.
 }: FeedProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [feedList, setFeedList] = useState<FeedMsg[]>([]);
@@ -76,42 +76,37 @@ export default function Feed({
 
   return (
     <div
+      ref={feedRef}
       className={`z-20 w-full ${
         isVisible ? "" : "hidden"
-      } p-2 flex flex-row gap-2 items-center cowpoke-panel-white border border-black`}
+      } p-2 flex flex-col gap-1 cowpoke-panel-white border border-black overflow-y-auto ${heightClass}`}
       aria-label="Feed Container"
     >
-      <div
-        ref={feedRef}
-        className={`flex flex-col w-full gap-1 overflow-y-auto ${heightClass}`}
-        aria-label="Feed Content"
-      >
-        {feedList.map((item, i) => (
-          <div
-            key={i}
-            className={`text-primary-text-color-light text-sm ${
-              item.align === "right"
-                ? "text-right"
-                : item.align === "center"
-                ? "text-center"
-                : "text-left"
-            }`}
-            // eslint-disable-next-line no-restricted-syntax
-            dangerouslySetInnerHTML={{
-              __html:
-                item.msg === ""
-                  ? "&nbsp;" // Use non-breaking space for empty messages
-                  : item.align === "right"
-                  ? `${sanitizeHtml(item.msg)}<b> — ${sanitizeHtml(
-                      item.sender
-                    )}</b>`
-                  : `<b>${sanitizeHtml(item.sender)} — </b>${sanitizeHtml(
-                      item.msg
-                    )}`,
-            }}
-          />
-        ))}
-      </div>
+      {feedList.map((item, i) => (
+        <div
+          key={i}
+          className={`text-primary-text-color-light text-sm ${
+            item.align === "right"
+              ? "text-right"
+              : item.align === "center"
+              ? "text-center"
+              : "text-left"
+          }`}
+          // eslint-disable-next-line no-restricted-syntax
+          dangerouslySetInnerHTML={{
+            __html:
+              item.msg === ""
+                ? "&nbsp;" // Use non-breaking space for empty messages
+                : item.align === "right"
+                ? `${sanitizeHtml(item.msg)}<b> — ${sanitizeHtml(
+                    item.sender
+                  )}</b>`
+                : `<b>${sanitizeHtml(item.sender)} — </b>${sanitizeHtml(
+                    item.msg
+                  )}`,
+          }}
+        />
+      ))}
     </div>
   );
 }
