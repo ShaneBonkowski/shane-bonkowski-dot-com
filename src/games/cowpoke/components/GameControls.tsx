@@ -135,10 +135,7 @@ export default function GameControls() {
     >
       {/* Controls */}
       <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
-        <MovingSliderBar
-          sliderId={"win-element"}
-          speed={fastMode ? 1.7 : 0.9}
-        />
+        <MovingSliderBar sliderId={"win-element"} speed={fastMode ? 2 : 1.25} />
         <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectRock}
@@ -183,7 +180,7 @@ export default function GameControls() {
       </div>
 
       <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
-        <MovingSliderBar sliderId={"win-combat"} speed={fastMode ? 1.7 : 0.9} />
+        <MovingSliderBar sliderId={"win-combat"} speed={fastMode ? 2 : 1.25} />
         <div className="flex flex-row gap-4 items-center justify-center">
           <GameIconButton
             onPointerDown={selectAttack}
