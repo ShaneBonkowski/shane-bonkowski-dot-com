@@ -10,10 +10,10 @@ export const gameOfLifeTypes = {
   CONWAY: "Conway's Game of Life",
 };
 
-export const tileGridWidthPhone = 14;
-export const tileGridHeightPhone = 28;
-export const tileGridWidthComputer = 40;
-export const tileGridHeightComputer = 15;
+export const tileGridWidthPhone = 40;
+export const tileGridHeightPhone = 80;
+export const tileGridWidthComputer = 100;
+export const tileGridHeightComputer = 50;
 
 export const tileGridAttrs = {
   tileGridWidth: tileGridWidthComputer,
