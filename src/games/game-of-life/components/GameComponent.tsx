@@ -8,7 +8,6 @@ import {
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import { ContentDataProps } from "@/src/types/data-props";
-import GameMessagePopup from "@/src/components/GameMessagePopup";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import UiOverlay from "@/src/games/game-of-life/components/UiOverlay";
 import SettingsContainer from "@/src/games/game-of-life/components/SettingsContainer";
@@ -113,10 +112,6 @@ const GameComponent: React.FC = () => {
     <>
       {/* UI */}
       <UiOverlay />
-      <GameMessagePopup
-        message="Warning: This game is not fully optimized and may experience lag, especially on mobile."
-        bottom={true}
-      />
       <SettingsContainer />
       <GameInfoContainer
         infoData={gameInfoData}
