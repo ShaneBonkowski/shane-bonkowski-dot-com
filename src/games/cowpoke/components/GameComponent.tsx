@@ -22,7 +22,89 @@ export const gameInfoData: ContentDataProps[] = [
   },
   {
     type: "paragraph",
-    text: "Follow'n in the footsteps of Cowpoke Jack, you're headin' out west to find your place in this here frontier.",
+    text: "Follow'n in the footsteps of Cowpoke Jack, you're headin' out west to find your place in this here frontier one bandit at a time.",
+  },
+  {
+    type: "paragraph",
+    text: "Collect powerful Cowpoke artifacts and get stronger with each bandit you defeat.",
+  },
+  {
+    type: "h2",
+    text: "How to Play",
+  },
+  {
+    type: "paragraph",
+    text: "Each round, you must make two choices: an element (Rock, Paper, or Scissors) and a combat action (Attack, Defend, or Counter). Both choices are made using selection buttons that stop a moving slider bar.",
+  },
+
+  {
+    type: "paragraph",
+    text: "The closer you stop the slider bar to the green target bar, the higher your chance of winning that matchup. In other words, if you stop it close, the enemy is more likely to pick a move that lets you win the matchup.",
+  },
+  {
+    type: "paragraph",
+    text: "As the slider moves, a green box highlights the favored selection, which changes over time. Being favored gives that element or combat selection a damage bonus. For maximum damage, try to time your slider stop with the favored selection.",
+  },
+  {
+    type: "h3",
+    text: "Element",
+  },
+  {
+    type: "paragraph",
+    text: "Elements work like the classic Rock-Paper-Scissors game, with each element having a specific advantage over another. Winning an element matchup increases your damage, while losing decreases it.",
+  },
+  {
+    type: "image",
+    contentImageData: {
+      src: "/webps/games/cowpoke-example-element-bar.webp",
+      alt: "Cowpoke Element Bar Example",
+      width: 600,
+      height: 60,
+    },
+  },
+  {
+    type: "list",
+    items: [
+      "<b>Win element matchup</b>: Increased damage",
+      "<b>Tie element matchup</b>: Base damage",
+      "<b>Lose element matchup</b>: Decreased damage",
+    ],
+  },
+  {
+    type: "h3",
+    text: "Combat",
+  },
+  {
+    type: "paragraph",
+    text: "Combat actions work similarly to elements, but with more nuanced matchups. The following table is read as {your selection} vs. {enemy selection}",
+  },
+  {
+    type: "image",
+    contentImageData: {
+      src: "/webps/games/cowpoke-example-combat-bar.webp",
+      alt: "Cowpoke Combat Bar Example",
+      width: 600,
+      height: 60,
+    },
+  },
+  {
+    type: "list",
+    items: [
+      "<b>Attack vs. Attack</b>: Both deal normal damage.",
+      "<b>Attack vs. Defend</b>: Both deal less damage.",
+      "<b>Attack vs. Counter</b>: Chance to deal no damage; enemy deals increased damage.",
+      "<b>Defend vs. Attack</b>: Both deal less damage.",
+      "<b>Defend vs. Defend</b>: No damage dealt.",
+      "<b>Defend vs. Counter</b>: You deal normal damage; enemy deals no damage.",
+      "<b>Counter vs. Attack</b>: You deal increased damage; enemy has a chance to deal no damage.",
+      "<b>Counter vs. Defend</b>: You deal no damage; enemy deals normal damage.",
+      "<b>Counter vs. Counter</b>: Both deal normal damage.",
+    ],
+  },
+
+  {
+    type: "paragraph",
+    text: "For the optimal outcome, stop the slider bar close to the target and pick the favored element and combat action. Your choices determine who goes first and how much damage is dealt in each round.",
   },
   {
     type: "h2",
