@@ -123,10 +123,16 @@ export class MainGameScene extends Generic2DGameScene {
       "/webps/games/cowpoke-gun-handcannon.webp"
     );
     this.load.image("gun-revolver", "/webps/games/cowpoke-gun-revolver.webp");
+    this.load.image(
+      "gun-crooked-revolver",
+      "/webps/games/cowpoke-gun-crooked-revolver.webp"
+    );
 
     // Hats
     this.load.image("hat-bandito", "/webps/games/cowpoke-hat-bandito.webp");
     this.load.image("hat-sherif", "/webps/games/cowpoke-hat-sherif.webp");
+    this.load.image("hat-wizard", "/webps/games/cowpoke-hat-wizard.webp");
+    this.load.image("hat-santa", "/webps/games/cowpoke-hat-santa.webp");
 
     // Bodies
     this.load.image("body-default", "/webps/games/cowpoke-body-default.webp");
@@ -152,6 +158,9 @@ export class MainGameScene extends Generic2DGameScene {
       "head-chill-guy",
       "/webps/games/cowpoke-head-chill-guy.webp"
     );
+    this.load.image("head-dumb-guy", "/webps/games/cowpoke-head-dumb-guy.webp");
+    this.load.image("head-evil-guy", "/webps/games/cowpoke-head-evil-guy.webp");
+    this.load.image("head-old-guy", "/webps/games/cowpoke-head-old-guy.webp");
 
     // Extras
     this.load.image("rarity-star-1", "/webps/games/cowpoke-rarity-star-1.webp");
