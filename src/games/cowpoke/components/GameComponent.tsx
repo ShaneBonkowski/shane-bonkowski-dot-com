@@ -59,7 +59,7 @@ export const gameInfoData: ContentDataProps[] = [
       src: "/webps/games/cowpoke-example-element-bar.webp",
       alt: "Cowpoke Element Bar Example",
       width: 600,
-      height: 200,
+      height: 60,
     },
   },
   {
@@ -84,7 +84,7 @@ export const gameInfoData: ContentDataProps[] = [
       src: "/webps/games/cowpoke-example-combat-bar.webp",
       alt: "Cowpoke Combat Bar Example",
       width: 600,
-      height: 200,
+      height: 60,
     },
   },
   {
