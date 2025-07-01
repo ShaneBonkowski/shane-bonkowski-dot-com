@@ -159,7 +159,7 @@ const SettingsContainer: React.FC = () => {
         onPointerDown={openWindow}
         icon={<FaCog size={30} />}
         ariaLabel="Settings"
-        className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
+        className={`fixed bottom-3 left-3 ${isButtonVisible ? "" : "hidden"}`}
         lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
         title="Settings"
       />

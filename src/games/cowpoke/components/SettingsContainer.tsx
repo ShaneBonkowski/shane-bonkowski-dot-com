@@ -220,7 +220,7 @@ const SettingsContainer: React.FC = () => {
 
   return (
     <>
-      <div className="z-20 fixed bottom-5 left-5 flex flex-row items-center gap-2">
+      <div className="z-20 fixed bottom-3 left-3 flex flex-row items-center gap-2">
         <GameIconButton
           onPointerDown={openWindow}
           icon={<FaCog size={30} />}
@@ -242,7 +242,7 @@ const SettingsContainer: React.FC = () => {
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         <div className="flex flex-col items-center gap-6 mb-6">
           {/* Title */}
-          <h1 className="text-center">Cowpoke Gear & Upgrades</h1>
+          <h1 className="text-center">Gear & Upgrades</h1>
 
           {/* Upgrades Section */}
           <div>
@@ -254,7 +254,7 @@ const SettingsContainer: React.FC = () => {
             ) : (
               <p className="text-center">Level up to earn upgrade points!</p>
             )}
-            <div className="flex flex-row gap-6 justify-center">
+            <div className="flex flex-row gap-4 justify-center">
               <UpgradeButton
                 type="Health"
                 icon={<FaHeart size={30} />}

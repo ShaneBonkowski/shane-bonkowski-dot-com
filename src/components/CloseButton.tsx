@@ -19,7 +19,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({ onClose }) => {
 
   return (
     <button
-      className={`absolute top-[2rem] right-[2rem] landscape:top-[2.5rem] landscape:right-[2.5rem] text-3xl font-bold text-primary-text-color-light dark:text-primary-text-color text-outline-light dark:text-outline-dark ${
+      className={`px-[10px] py-[4px] absolute top-[1.75rem] right-[1.35rem] landscape:top-[2.25rem] landscape:right-[1.9rem] text-3xl font-bold text-primary-text-color-light dark:text-primary-text-color text-outline-light dark:text-outline-dark ${
         isHoverable
           ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
           : ""

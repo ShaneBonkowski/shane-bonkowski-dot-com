@@ -208,7 +208,7 @@ const StartEndMenu: React.FC = () => {
 
         {/* Input + Start Loading Game Button */}
         <div
-          className="fixed bottom-5 right-5 flex flex-row gap-4 items-center"
+          className="fixed bottom-4 right-4 flex flex-row gap-4 items-center"
           title="Shortcut: Press Enter to begin" // tooltip
         >
           <input
@@ -235,7 +235,7 @@ const StartEndMenu: React.FC = () => {
           icon={<FaRedo size={30} />}
           ariaLabel="Reset Lifetime Stats"
           darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-          className={`fixed bottom-5 left-5`}
+          className={`fixed bottom-3 left-3`}
           title="Reset Lifetime Stats"
         />
       </GameUiWindow>

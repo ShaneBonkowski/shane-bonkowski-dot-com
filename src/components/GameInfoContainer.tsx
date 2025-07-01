@@ -65,7 +65,7 @@ const GameInfoContainer: React.FC<{
         onPointerDown={openInfoWindow}
         icon={<FaInfoCircle size={30} />}
         ariaLabel="Game Information"
-        className={`fixed bottom-5 right-5 ${isButtonVisible ? "" : "hidden"}`}
+        className={`fixed bottom-3 right-3 ${isButtonVisible ? "" : "hidden"}`}
         lightModeDark={lightModeDark}
         darkModeLight={darkModeLight}
         whiteBackground={whiteBackground}

@@ -134,9 +134,9 @@ export default function GameControls() {
       }`}
     >
       {/* Controls */}
-      <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
+      <div className="h-8 flex flex-row gap-3 justify-center items-stretch">
         <MovingSliderBar sliderId={"win-element"} speed={fastMode ? 2 : 1.25} />
-        <div className="flex flex-row gap-4 items-center justify-center">
+        <div className="flex flex-row gap-0 items-center justify-center">
           <GameIconButton
             onPointerDown={selectRock}
             icon={<GiRock size={30} />}
@@ -145,7 +145,7 @@ export default function GameControls() {
             disabled={elementDisabled}
             className={
               favoredElement === "rock" && !elementDisabled
-                ? "ring-2 ring-green-500 ring-offset-2"
+                ? "ring-2 ring-green-500"
                 : ""
             }
             title="Shortcut: Press 1 for rock" // tooltip
@@ -158,7 +158,7 @@ export default function GameControls() {
             disabled={elementDisabled}
             className={
               favoredElement === "paper" && !elementDisabled
-                ? "ring-2 ring-green-500 ring-offset-2"
+                ? "ring-2 ring-green-500"
                 : ""
             }
             title="Shortcut: Press 2 for paper" // tooltip
@@ -171,7 +171,7 @@ export default function GameControls() {
             disabled={elementDisabled}
             className={
               favoredElement === "scissors" && !elementDisabled
-                ? "ring-2 ring-green-500 ring-offset-2"
+                ? "ring-2 ring-green-500"
                 : ""
             }
             title="Shortcut: Press 3 for scissors" // tooltip
@@ -179,9 +179,9 @@ export default function GameControls() {
         </div>
       </div>
 
-      <div className="h-8 flex flex-row gap-4 justify-center items-stretch">
+      <div className="h-8 flex flex-row gap-3 justify-center items-stretch">
         <MovingSliderBar sliderId={"win-combat"} speed={fastMode ? 2 : 1.25} />
-        <div className="flex flex-row gap-4 items-center justify-center">
+        <div className="flex flex-row gap-0 items-center justify-center">
           <GameIconButton
             onPointerDown={selectAttack}
             icon={<GiCrossedSwords size={30} />}
@@ -190,7 +190,7 @@ export default function GameControls() {
             disabled={combatDisabled}
             className={
               favoredCombat === "attack" && !combatDisabled
-                ? "ring-2 ring-green-500 ring-offset-2"
+                ? "ring-2 ring-green-500"
                 : ""
             }
             title="Shortcut: Press 1 to attack" // tooltip
@@ -203,7 +203,7 @@ export default function GameControls() {
             disabled={combatDisabled}
             className={
               favoredCombat === "defend" && !combatDisabled
-                ? "ring-2 ring-green-500 ring-offset-2"
+                ? "ring-2 ring-green-500"
                 : ""
             }
             title="Shortcut: Press 2 to defend" // tooltip
@@ -216,7 +216,7 @@ export default function GameControls() {
             disabled={combatDisabled}
             className={
               favoredCombat === "counter" && !combatDisabled
-                ? "ring-2 ring-green-500 ring-offset-2"
+                ? "ring-2 ring-green-500"
                 : ""
             }
             title="Shortcut: Press 3 to counter" // tooltip

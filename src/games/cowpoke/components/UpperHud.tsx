@@ -74,7 +74,7 @@ export default function UpperHud() {
   return (
     <div
       id="upper-hud"
-      className={`w-full max-w-[80vw] flex flex-row items-end justify-between p-2 gap-6 ${
+      className={`w-full max-w-[80vw] flex flex-row items-end justify-between p-2 gap-4 ${
         isVisible ? "" : "hidden"
       }`}
       aria-label="Game upper HUD"
@@ -85,7 +85,7 @@ export default function UpperHud() {
       />
 
       <div
-        className="flex flex-row items-center mb-1 gap-4"
+        className="flex flex-row items-center mb-1 gap-0"
         id="hud-controls"
         aria-label="HUD controls"
       >
@@ -103,6 +103,7 @@ export default function UpperHud() {
           ariaLabel="Toggle Fast Mode"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           title="Toggle Fast Mode"
+          className="pb-0" // override from GameIconButton
         />
         <GameIconButton
           onPointerDown={handleTryToEndGame}
@@ -110,8 +111,9 @@ export default function UpperHud() {
           ariaLabel="End Game"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           title="End Game"
+          className="pb-0" // override from GameIconButton
         />
-        <div className="z-20 flex flex-row items-center">
+        <div className="px-[8px] pt-[8px] pb-0 z-20 flex flex-row items-center">
           <FaSkull size={25} className="text-primary-text-color-light" />
           <span className="ml-1 font-bold text-primary-text-color-light">
             <b>x</b>
