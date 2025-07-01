@@ -101,7 +101,7 @@ const LootContainer: React.FC<LootContainerProps> = ({
         </div>
       </div>
       {/* Bottom: Item Name */}
-      <span className="text-xs text-center font-medium text-white">
+      <span className="mt-2 text-xs text-center font-medium text-white">
         <b>{lootItem.name}</b>
       </span>
     </div>

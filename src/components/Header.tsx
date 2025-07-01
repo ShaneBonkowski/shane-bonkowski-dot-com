@@ -69,9 +69,11 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`z-50 pointer-events-none flex justify-between items-center p-common-p sm:p-common-p-sm ${
+      className={`z-50 pointer-events-none flex justify-between items-center ${
         isButtonVisible ? "" : "hidden"
-      } ${isGamesPath ? "absolute top-0 left-0 w-full" : ""}`}
+      } ${
+        isGamesPath ? "absolute top-4 left-4" : "p-common-p sm:p-common-p-sm"
+      }`}
       id="header"
       aria-label="Header"
     >
@@ -86,7 +88,9 @@ const Header: React.FC = () => {
         title="Shane's Games Home"
       >
         <div
-          className="shanes-games-logo space-x-1 sm:space-x-3"
+          className={`shanes-games-logo space-x-1 sm:space-x-3 ${
+            isGamesPath ? "p-[4px]" : "p-[0px]"
+          }`}
           aria-label="Logo and title"
         >
           <Image
@@ -124,12 +128,12 @@ const Header: React.FC = () => {
       {/* Right Section: Navigation Buttons */}
       {!isGamesPath && (
         <nav
-          className="pointer-events-auto flex space-x-4 sm:space-x-5 h-header-btn-h"
+          className="pointer-events-auto flex space-x-1 sm:space-x-2 h-header-btn-h"
           aria-label="Navigation"
         >
           <button
             onPointerDown={toggleDarkMode}
-            className={`text-primary-text-color-light dark:text-primary-text-color ${
+            className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
@@ -147,7 +151,7 @@ const Header: React.FC = () => {
             title="About"
           >
             <div
-              className={`text-primary-text-color-light dark:text-primary-text-color ${
+              className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
                 isHoverable
                   ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                   : ""
@@ -161,7 +165,7 @@ const Header: React.FC = () => {
             href="https://github.com/ShaneBonkowski"
             target="_blank"
             rel="noopener noreferrer"
-            className={`text-primary-text-color-light dark:text-primary-text-color ${
+            className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
@@ -179,7 +183,8 @@ const Header: React.FC = () => {
             title="Shane's Games Home"
           >
             <div
-              className={`text-primary-text-color-light dark:text-primary-text-color ${
+              // Left margin (pl), instead of px like the others, so that it doesn't shift the whole header left
+              className={`pl-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
                 isHoverable
                   ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                   : ""

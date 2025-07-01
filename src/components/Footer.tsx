@@ -29,18 +29,18 @@ const Footer: React.FC = () => {
         aria-label="Footer"
       >
         {/* Main Text */}
-        <p className="text-center">Thanks for visiting Shanes Games!</p>
+        <p className="text-center mb-2">Thanks for visiting Shanes Games!</p>
 
         {/* Social Icons */}
         <div
-          className="flex space-x-4 mt-0 mb-0"
+          className="flex space-x-1 mt-0 mb-0"
           aria-label="Social Media Links"
         >
           <a
             href="https://www.linkedin.com/in/shanebonkowski/"
             target="_blank"
             rel="noopener noreferrer"
-            className={`text-primary-text-color-light dark:text-primary-text-color ${
+            className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
             href="https://github.com/ShaneBonkowski"
             target="_blank"
             rel="noopener noreferrer"
-            className={`text-primary-text-color-light dark:text-primary-text-color ${
+            className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
             title="Shane's Games Home"
           >
             <div
-              className={`text-primary-text-color-light dark:text-primary-text-color ${
+              className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
                 isHoverable
                   ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                   : ""
@@ -96,7 +96,7 @@ const Footer: React.FC = () => {
           title="Privacy Policy"
         >
           <p
-            className={`text-secondary-text-color-light dark:text-secondary-text-color ${
+            className={`mt-1 text-secondary-text-color-light dark:text-secondary-text-color ${
               isHoverable && isHovered
                 ? "underline decoration-inherit"
                 : "no-underline"

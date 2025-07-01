@@ -179,7 +179,7 @@ export default function Home() {
       />
 
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-6 sm:m-8 gap-6 sm:gap-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-common-p sm:p-common-p-sm gap-6 sm:gap-8"
         id="content-boxes"
       >
         {filteredContent.length > 0 ? (

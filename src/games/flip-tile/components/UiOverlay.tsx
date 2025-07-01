@@ -111,7 +111,7 @@ const UiOverlay: React.FC = () => {
       {/* Buttons and Toggles */}
       <div
         id="tile-buttons"
-        className="z-20 pointer-events-none w-full fixed bottom-5 gap-5 flex flex-row justify-center"
+        className="z-20 pointer-events-none w-full fixed bottom-3 gap-1 flex flex-row justify-center"
         aria-label="Tile Buttons"
       >
         {/* Solution Toggle Button */}
@@ -144,7 +144,7 @@ const UiOverlay: React.FC = () => {
       {/* Difficulty Toggles */}
       <div
         id="difficulty-controls"
-        className="z-20 fixed bottom-5 left-5 flex flex-col gap-5"
+        className="z-20 fixed bottom-3 left-3 flex flex-col gap-1"
         aria-label="Difficulty Selection"
       >
         {[

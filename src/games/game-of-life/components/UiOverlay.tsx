@@ -70,7 +70,7 @@ const UiOverlay: React.FC = () => {
   return (
     // z-20 so that its behind z-30 windows, but above mostly everything else
     <div
-      className={`z-20 pointer-events-none fixed bottom-5 w-full flex flex-col gap-3 ${
+      className={`z-20 pointer-events-none fixed bottom-3 w-full flex flex-col gap-1 ${
         isUiVisible ? "" : "hidden"
       }`}
       id="ui-overlay"
@@ -89,7 +89,7 @@ const UiOverlay: React.FC = () => {
       {/* Buttons and Toggles */}
       <div
         id="game-of-life-buttons"
-        className="pointer-events-none gap-5 flex flex-row justify-center"
+        className="pointer-events-none gap-1 flex flex-row justify-center"
         aria-label="Tile Buttons"
       >
         {/* Disco Button */}

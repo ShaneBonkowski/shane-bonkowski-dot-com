@@ -44,7 +44,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
   return (
     <div
       className="
-      flex text-small sm:text-small-sm items-center mx-6 sm:mx-8 space-x-2 rounded-lg"
+      flex text-small sm:text-small-sm items-center px-common-p sm:px-common-p-sm space-x-2 rounded-lg"
       id="content-search-bar"
       role="search"
       aria-label="Content search bar"

@@ -146,7 +146,7 @@ const SettingsContainer: React.FC = () => {
         onPointerDown={openWindow}
         icon={<FaCog size={30} />}
         ariaLabel="Settings"
-        className={`fixed bottom-5 left-5 ${isButtonVisible ? "" : "hidden"}`}
+        className={`fixed bottom-3 left-3 ${isButtonVisible ? "" : "hidden"}`}
         title="Settings"
       />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
