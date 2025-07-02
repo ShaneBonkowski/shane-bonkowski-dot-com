@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import "@/src/games/cowpoke/styles/game.css";
 import {
@@ -7,134 +8,12 @@ import {
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
-import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/cowpoke/components/SettingsContainer";
 import UpperHud from "@/src/games/cowpoke/components/UpperHud";
 import GameControls from "@/src/games/cowpoke/components/GameControls";
 import StartEndMenu from "@/src/games/cowpoke/components/StartEndMenu";
 import GamePreventPortraitOrLandscapeMode from "@/src/components/GamePreventPortraitOrLandscapeMode";
-
-export const gameInfoData: ContentDataProps[] = [
-  {
-    type: "h1",
-    text: "Cowpoke",
-  },
-  {
-    type: "paragraph",
-    text: "Follow'n in the footsteps of Cowpoke Jack, you're headin' out west to find your place in this here frontier one bandit at a time.",
-  },
-  {
-    type: "paragraph",
-    text: "Collect powerful Cowpoke artifacts and get stronger with each bandit you defeat.",
-  },
-  {
-    type: "h2",
-    text: "How to Play",
-  },
-  {
-    type: "paragraph",
-    text: "Each round, you must make two choices: an element (Rock, Paper, or Scissors) and a combat action (Attack, Defend, or Counter). Both choices are made using selection buttons that stop a moving slider bar.",
-  },
-
-  {
-    type: "paragraph",
-    text: "The closer you stop the slider bar to the green target bar, the higher your chance of winning that matchup. In other words, if you stop it close, the enemy is more likely to pick a move that lets you win the matchup.",
-  },
-  {
-    type: "paragraph",
-    text: "As the slider moves, a green box highlights the favored selection, which changes over time. Being favored gives that element or combat selection a damage bonus. For maximum damage, try to time your slider stop with the favored selection.",
-  },
-  {
-    type: "h3",
-    text: "Element",
-  },
-  {
-    type: "paragraph",
-    text: "Elements work like the classic Rock-Paper-Scissors game, with each element having a specific advantage over another. Winning an element matchup increases your damage, while losing decreases it.",
-  },
-  {
-    type: "image",
-    contentImageData: {
-      src: "/webps/games/cowpoke-example-element-bar.webp",
-      alt: "Cowpoke Element Bar Example",
-      width: 600,
-      height: 60,
-    },
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Win element matchup</b>: Increased damage",
-      "<b>Tie element matchup</b>: Base damage",
-      "<b>Lose element matchup</b>: Decreased damage",
-    ],
-  },
-  {
-    type: "h3",
-    text: "Combat",
-  },
-  {
-    type: "paragraph",
-    text: "Combat actions work similarly to elements, but with more nuanced matchups. The following table is read as {your selection} vs. {enemy selection}",
-  },
-  {
-    type: "image",
-    contentImageData: {
-      src: "/webps/games/cowpoke-example-combat-bar.webp",
-      alt: "Cowpoke Combat Bar Example",
-      width: 600,
-      height: 60,
-    },
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Attack vs. Attack</b>: Both deal normal damage.",
-      "<b>Attack vs. Defend</b>: Both deal less damage.",
-      "<b>Attack vs. Counter</b>: Chance to deal no damage; enemy deals increased damage.",
-      "<b>Defend vs. Attack</b>: Both deal less damage.",
-      "<b>Defend vs. Defend</b>: No damage dealt.",
-      "<b>Defend vs. Counter</b>: You deal normal damage; enemy deals no damage.",
-      "<b>Counter vs. Attack</b>: You deal increased damage; enemy has a chance to deal no damage.",
-      "<b>Counter vs. Defend</b>: You deal no damage; enemy deals normal damage.",
-      "<b>Counter vs. Counter</b>: Both deal normal damage.",
-    ],
-  },
-
-  {
-    type: "paragraph",
-    text: "For the optimal outcome, stop the slider bar close to the target and pick the favored element and combat action. Your choices determine who goes first and how much damage is dealt in each round.",
-  },
-  {
-    type: "h2",
-    text: "Keyboard Shortcuts",
-  },
-  {
-    type: "paragraph",
-    text: "In element mode:",
-  },
-  {
-    type: "list",
-    items: [
-      "<b>1</b>: Select Rock",
-      "<b>2</b>: Select Paper",
-      "<b>3</b>: Select Scissors",
-    ],
-  },
-  {
-    type: "paragraph",
-    text: "In combat mode:",
-  },
-  {
-    type: "list",
-    items: [
-      "<b>1</b>: Select Attack",
-      "<b>2</b>: Select Defend",
-      "<b>3</b>: Select Counter",
-    ],
-  },
-];
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
@@ -214,10 +93,153 @@ const GameComponent: React.FC = () => {
       <StartEndMenu />
       <SettingsContainer />
       <GameInfoContainer
-        infoData={gameInfoData}
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
-      />
+      >
+        <div
+          className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+          id={"info-window"}
+          aria-label={`Page content for 'info-window'`}
+        >
+          <h1>Cowpoke</h1>
+          <p>
+            Follow&apos;n in the footsteps of Cowpoke Jack, you&apos;re
+            headin&apos; out west to find your place in this here frontier one
+            bandit at a time.
+          </p>
+          <p>
+            Collect powerful Cowpoke artifacts and get stronger with each bandit
+            you defeat.
+          </p>
+          <h2>How to Play</h2>
+          <p>
+            Each round, you must make two choices: an element (Rock, Paper, or
+            Scissors) and a combat action (Attack, Defend, or Counter). Both
+            choices are made using selection buttons that stop a moving slider
+            bar.
+          </p>
+          <p>
+            The closer you stop the slider bar to the green target bar, the
+            higher your chance of winning that matchup. In other words, if you
+            stop it close, the enemy is more likely to pick a move that lets you
+            win the matchup.
+          </p>
+          <p>
+            As the slider moves, a green box highlights the favored selection,
+            which changes over time. Being favored gives that element or combat
+            selection a damage bonus. For maximum damage, try to time your
+            slider stop with the favored selection.
+          </p>
+          <h3>Element</h3>
+          <p>
+            Elements work like the classic Rock-Paper-Scissors game, with each
+            element having a specific advantage over another. Winning an element
+            matchup increases your damage, while losing decreases it.
+          </p>
+          <div
+            className={`my-8 flex justify-center w-3/4 h-3/4 sm:w-1/2 sm:h-1/2`}
+          >
+            <Image
+              src={"/webps/games/cowpoke-example-element-bar.webp"}
+              alt={"Cowpoke Element Bar Example"}
+              width={600}
+              height={60}
+              className="object-contain"
+            />
+          </div>
+          <ul>
+            <li>
+              <b>Win element matchup</b>: Increased damage
+            </li>
+            <li>
+              <b>Tie element matchup</b>: Base damage
+            </li>
+            <li>
+              <b>Lose element matchup</b>: Decreased damage
+            </li>
+          </ul>
+          <h3>Combat</h3>
+          <p>
+            Combat actions work similarly to elements, but with more nuanced
+            matchups. The following table is read as &quot;your selection&quot;
+            vs. &quot;enemy selection&quot;
+          </p>
+          <div
+            className={`my-8 flex justify-center w-3/4 h-3/4 sm:w-1/2 sm:h-1/2`}
+          >
+            <Image
+              src={"/webps/games/cowpoke-example-combat-bar.webp"}
+              alt={"Cowpoke Combat Bar Example"}
+              width={600}
+              height={60}
+              className="object-contain"
+            />
+          </div>
+          <ul>
+            <li>
+              <b>Attack vs. Attack</b>: Both deal normal damage.
+            </li>
+            <li>
+              <b>Attack vs. Defend</b>: Both deal less damage.
+            </li>
+            <li>
+              <b>Attack vs. Counter</b>: Chance to deal no damage; enemy deals
+              increased damage.
+            </li>
+            <li>
+              <b>Defend vs. Attack</b>: Both deal less damage.
+            </li>
+            <li>
+              <b>Defend vs. Defend</b>: No damage dealt.
+            </li>
+            <li>
+              <b>Defend vs. Counter</b>: You deal normal damage; enemy deals no
+              damage.
+            </li>
+            <li>
+              <b>Counter vs. Attack</b>: You deal increased damage; enemy has a
+              chance to deal no damage.
+            </li>
+            <li>
+              <b>Counter vs. Defend</b>: You deal no damage; enemy deals normal
+              damage.
+            </li>
+            <li>
+              <b>Counter vs. Counter</b>: Both deal normal damage.
+            </li>
+          </ul>
+          <p>
+            For the optimal outcome, stop the slider bar close to the target and
+            pick the favored element and combat action. Your choices determine
+            who goes first and how much damage is dealt in each round.
+          </p>
+          <h2>Keyboard Shortcuts</h2>
+          <p>In element mode:</p>
+          <ul>
+            <li>
+              <b>1</b>: Select Rock
+            </li>
+            <li>
+              <b>2</b>: Select Paper
+            </li>
+            <li>
+              <b>3</b>: Select Scissors
+            </li>
+          </ul>
+          <p>In combat mode:</p>
+          <ul>
+            <li>
+              <b>1</b>: Select Attack
+            </li>
+            <li>
+              <b>2</b>: Select Defend
+            </li>
+            <li>
+              <b>3</b>: Select Counter
+            </li>
+          </ul>
+        </div>
+      </GameInfoContainer>
       <div className="relative p-5 flex flex-col gap-4 justify-center items-center">
         <UpperHud />
         <GameControls />

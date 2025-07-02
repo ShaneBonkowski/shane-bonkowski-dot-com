@@ -7,24 +7,8 @@ import {
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
-import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import UiOverlay from "@/src/games/flip-tile/components/UiOverlay";
-
-export const gameInfoData: ContentDataProps[] = [
-  {
-    type: "h1",
-    text: "Flip Tile",
-  },
-  {
-    type: "paragraph",
-    text: 'Inspired by the classic <a href="https://en.wikipedia.org/wiki/Lights_Out_(game)" target="_blank" rel="noopener noreferrer">Lights Out</a> game, Flip Tile brings a fresh twist to the familiar puzzle concept, offering three distinct levels of difficulty to challenge players of all skill levels.',
-  },
-  {
-    type: "paragraph",
-    text: 'I created this game mostly as an exercise to re-learn linear algebra concepts. Watch <a href="https://www.youtube.com/watch?v=0fHkKcy0x_U" target="_blank" rel="noopener noreferrer">Solving the "Lights Out" Problem</a> for more context on how linear algebra can be used to automatically solve this game!',
-  },
-];
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
@@ -102,7 +86,41 @@ const GameComponent: React.FC = () => {
     <>
       {/* UI */}
       <UiOverlay />
-      <GameInfoContainer infoData={gameInfoData} />
+      <GameInfoContainer>
+        <div
+          className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+          id={"info-window"}
+          aria-label={`Page content for 'info-window'`}
+        >
+          <h1>Flip Tile</h1>
+          <p>
+            Inspired by the classic{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Lights_Out_(game)"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Lights Out
+            </a>{" "}
+            game, Flip Tile brings a fresh twist to the familiar puzzle concept,
+            offering three distinct levels of difficulty to challenge players of
+            all skill levels.
+          </p>
+          <p>
+            I created this game mostly as an exercise to re-learn linear algebra
+            concepts. Watch{" "}
+            <a
+              href="https://www.youtube.com/watch?v=0fHkKcy0x_U"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Solving the &quot;Lights Out&quot; Problem
+            </a>{" "}
+            for more context on how linear algebra can be used to automatically
+            solve this game!
+          </p>
+        </div>
+      </GameInfoContainer>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game" />

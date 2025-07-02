@@ -14,11 +14,11 @@ export class Ball extends GameObject {
     // Return early during SSR/static generation (need to call super first)
     if (typeof window === "undefined") return;
 
-    // Initialize GameObject with physics, and rigid body
-    this.updateScale(); // set the scale here!, not in GameObject
-
     this.scene = scene;
     this.random = new SeededRandom(randomType.UNSEEDED_RANDOM);
+
+    // Initialize GameObject with physics, and rigid body
+    this.updateScale(); // set the scale here!, not in GameObject
 
     // Move to provided location
     this.physicsBody2D!.position.x = spawnX;
