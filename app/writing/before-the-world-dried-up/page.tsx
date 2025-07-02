@@ -2,6 +2,7 @@ import StoryContentLoader from "@/src/components/StoryContentLoader";
 import { StoryMetadataProps } from "@/src/types/data-props";
 import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import StoryParagraphElement from "@/src/components/StoryParagraphElement";
+import StoryParagraphGroup from "@/src/components/StoryParagraphGroup";
 
 const storyData: StoryMetadataProps = {
   title: "Before the World Dried Up",
@@ -42,170 +43,163 @@ export default function Page() {
     <>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />
       <StoryContentLoader {...storyData}>
-        <StoryParagraphElement
-          fontStyle={"italic"}
-          textAlign={"justify"}
-          // First paragraph element in the story
-          isFirst={true}
-        >
-          It was a year so far in the distant future that they decided to stop
-          counting altogether. Whether they lost count or it simply didn&apos;t
-          matter anymore remains a mystery. Two distant cosmic archaeologists,
-          armed with the goal of tracking the origins of man, find themselves in
-          a long-forgotten corner of some long since forgotten galaxy.
-        </StoryParagraphElement>
+        <StoryParagraphGroup>
+          <StoryParagraphElement fontStyle={"italic"} textAlign={"justify"}>
+            It was a year so far in the distant future that they decided to stop
+            counting altogether. Whether they lost count or it simply
+            didn&apos;t matter anymore remains a mystery. Two distant cosmic
+            archaeologists, armed with the goal of tracking the origins of man,
+            find themselves in a long-forgotten corner of some long since
+            forgotten galaxy.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle={"italic"} textAlign={"justify"}>
-          How they ended up here was unclear, but the planet they sighted was
-          scorched beyond recognition. It was a small, rocky planet orbiting a
-          dim White Dwarf with just enough energy to glow, and nothing more.
-          Cleary not a place hospitable for life, but maybe one day years and
-          years ago it would have been ripe for life. Or so the faint
-          biosignatures radiating off of it led them to believe.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle={"italic"} textAlign={"justify"}>
+            How they ended up here was unclear, but the planet they sighted was
+            scorched beyond recognition. It was a small, rocky planet orbiting a
+            dim White Dwarf with just enough energy to glow, and nothing more.
+            Cleary not a place hospitable for life, but maybe one day years and
+            years ago it would have been ripe for life. Or so the faint
+            biosignatures radiating off of it led them to believe.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle={"italic"} textAlign={"justify"}>
-          They almost decided against landing altogether. Time and time again,
-          they had stopped to visit a rocky planet with faint biosignatures to
-          no avail. But today was different. Maybe it was because it had been
-          many millions of miles since their last expedition, and they were
-          growing restless. Or perhaps it was some sort of cosmic intervention
-          pointing them to this lonely planet. Regardless, they landed in what
-          appeared to be a long-dried riverbed, evidenced by the long, branching
-          channels resembling the rivers from their home planet.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle={"italic"} textAlign={"justify"}>
+            They almost decided against landing altogether. Time and time again,
+            they had stopped to visit a rocky planet with faint biosignatures to
+            no avail. But today was different. Maybe it was because it had been
+            many millions of miles since their last expedition, and they were
+            growing restless. Or perhaps it was some sort of cosmic intervention
+            pointing them to this lonely planet. Regardless, they landed in what
+            appeared to be a long-dried riverbed, evidenced by the long,
+            branching channels resembling the rivers from their home planet.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle={"italic"} textAlign={"justify"}>
-          Just when they thought they had explored enough to conclude this was
-          in fact just another lifeless rocky planet, one of them had spotted
-          something strange off in the distance: a lonely vessel in surprisingly
-          good shape. This was especially peculiar, considering that everything
-          else in this godforsaken wasteland had been scorched beyond
-          recognition. Its pure white frame stood out against the burnt black
-          landscape like a star in an empty sky. Inside, they found a pristine
-          skeleton clutching some sort of ancient recording mechanism. They
-          pressed play.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle={"italic"} textAlign={"justify"}>
+            Just when they thought they had explored enough to conclude this was
+            in fact just another lifeless rocky planet, one of them had spotted
+            something strange off in the distance: a lonely vessel in
+            surprisingly good shape. This was especially peculiar, considering
+            that everything else in this godforsaken wasteland had been scorched
+            beyond recognition. Its pure white frame stood out against the burnt
+            black landscape like a star in an empty sky. Inside, they found a
+            pristine skeleton clutching some sort of ancient recording
+            mechanism. They pressed play.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle={"normal"} textAlign={"justify"}>
-          They ask me why I plan on sticking around this place. Why I
-          haven&apos;t jumped ship with the rest of them. I let out a sigh as I
-          gaze off across the lifeless desertscape from the helm of my beached
-          vessel. Its dry, relentless blight siphoning every ounce of life that
-          crosses its path.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle={"normal"} textAlign={"justify"}>
+            They ask me why I plan on sticking around this place. Why I
+            haven&apos;t jumped ship with the rest of them. I let out a sigh as
+            I gaze off across the lifeless desertscape from the helm of my
+            beached vessel. Its dry, relentless blight siphoning every ounce of
+            life that crosses its path.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="center">
-          Before me lay a boneyard.<br></br>
-          Devoid of life.<br></br>
-          Devoid of movement.<br></br>
-          Devoid of soul.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            Before me lay a boneyard.<br></br>
+            Devoid of life.<br></br>
+            Devoid of movement.<br></br>
+            Devoid of soul.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="justify">
-          I remember a time when Angels graced this planet with their delicate
-          songs. Who shimmered and flocked by the thousands in perfect harmony
-          like the stars above. Lighting the way through the deepest, darkest
-          depths no man had ever laid eyes on before.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+            I remember a time when Angels graced this planet with their delicate
+            songs. Who shimmered and flocked by the thousands in perfect harmony
+            like the stars above. Lighting the way through the deepest, darkest
+            depths no man had ever laid eyes on before.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="center">
-          A time of mystery and wonder. <br></br>
-          Sunken cities, lost treasures,<br></br>
-          Fantastic Aquatic Beasts, just out of reach.<br></br>
-          Waiting to be discovered.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            A time of mystery and wonder. <br></br>
+            Sunken cities, lost treasures,<br></br>
+            Fantastic Aquatic Beasts, just out of reach.<br></br>
+            Waiting to be discovered.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="justify">
-          I remember a time when the mighty, unforgiving sea was King. A gentle
-          beast of immense, unrelenting power that was not to be underestimated.
-          Whose mighty, chaotic waves upheld order and prosperity on this
-          planet.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+            I remember a time when the mighty, unforgiving sea was King. A
+            gentle beast of immense, unrelenting power that was not to be
+            underestimated. Whose mighty, chaotic waves upheld order and
+            prosperity on this planet.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="center">
-          Gone are those days, they say.<br></br>
-          Or so they say at least.<br></br>
-          As long as I am here to tell the story,<br></br>
-          Those days will live on.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            Gone are those days, they say.<br></br>
+            Or so they say at least.<br></br>
+            As long as I am here to tell the story,<br></br>
+            Those days will live on.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="justify">
-          Or maybe it was our lonely Lunar Guardian who was King. Who with each
-          pass commanded the ravenous tides to devour the earth. Waging war
-          amidst the threshold between land and sea. Each pass signaling a new
-          dawn. A new opportunity to begin again.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+            Or maybe it was our lonely Lunar Guardian who was King. Who with
+            each pass commanded the ravenous tides to devour the earth. Waging
+            war amidst the threshold between land and sea. Each pass signaling a
+            new dawn. A new opportunity to begin again.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="center">
-          Maybe I stick around to pay my respects.<br></br>
-          To watch after the throne.<br></br>
-          Maybe I stick around to admire it all.<br></br>
-          Or maybe to bask in the absurdity of it all.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            Maybe I stick around to pay my respects.<br></br>
+            To watch after the throne.<br></br>
+            Maybe I stick around to admire it all.<br></br>
+            Or maybe to bask in the absurdity of it all.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="justify">
-          As the years pass, my memory of it fades. I dust off the thick coating
-          of dust from the windshield and close my eyes, trying to remind myself
-          what it was like to cruise on this vessel. When we rode, not even the
-          mighty sea could hold us back. Tides would part beneath us like the
-          Red Sea.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+            As the years pass, my memory of it fades. I dust off the thick
+            coating of dust from the windshield and close my eyes, trying to
+            remind myself what it was like to cruise on this vessel. When we
+            rode, not even the mighty sea could hold us back. Tides would part
+            beneath us like the Red Sea.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="center">
-          No land in sight for miles.<br></br>
-          Just me, this boat, and Infinity.<br></br>
-          What I&apos;d do for one more ride.<br></br>
-          One final trip to the edge of the world.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            No land in sight for miles.<br></br>
+            Just me, this boat, and Infinity.<br></br>
+            What I&apos;d do for one more ride.<br></br>
+            One final trip to the edge of the world.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="justify">
-          They say that our poor Stellar Guardian doesn&apos;t have much time
-          left. I wipe the sweat off as its fiery fury beats down on my neck.
-          Well, at least in terms of its lifespan. I&apos;ll be long gone before
-          then. For billions of years, this blazing ball of life, destruction,
-          and sustenance has watched over us.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+            They say that our poor Stellar Guardian doesn&apos;t have much time
+            left. I wipe the sweat off as its fiery fury beats down on my neck.
+            Well, at least in terms of its lifespan. I&apos;ll be long gone
+            before then. For billions of years, this blazing ball of life,
+            destruction, and sustenance has watched over us.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="center">
-          Now we sit in the wake of its death throes.<br></br>
-          Watching as its hellish flames grow closer.<br></br>
-          Ever larger.<br></br>
-          Ever hotter.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            Now we sit in the wake of its death throes.<br></br>
+            Watching as its hellish flames grow closer.<br></br>
+            Ever larger.<br></br>
+            Ever hotter.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="justify">
-          It&apos;s humbling to think that no matter how far we progress, we
-          will always be at the whims of the Celestial Beasts. To think that
-          somewhere in this grand cosmic balance it was decided that everything
-          we hold dearly would have an expiration date.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+            It&apos;s humbling to think that no matter how far we progress, we
+            will always be at the whims of the Celestial Beasts. To think that
+            somewhere in this grand cosmic balance it was decided that
+            everything we hold dearly would have an expiration date.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="center">
-          Maybe it is by design.<br></br>
-          Why race if there is no finish line?<br></br>
-          Life has so much impact in just a small blip in time.<br></br>I stand
-          in awe at their chaotic beauty.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            Maybe it is by design.<br></br>
+            Why race if there is no finish line?<br></br>
+            Life has so much impact in just a small blip in time.<br></br>I
+            stand in awe at their chaotic beauty.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement fontStyle="normal" textAlign="justify">
-          Maybe I&apos;m old fashioned, but I have no intentions of following
-          the droves of those who plan to escape. To find a new Stellar
-          Guardian, dooming their descendants to this same fate. No, I think
-          I&apos;ll just wait this one out as the universe has intended.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+            Maybe I&apos;m old fashioned, but I have no intentions of following
+            the droves of those who plan to escape. To find a new Stellar
+            Guardian, dooming their descendants to this same fate. No, I think
+            I&apos;ll just wait this one out as the universe has intended.
+          </StoryParagraphElement>
 
-        <StoryParagraphElement
-          fontStyle="normal"
-          textAlign="center"
-          // Last paragraph element in the story
-          isLast={true}
-        >
-          Sitting here on my long since beached vessel.<br></br>
-          Dreaming of the days that have long since passed.<br></br>
-          What is yet to come for those who never knew.<br></br>
-          The days before the world dried up.
-        </StoryParagraphElement>
+          <StoryParagraphElement fontStyle="normal" textAlign="center">
+            Sitting here on my long since beached vessel.<br></br>
+            Dreaming of the days that have long since passed.<br></br>
+            What is yet to come for those who never knew.<br></br>
+            The days before the world dried up.
+          </StoryParagraphElement>
+        </StoryParagraphGroup>
       </StoryContentLoader>
     </>
   );

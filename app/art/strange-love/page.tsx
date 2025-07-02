@@ -1,6 +1,7 @@
 import StoryContentLoader from "@/src/components/StoryContentLoader";
 import { StoryMetadataProps } from "@/src/types/data-props";
 import StoryParagraphElement from "@/src/components/StoryParagraphElement";
+import StoryParagraphGroup from "@/src/components/StoryParagraphGroup";
 
 const imageData: StoryMetadataProps = {
   title: "Strange Love",
@@ -40,15 +41,12 @@ export const metadata = {
 export default function Page() {
   return (
     <StoryContentLoader {...imageData}>
-      <StoryParagraphElement
-        fontStyle={"italic"}
-        textAlign={"center"}
-        // For a single Paragraph element, it is considered both first and last
-        isFirst={true}
-        isLast={true}
-      >
-        Bone of my bones, flesh of my flesh. A piece of me, now a piece of you.
-      </StoryParagraphElement>
+      <StoryParagraphGroup>
+        <StoryParagraphElement fontStyle={"italic"} textAlign={"center"}>
+          Bone of my bones, flesh of my flesh. A piece of me, now a piece of
+          you.
+        </StoryParagraphElement>
+      </StoryParagraphGroup>
     </StoryContentLoader>
   );
 }
