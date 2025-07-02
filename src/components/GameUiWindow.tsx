@@ -6,17 +6,17 @@ import CloseButton from "@/src/components/CloseButton";
 interface GameUiWindowProps {
   isVisible: boolean;
   onClose: (() => void) | null;
-  children: React.ReactNode;
   overrideBgColor?: string;
   overrideTextColor?: string;
+  children: React.ReactNode;
 }
 
 const GameUiWindow: React.FC<GameUiWindowProps> = ({
   isVisible,
   onClose,
-  children,
   overrideBgColor,
   overrideTextColor,
+  children,
 }) => {
   return (
     <div

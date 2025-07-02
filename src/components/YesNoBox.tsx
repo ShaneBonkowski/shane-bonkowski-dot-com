@@ -4,23 +4,23 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 interface YesNoBoxProps {
-  children: React.ReactNode;
   yesButtonText: string;
   noButtonText: string;
   onYes: () => void;
   onNo: () => void;
   id?: string;
   bottomRight?: boolean;
+  children: React.ReactNode;
 }
 
 const YesNoBox: React.FC<YesNoBoxProps> = ({
-  children,
   yesButtonText,
   noButtonText,
   onYes,
   onNo,
   id = "yes-no-box",
   bottomRight = false,
+  children,
 }) => {
   /* Only allow hover on hover-supported devices */
   const [isHoverable, setIsHoverable] = useState(false);

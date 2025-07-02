@@ -7,10 +7,10 @@ interface FadeProps {
   fadeType: "in" | "out"; // Direction of fade
   duration?: number; // milliseconds, default 1000
   onFadeComplete?: (() => void) | null;
-  children: React.ReactNode;
   className?: string;
   id?: string;
   ariaLabel?: string;
+  children: React.ReactNode;
 }
 
 /**
@@ -26,10 +26,10 @@ const Fade: React.FC<FadeProps> = ({
   fadeType,
   duration = 1000,
   onFadeComplete,
-  children,
   className = "",
   id = "fade-component",
   ariaLabel = "Fade component",
+  children,
 }) => {
   const [visible, setVisible] = useState(fadeType === "in" ? false : true);
   const [show, setShow] = useState(fadeType === "in" ? false : true);

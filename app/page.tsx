@@ -74,7 +74,7 @@ const contentBoxData: ContentBoxProps[] = [
     linkUrl: "/writing/the-lovers",
     title: "The Lovers",
     description:
-      "Deep within the hidden corridors of Genesis Labs, two scientists are developing what may go down as mankind’s final invention.",
+      "Deep within the hidden corridors of Genesis Labs, two scientists are developing what may go down as mankind's final invention.",
     searchTags:
       "Love, Lovers, Bible, Adam, Eve, Universe, Nova, Lux, Mammon, Barachiel, Dr, Dr., Doctor, Scientist, AI, Artificial, Intelligence",
     contentType: "writing",
@@ -138,7 +138,7 @@ const contentBoxData: ContentBoxProps[] = [
     linkUrl: "/writing/I-am-immortal",
     title: "I am Immortal",
     description:
-      "If you ask me, I’m at least 13.8 billion years old. Born in the aftermath of the Big Bang. My life began the same way it will end: Scattered across Infinity.",
+      "If you ask me, I'm at least 13.8 billion years old. Born in the aftermath of the Big Bang. My life began the same way it will end: Scattered across Infinity.",
     searchTags:
       "life, death, universe, immortal, live, forever, spooky, eerie, sci-fi, science, fiction",
     contentType: "writing",

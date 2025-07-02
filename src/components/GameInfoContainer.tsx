@@ -7,15 +7,15 @@ import { dispatchMenuEvent } from "@/src/events/game-events";
 import { FaInfoCircle } from "react-icons/fa";
 
 const GameInfoContainer: React.FC<{
-  children: React.ReactNode;
   lightModeDark?: boolean;
   darkModeLight?: boolean;
   whiteBackground?: boolean;
+  children: React.ReactNode;
 }> = ({
-  children,
   lightModeDark = false,
   darkModeLight = false,
   whiteBackground = false,
+  children,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
