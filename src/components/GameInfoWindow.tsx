@@ -2,19 +2,17 @@
 
 import React from "react";
 import GameUiWindow from "@/src/components/GameUiWindow";
-import PageContentLoader from "@/src/components/PageContentLoader";
-import { ContentDataProps } from "@/src/types/data-props";
 
 interface GameInfoWindowProps {
   isVisible: boolean;
   onClose: () => void;
-  infoData: ContentDataProps[];
+  children: React.ReactNode;
 }
 
 const GameInfoWindow: React.FC<GameInfoWindowProps> = ({
   isVisible,
   onClose,
-  infoData,
+  children,
 }) => {
   return (
     <GameUiWindow
@@ -22,7 +20,7 @@ const GameInfoWindow: React.FC<GameInfoWindowProps> = ({
       onClose={onClose}
       aria-label="Game information window"
     >
-      <PageContentLoader contentData={infoData} id="game-info" />
+      {children}
     </GameUiWindow>
   );
 };

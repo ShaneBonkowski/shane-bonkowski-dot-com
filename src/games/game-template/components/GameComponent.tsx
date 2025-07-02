@@ -7,21 +7,8 @@ import {
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
-import { ContentDataProps } from "@/src/types/data-props";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/game-template/components/SettingsContainer"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC SETTINGS CONTAINER
-
-// FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO
-export const gameInfoData: ContentDataProps[] = [
-  {
-    type: "h1",
-    text: "<Game Name>",
-  },
-  {
-    type: "paragraph",
-    text: "Fill in information about the game here",
-  },
-];
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
@@ -101,7 +88,17 @@ const GameComponent: React.FC = () => {
     <>
       {/* UI */}
       <SettingsContainer />
-      <GameInfoContainer infoData={gameInfoData} />
+      <GameInfoContainer>
+        <div
+          className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+          id={"info-window"}
+          aria-label={`Page content for 'info-window'`}
+        >
+          {/* FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO */}
+          <h1>Game Name</h1>
+          <p>Fill in information about the game here</p>
+        </div>
+      </GameInfoContainer>
 
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game" />

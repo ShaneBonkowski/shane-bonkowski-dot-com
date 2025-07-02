@@ -8,31 +8,7 @@ import {
   loadPhaserScriptThenGame,
   cleanupPhaserGame,
 } from "@/src/utils/phaser-loading";
-import { ContentDataProps } from "@/src/types/data-props";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
-
-export const gameInfoData: ContentDataProps[] = [
-  {
-    type: "h1",
-    text: "Better Boids",
-  },
-  {
-    type: "paragraph",
-    text: 'The <a href="https://en.wikipedia.org/wiki/Boids" target="_blank" rel="noopener noreferrer">Boids algorithm</a>, devised by Craig Reynolds, mimics the flocking behavior seen in birds and other animals. In general, Boids follow three rules:',
-  },
-  {
-    type: "list",
-    items: [
-      "<b>Alignment:</b> Boids try to align their direction with other nearby Boids.",
-      "<b>Cohesion:</b> Boids move towards the average position of nearby Boids.",
-      "<b>Separation:</b> Boids avoid crowding near other Boids.",
-    ],
-  },
-  {
-    type: "paragraph",
-    text: "From these three simple rules, complex emergent behavior and intricate patterns can arise. This little game is an attempt to display the beauty in the Boids algorithm, while expanding on it with novel concepts where applicable.",
-  },
-];
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
@@ -110,8 +86,46 @@ const GameComponent: React.FC = () => {
     <>
       {/* UI */}
       <SettingsContainer />
-      <GameInfoContainer infoData={gameInfoData} />
-
+      <GameInfoContainer>
+        <div
+          className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+          id={"info-window"}
+          aria-label={`Page content for 'info-window'`}
+        >
+          <h1>Better Boids</h1>
+          <p>
+            The{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Boids"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Boids algorithm
+            </a>
+            , devised by Craig Reynolds, mimics the flocking behavior seen in
+            birds and other animals. In general, Boids follow three rules:
+          </p>
+          <ul>
+            <li>
+              <b>Alignment:</b> Boids try to align their direction with other
+              nearby Boids.
+            </li>
+            <li>
+              <b>Cohesion:</b> Boids move towards the average position of nearby
+              Boids.
+            </li>
+            <li>
+              <b>Separation:</b> Boids avoid crowding near other Boids.
+            </li>
+          </ul>
+          <p>
+            From these three simple rules, complex emergent behavior and
+            intricate patterns can arise. This little game is an attempt to
+            display the beauty in the Boids algorithm, while expanding on it
+            with novel concepts where applicable.
+          </p>
+        </div>
+      </GameInfoContainer>
       {/* Phaser Game Container */}
       <div className="absolute inset-0" id="phaser-game" />
 

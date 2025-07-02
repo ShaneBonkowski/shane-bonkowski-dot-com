@@ -3,17 +3,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameInfoWindow from "@/src/components/GameInfoWindow";
-import { ContentDataProps } from "@/src/types/data-props";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { FaInfoCircle } from "react-icons/fa";
 
 const GameInfoContainer: React.FC<{
-  infoData: ContentDataProps[];
+  children: React.ReactNode;
   lightModeDark?: boolean;
   darkModeLight?: boolean;
   whiteBackground?: boolean;
 }> = ({
-  infoData,
+  children,
   lightModeDark = false,
   darkModeLight = false,
   whiteBackground = false,
@@ -74,9 +73,10 @@ const GameInfoContainer: React.FC<{
       <GameInfoWindow
         isVisible={isVisible}
         onClose={closeInfoWindow}
-        infoData={infoData}
         aria-label="Game information window"
-      />
+      >
+        {children}
+      </GameInfoWindow>
     </>
   );
 };

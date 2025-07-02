@@ -22,15 +22,3 @@ export interface StoryContentDataProps {
   textAlign: "left" | "center" | "right" | "justify";
   splitParagraphs?: boolean;
 }
-
-export interface ContentDataProps {
-  type: "h1" | "h2" | "h3" | "paragraph" | "list" | "image";
-  text?: string;
-  items?: string[];
-  contentImageData?: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
-}
