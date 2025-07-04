@@ -218,6 +218,7 @@ const StartEndMenu: React.FC = () => {
             onChange={(e) => updatePlayerName(e.target.value)}
             maxLength={10}
             className="p-2 text-small flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
+            style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
             aria-label="Player name input"
           />
           <GameIconButton
