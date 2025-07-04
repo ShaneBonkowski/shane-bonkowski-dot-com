@@ -43,8 +43,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
 
   return (
     <div
-      className="
-      flex text-small sm:text-small-sm items-center px-common-p sm:px-common-p-sm space-x-2 rounded-lg"
+      className="flex items-stretch px-common-p sm:px-common-p-sm space-x-2 rounded-lg"
       id="content-search-bar"
       role="search"
       aria-label="Content search bar"
@@ -68,7 +67,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
           setSearchTerm((e.target as HTMLInputElement).value)
         }
         className="
-        p-2 text-small sm:text-small-sm flex-grow bg-button-color-light dark:bg-button-color  
+        p-2 w-full bg-button-color-light dark:bg-button-color  
         text-primary-text-color-light dark:text-primary-text-color rounded-sm focus:outline-none 
         placeholder:text-secondary-text-color-light dark:placeholder:text-secondary-text-color
         "
