@@ -190,17 +190,6 @@ body {
       @apply hover:scale-105;
     }
   }
-
-  .content-box-img-w {
-    @apply w-content-box-dropdown-w;
-  }
-
-  /* Computer sizes */
-  @media (min-width: 640px) {
-    .content-box-img-w {
-      @apply w-content-box-dropdown-w-sm;
-    }
-  }
 }
 
 @layer utilities {
