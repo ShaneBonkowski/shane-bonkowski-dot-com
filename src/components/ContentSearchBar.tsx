@@ -72,6 +72,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
         text-primary-text-color-light dark:text-primary-text-color rounded-sm focus:outline-none 
         placeholder:text-secondary-text-color-light dark:placeholder:text-secondary-text-color
         "
+        style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
         aria-label="Search content"
         title="Search content"
       />
