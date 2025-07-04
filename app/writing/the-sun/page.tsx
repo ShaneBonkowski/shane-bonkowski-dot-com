@@ -1,10 +1,10 @@
-import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { StoryMetadataProps } from "@/src/types/data-props";
+import WrittenContentLoader from "@/src/components/WrittenContentLoader";
+import { WrittenContentMetadataProps } from "@/src/types/data-props";
 import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
-import StoryParagraphElement from "@/src/components/StoryParagraphElement";
-import StoryParagraphGroup from "@/src/components/StoryParagraphGroup";
+import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
+import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagraphGroup";
 
-const storyData: StoryMetadataProps = {
+const storyData: WrittenContentMetadataProps = {
   title: "The Sun",
   subtitle: "Shane Bonkowski",
   date: "August 25, 2024",
@@ -42,26 +42,38 @@ export default function Page() {
   return (
     <>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />
-      <StoryContentLoader {...storyData}>
-        <StoryParagraphGroup>
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+      <WrittenContentLoader {...storyData}>
+        <WrittenContentParagraphGroup>
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             To my firstborn,
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Do you ever stop and wonder, if the wind did not blow, would the
             wilted flowers remain in frozen perfection for all eternity?
             Suspended in time like a delicate hourglass whose sand does not
             trickle. Yet, would the flower&apos;s beauty be as profound if it
             did not softly surrender to the wind&apos;s embrace?
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Spread your mighty wings and join me on this journey through
             paradise. Stay close by my side. Where we go the light will follow.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Down below, the forest is coming to life. The songbirds spin their
             beautiful melodies as my light peeks through the trees. The
             hummingbirds drink the sweet nectar from the fresh flowers and
@@ -72,13 +84,19 @@ export default function Page() {
             that fills the forest, they are the occasional booming call of the
             war drum. For a brief moment, the forest holds its breath, silent
             and attentive, not resuming until the drum pounds again.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             I admire the crows.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             All across the forest, the birds are hard at work nesting and
             finding mates. The long winter has finally passed, and the young and
             ambitious are ready to start their families. Some spend most of
@@ -89,9 +107,12 @@ export default function Page() {
             treetop to treetop with a canopy of birds. Some are thin and frail,
             like delicate spiderwebs caught in the breeze. Others are
             fortresses, built to last.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             When the storms of late spring tear through this forest, the mothers
             will spread their nurturing wings and clutch their delicate eggs. In
             some nests, like the crows, the fathers will stretch their
@@ -102,38 +123,53 @@ export default function Page() {
             will force its prying hands upon them, trying to rip them from their
             fortress. Lightning will strike down from the heavens and fires will
             rage in its wake.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Those with weaker nests will have already fled for safety, while the
             crows will endure the storm for as long as it takes. They will
             shield their incubating young from the onslaught above, remaining as
             still as statues, unshaken by the winds that aim to fell their
             fortress.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And though not all can weather the storm, their presence lingers on
             in the fortresses they have left behind, sheltering their families
             so they can carry on.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And when the storms finally pass and their light creeps out from
             behind the clouds, their families will rise victorious and soar
             through the skies on the wind born from the warmth they provide.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And they will rebuild.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Until we meet again,<br></br>- The light that beats upon your back
             as you soar among the treetops.
-          </StoryParagraphElement>
-        </StoryParagraphGroup>
-      </StoryContentLoader>
+          </WrittenContentParagraphElement>
+        </WrittenContentParagraphGroup>
+      </WrittenContentLoader>
     </>
   );
 }

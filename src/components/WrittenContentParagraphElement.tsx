@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export interface StoryParagraphElementProps {
+export interface WrittenContentParagraphElementProps {
   textAlign?: "left" | "center" | "right" | "justify";
   fontStyle?: "normal" | "italic" | "bold";
   className?: string;
@@ -15,7 +15,9 @@ export interface StoryParagraphElementProps {
  * A paragraph element for story content with customizable text alignment,
  * font style, and margin adjustments for first and last paragraphs.
  */
-const StoryParagraphElement: React.FC<StoryParagraphElementProps> = ({
+const WrittenContentParagraphElement: React.FC<
+  WrittenContentParagraphElementProps
+> = ({
   textAlign = "left",
   fontStyle,
   className = "",
@@ -37,4 +39,4 @@ const StoryParagraphElement: React.FC<StoryParagraphElementProps> = ({
   );
 };
 
-export default StoryParagraphElement;
+export default WrittenContentParagraphElement;

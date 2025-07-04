@@ -1,10 +1,10 @@
-import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { StoryMetadataProps } from "@/src/types/data-props";
+import WrittenContentLoader from "@/src/components/WrittenContentLoader";
+import { WrittenContentMetadataProps } from "@/src/types/data-props";
 import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
-import StoryParagraphElement from "@/src/components/StoryParagraphElement";
-import StoryParagraphGroup from "@/src/components/StoryParagraphGroup";
+import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
+import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagraphGroup";
 
-const storyData: StoryMetadataProps = {
+const storyData: WrittenContentMetadataProps = {
   title: "Death",
   subtitle: "Shane Bonkowski",
   date: "September 10, 2024",
@@ -42,9 +42,12 @@ export default function Page() {
   return (
     <>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />
-      <StoryContentLoader {...storyData}>
-        <StoryParagraphGroup>
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+      <WrittenContentLoader {...storyData}>
+        <WrittenContentParagraphGroup>
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             A man sits alone at a rundown bar after a long day of work, his
             soulless eyes projecting a heavy, lingering despair. Deep in the
             mind of the troubled man, a war is brewing. His mind aches with a
@@ -54,9 +57,12 @@ export default function Page() {
             most vile forms of evil imaginable. He orders a glass of absinthe,
             the green liquor swirling like a portal to another world, its
             bitterness masking his underlying torment.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Spanning the vast expanse of his mind, nestled between his
             horrendous thoughts, are the gaseous clouds of creation and fiery
             balls of destruction that permeate through infinity. The clouds
@@ -67,47 +73,68 @@ export default function Page() {
             and collide in utter chaotic beauty like a cosmic symphony. Amid
             this chaos, tucked away on the lucky few boulders that find a small
             window of time when the orchestra is at rest, are those who occupy.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The occupiers live a prosperous life. For eons, they have flourished
             and advanced, a society of scientists and engineers united by one
             goal: to seek out the hidden knowledge of their universe. There is
             no war, no crime, and very few disagreements. By all accounts, they
             reside in paradise. For all but one day out of the year, that is,
             when the true cost of their prosperity must be paid.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The annual harvest has existed for as long as their history books
             chart back. It is a night like no other, bringing the fanatic out of
             even the least devout. In the early days, they&apos;d make their
             rounds to the houses of the old and the sick.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Bang. Bang. Bang.</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The doors fling open and the Crusaders flood in. They tie up the
             sacrificial fodder and drag them through the dark streets toward the
             tree line. The chosen wrap their arms around the trees in their
             final act of intimacy, their trembling hands nailed to the trunks in
             a grotesque embrace. They close their eyes and calmly wait to face
             their fate.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Dong. Dong. Dong.</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The bell tower tolls an eerie chime signaling the arrival of
             midnight.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Off in the distance, a pale rider approaches, his horse tinged with
             the sickly green of a decaying corpse. He is shrouded in a loose
             black robe that whispers calamities in the wind as he rides. The
@@ -117,20 +144,29 @@ export default function Page() {
             meticulously crafted, as if forged from the Pearly Gates of Heaven.
             When the debt collector comes to collect, those who know better
             cower in the safety of their homes to avoid his gaze of judgment.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The treeline screams in agony all through the long night. The
             townspeople wake the next morning only to find jagged bloody stakes
             where bodies and trees once were—swift and final justice at the hand
             of his gilded sword.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             It used to be so simple.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             One year, in an act of utter disobedience and hubris, they attempted
             to deceive their servant of death. In the weeks leading up to his
             arrival, they slaughtered one-quarter of their livestock and used
@@ -138,9 +174,12 @@ export default function Page() {
             in their clothing. They left them out on the night of his arrival
             bound to the blood-stained trees where he would come to collect his
             debts.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The treeline screamed in agony all through the long night. The
             occupiers woke the next morning, and to their shock, the effigies
             remained where they began, unclothed but otherwise untouched. They
@@ -151,24 +190,36 @@ export default function Page() {
             dam, their life essence slowly oozing into the water supply. Gently
             draped over their bodies were the clothes that previously adorned
             their effigies, as if meticulously placed one by one.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Fueled by the red hatred of the river, their crops warped into
             corrupted, rotten forms. One-quarter of their population starved to
             death in the ensuing famine. It took a decade to cleanse the river
             of their sins.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             &quot;I always collect my debts.&quot; The collector warned them.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And they swore never to deceive him ever again.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             As their civilization has expanded across the cosmos, the
             collector&apos;s appetite has grown increasingly insatiable. What
             began as a few of the old, the weak, and the wicked has escalated
@@ -177,13 +228,19 @@ export default function Page() {
             how far he could go if he does not get his fix. Driven by this
             merciless cycle that has grown unwieldy, the occupiers desperately
             seek a way to break free.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             This year&apos;s sacrifices are rapidly approaching.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             But this year, a secret plan is brewing that the leaders are keeping
             close to their chests. They sprawl with their fleet of hundreds of
             thousands of ships from star system to star system, depleting them
@@ -192,27 +249,39 @@ export default function Page() {
             next. They tow the ball of energy they have amassed behind their
             fleet in a gravity prison. It takes nearly as much energy to contain
             their fiery ball of destruction as it contains itself.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The universe waxes and wanes as its life force is sucked out. At a
             rate never seen before, distortions are appearing and rippling
             throughout the cosmos. Black holes are spontaneously forming in the
             ether and tearing through galaxies. Entire galactic webs are dying
             off like the coral reefs on the shores of their home planet.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             &quot;Look at the devastation wrought upon our universe!&quot; their
             leader proclaims. &quot;How will we ever recover from this
             destruction he has unleashed upon us?&quot;
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Tick. Tick. Tick.</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             His mind turns like clockwork. Deep within the recesses of the
             troubled man&apos;s brain, the tides are shifting. His call to
             darkness beckons like a relentless storm, feeding on his sanity. His
@@ -220,50 +289,71 @@ export default function Page() {
             agonizing pulses of hatred like turbulent waves in an unsettled sea.
             Memories slip away like grains of sand through clenched fingers, and
             relentless migraines lash out like fiery whips.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             He drinks to ease the terrible thoughts but it&apos;s no use.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The chaos within him festers as nightmarish visions torment him. He
             is the architect of suffering, relishing the thought of inflicting
             unspeakable cruelties. His mind conjures scenes of the unending
             agony he will unleash upon the masses. He dreams of the rifts he
             will tear through their planets, revealing burning lakes of fire
             that spew the eternal flames that will sear their very essence.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             He stares into his reflection in the swirling green sludge in his
             glass. A demon stares back at him with a menacing smirk. He slams
             the glass down on the table and it spills, the green hatred seeping
             into the grooves of the old wooden countertop. In the commotion, all
             the other patrons turn their heads and stare with their judgemental
             eyes. Frantic, he gathers himself and stumbles out of the bar.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             On his way home, he passes a church, catching sight of a passionate
             sermon through the open doors. Slipping inside, he finds a seat in
             the back. The church doesn&apos;t erupt in flames. He exhales,
             relieved.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The pastor reads:
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>
               Revelation 6:7-8: When the Lamb opened the fourth seal, I heard
               the voice of the fourth living creature say, &quot;Come!&quot; I
               looked, and there before me was a pale horse—
             </em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Before the pastor can finish the excerpt, the troubled man&apos;s
             ears start to ring. A cold chill runs through him, and he sinks
             deeper into his seat. He remains there in silence and despair for
@@ -271,23 +361,32 @@ export default function Page() {
             The church is dimly lit, with only the muted light filtering through
             the stained glass to accompany him. Beside him, the iridescent white
             and yellow reflection of an angel from the glass.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Gathering his courage, he approaches the front and asks the pastor
             for advice.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             &quot;The souls of my victims haunt me. I hear their voices and
             their screams every time I close my eyes.&quot; He confesses to the
             pastor. &quot;I command the electricity to stop their hearts from
             beating, I deliver the poison to their bodies that ends their
             torment. I am death, and yet I am justice. I am the gavel and I am
             the guillotine. What am I to do?&quot;
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             They lock in gaze for a moment, and the man stares into the
             pastor&apos;s cloudy white eyes, devoid of depth. The pastor stares
             back into the man&apos;s empty black eyes, devoid of soul. The
@@ -295,23 +394,32 @@ export default function Page() {
             bible verses in his mind, juggling the urge to condemn the troubled
             man for his murderous sins, and the patience and empathy to help him
             find the light. He says:
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>
               Isaiah 1:18: &quot;Come now, let us reason together,&quot; says
               the Lord. &quot;Though your sins are like scarlet, they shall be
               as white as snow; though they are red like crimson, they shall
               become like wool.&quot;
             </em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Before the troubled man has a chance to reply, the pastor follows
             with:
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>
               Matthew 12:43-45: When an impure spirit comes out of a person, it
               goes through arid places seeking rest and does not find it. Then
@@ -321,29 +429,41 @@ export default function Page() {
               wicked than itself, and they go in and live there. And the final
               condition of that person is worse than the first.
             </em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The man nods his head and sees himself off. He hears the pastor
             mutter a final line of scripture under his breath. The line echoes
             ominously in the dimly lit church:
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>
               Hebrews 10:26-27: If we deliberately keep on sinning after we have
               received the knowledge of the truth, no sacrifice for sins is
               left, but only a fearful expectation of judgment and of raging
               fire that will consume the enemies of God.
             </em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             As the troubled man exits, the weight of the pastor&apos;s words
             hangs heavy in the air.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             At the same time, in a distant corner of some forgotten galaxy, the
             leaders finally unveil their long-guarded plan to the rest of the
             occupiers. Deep down, they understand that mere evasion will not
@@ -355,25 +475,37 @@ export default function Page() {
             have harnessed, they plan to spin the black hole at such tremendous
             speeds that it bores a hole through spacetime itself, leaving behind
             a portal to another universe.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             It is not lost on them that this is a decision with severe
             consequences they know all too well.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             In their previous attempt to escape the collector, the occupiers
             fled to the far reaches of a newly discovered galaxy, hoping its
             isolation would shield them from his insatiable hunger. For decades,
             they thrived in their new sanctuary.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Until they didn&apos;t.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Upon discovering their refuge, the collector unleashed a
             catastrophic plague upon the galaxy, meticulously crafted to attack
             their very essence. It twisted their forms into hideous mockeries of
@@ -383,9 +515,12 @@ export default function Page() {
             stellar winds and cosmic radiation. Before long there were too many
             to contain. Entire planets descended into chaos as the disease
             ravaged all that it touched.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The plague poisoned the air, water, and land, leaving a desolate
             trail in its wake. Once-thriving civilizations crumbled into ruins,
             their populations dwindling to mere shadows of their former selves.
@@ -393,19 +528,28 @@ export default function Page() {
             of the collector&apos;s relentless judgment. The once vibrant
             expanse was reduced to a graveyard of twisted forms and shattered
             hopes, a silent monument to the collector&apos;s unyielding wrath.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And so the occupiers, once again, were forced to flee. To this day,
             no one dares to enter that forsaken galaxy, haunted by the
             monstrosities they left behind.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The collector always collects his debts.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             In stark contrast to the crumbled ruins of the forsaken galaxy, Eden
             stands as an impenetrable fortress. It is encircled by numerous
             smaller black holes that orbit it like sentinels. Chaotic balls of
@@ -416,9 +560,12 @@ export default function Page() {
             their fiery swords. With collection day rapidly approaching, they
             close in on their target, and along the way collect more energy from
             stray stars.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Meanwhile, the troubled man finally stumbles home, his mind in
             turmoil. The pastor&apos;s words echo painfully through his skull as
             if his thoughts are being ripped apart. He paces around his room,
@@ -426,37 +573,52 @@ export default function Page() {
             <em>
               How can I leave my job behind? How would I support my family?
             </em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             &quot;I&apos;m only a few years away from getting my pension,&quot;
             he mutters to himself, trying to soothe his conscience. &quot;I just
             need to hang in there a little longer, then it will all be
             over.&quot;
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Every excuse feels hollow, burdened by the blood on his hands. Each
             time he considers walking away, the stark reality hits him: quitting
             would mean upending everything. He feels trapped.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Eden&apos;s fleet only grows stronger as the dead stars collapse and
             are reborn as rogue black holes. They patrol all throughout the
             universe, corrupted stellar beasts set forth to consume entire
             civilizations. The troubled man hears all their voices as they cry
             in agony when the beasts come by to devour them. Somehow, the
             occupiers still push on despite the onslaught from the universe.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The sun from their home planet rises, and with it, an arid,
             suffocating silence fills the void that can only mean one thing:
             collection day has arrived.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The remaining occupiers storm past the guards of Eden and unleash
             all of the energy they have harnessed. Half their fleet is sucked
             into oblivion as they cross paths with the event horizons that
@@ -470,9 +632,12 @@ export default function Page() {
             faster and faster, distorting spacetime around it. The very fabric
             of their universe is dragged around by the rotation and knotted in
             on itself.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Caught in the wake of rippling distorted spacetime, their remaining
             fleet of hundreds of thousands of ships patiently waits, bracing for
             their impending fate. All around them, the crumpled fabric of
@@ -482,128 +647,185 @@ export default function Page() {
             unending nightmare of death&apos;s construction stretched across
             infinity. When they glimpse into the future, it blazes with blinding
             white light, forcing them to shield their eyes and turn away.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Ships are stationed at every pump, ready to fight with everything
             they have. Restless, they stand guard and wait for the collector to
             arrive, to challenge their desperate bid for freedom. Holding their
             breath, they empty their reserves into the black hole, watching as
             the last bit of energy they have swirls endlessly around its goliath
             halo.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And they wait.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And nothing happens.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Shocked and horrified, they quickly realize they have made a grave
             mistake. They did not have enough energy to break through.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             &quot;There must be something we can do!&quot; some of the occupiers
             plead, looking to their captains, who sit frozen in fear, terrified
             of what the collector has in store for them.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             While they wait to face their reckoning, the troubled man confronts
             his own demons with the lethal injection he has scheduled for today.
             He moves slowly through the dimly lit hall toward the execution
             room, wrestling with his decision. His heart races.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Thump, Thump, Thump, Thump, Thump.</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The door is half open with a soft white glow emanating from it. Deep
             down he knows that his mind was already made the moment he left home
             to go to work this morning. He fills his syringe carefully with a
             green liquid, one fluid ounce of death swirling in its glass
             chamber. His hands steady and his heart heavy, he approaches the
             prisoner. As the needle pierces the skin, his heart slows.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Thump… Thump… Thump…</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Until it gives its final beat.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Thud.</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Growing impatient, suspecting that the collector is playing tricks
             on them before he plans to unleash his judgment, the occupiers cry
             out into the void. &quot;Show yourself! We know that we have wronged
             you. Punish us if you must.&quot;
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             A heavy, lingering silence fills the void.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Without the pumps to keep it going, Eden&apos;s death roll grinds to
             a halt. As the fabric of reality unfurls around it, the universe
             begins to devour itself. The lights of distant stars flicker around
             them, and the nearby black holes endlessly swirl their halos in a
             chaotic display as they zoom past, dragging the occupiers with them
             through the gates of Eden.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             It is dark and desolate, a lonely passage that stretches on forever.
             They drift through the empty ether for an eternity, lost and without
             purpose, free at last but without a home. Their memories fade as the
             endless dark stretches on. Eventually, they are one with
             nothingness, as if they had never existed in the first place—an
             amorphous blob of infinity.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Then, at last, a faint white glow pierces through the unending
             night. Suddenly, they burst into existence, hovering over a massive,
             lifeless form. He looks just like them, yet far too vast to
             appreciate in his entirety. They orbit around his head as if bound
             by some invisible tether, following him as he is scooped up and
             taken first to the coroner and then to his funeral.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The priest reads:
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>
               Matthew 7:13-14: Enter through the narrow gate. For wide is the
               gate and broad is the road that leads to destruction, and many
               enter through it. But small is the gate and narrow the road that
               leads to life, and only a few find it.
             </em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             And with their host finally laid to rest, they are released from
             their tether. Before the troubled man is lowered into the earth from
             which he came, the priest gently caresses his casket. Briefly, he
             drifts his cloudy white eyes to his reflection on the gilded accents
             of the casket, a demon idly stares back at him.
-          </StoryParagraphElement>
-        </StoryParagraphGroup>
-      </StoryContentLoader>
+          </WrittenContentParagraphElement>
+        </WrittenContentParagraphGroup>
+      </WrittenContentLoader>
     </>
   );
 }

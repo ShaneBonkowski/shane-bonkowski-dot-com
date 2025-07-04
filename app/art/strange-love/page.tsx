@@ -1,9 +1,9 @@
-import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { StoryMetadataProps } from "@/src/types/data-props";
-import StoryParagraphElement from "@/src/components/StoryParagraphElement";
-import StoryParagraphGroup from "@/src/components/StoryParagraphGroup";
+import WrittenContentLoader from "@/src/components/WrittenContentLoader";
+import { WrittenContentMetadataProps } from "@/src/types/data-props";
+import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
+import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagraphGroup";
 
-const imageData: StoryMetadataProps = {
+const imageData: WrittenContentMetadataProps = {
   title: "Strange Love",
   subtitle: "Shane Bonkowski",
   date: "April 6, 2022",
@@ -40,13 +40,16 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <StoryContentLoader {...imageData}>
-      <StoryParagraphGroup>
-        <StoryParagraphElement fontStyle={"italic"} textAlign={"center"}>
+    <WrittenContentLoader {...imageData}>
+      <WrittenContentParagraphGroup>
+        <WrittenContentParagraphElement
+          fontStyle={"italic"}
+          textAlign={"center"}
+        >
           Bone of my bones, flesh of my flesh. A piece of me, now a piece of
           you.
-        </StoryParagraphElement>
-      </StoryParagraphGroup>
-    </StoryContentLoader>
+        </WrittenContentParagraphElement>
+      </WrittenContentParagraphGroup>
+    </WrittenContentLoader>
   );
 }

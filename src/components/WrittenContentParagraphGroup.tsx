@@ -1,19 +1,23 @@
 "use client";
 
 import React from "react";
-import { StoryParagraphElementProps } from "@/src/components/StoryParagraphElement";
+import { WrittenContentParagraphElementProps } from "@/src/components/WrittenContentParagraphElement";
 
 /**
- * A wrapper component that groups multiple StoryParagraphElement components
+ * A wrapper component that groups multiple WrittenContentParagraphElement components
  * and automatically assigns isFirst and isLast props to them.
  */
-const StoryParagraphGroup = ({ children }: { children: React.ReactNode }) => {
+const WrittenContentParagraphGroup = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const childArray = React.Children.toArray(children);
   return (
     <>
       {childArray.map((child, idx) => {
         return React.cloneElement(
-          child as React.ReactElement<StoryParagraphElementProps>,
+          child as React.ReactElement<WrittenContentParagraphElementProps>,
           {
             isFirst: idx === 0,
             isLast: idx === childArray.length - 1,
@@ -24,4 +28,4 @@ const StoryParagraphGroup = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default StoryParagraphGroup;
+export default WrittenContentParagraphGroup;

@@ -2,12 +2,12 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { StoryMetadataProps } from "@/src/types/data-props";
+import { WrittenContentMetadataProps } from "@/src/types/data-props";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
 const avgWPMReading = 238;
 
-const StoryContentLoader: React.FC<StoryMetadataProps> = ({
+const WrittenContentLoader: React.FC<WrittenContentMetadataProps> = ({
   title,
   subtitle,
   date,
@@ -86,4 +86,4 @@ const StoryContentLoader: React.FC<StoryMetadataProps> = ({
   );
 };
 
-export default StoryContentLoader;
+export default WrittenContentLoader;
