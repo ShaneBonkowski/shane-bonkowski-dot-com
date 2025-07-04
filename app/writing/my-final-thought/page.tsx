@@ -1,10 +1,10 @@
-import StoryContentLoader from "@/src/components/StoryContentLoader";
-import { StoryMetadataProps } from "@/src/types/data-props";
+import WrittenContentLoader from "@/src/components/WrittenContentLoader";
+import { WrittenContentMetadataProps } from "@/src/types/data-props";
 import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
-import StoryParagraphElement from "@/src/components/StoryParagraphElement";
-import StoryParagraphGroup from "@/src/components/StoryParagraphGroup";
+import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
+import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagraphGroup";
 
-const storyData: StoryMetadataProps = {
+const storyData: WrittenContentMetadataProps = {
   title: "My Final Thought",
   subtitle: "Shane Bonkowski",
   date: "December 8, 2024",
@@ -42,26 +42,38 @@ export default function Page() {
   return (
     <>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />
-      <StoryContentLoader {...storyData}>
-        <StoryParagraphGroup>
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+      <WrittenContentLoader {...storyData}>
+        <WrittenContentParagraphGroup>
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             As I sit here and watch the unforgiving grains of sand trickle down
             from my hourglass, there is nothing left to do but ponder.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Tick. Tick. Tick.</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             I always figured I&apos;d be at peace when my time comes, but here I
             find myself restless and worried. Why couldn&apos;t I have just been
             hit by a bus? Something quick and painless. Those are the lucky
             ones. The ones who aren&apos;t trapped with this burden of
             frantically trying to make sense of it all at the end.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             I&apos;m sure the thought of what final words they will mutter
             crosses most people&apos;s minds when they find themselves in my
             situation. Maybe I&apos;ve grown cynical, but I&apos;ve lived enough
@@ -69,23 +81,32 @@ export default function Page() {
             creeps to midnight with my family by my side, will I be honest? Will
             I tell them how I truly feel? How afraid I am? Or will I try to
             ensure that their last memory of me is a good one?
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             I wonder what I&apos;ll be thinking about when that last grain of
             sand falls.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Is it better if it&apos;s a mundane thought? In another life, maybe
             I&apos;m thinking about what errands to run or what groceries to get
             when that bus hits me. Boring, yes, but at least it&apos;s not a sad
             thought or an awful thought. I try to rationalize it this way at
             least, but if I&apos;m being honest I&apos;m too selfish to want it
             to be a mundane thought. Let it be something grand.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Growing up hunting with my dad, I learned a lot about life and
             death. He used to say that it&apos;s the knowledge and fear of death
             that sets us apart as humans. When you shoot a deer, you&apos;d be
@@ -95,17 +116,26 @@ export default function Page() {
             before the gateway to the other side closes. It is the ugliest, most
             haunting sight imaginable. Yet somehow, a strange, almost serene
             sense of beauty lingers in their calmness.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             I wasn&apos;t always the best shot and for that I am remorseful.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Tick. Tick.</em>
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             I remember what it was like as a young child shooting one of my
             first deer. It was a cold autumn day, and we had already been in the
             treestand for hours. My dad used to wake me up well before the crack
@@ -113,9 +143,12 @@ export default function Page() {
             drift in and out of consciousness, catching up on the sleep I had
             lost. Somehow, he was always wide awake—a mystery to me, given how
             much rest he deserved.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             This was a man who carried the weight of the world on his shoulders:
             long, grueling days of manual labor and the demands of supporting a
             family. Yet something about those woods allowed his restless mind
@@ -124,9 +157,12 @@ export default function Page() {
             that we shared some of our deepest conversations about life, the
             universe, and our place within it—whispering, of course, so the deer
             couldn&apos;t hear us.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             A gentle tap on my shoulder woke me from a light, dreamless nap. My
             dad pointed to a decent buck just behind us, and I instantly knew
             that this was the moment you do it all for. All the waiting, the
@@ -134,38 +170,50 @@ export default function Page() {
             rose and turned toward the deer. My arms trembled, and my breath
             grew shallow and quick with a mixture of nerves and excitement that
             coursed through me.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The long, cold barrel of the 12-gauge carefully stretched out as I
             centered my aim on its upper midsection. With a slow pull of the
             trigger, one ounce of death screamed from the barrel with a powerful
             crack that could be heard a mile away. The gun kicked back just as
             hard and bruised my shoulder. In an instant, death made contact, and
             the entire symphony of the forest drew to a close.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             There we watched the majestic beast flail in eerie silence. Only the
             rustling of leaves and snapping of branches could be heard. Perhaps
             he was overwhelmed by strange new thoughts and feelings, or perhaps
             his mind had found peace even as his body struggled to catch up.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Eventually, the flailing ceased, and a heavy stillness took over. I
             looked to my dad, and together we offered a quiet prayer for the
             animal, asking for a safe passage to the other side. We thanked it
             for the sustenance it would provide, a solemn exchange of life and
             death. At first gradually, and then all at once, the forest hummed
             its song again.
-          </StoryParagraphElement>
+          </WrittenContentParagraphElement>
 
-          <StoryParagraphElement fontStyle="normal" textAlign="justify">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             <em>Tick.</em>
-          </StoryParagraphElement>
-        </StoryParagraphGroup>
-      </StoryContentLoader>
+          </WrittenContentParagraphElement>
+        </WrittenContentParagraphGroup>
+      </WrittenContentLoader>
     </>
   );
 }

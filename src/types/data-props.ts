@@ -7,7 +7,7 @@ export interface GameMetadataProps {
   imageAlt: string;
 }
 
-export interface StoryMetadataProps {
+export interface WrittenContentMetadataProps {
   title: string;
   subtitle: string;
   date: string;
