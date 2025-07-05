@@ -254,7 +254,6 @@ function solveTileSpaceMatrix(
     tilePatternAttrs.qtyStatesBeingUsed
   );
   const strategyMatrix = flattenedStrategyMatrix.unflatten(gridSize);
-  //strategyMatrix.printHowItAppearsInFlipTile();
 
   return strategyMatrix;
 }
