@@ -99,7 +99,7 @@ const UiOverlay: React.FC = () => {
       >
         <p
           id="score-display"
-          className={`pointer-events-auto font-bold text-5xl sm:6xl ${
+          className={`mt-4 pointer-events-auto font-bold text-5xl sm:6xl ${
             isPulsing ? "flip-tile-pulse" : ""
           }`}
           aria-live="polite"

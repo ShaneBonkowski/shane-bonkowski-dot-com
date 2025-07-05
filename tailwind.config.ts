@@ -28,7 +28,6 @@ export default {
         "game-menu-bkg-color-light": "rgba(208, 208, 208, 0.75)",
       },
       spacing: {
-        "common-ml": "2rem",
         "common-p": "1.5rem",
         "common-p-sm": "1.5rem",
         "flip-tile-small-mx": "6vw",

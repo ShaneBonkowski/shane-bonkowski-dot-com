@@ -63,14 +63,15 @@ const SettingsContainer: React.FC = () => {
       />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
         {/* FIXME: Replace id with actual game name */}
-        <div className="w-full h-full p-4" id="<GAME-NAME>-settings-container">
+        <div className="w-full h-full" id="<GAME-NAME>-settings-container">
           {/* Top Section: Settings Info */}
           {/* FIXME: Replace id with actual game name */}
-          <div className="p-2" id="<GAME-NAME>-settings-description">
-            <div className="flex flex-col items-center">
-              <h1 className="text-center my-0">Settings</h1>
-              <p className="text-center mb-0">FIXME... add settings</p>
-            </div>
+          <div
+            className="p-2 flex flex-col items-center"
+            id="<GAME-NAME>-settings-description"
+          >
+            <h1 className="text-center">Settings</h1>
+            <p className="text-center">FIXME... add settings</p>
           </div>
         </div>
       </GameUiWindow>

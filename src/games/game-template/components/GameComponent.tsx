@@ -90,7 +90,7 @@ const GameComponent: React.FC = () => {
       <SettingsContainer />
       <GameInfoContainer>
         <div
-          className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+          className="written-content-container"
           id={"info-window"}
           aria-label={`Page content for 'info-window'`}
         >

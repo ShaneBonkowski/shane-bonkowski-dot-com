@@ -1,7 +1,7 @@
 export default function Page() {
   return (
     <div
-      className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+      className="max-w-3xl mx-auto written-content-container"
       id={"about"}
       aria-label={`Page content for 'about'`}
     >
