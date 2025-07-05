@@ -80,7 +80,7 @@ const CookieAgreement: React.FC = () => {
         aria-labelledby="cookie-agreement-title"
         aria-describedby="cookie-agreement-description"
       >
-        <p id="cookie-agreement-description" className="text-left">
+        <p id="cookie-agreement-description" className="text-left py-2 my-0">
           This website uses cookies to ensure you get the best experience. By
           continuing to use this site, you accept our use of cookies.{" "}
           <Link href="/main/cookie-policy" className="link">
