@@ -172,14 +172,14 @@ export default function Home() {
     useState<ContentBoxProps[]>(contentBoxData);
 
   return (
-    <div className="mt-3 sm:mt-4" id="content-search-bar-and-boxes">
+    <>
       <ContentSearchBar
         contentData={contentBoxData}
         setFilteredContent={setFilteredContent}
       />
 
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-common-p sm:p-common-p-sm gap-6 sm:gap-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-common-p sm:mt-common-p-sm px-common-p sm:px-common-p-sm gap-common-p sm:gap-common-p-sm"
         id="content-boxes"
       >
         {filteredContent.length > 0 ? (
@@ -193,6 +193,6 @@ export default function Home() {
           </p>
         )}
       </div>
-    </div>
+    </>
   );
 }

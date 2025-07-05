@@ -165,12 +165,13 @@ const SettingsContainer: React.FC = () => {
       />
 
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
-        <div className="w-full h-full p-4" id="game-of-life-settings-container">
+        <div className="w-full h-full" id="game-of-life-settings-container">
           {/* Top Section: Settings Info */}
-          <div className="p-2" id="game-of-life-settings-description">
-            <div className="flex flex-col items-center">
-              <h1 className="text-center my-0">Settings</h1>
-            </div>
+          <div
+            className="p-2 flex flex-col items-center"
+            id="game-of-life-settings-description"
+          >
+            <h1 className="text-center">Settings</h1>
           </div>
 
           {/* Bottom Section: Controls */}

@@ -28,7 +28,6 @@ export default {
         "game-menu-bkg-color-light": "rgba(208, 208, 208, 0.75)",
       },
       spacing: {
-        "common-ml": "2rem",
         "common-p": "1.5rem",
         "common-p-sm": "1.5rem",
         "flip-tile-small-mx": "6vw",
@@ -39,10 +38,6 @@ export default {
         "flip-tile-high-mb": "30vh",
       },
       width: {
-        "content-box-dropdown-h": "8rem",
-        "content-box-dropdown-h-sm": "15rem",
-        "content-box-dropdown-w": "30%",
-        "content-box-dropdown-w-sm": "20%",
         "header-btn-h": "7rem",
       },
       fontSize: {

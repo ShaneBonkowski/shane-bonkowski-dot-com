@@ -31,16 +31,16 @@ const WrittenContentLoader: React.FC<WrittenContentMetadataProps> = ({
 
   return (
     <div
-      className={`flex flex-col max-w-3xl mx-auto p-common-p sm:p-common-p-sm text-left`}
+      className={`max-w-3xl mx-auto written-content-container`}
       id={title.toLowerCase().replace(/\s+/g, "-")}
       aria-labelledby="story-content-title"
       aria-describedby="story-content-body"
     >
       {/* Header */}
-      <h1 id="story-content-title" className="text-center my-2">
+      <h1 id="story-content-title" className="text-center">
         {title}
       </h1>
-      <h3 className="italic text-center my-2">{subtitle}</h3>
+      <h3 className="italic text-center my-0">{subtitle}</h3>
 
       {/* Image */}
       {/* NOTE: mb-0 on artwork with body text since there is no date to serve as a buffer */}

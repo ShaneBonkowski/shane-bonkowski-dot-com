@@ -97,7 +97,7 @@ const GameComponent: React.FC = () => {
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
       >
         <div
-          className="ml-common-ml mr-common-ml sm:px-common-p-sm text-left"
+          className="written-content-container"
           id={"info-window"}
           aria-label={`Page content for 'info-window'`}
         >

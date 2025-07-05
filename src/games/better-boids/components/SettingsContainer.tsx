@@ -150,24 +150,25 @@ const SettingsContainer: React.FC = () => {
         title="Settings"
       />
       <GameUiWindow isVisible={isVisible} onClose={closeWindow}>
-        <div className="w-full h-full p-4" id="boids-settings-container">
+        <div className="w-full h-full" id="boids-settings-container">
           {/* Top Section: Settings Info */}
-          <div className="p-2" id="boids-settings-description">
-            <div className="flex flex-col items-center">
-              <h1 className="text-center my-0">
-                {settingsConfig[selectedSetting as keyof typeof settingsConfig]
-                  ?.title || "Settings"}
-              </h1>
-              <p className="text-center mb-0">
-                {settingsConfig[selectedSetting as keyof typeof settingsConfig]
-                  ?.desc || "Select a setting to view its description."}
-              </p>
-            </div>
+          <div
+            className="p-2 flex flex-col items-center"
+            id="boids-settings-description"
+          >
+            <h1 className="text-center">
+              {settingsConfig[selectedSetting as keyof typeof settingsConfig]
+                ?.title || "Settings"}
+            </h1>
+            <p className="text-center">
+              {settingsConfig[selectedSetting as keyof typeof settingsConfig]
+                ?.desc || "Select a setting to view its description."}
+            </p>
           </div>
 
           {/* Bottom Section: Image and Controls */}
           <div
-            className="mt-4 landscape:sm:mt-8 flex flex-col landscape:sm:flex-row gap-4 landscape:sm:gap-8"
+            className="mt-4 flex flex-col landscape:sm:flex-row gap-4 landscape:sm:gap-8"
             id="boids-settings-content"
           >
             {/* Image */}
