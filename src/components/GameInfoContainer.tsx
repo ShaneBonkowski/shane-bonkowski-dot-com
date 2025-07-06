@@ -5,6 +5,7 @@ import GameIconButton from "@/src/components/GameIconButton";
 import GameInfoWindow from "@/src/components/GameInfoWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { FaInfoCircle } from "react-icons/fa";
+import Fade from "@/src/components/Fade";
 
 const GameInfoContainer: React.FC<{
   lightModeDark?: boolean;
@@ -27,6 +28,7 @@ const GameInfoContainer: React.FC<{
   const [animatedTutorialText, setAnimatedTutorialText] = useState("");
   const tutorialText = "Instructions";
   const [fadeOut, setFadeOut] = useState(false);
+  const fadeOutDuration = 500;
 
   const openInfoWindow = () => {
     // Add a small delay before revealing.
@@ -93,13 +95,6 @@ const GameInfoContainer: React.FC<{
             // Wait some time to show the full text, then trigger fade out
             animationTimeoutRef.current = setTimeout(() => {
               setFadeOut(true);
-
-              // match css fade anim duration defined below, after which
-              // we will hide the text fully by setting showTutorialText to false
-              animationTimeoutRef.current = setTimeout(
-                () => setShowTutorialText(false),
-                500
-              );
             }, 2500);
           }
         }, 80);
@@ -126,14 +121,16 @@ const GameInfoContainer: React.FC<{
         {showTutorialText &&
           isButtonVisible &&
           animatedTutorialText.length > 0 && (
-            <div
-              className={`bg-green-500 text-white text-sm font-bold px-2 py-1 rounded-full pointer-events-none transition-opacity duration-500 ${
-                fadeOut ? "opacity-0" : "opacity-100"
-              }`}
+            <Fade
+              isFading={fadeOut}
+              fadeType="out"
+              duration={fadeOutDuration}
+              onFadeComplete={() => setShowTutorialText(false)}
+              className="bg-green-500 text-white text-sm font-bold px-2 py-1 rounded-full pointer-events-none"
               aria-live="polite"
             >
               {animatedTutorialText}
-            </div>
+            </Fade>
           )}
 
         {/* Info button */}
