@@ -616,7 +616,7 @@ export class Character extends GameObject {
     );
   }
 
-  getDamageAmount() {
+  getBaseDamageAmount() {
     // base dmg + gun and hat bonuses
     let baseDmg = 1 + this.level * 0.6;
 
@@ -625,11 +625,18 @@ export class Character extends GameObject {
       baseDmg = 999999;
     }
 
+    return baseDmg;
+  }
+
+  getBaseDmgMultiplier() {
+    // +0.1x dmg per addDmg bonus from gun and hat.
+    // +0.05x dmg per permanentDamageBonus
     return (
-      baseDmg +
-      GUN_LOOT_MAP[this.equippedGunId].addDmg +
-      HAT_LOOT_MAP[this.equippedHatId].addDmg +
-      this.permanentDamageBonus
+      1 +
+      (0.1 *
+        (GUN_LOOT_MAP[this.equippedGunId].addDmg +
+          HAT_LOOT_MAP[this.equippedHatId].addDmg) +
+        0.05 * this.permanentDamageBonus)
     );
   }
 
