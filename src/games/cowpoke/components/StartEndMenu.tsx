@@ -170,6 +170,18 @@ const StartEndMenu: React.FC = () => {
               : `It's yer pal Cowpoke Jack talkin'. Hope yer ready to follow in my footsteps 'n set out West.
       Go'n remind me what's yer name, then press "Enter" or that play button down there in the corner to git started.`}
           </p>
+          {menuType === "start" && (
+            <input
+              type="text"
+              placeholder="Yer name here..."
+              value={playerName}
+              onChange={(e) => updatePlayerName(e.target.value)}
+              maxLength={10}
+              className="p-2 flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
+              style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
+              aria-label="Player name input"
+            />
+          )}
           {/* Cowpoke stats only show on end screen */}
           {menuType === "end" && (
             <>
@@ -206,29 +218,15 @@ const StartEndMenu: React.FC = () => {
           )}
         </div>
 
-        {/* Input + Start Loading Game Button */}
-        <div
-          className="fixed bottom-4 right-4 flex flex-row gap-4 items-center"
+        {/* Start Loading Game Button */}
+        <GameIconButton
+          onPointerDown={handleStartLoadingGame}
+          icon={<FaPlay size={25} />}
+          ariaLabel="Start Loading Game"
           title="Shortcut: Press Enter to begin" // tooltip
-        >
-          <input
-            type="text"
-            placeholder="Yer name here..."
-            value={playerName}
-            onChange={(e) => updatePlayerName(e.target.value)}
-            maxLength={10}
-            className="p-2 flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
-            style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
-            aria-label="Player name input"
-          />
-          <GameIconButton
-            onPointerDown={handleStartLoadingGame}
-            icon={<FaPlay size={25} />}
-            ariaLabel="Start Loading Game"
-            className={""}
-            darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-          />
-        </div>
+          className={"fixed bottom-3 right-3"}
+          darkModeLight={true} // Want the black buttons this game! Since bkg is light.
+        />
 
         {/* Reset Lifetime Stats Button */}
         <GameIconButton
