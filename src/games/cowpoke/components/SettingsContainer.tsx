@@ -233,7 +233,7 @@ const SettingsContainer: React.FC = () => {
 
         {/* Notification count */}
         {getTotalNotificationCount() > 0 && isButtonVisible && (
-          <div className="bg-green-500 text-white text-sm font-bold px-2 py-1 rounded-full">
+          <div className="bg-green-500 text-white text-sm font-bold px-2 py-1 rounded-full pointer-events-none">
             +{getTotalNotificationCount()}
           </div>
         )}
