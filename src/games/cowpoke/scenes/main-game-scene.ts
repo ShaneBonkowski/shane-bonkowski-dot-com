@@ -15,6 +15,7 @@ import {
 } from "@/src/games/cowpoke/cowpoke-game-object-types";
 import { sendFeedMessage } from "@/src/games/cowpoke/components/Feed";
 import { gameDataStore, GameData } from "@/src/games/cowpoke/game-data-store";
+import { MoreMath } from "@/src/utils/more-math";
 
 // Bkg art was drawn at 1920x1080, so we use that as the reference size.
 // This is used to scale the background decorations to fit the screen.
@@ -513,6 +514,10 @@ export class MainGameScene extends Generic2DGameScene {
     const custom = event as CustomEvent;
     const type = custom.detail?.type;
 
+    // Reset the extra damage multipliers prior to next combat
+    this.playerExtraDamageMultiplier = 1;
+    this.enemyExtraDamageMultiplier = 1;
+
     if (type === "rock" || type === "paper" || type === "scissors") {
       // Player picks element, then stops element slider.. this will trigger
       // another event which starts the combat slider and picks enemy element.
@@ -552,9 +557,6 @@ export class MainGameScene extends Generic2DGameScene {
   };
 
   fire() {
-    // Execute the "sub round" combat
-    this.calculateDamageMultipliers();
-
     // Start w/ first combat, and let events drive the
     // rest of the combat so that theres time for animations.
     this.executeFirstCombat();
@@ -625,7 +627,7 @@ export class MainGameScene extends Generic2DGameScene {
   executePlayerCombat() {
     let playerDmgDealt =
       this.player!.getDamageAmount() * this.playerExtraDamageMultiplier;
-    playerDmgDealt = Math.round(playerDmgDealt * 100) / 100;
+    playerDmgDealt = MoreMath.roundToDigits(playerDmgDealt, 2);
 
     this.player!.attack(this.enemy!, playerDmgDealt);
   }
@@ -633,15 +635,26 @@ export class MainGameScene extends Generic2DGameScene {
   executeEnemyCombat() {
     let enemyDmgDealt =
       this.enemy!.getDamageAmount() * this.enemyExtraDamageMultiplier;
-    enemyDmgDealt = Math.round(enemyDmgDealt * 100) / 100;
+    enemyDmgDealt = MoreMath.roundToDigits(enemyDmgDealt, 2);
 
     this.enemy!.attack(this.player!, enemyDmgDealt);
   }
 
-  calculateDamageMultipliers() {
-    // Play out the "sub-round" to see who won, who gets dmg'd etc.
+  handleElementMatchups() {
     let playerExtraDamageMultiplier = 1;
     let enemyExtraDamageMultiplier = 1;
+    let elementMatchupMsg = "";
+
+    // Favored element multiplier. More dmg if you select the favored element
+    if (this.favoredElement) {
+      elementMatchupMsg += `The favored element here is ${this.favoredElement}.`;
+
+      if (this.player!.elementSelected === this.favoredElement) {
+        playerExtraDamageMultiplier *= 1.2;
+      } else if (this.enemy!.elementSelected === this.favoredElement) {
+        enemyExtraDamageMultiplier *= 1.2;
+      }
+    }
 
     // Handle element matchups
     if (
@@ -649,19 +662,76 @@ export class MainGameScene extends Generic2DGameScene {
       this.enemy!.elementSelected
     ) {
       // Enemy wins element
-      playerExtraDamageMultiplier = 0.5;
-      enemyExtraDamageMultiplier = 1.5;
+      playerExtraDamageMultiplier *= 0.5;
+      enemyExtraDamageMultiplier *= 1.5;
+
+      elementMatchupMsg += ` His ${this.displayEnemyElementAndMultiplier(
+        enemyExtraDamageMultiplier
+      )} beats yer ${this.displayPlayerElementAndMultiplier(
+        playerExtraDamageMultiplier
+      )}`;
     } else if (
       // Player wins element
       ELEMENT_BEATEN_BY_MAP[this.enemy!.elementSelected!] ===
       this.player!.elementSelected
     ) {
-      playerExtraDamageMultiplier = 1.5;
-      enemyExtraDamageMultiplier = 0.5;
+      playerExtraDamageMultiplier *= 1.5;
+      enemyExtraDamageMultiplier *= 0.5;
+
+      elementMatchupMsg += ` Yer ${this.displayPlayerElementAndMultiplier(
+        playerExtraDamageMultiplier
+      )} beats his ${this.displayEnemyElementAndMultiplier(
+        enemyExtraDamageMultiplier
+      )}`;
     } else {
       // Draw, both do normal damage
-      playerExtraDamageMultiplier = 1;
-      enemyExtraDamageMultiplier = 1;
+      playerExtraDamageMultiplier *= 1;
+      enemyExtraDamageMultiplier *= 1;
+
+      elementMatchupMsg += ` It's a draw! His ${this.displayEnemyElementAndMultiplier(
+        enemyExtraDamageMultiplier
+      )} against yer ${this.displayPlayerElementAndMultiplier(
+        playerExtraDamageMultiplier
+      )}`;
+    }
+
+    // Send a message about the element matchup
+    sendFeedMessage(elementMatchupMsg, "Cowpoke Jack's Ghost", "center");
+
+    return {
+      playerExtraDamageMultiplier,
+      enemyExtraDamageMultiplier,
+    };
+  }
+
+  displayPlayerElementAndMultiplier(playerExtraDamageMultiplier: number) {
+    return `${this.player!.elementSelected} <b>(+${MoreMath.roundToDigits(
+      playerExtraDamageMultiplier,
+      1
+    )}x)</b>`;
+  }
+
+  displayEnemyElementAndMultiplier(enemyExtraDamageMultiplier: number) {
+    return `${this.enemy!.elementSelected} <b>(+${MoreMath.roundToDigits(
+      enemyExtraDamageMultiplier,
+      1
+    )}x)</b>`;
+  }
+
+  handleCombatMatchups() {
+    let playerExtraDamageMultiplier = 1;
+    let enemyExtraDamageMultiplier = 1;
+    let combatMatchupMsg = "";
+
+    // Favored combat multiplier. More dmg if you select the favored combat
+    if (this.favoredCombat) {
+      combatMatchupMsg += `The favored combat type here is ${this.favoredCombat}.`;
+
+      if (this.player!.combatSelected === this.favoredCombat) {
+        playerExtraDamageMultiplier *= 1.2;
+      } else if (this.enemy!.combatSelected === this.favoredCombat) {
+        enemyExtraDamageMultiplier *= 1.2;
+      }
     }
 
     // Handle combat matchups
@@ -670,74 +740,133 @@ export class MainGameScene extends Generic2DGameScene {
         // Both attack, no extra damage
         playerExtraDamageMultiplier *= 1;
         enemyExtraDamageMultiplier *= 1;
+
+        combatMatchupMsg += ` It's a draw! His ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )} against yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )}`;
       } else if (this.enemy!.combatSelected === "defend") {
         // Attack a defender, do 0.5x each
         playerExtraDamageMultiplier *= 0.5;
         enemyExtraDamageMultiplier *= 0.5;
+
+        combatMatchupMsg += ` His ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )} blocks yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )}`;
       } else if (this.enemy!.combatSelected === "counter") {
         // Attack a counter, 50/50 chance to do no damage.
         // Enemy doing counter does 1.5x.
+        let playerAttackMissMsg = "";
         if (this.random.getRandomFloat(0, 1) < 0.5) {
           playerExtraDamageMultiplier = 0;
+          playerAttackMissMsg += " and you miss";
         } else {
           playerExtraDamageMultiplier *= 1;
         }
         enemyExtraDamageMultiplier *= 1.5;
+
+        combatMatchupMsg += ` He does a ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )} against yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )}${playerAttackMissMsg}`;
       }
     } else if (this.player!.combatSelected === "defend") {
       if (this.enemy!.combatSelected === "attack") {
         // Defend against an attacker, do 0.5x each
         playerExtraDamageMultiplier *= 0.5;
         enemyExtraDamageMultiplier *= 0.5;
+
+        combatMatchupMsg += ` Yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )} blocks his ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )}`;
       } else if (this.enemy!.combatSelected === "defend") {
         // Both defend, no damage dealt
         playerExtraDamageMultiplier *= 0;
         enemyExtraDamageMultiplier *= 0;
+
+        combatMatchupMsg += ` It's a draw and yer both nullified! His ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )} against yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )}`;
       } else if (this.enemy!.combatSelected === "counter") {
         // Defend against a counter, do 1x dmg and enemy does 0x.
         playerExtraDamageMultiplier *= 1;
         enemyExtraDamageMultiplier *= 0;
+
+        combatMatchupMsg += ` Yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )} nullifies his ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )}`;
       }
     } else if (this.player!.combatSelected === "counter") {
       if (this.enemy!.combatSelected === "attack") {
         // Counter an attacker, do 1.5x dmg and 50/50 chance enemy does 0x.
         playerExtraDamageMultiplier *= 1.5;
+        let enemyAttackMissMsg = "";
         if (this.random.getRandomFloat(0, 1) < 0.5) {
           enemyExtraDamageMultiplier = 0;
+          enemyAttackMissMsg += " and he misses";
         } else {
           enemyExtraDamageMultiplier *= 1;
         }
+
+        combatMatchupMsg += ` You ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )} against his ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )}${enemyAttackMissMsg}`;
       } else if (this.enemy!.combatSelected === "defend") {
         // Counter a defender, do 0x dmg and enemy does 1x shield bash.
         playerExtraDamageMultiplier *= 0;
         enemyExtraDamageMultiplier *= 1;
+
+        combatMatchupMsg += ` His ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )} nullifies yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )}`;
       } else if (this.enemy!.combatSelected === "counter") {
         // Both counter, no extra damage
         playerExtraDamageMultiplier *= 1;
         enemyExtraDamageMultiplier *= 1;
+
+        combatMatchupMsg += ` It's a draw! His ${this.displayEnemyCombatAndMultiplier(
+          enemyExtraDamageMultiplier
+        )} against yer ${this.displayPlayerCombatAndMultiplier(
+          playerExtraDamageMultiplier
+        )}`;
       }
     }
 
-    // Favored element and combat multipliers. More dmg if you select the
-    // favored element
-    if (this.favoredElement) {
-      if (this.player!.elementSelected === this.favoredElement) {
-        playerExtraDamageMultiplier *= 1.2;
-      } else if (this.enemy!.elementSelected === this.favoredElement) {
-        enemyExtraDamageMultiplier *= 1.2;
-      }
-    }
-    if (this.favoredCombat) {
-      if (this.player!.combatSelected === this.favoredCombat) {
-        playerExtraDamageMultiplier *= 1.2;
-      } else if (this.enemy!.combatSelected === this.favoredCombat) {
-        enemyExtraDamageMultiplier *= 1.2;
-      }
-    }
+    // Send a message about the element matchup
+    sendFeedMessage(combatMatchupMsg, "Cowpoke Jack's Ghost", "center");
 
-    // Update the multipliers for the player and enemy
-    this.playerExtraDamageMultiplier = playerExtraDamageMultiplier;
-    this.enemyExtraDamageMultiplier = enemyExtraDamageMultiplier;
+    return {
+      playerExtraDamageMultiplier,
+      enemyExtraDamageMultiplier,
+    };
+  }
+
+  displayPlayerCombatAndMultiplier(playerExtraDamageMultiplier: number) {
+    return `${this.player!.combatSelected} <b>(+${MoreMath.roundToDigits(
+      playerExtraDamageMultiplier,
+      1
+    )}x)</b>`;
+  }
+
+  displayEnemyCombatAndMultiplier(enemyExtraDamageMultiplier: number) {
+    return `${this.enemy!.combatSelected} <b>(+${MoreMath.roundToDigits(
+      enemyExtraDamageMultiplier,
+      1
+    )}x)</b>`;
   }
 
   walkToNextEnemy() {
@@ -775,22 +904,21 @@ export class MainGameScene extends Generic2DGameScene {
     if (sliderId === "win-element") {
       // % chance enemy picks optimal element, lower if player got close to the target
       let winElementChance = 0.33;
-      let extraWinElementStr = "";
       if (distance < 0.01) {
         winElementChance += 0.5;
-        extraWinElementStr = " +50% win chance";
       } else if (distance < 0.05) {
         winElementChance += 0.1;
-        extraWinElementStr = " +10% win chance";
       } else if (distance < 0.1) {
         winElementChance += 0.05;
-        extraWinElementStr = " +5% win chance";
       }
 
       // Add any element inc/dec from player and enemy loot, if applicable
       winElementChance += this.player!.getElementIncrease();
       winElementChance -= this.enemy!.getElementIncrease();
       winElementChance = Math.max(0, Math.min(1, winElementChance));
+
+      const extraWinElementStr =
+        " " + MoreMath.roundToDigits(winElementChance * 100, 1) + "% win odds";
 
       this.enemy!.elementSelected = this.pickEnemyChoice(
         this.player!.elementSelected!,
@@ -807,6 +935,13 @@ export class MainGameScene extends Generic2DGameScene {
       );
       this.sendElementMessage(this.enemy, this.enemy!.elementSelected);
 
+      // Play out the element matchups to see who gets dmg'd etc.
+      const elementMultipliers = this.handleElementMatchups();
+      this.playerExtraDamageMultiplier *=
+        elementMultipliers.playerExtraDamageMultiplier;
+      this.enemyExtraDamageMultiplier *=
+        elementMultipliers.enemyExtraDamageMultiplier;
+
       // Start the combat slider after the element slider is done
       document.dispatchEvent(
         new CustomEvent("startMovingSlider", {
@@ -816,22 +951,21 @@ export class MainGameScene extends Generic2DGameScene {
     } else if (sliderId === "win-combat") {
       // % chance enemy picks optimal combat action, lower if player got close to the target
       let winCombatChance = 0.33;
-      let extraWinCombatStr = "";
       if (distance < 0.01) {
         winCombatChance += 0.5;
-        extraWinCombatStr = " +50% win chance";
       } else if (distance < 0.05) {
         winCombatChance += 0.1;
-        extraWinCombatStr = " +10% win chance";
       } else if (distance < 0.1) {
         winCombatChance += 0.05;
-        extraWinCombatStr = " +5% win chance";
       }
 
       // Add any combat inc/dec from player and enemy loot, if applicable
       winCombatChance += this.player!.getCombatIncrease();
       winCombatChance -= this.enemy!.getCombatIncrease();
       winCombatChance = Math.max(0, Math.min(1, winCombatChance));
+
+      const extraWinCombatStr =
+        " " + MoreMath.roundToDigits(winCombatChance * 100, 1) + "% win odds";
 
       this.enemy!.combatSelected = this.pickEnemyChoice(
         this.player!.combatSelected!,
@@ -864,6 +998,13 @@ export class MainGameScene extends Generic2DGameScene {
         this.sendCombatMessage(this.enemy, this.enemy!.combatSelected!);
         this.playerGoesFirst = true;
       }
+
+      // Play out the combat matchups to see who gets dmg'd etc.
+      const combatMultipliers = this.handleCombatMatchups();
+      this.playerExtraDamageMultiplier *=
+        combatMultipliers.playerExtraDamageMultiplier;
+      this.enemyExtraDamageMultiplier *=
+        combatMultipliers.enemyExtraDamageMultiplier;
 
       // Start the block animations for both player and enemy if they are defending.
       if (this.player!.combatSelected === "defend") {

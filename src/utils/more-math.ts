@@ -66,4 +66,15 @@ export class MoreMath {
   static clamp(value: number, min: number, max: number): number {
     return Math.max(min, Math.min(value, max));
   }
+
+  /**
+   * Rounds a number to a specified number of decimal digits.
+   * @param {number} value - The number to round.
+   * @param {number} digits - The number of decimal digits to round to.
+   * @returns {number} The rounded number.
+   */
+  static roundToDigits(value: number, digits: number): number {
+    const factor = Math.pow(10, digits);
+    return Math.round(value * factor) / factor;
+  }
 }

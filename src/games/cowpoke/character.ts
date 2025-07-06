@@ -955,6 +955,9 @@ export class Character extends GameObject {
         this.getFeedMessageAlignment()
       );
     }
+
+    // Send a msg in the center that is just a line to divide the feed
+    sendFeedMessage("LINE");
   }
 
   handleDeath() {
