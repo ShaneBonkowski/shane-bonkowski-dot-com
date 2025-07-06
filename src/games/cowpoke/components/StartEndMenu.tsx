@@ -250,7 +250,7 @@ const StartEndMenu: React.FC = () => {
           onNo={onNoReset}
           id="reset-lifetime-stats"
         >
-          <p className="text-left">
+          <p className="text-left py-2 my-0">
             Are you sure you want to reset your lifetime stats, perma upgrades
             and loot? This action cannot be undone.
           </p>

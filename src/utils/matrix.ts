@@ -49,6 +49,15 @@ export class Matrix {
   }
 
   /**
+   * Deep copies the current matrix.
+   * @return {Matrix} A new Matrix instance with the same values.
+   */
+  clone(): Matrix {
+    const newMat = this.mat.map((row) => row.slice());
+    return new Matrix(newMat);
+  }
+
+  /**
    * Prints the actual matrix in the order it's indexed.
    */
   printActual() {

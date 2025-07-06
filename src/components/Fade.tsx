@@ -33,26 +33,34 @@ const Fade: React.FC<FadeProps> = ({
 }) => {
   const [visible, setVisible] = useState(fadeType === "in" ? false : true);
   const [show, setShow] = useState(fadeType === "in" ? false : true);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutShowRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutCompleteRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isFading) {
       if (fadeType === "in") {
         setVisible(true);
-        timeoutRef.current = setTimeout(() => setShow(true), 10); // trigger fade-in pretty much immediately
-        timeoutRef.current = setTimeout(() => {
+        timeoutShowRef.current = setTimeout(() => setShow(true), 10); // trigger fade-in pretty much immediately
+        timeoutCompleteRef.current = setTimeout(() => {
           if (onFadeComplete) onFadeComplete();
         }, duration);
       } else {
         setShow(false);
-        timeoutRef.current = setTimeout(() => {
+        timeoutCompleteRef.current = setTimeout(() => {
           setVisible(false);
           if (onFadeComplete) onFadeComplete();
         }, duration);
       }
     }
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (timeoutShowRef.current) {
+        clearTimeout(timeoutShowRef.current);
+        timeoutShowRef.current = null;
+      }
+      if (timeoutCompleteRef.current) {
+        clearTimeout(timeoutCompleteRef.current);
+        timeoutCompleteRef.current = null;
+      }
     };
   }, [isFading, fadeType, duration, onFadeComplete]);
 

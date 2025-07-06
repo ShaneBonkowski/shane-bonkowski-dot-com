@@ -96,10 +96,12 @@ export class Character extends GameObject {
     // Update position etc.
     switch (this.type) {
       case CHARACTER_TYPES.ENEMY:
-        this.physicsBody2D!.position.x = screenWidth - 150;
+        this.physicsBody2D!.position.x =
+          screenWidth - screenWidth * (160 / REFERENCE_BKG_SIZE.x);
         break;
       case CHARACTER_TYPES.PLAYER:
-        this.physicsBody2D!.position.x = 150;
+        this.physicsBody2D!.position.x =
+          screenWidth * (160 / REFERENCE_BKG_SIZE.x);
         break;
       default:
         console.warn(`Character: Unknown character type ${this.type}`);

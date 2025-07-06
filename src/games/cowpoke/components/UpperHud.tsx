@@ -136,7 +136,9 @@ export default function UpperHud() {
           onNo={onNoGameOver}
           id="select-end-game"
         >
-          <p className="text-left">Are you sure you want to bite the dust?</p>
+          <p className="text-left py-2 my-0">
+            Are you sure you want to bite the dust?
+          </p>
         </YesNoBox>
       )}
     </div>

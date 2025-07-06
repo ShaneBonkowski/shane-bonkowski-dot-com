@@ -37,7 +37,9 @@ const Header: React.FC = () => {
       }
       setIsDarkMode(false);
     }
+  }, []);
 
+  useEffect(() => {
     const handleUiMenuOpen = () => setIsButtonVisible(false);
     const handleUiMenuClose = () => setIsButtonVisible(true);
     const handleManualRevealHeader = () => setIsButtonVisible(true);
