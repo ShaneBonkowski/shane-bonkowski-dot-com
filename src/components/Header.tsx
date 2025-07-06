@@ -91,7 +91,7 @@ const Header: React.FC = () => {
       >
         <div
           className={`shanes-games-logo space-x-1 sm:space-x-3 ${
-            isGamesPath ? "p-[4px]" : "p-[0px]"
+            isGamesPath ? "p-[4px] pr-[12px] pb-[12px]" : "p-[0px]"
           }`}
           aria-label="Logo and title"
         >
