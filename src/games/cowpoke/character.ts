@@ -97,11 +97,11 @@ export class Character extends GameObject {
     switch (this.type) {
       case CHARACTER_TYPES.ENEMY:
         this.physicsBody2D!.position.x =
-          screenWidth - screenWidth * (160 / REFERENCE_BKG_SIZE.x);
+          screenWidth - 160 * (screenWidth / REFERENCE_BKG_SIZE.x);
         break;
       case CHARACTER_TYPES.PLAYER:
         this.physicsBody2D!.position.x =
-          screenWidth * (160 / REFERENCE_BKG_SIZE.x);
+          160 * (screenWidth / REFERENCE_BKG_SIZE.x);
         break;
       default:
         console.warn(`Character: Unknown character type ${this.type}`);
@@ -111,7 +111,7 @@ export class Character extends GameObject {
     // Top of floor is about at 225 px on the unscaled background.
     // Place character just below top of floor.
     this.physicsBody2D!.position.y =
-      screenHeight - screenHeight * (100 / REFERENCE_BKG_SIZE.y);
+      screenHeight - 100 * (screenHeight / REFERENCE_BKG_SIZE.y);
 
     // Subscribe to game data changes
     this.subscribeToEvents();
