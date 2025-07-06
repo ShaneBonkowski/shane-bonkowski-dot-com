@@ -70,7 +70,14 @@ if already protected, upstream or if dispositioned.`,
 const tsRestrictedSyntaxRules = [];
 
 // TSX-specific rule for all .tsx files (including app directory)
-const tsxRestrictedSyntaxRules = [];
+const tsxRestrictedSyntaxRules = [
+  {
+    selector: "ExpressionStatement > CallExpression[callee.name='setTimeout']",
+    message: `[Custom rule] setTimeout must be assigned to a variable or ref so 
+    it can be cleared on cleanup. See examples in this codebase for more context. 
+    Add eslint-disable comment if already protected.`,
+  },
+];
 
 // TSX-specific rule for all .tsx files NOT IN APP DIRECTORY
 const tsxRestrictedSyntaxRulesNotAppDir = [
