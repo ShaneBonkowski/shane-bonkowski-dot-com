@@ -19,7 +19,7 @@ const GamePreventPortraitOrLandscapeMode: React.FC<
 
     const checkOrientation = () => {
       // eslint-disable-next-line no-restricted-syntax
-      const isPortrait = window.innerHeight > window.innerWidth;
+      const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
       if (preventMode === "portrait") {
         setShouldShow(isPortrait);

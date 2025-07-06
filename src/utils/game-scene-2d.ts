@@ -1,6 +1,7 @@
 import Phaser from "@/public/js/phaser.min.js";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Vec2 } from "@/src/utils/vector";
+import { virtualKeyboardLikelyOpen } from "@/src/utils/heuristics";
 
 /**
  * Class representing a generic 2D game scene, which can be extended.
@@ -135,9 +136,14 @@ export class Generic2DGameScene extends Phaser.Scene {
     resizeCanvasToParent(this.game);
 
     // This is a workaround for the iOS bug where address bar or "enable diction"
-    // window appearing causes scroll that gets stuck.
+    // window appears/dissappears quickly and causes scroll that gets stuck. Must
+    // also check that virtual keyboard is NOT open, since that can also cause
+    // scroll (and we do not want to reset the keyboard's scroll position).
     /* eslint-disable no-restricted-syntax */
-    if (window.scrollX !== 0 || window.scrollY !== 0) {
+    if (
+      (window.scrollX !== 0 || window.scrollY !== 0) &&
+      !virtualKeyboardLikelyOpen()
+    ) {
       window.scrollTo(0, 0);
     }
     /* eslint-enable no-restricted-syntax */
