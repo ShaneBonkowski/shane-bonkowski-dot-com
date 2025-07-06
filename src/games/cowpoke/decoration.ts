@@ -38,28 +38,28 @@ export class Decoration extends GameObject {
     switch (this.type) {
       case DECOR_TYPES.BACK:
         this.graphic!.setDepth(0);
-        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 0.5);
-        this.physicsBody2D!.position.y = screenHeight / 2;
+        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0, 1); // bottom left pivot point
+        this.physicsBody2D!.position.y = screenHeight;
         break;
       case DECOR_TYPES.MID:
         this.graphic!.setDepth(1);
-        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 0.5);
-        this.physicsBody2D!.position.y = screenHeight / 2;
+        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0, 1); // bottom left pivot point
+        this.physicsBody2D!.position.y = screenHeight;
         break;
       case DECOR_TYPES.FRONT:
-        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 1); // bottom middle pivot point
+        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0, 1); // bottom left pivot point
         this.graphic!.setDepth(2);
 
         // Top of floor is about at 225 px on the unscaled background.
         // Place decor just about on top of the floor.
         const frontDecorPosY =
-          screenHeight - screenHeight * (225 / REFERENCE_BKG_SIZE.y);
+          screenHeight - 225 * (screenHeight / REFERENCE_BKG_SIZE.y);
         this.physicsBody2D!.position.y = frontDecorPosY;
         break;
       case DECOR_TYPES.FLOOR:
         this.graphic!.setDepth(3);
-        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0.5, 0.5);
-        this.physicsBody2D!.position.y = screenHeight / 2;
+        (this.graphic as Phaser.GameObjects.Sprite).setOrigin(0, 1); // bottom left pivot point
+        this.physicsBody2D!.position.y = screenHeight;
         break;
       default:
         console.warn(`Decoration: Unknown decor type ${this.type}.`);
@@ -127,58 +127,130 @@ export class Decoration extends GameObject {
           break;
         case DECOR_TYPES.MID:
           this.physicsBody2D!.position.x -= (midSpeed * delta) / 1000; // Convert delta to seconds
-          this.physicsBody2D!.position.x = Math.round(
+          this.physicsBody2D!.position.x = Math.floor(
             this.physicsBody2D!.position.x
           );
-
-          // if the mid decor goes off screen, reset it to the right side
-          if (
-            this.physicsBody2D!.position.x <=
-            -this.graphic!.displayWidth / 2
-          ) {
-            this.physicsBody2D!.position.x = Math.round(
-              this.scene!.screenInfo.width + this.graphic!.displayWidth / 2
-            );
-          }
-
           break;
         case DECOR_TYPES.FLOOR:
           break;
         case DECOR_TYPES.FRONT:
           this.physicsBody2D!.position.x -= (frontSpeed * delta) / 1000; // Convert delta to seconds
-          this.physicsBody2D!.position.x = Math.round(
+          this.physicsBody2D!.position.x = Math.floor(
             this.physicsBody2D!.position.x
           );
-
-          // if the front decor goes off screen, reset it to the right side
-          if (
-            this.physicsBody2D!.position.x <=
-            -this.graphic!.displayWidth / 2
-          ) {
-            this.physicsBody2D!.position.x = Math.round(
-              this.scene!.screenInfo.width + this.graphic!.displayWidth / 2
-            );
-
-            // Also update it to a random new decor graphic sprite to keep it fresh
-            const randomSpriteName = this.getRandomSprite(
-              "bkg-front-",
-              this.scene!.textures.getTextureKeys(),
-              this.scene!.random
-            );
-
-            if (randomSpriteName != null) {
-              (this.graphic as Phaser.GameObjects.Sprite).setTexture(
-                randomSpriteName
-              );
-            }
-          }
-
           break;
         default:
           console.warn(
             `Decoration: Unknown decor type ${this.type}. No movement applied.`
           );
       }
+    }
+  }
+
+  handleScreenBoundaries() {
+    switch (this.type) {
+      case DECOR_TYPES.BACK:
+        break;
+      case DECOR_TYPES.MID:
+        // if the mid decor goes off screen, reset it to the right of the
+        // furthest right mid found. This allows for multiple mids to be placed
+        // at different x positions, and they will all reset to the right of the
+        // furthest right mid when they go off screen.
+        if (this.physicsBody2D!.position.x <= -this.graphic!.displayWidth) {
+          // Find all other mids except this one
+          const otherMids = this.scene!.decorations.filter(
+            (d) => d !== this && d.type === DECOR_TYPES.MID
+          );
+          if (otherMids.length > 0) {
+            // Find the furthest right mid
+            const furthestRightMid = otherMids.reduce((rightmost, current) =>
+              current.physicsBody2D!.position.x +
+                current.graphic!.displayWidth >
+              rightmost.physicsBody2D!.position.x +
+                rightmost.graphic!.displayWidth
+                ? current
+                : rightmost
+            );
+
+            // Place this mid directly to the right of the furthest right mid
+            this.physicsBody2D!.position.x = Math.floor(
+              furthestRightMid.physicsBody2D!.position.x +
+                furthestRightMid.graphic!.displayWidth
+            );
+          } else {
+            console.error(
+              "Decoration: No other mid decorations found to reset position."
+            );
+            // If no other mids, just reset to the right side of the screen
+            this.physicsBody2D!.position.x = this.scene!.screenInfo.width;
+          }
+        }
+
+        break;
+      case DECOR_TYPES.FLOOR:
+        break;
+      case DECOR_TYPES.FRONT:
+        // if the front decor goes off screen, reset it to the right side of
+        // the rightmost front decor, plus a random offset.
+        if (this.physicsBody2D!.position.x <= -this.graphic!.displayWidth) {
+          // Find all other front decors except this one
+          const otherFronts = this.scene!.decorations.filter(
+            (d) => d !== this && d.type === DECOR_TYPES.FRONT
+          );
+
+          if (otherFronts.length > 0) {
+            // Find the furthest right front decor
+            const furthestRightFront = otherFronts.reduce(
+              (rightmost, current) =>
+                current.physicsBody2D!.position.x +
+                  current.graphic!.displayWidth >
+                rightmost.physicsBody2D!.position.x +
+                  rightmost.graphic!.displayWidth
+                  ? current
+                  : rightmost
+            );
+            // Place this decor to the right of the furthest right decor (or
+            // the screen width, whichever is larger), plus random offset. Checking
+            // for the max here guarantees that the decor will always be placed
+            // off-screen to the right.
+            const offset = Math.floor(
+              this.scene!.random.getRandomInt(
+                50 * (this.scene!.screenInfo.width / REFERENCE_BKG_SIZE.x),
+                300 * (this.scene!.screenInfo.width / REFERENCE_BKG_SIZE.x)
+              )
+            );
+            this.physicsBody2D!.position.x =
+              Math.max(
+                this.scene!.screenInfo.width,
+                furthestRightFront.physicsBody2D!.position.x +
+                  furthestRightFront.graphic!.displayWidth
+              ) + offset;
+          } else {
+            console.error(
+              "Decoration: No other front decorations found to reset position."
+            );
+
+            // If no other fronts, just reset to the right side of the screen
+            this.physicsBody2D!.position.x = this.scene!.screenInfo.width;
+          }
+
+          // Also update it to a random new decor graphic sprite to keep it fresh
+          const randomSpriteName = this.getRandomSprite(
+            "bkg-front-",
+            this.scene!.textures.getTextureKeys(),
+            this.scene!.random
+          );
+
+          if (randomSpriteName != null) {
+            (this.graphic as Phaser.GameObjects.Sprite).setTexture(
+              randomSpriteName
+            );
+          }
+        }
+
+        break;
+      default:
+        console.warn(`Decoration: Unknown decor type ${this.type}.`);
     }
   }
 

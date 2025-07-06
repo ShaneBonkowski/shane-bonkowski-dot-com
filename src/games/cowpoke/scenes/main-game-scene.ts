@@ -42,7 +42,7 @@ const UPDATE_FAVORED_INTERVAL_DEFAULT: number = 1450;
 const UPDATE_FAVORED_INTERVAL_FAST_MODE: number = 500;
 
 export class MainGameScene extends Generic2DGameScene {
-  private decorations: Decoration[] = [];
+  public decorations: Decoration[] = [];
   private player: Character | null = null;
   private playerExtraDamageMultiplier: number = 1;
   private enemy: Character | null = null;
@@ -302,30 +302,18 @@ export class MainGameScene extends Generic2DGameScene {
   ) {
     // Back bkg
     this.decorations.push(
-      new Decoration(
-        this,
-        Math.round(screenWidth / 2),
-        screenHeight,
-        DECOR_TYPES.BACK,
-        "bkg-back"
-      )
+      new Decoration(this, 0, screenHeight, DECOR_TYPES.BACK, "bkg-back")
     );
 
     // Need 2 mid backgrounds. One on the pg and one offscreen shifted by screen width.
     // This is so there is a buffer to allow for parallax scrolling.
     this.decorations.push(
-      new Decoration(
-        this,
-        Math.round(screenWidth / 2),
-        screenHeight,
-        DECOR_TYPES.MID,
-        "bkg-mid-1"
-      )
+      new Decoration(this, 0, screenHeight, DECOR_TYPES.MID, "bkg-mid-1")
     );
     this.decorations.push(
       new Decoration(
         this,
-        Math.round(screenWidth / 2 + screenWidth),
+        0 + screenWidth, // to the right of the first mid bkg
         screenHeight,
         DECOR_TYPES.MID,
         "bkg-mid-2"
@@ -334,13 +322,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Floor bkg
     this.decorations.push(
-      new Decoration(
-        this,
-        Math.round(screenWidth / 2),
-        screenHeight,
-        DECOR_TYPES.FLOOR,
-        "bkg-floor"
-      )
+      new Decoration(this, 0, screenHeight, DECOR_TYPES.FLOOR, "bkg-floor")
     );
 
     // Add some front decorations at random x positions on the screen to start.
@@ -408,6 +390,12 @@ export class MainGameScene extends Generic2DGameScene {
         // the player is moving.
         for (const decoration of this.decorations) {
           decoration.handlePhysics(delta, this.moving);
+        }
+
+        // Handle screen boundaries for decor so that if they go off screen,
+        // they are reset to the right side of the screen etc.
+        for (const decoration of this.decorations) {
+          decoration.handleScreenBoundaries();
         }
       }
 
