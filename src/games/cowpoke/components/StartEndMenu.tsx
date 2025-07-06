@@ -20,6 +20,7 @@ const StartEndMenu: React.FC = () => {
     setPlayerName,
     resetPermanentData,
   } = UseGameData();
+  const [localPlayerName, setLocalPlayerName] = useState(playerName);
   const [isVisible, setIsVisible] = useState(false);
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
@@ -47,14 +48,6 @@ const StartEndMenu: React.FC = () => {
     dispatchMenuEvent("Start/End", "close");
   };
 
-  const updatePlayerName = useCallback(
-    (name: string) => {
-      // Update the player name in the game data store
-      setPlayerName(name);
-    },
-    [setPlayerName]
-  );
-
   const handleStartLoadingGame = useCallback(() => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
@@ -63,7 +56,7 @@ const StartEndMenu: React.FC = () => {
       // Clean up the player name before loading the game..
       // Do this here instead of in the input change handler
       // so that the name is only cleaned on submit.
-      let cleanedName = playerName.trim();
+      let cleanedName = localPlayerName.trim();
       if (cleanedName.length > 10) {
         cleanedName = cleanedName.slice(0, 10);
       }
@@ -72,12 +65,13 @@ const StartEndMenu: React.FC = () => {
         cleanedName = "Shaner";
       }
 
-      updatePlayerName(cleanedName);
+      // Update the player name in the game data store
+      setPlayerName(cleanedName);
 
       // Tell the main-game-scene to start loading the game
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
     }, 150);
-  }, [playerName, updatePlayerName]);
+  }, [localPlayerName, setPlayerName]);
 
   const handleTryToResetStats = () => {
     // Add a small delay before revealing.
@@ -174,8 +168,8 @@ const StartEndMenu: React.FC = () => {
             <input
               type="text"
               placeholder="Yer name here..."
-              value={playerName}
-              onChange={(e) => updatePlayerName(e.target.value)}
+              value={localPlayerName}
+              onChange={(e) => setLocalPlayerName(e.target.value)}
               maxLength={10}
               className="p-2 flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
               style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
