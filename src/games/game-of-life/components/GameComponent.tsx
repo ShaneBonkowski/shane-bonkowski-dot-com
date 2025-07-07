@@ -86,7 +86,11 @@ const GameComponent: React.FC = () => {
   return (
     // Disables user zoom. This is necessary to prevent for example
     // pinch-zooming on mobile devices, which breaks things on games.
-    <div id={"Prevent zoom"} style={{ touchAction: "pan-x pan-y" }}>
+    // Also prevents "overscroll" behavior on mobile devices.
+    <div
+      id={"Prevent zoom"}
+      style={{ touchAction: "pan-x pan-y", overscrollBehavior: "contain" }}
+    >
       {/* UI */}
       <UiOverlay />
       <SettingsContainer />
