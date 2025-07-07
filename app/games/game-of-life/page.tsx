@@ -5,7 +5,7 @@ import GameComponent from "@/src/games/game-of-life/components/GameComponent";
 const gameMetadata: GameMetadataProps = {
   title: "Game of Life",
   description: "A game by Shane Bonkowski.",
-  logoImageUrl: "/webps/mars-logo-large.webp",
+  coverImageUrl: "/webps/games/game-of-life-cover.webp",
   imageAlt: "Game of Life",
 };
 
@@ -18,7 +18,7 @@ export const metadata = {
     url: "https://shanebonkowski.com",
     images: [
       {
-        url: `https://shanebonkowski.com${gameMetadata.logoImageUrl}`,
+        url: `https://shanebonkowski.com${gameMetadata.coverImageUrl}`,
         alt: gameMetadata.imageAlt,
       },
     ],
@@ -29,7 +29,7 @@ export const metadata = {
     site: "@ShaneBonkowski",
     title: gameMetadata.title,
     description: gameMetadata.description,
-    image: `https://shanebonkowski.com${gameMetadata.logoImageUrl}`,
+    image: `https://shanebonkowski.com${gameMetadata.coverImageUrl}`,
     imageAlt: gameMetadata.imageAlt,
   },
 };
