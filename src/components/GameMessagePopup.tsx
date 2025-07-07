@@ -67,7 +67,7 @@ const GameMessagePopup: React.FC<GameMessagePopupProps> = ({
   return (
     <div
       id="game-message-popup-container"
-      className={`pointer-events-none fixed ${
+      className={`app-mode pointer-events-none fixed ${
         bottom ? "bottom-0" : "top-0"
       } flex justify-center w-full transition-opacity duration-1000 ${
         isFading ? "opacity-0" : "opacity-100"

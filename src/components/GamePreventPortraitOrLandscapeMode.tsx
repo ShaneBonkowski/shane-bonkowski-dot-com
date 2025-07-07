@@ -50,7 +50,7 @@ const GamePreventPortraitOrLandscapeMode: React.FC<
 
   return (
     <div
-      className="fixed z-40 inset-0 flex items-center justify-center bg-black"
+      className="app-mode fixed z-40 inset-0 flex items-center justify-center bg-black"
       id="prevent-portrait-landscape-mode"
       aria-label="Prevent Portrait or Landscape Mode"
     >
