@@ -44,9 +44,9 @@ const UPDATE_FAVORED_INTERVAL_FAST_MODE: number = 500;
 
 export class MainGameScene extends Generic2DGameScene {
   public decorations: Decoration[] = [];
-  private player: Character | null = null;
+  public player: Character | null = null;
   private playerExtraDamageMultiplier: number = 1;
-  private enemy: Character | null = null;
+  public enemy: Character | null = null;
   private enemyExtraDamageMultiplier: number = 1;
   public gameRound: number = 0;
   public playerGoesFirst: boolean = true;

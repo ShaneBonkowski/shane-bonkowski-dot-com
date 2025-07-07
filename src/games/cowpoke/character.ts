@@ -70,10 +70,10 @@ export class Character extends GameObject {
     if (typeof window === "undefined") return;
 
     // Get snapshot of the game data, then load them in and subscribe to changes.
+    this.type = type;
     this.setupSyncedGameData();
 
     this.scene = scene;
-    this.type = type;
 
     // Set the sprites for the character. Each character is a container
     // full of sprites that consists of a body, head, hat, and gun.
@@ -312,9 +312,19 @@ export class Character extends GameObject {
     );
     this.headSprite!.setDepth(7);
 
-    // Set default hat and gun when new player character is spawned
-    this.equipHat(0);
-    this.equipGun(0);
+    // Set default hat and gun when new player character is spawned.. or equip the
+    // last equipped ones so that the player can continue where they left off.
+    if (this.equippedHatId && this.ownedHatIds.includes(this.equippedHatId)) {
+      this.equipHat(this.equippedHatId);
+    } else {
+      this.equipHat(0);
+    }
+
+    if (this.equippedGunId && this.ownedGunIds.includes(this.equippedGunId)) {
+      this.equipGun(this.equippedGunId);
+    } else {
+      this.equipGun(0);
+    }
 
     // Set level, this will set max health, xp, etc.
     this.updateLevel(5, true);
@@ -350,15 +360,16 @@ export class Character extends GameObject {
 
     // Set a random level for enemy characters, this will
     // set max health, xp, etc.
-    if (this.scene!.gameRound < 5) {
+    if (this.scene!.gameRound < 8) {
       this.updateLevel(this.scene!.random.getRandomInt(1, 4), true);
-    } else if (this.scene!.gameRound < 10) {
+    } else if (this.scene!.gameRound < 15) {
       this.updateLevel(this.scene!.random.getRandomInt(3, 8), true);
     } else {
+      // For further rounds, set an enemy level based on player level
       this.updateLevel(
         this.scene!.random.getRandomInt(
-          this.scene!.gameRound - 5,
-          this.scene!.gameRound
+          Math.max(Math.round(this.scene!.player!.level * 0.55), 8),
+          Math.max(Math.round(this.scene!.player!.level * 0.9), 12)
         ),
         true
       );
@@ -525,14 +536,18 @@ export class Character extends GameObject {
       commonChance = 0.2;
       rareChance = 0.5;
       legendaryChance = 0.3;
-    } else if (this.scene!.gameRound >= 20) {
-      commonChance = 0.4;
-      rareChance = 0.4;
+    } else if (this.scene!.gameRound >= 30) {
+      commonChance = 0.35;
+      rareChance = 0.45;
       legendaryChance = 0.2;
-    } else {
-      commonChance = 0.6;
-      rareChance = 0.3;
+    } else if (this.scene!.gameRound >= 15) {
+      commonChance = 0.55;
+      rareChance = 0.35;
       legendaryChance = 0.1;
+    } else {
+      commonChance = 0.75;
+      rareChance = 0.25;
+      legendaryChance = 0; // no legendery loot in early rounds
     }
 
     // Normalize in case of rounding errors
@@ -617,8 +632,10 @@ export class Character extends GameObject {
   }
 
   getBaseDamageAmount() {
-    // base dmg + gun and hat bonuses
-    let baseDmg = 1 + this.level * 0.6;
+    // Calculate base dmg + gun and hat bonuses.
+    // Enemies have reduced base dmg.
+    let baseDmg =
+      (5 + this.level * 0.2) * (this.type === CHARACTER_TYPES.ENEMY ? 0.25 : 1);
 
     // If in GOD_MODE, set base dmg to 999,999
     if (this.name === "GOD_MODE") {
@@ -795,7 +812,11 @@ export class Character extends GameObject {
   }
 
   updateMaxHealth() {
-    let newMaxHealth = 10 + this.level * 1.2 + this.permanentHealthBonus;
+    // Calculate new max health based on level, bonuses, and equipped items.
+    // Enemies have reduced max health.
+    let newMaxHealth =
+      (10 + this.level * 1.2 + this.permanentHealthBonus) *
+      (this.type === CHARACTER_TYPES.ENEMY ? 0.25 : 1);
 
     newMaxHealth +=
       HAT_LOOT_MAP[this.equippedHatId].addHealth +
@@ -874,7 +895,7 @@ export class Character extends GameObject {
   }
 
   updateMaxXp() {
-    const newMaxXp = 10 + this.level * 2;
+    const newMaxXp = 1 + this.level * 2;
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
       gameDataStore.setPlayerMaxXp(newMaxXp);
@@ -887,7 +908,7 @@ export class Character extends GameObject {
     if (this.type === CHARACTER_TYPES.PLAYER) {
       gameDataStore.setPlayerKills(this.kills + 1);
 
-      const addXp = Math.floor(otherCharacter.level * 1.2);
+      const addXp = Math.floor(otherCharacter.level * 1.5);
 
       // Player says a quip when killing enemy
       sendFeedMessage(
@@ -903,13 +924,13 @@ export class Character extends GameObject {
       // 50/50 chance to try to drop either gun or hat
       if (this.scene!.random.getRandomFloat(0, 1) < 0.5) {
         // Random chance to get enemy's gun
-        let gunDropOdds = 0.6;
+        let gunDropOdds = 0.55;
         if (GUN_LOOT_MAP[otherCharacter.equippedGunId].rarity === RARITY.RARE) {
-          gunDropOdds = 0.4;
+          gunDropOdds = 0.35;
         } else if (
           GUN_LOOT_MAP[otherCharacter.equippedGunId].rarity === RARITY.LEGENDARY
         ) {
-          gunDropOdds = 0.25;
+          gunDropOdds = 0.18;
         }
 
         if (this.scene!.random.getRandomFloat(0, 1) < gunDropOdds) {
@@ -928,13 +949,13 @@ export class Character extends GameObject {
         }
       } else {
         // Random chance to get enemy's hat
-        let hatDropOdds = 0.6;
+        let hatDropOdds = 0.55;
         if (HAT_LOOT_MAP[otherCharacter.equippedHatId].rarity === RARITY.RARE) {
-          hatDropOdds = 0.4;
+          hatDropOdds = 0.35;
         } else if (
           HAT_LOOT_MAP[otherCharacter.equippedHatId].rarity === RARITY.LEGENDARY
         ) {
-          hatDropOdds = 0.25;
+          hatDropOdds = 0.18;
         }
 
         if (this.scene!.random.getRandomFloat(0, 1) < hatDropOdds) {
