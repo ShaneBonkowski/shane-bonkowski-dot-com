@@ -176,7 +176,7 @@ const SettingsContainer: React.FC = () => {
 
           {/* Bottom Section: Controls */}
           <div
-            className="w-full mt-4 p-4 landscape:sm:p-8 flex flex-col gap-8"
+            className="w-full mt-4 p-4 landscape:sm:p-8 flex flex-col gap-4"
             id="game-of-life-settings-controls"
           >
             {Object.entries(settingsConfig).map(([key, config]) => {
@@ -185,16 +185,19 @@ const SettingsContainer: React.FC = () => {
               return (
                 <div key={key}>
                   {config.type === "checkbox" ? (
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-4 mb-2">
-                        <input
-                          type="checkbox"
-                          checked={currentValue as boolean}
-                          onChange={(e) =>
-                            handleCheckboxChange(key, e.target.checked)
-                          }
-                        />
-                        <label className="text-md font-bold">
+                    <div className="flex flex-col mb-4">
+                      <div className="flex items-center">
+                        {/* Make clickable area larger */}
+                        <div className="pr-4 pb-2">
+                          <input
+                            type="checkbox"
+                            checked={currentValue as boolean}
+                            onChange={(e) =>
+                              handleCheckboxChange(key, e.target.checked)
+                            }
+                          />
+                        </div>
+                        <label className="mb-2 text-md font-bold">
                           {config.title}
                         </label>
                       </div>
@@ -206,17 +209,20 @@ const SettingsContainer: React.FC = () => {
                         {config.title}: {currentValue as number}
                       </label>
                       <label className="text-sm mb-2">{config.desc}</label>
-                      <input
-                        type="range"
-                        min={config.lowerBound}
-                        max={config.upperBound}
-                        step={config.step}
-                        value={currentValue as number}
-                        onChange={(e) =>
-                          handleSliderChange(key, parseFloat(e.target.value))
-                        }
-                        className="w-full"
-                      />
+                      {/* Make clickable area larger */}
+                      <div className="py-4">
+                        <input
+                          type="range"
+                          min={config.lowerBound}
+                          max={config.upperBound}
+                          step={config.step}
+                          value={currentValue as number}
+                          onChange={(e) =>
+                            handleSliderChange(key, parseFloat(e.target.value))
+                          }
+                          className="w-full"
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
