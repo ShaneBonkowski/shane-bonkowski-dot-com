@@ -194,6 +194,15 @@ body {
   .written-content-container {
     @apply my-2 px-common-p px-common-p-sm flex flex-col;
   }
+
+  /* Disables user zoom. This is necessary to prevent for example 
+  pinch-zooming on mobile devices which breaks things on games and other
+  'app-like' experiences. Similar for preventing overscroll behavior.
+  */
+  .app-mode {
+    touch-action: pan-x pan-y; /* disables double-tap zoom */
+    overscroll-behavior: none; /* prevents overscroll, pull-to-refresh */
+  }
 }
 
 @layer utilities {

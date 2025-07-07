@@ -50,7 +50,7 @@ const GameLoadingScreen: React.FC<LoadingScreenProps> = ({
       duration={fadeDuration}
       onFadeComplete={onFadeOutComplete}
       // z-40 so its most of the way in the front.. but behind e.g. the header at z-50.
-      className="fixed z-40 inset-0 flex items-center justify-center bg-black"
+      className="app-mode fixed z-40 inset-0 flex items-center justify-center bg-black"
       id="game-loading-screen"
       aria-label="Game loading screen"
     >

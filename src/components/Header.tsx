@@ -71,17 +71,16 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`z-50 pointer-events-none flex justify-between items-center ${
+      // 'app-mode' is necessary to prevent for example pinch-zooming on mobile
+      // devices, which breaks things on games. This is needed here because the
+      // header is used in games and other app-like experiences.
+      className={`z-50 app-mode pointer-events-none flex justify-between items-center ${
         isButtonVisible ? "" : "hidden"
       } ${
         isGamesPath ? "absolute top-4 left-4" : "p-common-p sm:p-common-p-sm"
       }`}
       id="header"
       aria-label="Header"
-      // Disables user zoom. This is necessary to prevent for example
-      // pinch-zooming on mobile devices. This is only needed here because
-      // this header appears in games, and games CANNOT allow zoom.
-      style={{ touchAction: "pan-x pan-y" }}
     >
       {/* Left Section: Logo & Title */}
       <Link

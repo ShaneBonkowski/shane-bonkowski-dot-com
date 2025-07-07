@@ -116,7 +116,7 @@ const GameInfoContainer: React.FC<{
 
   return (
     <>
-      <div className="z-20 fixed bottom-3 right-3 flex flex-row items-center gap-2">
+      <div className="app-mode z-20 fixed bottom-3 right-3 flex flex-row items-center gap-2">
         {/* Tutorial text */}
         {showTutorialText &&
           isButtonVisible &&
