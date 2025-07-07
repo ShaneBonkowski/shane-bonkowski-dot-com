@@ -189,7 +189,7 @@ const SettingsContainer: React.FC = () => {
 
             {/* Controls */}
             <div
-              className="w-full landscape:sm:w-1/2 p-4 landscape:sm:p-8 flex flex-col gap-4"
+              className="w-full landscape:sm:w-1/2 p-4 landscape:sm:p-8 flex flex-col"
               id="boids-settings-controls"
             >
               {Object.entries(settingsConfig).map(([key, config]) => {
@@ -198,39 +198,48 @@ const SettingsContainer: React.FC = () => {
                 return (
                   <div key={key}>
                     {config.type === "checkbox" ? (
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center">
                         <label className="text-sm font-medium">
                           {config.title}
                         </label>
-                        <input
-                          type="checkbox"
-                          checked={currentValue as boolean}
-                          onChange={(e) => {
-                            handleCheckboxChange(key, e.target.checked);
-                            // set selected onChange, rather than onPointerDown like
-                            // the sliders, since checkboxes are not as interactive. This
-                            // prevents some jumpiness when clicking the checkbox.
-                            setSelectedSetting(key);
-                          }}
-                        />
+                        {/* Make clickable area larger */}
+                        <div className="px-4">
+                          <input
+                            type="checkbox"
+                            checked={currentValue as boolean}
+                            onChange={(e) => {
+                              handleCheckboxChange(key, e.target.checked);
+                              // set selected onChange, rather than onPointerDown like
+                              // the sliders, since checkboxes are not as interactive. This
+                              // prevents some jumpiness when clicking the checkbox.
+                              setSelectedSetting(key);
+                            }}
+                          />
+                        </div>
                       </div>
                     ) : (
                       <>
                         <label className="block text-sm font-medium mb-2">
                           {config.title}: {currentValue as number}
                         </label>
-                        <input
-                          type="range"
-                          min={config.lowerBound}
-                          max={config.upperBound}
-                          step={config.step}
-                          value={currentValue as number}
-                          onChange={(e) =>
-                            handleSliderChange(key, parseFloat(e.target.value))
-                          }
-                          onPointerDown={() => setSelectedSetting(key)}
-                          className="w-full"
-                        />
+                        {/* Make clickable area larger */}
+                        <div className="pt-2 pb-4">
+                          <input
+                            type="range"
+                            min={config.lowerBound}
+                            max={config.upperBound}
+                            step={config.step}
+                            value={currentValue as number}
+                            onChange={(e) =>
+                              handleSliderChange(
+                                key,
+                                parseFloat(e.target.value)
+                              )
+                            }
+                            onPointerDown={() => setSelectedSetting(key)}
+                            className="w-full"
+                          />
+                        </div>
                       </>
                     )}
                   </div>
