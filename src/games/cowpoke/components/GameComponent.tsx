@@ -93,7 +93,7 @@ const GameComponent: React.FC = () => {
     // Also prevents "overscroll" behavior on mobile devices.
     <div
       id={"Prevent zoom"}
-      style={{ touchAction: "pan-x pan-y", overscrollBehavior: "contain" }}
+      style={{ touchAction: "pan-x pan-y", overscrollBehavior: "none" }}
     >
       {/* UI */}
       <StartEndMenu />
