@@ -210,8 +210,9 @@ export class Boid extends GameObject {
 
     if (this.graphic) {
       this.rigidBody2D!.hitboxSize = new Vec2(
-        this.graphic!.displayWidth,
-        this.graphic!.displayHeight
+        // Visible portion of the graphic is about 33% of the total graphic size
+        this.graphic!.displayWidth * 0.33,
+        this.graphic!.displayHeight * 0.33
       );
     }
   }
@@ -571,24 +572,24 @@ export class Boid extends GameObject {
       this.physicsBody2D!.position.x =
         this.scene!.screenInfo.width -
         edgeMargin -
-        this.graphic!.displayWidth / 2;
+        this.rigidBody2D!.hitboxSize.x / 2;
     }
     // If right, teleport to left side of screen
     else if (collisionDirection === "right") {
       this.physicsBody2D!.position.x =
-        edgeMargin + this.graphic!.displayWidth / 2;
+        edgeMargin + this.rigidBody2D!.hitboxSize.x / 2;
     }
     // If top, move to bottom
     else if (collisionDirection === "top") {
       this.physicsBody2D!.position.y =
         this.scene!.screenInfo.height -
         edgeMargin -
-        this.graphic!.displayHeight / 2;
+        this.rigidBody2D!.hitboxSize.y / 2;
     }
     // If bottom, move to top
     else if (collisionDirection === "bottom") {
       this.physicsBody2D!.position.y =
-        edgeMargin + this.graphic!.displayHeight / 2;
+        edgeMargin + this.rigidBody2D!.hitboxSize.y / 2;
     }
   }
 
