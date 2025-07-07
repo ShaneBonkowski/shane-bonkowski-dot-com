@@ -160,7 +160,7 @@ const SettingsContainer: React.FC = () => {
               {settingsConfig[selectedSetting as keyof typeof settingsConfig]
                 ?.title || "Settings"}
             </h1>
-            <p className="text-center">
+            <p className="text-center min-h-[2lh]">
               {settingsConfig[selectedSetting as keyof typeof settingsConfig]
                 ?.desc || "Select a setting to view its description."}
             </p>

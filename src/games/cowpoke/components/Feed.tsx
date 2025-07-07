@@ -77,7 +77,7 @@ export default function Feed({
   return (
     <div
       ref={feedRef}
-      className={`z-20 w-full ${
+      className={`app-mode z-20 w-full ${
         isVisible ? "" : "hidden"
       } p-2 flex flex-col gap-1 cowpoke-panel-white border border-black overflow-y-auto ${heightClass}`}
       aria-label="Feed Container"
