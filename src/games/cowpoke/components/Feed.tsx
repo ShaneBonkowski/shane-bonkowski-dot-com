@@ -82,31 +82,41 @@ export default function Feed({
       } p-2 flex flex-col gap-1 cowpoke-panel-white border border-black overflow-y-auto ${heightClass}`}
       aria-label="Feed Container"
     >
-      {feedList.map((item, i) => (
-        <div
-          key={i}
-          className={`text-primary-text-color-light text-sm ${
-            item.align === "right"
-              ? "text-right"
-              : item.align === "center"
-              ? "text-center"
-              : "text-left"
-          }`}
-          // eslint-disable-next-line no-restricted-syntax
-          dangerouslySetInnerHTML={{
-            __html:
-              item.msg === ""
-                ? "&nbsp;" // Use non-breaking space for empty messages
-                : item.align === "right"
-                ? `${sanitizeHtml(item.msg)}<b> — ${sanitizeHtml(
-                    item.sender
-                  )}</b>`
-                : `<b>${sanitizeHtml(item.sender)} — </b>${sanitizeHtml(
-                    item.msg
-                  )}`,
-          }}
-        />
-      ))}
+      {feedList.map((item, i) =>
+        // Render a horizontal line for "LINE" messages, otherwise render the message
+        // with the appropriate alignment and sender.
+        item.msg === "LINE" ? (
+          <hr
+            key={i}
+            className="my-2 border-t border-gray-500 dark:border-gray-500"
+            aria-hidden="true"
+          />
+        ) : (
+          <div
+            key={i}
+            className={`text-primary-text-color-light text-sm ${
+              item.align === "right"
+                ? "text-right"
+                : item.align === "center"
+                ? "text-center"
+                : "text-left"
+            }`}
+            // eslint-disable-next-line no-restricted-syntax
+            dangerouslySetInnerHTML={{
+              __html:
+                item.msg === ""
+                  ? "&nbsp;" // Use non-breaking space for empty messages
+                  : item.align === "right"
+                  ? `${sanitizeHtml(item.msg)}<b> — ${sanitizeHtml(
+                      item.sender
+                    )}</b>`
+                  : `<b>${sanitizeHtml(item.sender)} — </b>${sanitizeHtml(
+                      item.msg
+                    )}`,
+            }}
+          />
+        )
+      )}
     </div>
   );
 }
@@ -119,7 +129,7 @@ export default function Feed({
  */
 export function sendFeedMessage(
   msg: string,
-  sender: string,
+  sender: string = "Cowpoke Jack's Ghost",
   align: "left" | "right" | "center" = "left"
 ) {
   document.dispatchEvent(
