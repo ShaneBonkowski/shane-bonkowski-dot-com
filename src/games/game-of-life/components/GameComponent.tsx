@@ -106,7 +106,7 @@ const GameComponent: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Conway`s Game of Life
+              Conway&apos;s Game of Life
             </a>
             . The game is typically played on an infinite, two-dimensional grid.
             Each cell can exist in one of two states (alive or dead) and
