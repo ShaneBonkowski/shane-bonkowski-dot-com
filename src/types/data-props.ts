@@ -3,7 +3,7 @@ import React from "react";
 export interface GameMetadataProps {
   title: string;
   description: string;
-  logoImageUrl: string;
+  coverImageUrl: string;
   imageAlt: string;
 }
 
