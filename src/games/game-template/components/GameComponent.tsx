@@ -85,7 +85,9 @@ const GameComponent: React.FC = () => {
   }, []);
 
   return (
-    <>
+    // Disables user zoom. This is necessary to prevent for example
+    // pinch-zooming on mobile devices, which breaks things on games.
+    <div id={"Prevent zoom"} style={{ touchAction: "pan-x pan-y" }}>
       {/* UI */}
       <SettingsContainer />
       <GameInfoContainer>
@@ -110,7 +112,7 @@ const GameComponent: React.FC = () => {
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}
-    </>
+    </div>
   );
 };
 

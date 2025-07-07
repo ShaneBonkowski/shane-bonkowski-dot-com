@@ -78,6 +78,10 @@ const Header: React.FC = () => {
       }`}
       id="header"
       aria-label="Header"
+      // Disables user zoom. This is necessary to prevent for example
+      // pinch-zooming on mobile devices. This is only needed here because
+      // this header appears in games, and games CANNOT allow zoom.
+      style={{ touchAction: "pan-x pan-y" }}
     >
       {/* Left Section: Logo & Title */}
       <Link
