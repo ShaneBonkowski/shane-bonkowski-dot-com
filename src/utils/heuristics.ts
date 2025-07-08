@@ -46,3 +46,11 @@ export function iosWindowLikelyOpen(): boolean {
   // it suggests that the address bar or similar UI elements are open.
   return visualHeight < documentHeight * 0.9 || virtualKeyboardLikelyOpen();
 }
+
+/**
+ * Checks if the current device is an iOS device (iPhone, iPad, or iPod).
+ * @returns {boolean} True if the device is iOS.
+ */
+export function isIOS(): boolean {
+  return /iphone|ipod|ipad/i.test(navigator.userAgent);
+}
