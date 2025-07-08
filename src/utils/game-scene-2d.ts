@@ -1,7 +1,7 @@
 import Phaser from "@/public/js/phaser.min.js";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Vec2 } from "@/src/utils/vector";
-import { virtualKeyboardLikelyOpen } from "@/src/utils/heuristics";
+import { iosWindowLikelyOpen } from "@/src/utils/heuristics";
 
 /**
  * Class representing a generic 2D game scene, which can be extended.
@@ -13,7 +13,13 @@ export class Generic2DGameScene extends Phaser.Scene {
   public uiMenuOpen: boolean = false;
 
   // Window/screen info
-  public screenInfo = { width: 0, height: 0, isPortrait: false };
+  public screenInfo = {
+    width: 0,
+    height: 0,
+    visualWidth: 0,
+    visualHeight: 0,
+    isPortrait: false,
+  };
   private resizeObserver: ResizeObserver | null = null;
   private lastManualWindowResizeTime: number = 0;
   private windowResizeInterval: number = 2000;
@@ -136,13 +142,13 @@ export class Generic2DGameScene extends Phaser.Scene {
     resizeCanvasToParent(this.game);
 
     // This is a workaround for the iOS bug where address bar or "enable diction"
-    // window appears/dissappears quickly and causes scroll that gets stuck. Must
-    // also check that virtual keyboard is NOT open, since that can also cause
-    // scroll (and we do not want to reset the keyboard's scroll position).
+    // window appears/disappears quickly and causes a scroll that gets stuck.
+    // Only reset the scroll if the windows are likely closed (helps prevent e.g.
+    // a visual bug where e.g. keyboard being open causes a scroll flicker).
     /* eslint-disable no-restricted-syntax */
     if (
       (window.scrollX !== 0 || window.scrollY !== 0) &&
-      !virtualKeyboardLikelyOpen()
+      !iosWindowLikelyOpen()
     ) {
       window.scrollTo(0, 0);
     }
@@ -163,8 +169,10 @@ export class Generic2DGameScene extends Phaser.Scene {
   updateScreenInfo() {
     this.screenInfo = {
       /* eslint-disable no-restricted-syntax */
-      width: window.visualViewport?.width || window.innerWidth,
-      height: window.visualViewport?.height || window.innerHeight,
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+      visualWidth: window.visualViewport?.width || window.innerWidth,
+      visualHeight: window.visualViewport?.height || window.innerHeight,
       isPortrait: window.matchMedia("(orientation: portrait)").matches,
       /* eslint-enable no-restricted-syntax */
     };

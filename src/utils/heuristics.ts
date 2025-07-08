@@ -17,10 +17,32 @@ export function isInputFocused(): boolean {
 }
 
 /**
- * Estimates if the keyboard is likely open. This is a heuristic and may not be
- * 100% accurate, but it works well in most cases.
+ * Estimates if the virtual keyboard is likely open. This is a heuristic and may
+ * not be 100% accurate, but it works well in most cases.
  * @returns {boolean} True if the keyboard is likely open.
  */
 export function virtualKeyboardLikelyOpen(): boolean {
   return isInputFocused();
+}
+
+/**
+ * Checks if an iOS or similar window is likely open. This is a heuristic that
+ * checks if the visual viewport height is significantly less than the document
+ * height, which indicates that the address bar, virtual keyboard, or other UI
+ * elements are likely visible. NOTE: This is not foolproof, especially if the
+ * user has zoomed at all. Since zooming is mostly blocked on app-like windows
+ * on this site, this heuristic should work will in most cases.
+ * @returns {boolean} True if the iOS or similar window is likely open.
+ */
+export function iosWindowLikelyOpen(): boolean {
+  // Return early during SSR/static generation
+  if (typeof window === "undefined") return false;
+
+  // eslint-disable-next-line no-restricted-syntax
+  const visualHeight = window.visualViewport?.height || window.innerHeight;
+  const documentHeight = document.documentElement.clientHeight;
+
+  // If the visual height is significantly less than the document height,
+  // it suggests that the address bar or similar UI elements are open.
+  return visualHeight < documentHeight * 0.9 || virtualKeyboardLikelyOpen();
 }
