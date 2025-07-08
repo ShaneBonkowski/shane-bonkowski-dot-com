@@ -45,8 +45,10 @@ whitespace should use self-closing syntax (/>).`,
     message: `[Custom esling.config.mjs rule] localStorage usage detected. This 
 is not allowed with SSR. Any client-side code that uses localStorage must be 
 protected with a check for SSR. This means adding "if (typeof window === \\"undefined\\") return;" 
-upstream of any localStorage calls. Add eslint-disable comment if already 
-protected upstream, or if dispositioned.`,
+upstream of any localStorage calls. Additional note for games: it is advised
+to use a 'dataStore' for game-specific data that interacts w/ localStorage. See
+examples in this codebase for more context. Add eslint-disable comment if already 
+protected upstream, or if dispositioned. `,
   },
   {
     selector: "MethodDefinition[kind='constructor']",
