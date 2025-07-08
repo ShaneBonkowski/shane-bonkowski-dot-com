@@ -9,6 +9,7 @@ import {
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/game-template/components/SettingsContainer"; // FIXME: UPDATE THIS PATH TO THE GAME-SPECIFIC SETTINGS CONTAINER
+import UiOverlay from "@/src/games/game-template/components/UiOverlay"; // FIXME: UPDATE
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
@@ -89,6 +90,7 @@ const GameComponent: React.FC = () => {
     // devices, which breaks things on games.
     <div id={"Prevent zoom"} className="app-mode">
       {/* UI */}
+      <UiOverlay />
       <SettingsContainer />
       <GameInfoContainer>
         <div
