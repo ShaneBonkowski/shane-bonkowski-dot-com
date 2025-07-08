@@ -203,16 +203,15 @@ const SettingsContainer: React.FC = () => {
                           {config.title}
                         </label>
                         {/* Make clickable area larger */}
-                        <div className="px-4">
+                        <div
+                          className="px-4"
+                          onPointerDown={() => setSelectedSetting(key)}
+                        >
                           <input
                             type="checkbox"
                             checked={currentValue as boolean}
                             onChange={(e) => {
                               handleCheckboxChange(key, e.target.checked);
-                              // set selected onChange, rather than onPointerDown like
-                              // the sliders, since checkboxes are not as interactive. This
-                              // prevents some jumpiness when clicking the checkbox.
-                              setSelectedSetting(key);
                             }}
                           />
                         </div>
@@ -223,7 +222,10 @@ const SettingsContainer: React.FC = () => {
                           {config.title}: {currentValue as number}
                         </label>
                         {/* Make clickable area larger */}
-                        <div className="pt-2 pb-4">
+                        <div
+                          className="pt-2 pb-4"
+                          onPointerDown={() => setSelectedSetting(key)}
+                        >
                           <input
                             type="range"
                             min={config.lowerBound}
@@ -236,7 +238,6 @@ const SettingsContainer: React.FC = () => {
                                 parseFloat(e.target.value)
                               )
                             }
-                            onPointerDown={() => setSelectedSetting(key)}
                             className="w-full"
                           />
                         </div>
