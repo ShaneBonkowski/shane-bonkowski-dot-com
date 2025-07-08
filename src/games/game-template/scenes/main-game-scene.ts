@@ -53,6 +53,12 @@ export class MainGameScene extends Generic2DGameScene {
     dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: GAME NAME HERE
   }
 
+  // NOTE: A data store is used to sync data across classes, functions, and
+  // react components. This is very useful for having a single source of
+  // truth for game data, such as the score, which can be used in multiple
+  // places in the game. Anything subscribed to the gameDataStore will
+  // immediately update when the data changes. Check how this is implemented
+  // in the UiOverlay component, for example.
   setupSyncedGameData() {
     // Get snapshot of the game data, then load them in and subscribe to changes.
     const gameData = gameDataStore.getSnapshot();
