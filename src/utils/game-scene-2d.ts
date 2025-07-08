@@ -2,7 +2,6 @@ import Phaser from "@/public/js/phaser.min.js";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Vec2 } from "@/src/utils/vector";
 import { iosWindowLikelyOpen } from "@/src/utils/heuristics";
-import { getIosCompatibleInnerHeight } from "@/src/utils/ios-inner-height";
 
 /**
  * Class representing a generic 2D game scene, which can be extended.
@@ -17,8 +16,6 @@ export class Generic2DGameScene extends Phaser.Scene {
   public screenInfo = {
     width: 0,
     height: 0,
-    visualWidth: 0,
-    visualHeight: 0,
     isPortrait: false,
   };
   private resizeObserver: ResizeObserver | null = null;
@@ -170,12 +167,14 @@ export class Generic2DGameScene extends Phaser.Scene {
   updateScreenInfo() {
     this.screenInfo = {
       /* eslint-disable no-restricted-syntax */
-      width: window.innerWidth,
-      height: getIosCompatibleInnerHeight(), // ios is ususally wrong about innerHeight
-      visualWidth:
-        window.visualViewport?.width || document.documentElement.clientWidth,
-      visualHeight:
-        window.visualViewport?.height || document.documentElement.clientHeight,
+      width:
+        window.visualViewport?.width ||
+        document.documentElement.clientWidth ||
+        window.innerWidth,
+      height:
+        window.visualViewport?.height ||
+        document.documentElement.clientHeight ||
+        window.innerHeight,
       isPortrait: window.matchMedia("(orientation: portrait)").matches,
       /* eslint-enable no-restricted-syntax */
     };
