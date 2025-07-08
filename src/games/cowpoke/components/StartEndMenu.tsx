@@ -131,7 +131,7 @@ const StartEndMenu: React.FC = () => {
     <>
       {/* --- Background Image --- */}
       {isVisible && (
-        <div className="z-0 absolute inset-0 w-full h-full pointer-events-none">
+        <div className="app-mode z-0 absolute inset-0 w-full h-full pointer-events-none">
           <Image
             src="/webps/games/cowpoke-bkg-for-menu.webp"
             alt=""
