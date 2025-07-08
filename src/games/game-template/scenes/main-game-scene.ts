@@ -1,14 +1,19 @@
 import { Generic2DGameScene } from "@/src/utils/game-scene-2d";
-import { Ball } from "@/src/games/game-template/ball";
+import { Ball } from "@/src/games/game-template/ball"; // FIXME: Update this for your actual game name
 import { Physics } from "@/src/utils/physics";
 import {
   dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
+import {
+  gameDataStore,
+  GameData,
+} from "@/src/games/game-template/game-data-store"; // FIXME: Update this for your actual game name
 
 export class MainGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
   public maxBalls: number = 10;
+  private score: number = 0;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -33,6 +38,8 @@ export class MainGameScene extends Generic2DGameScene {
   create() {
     super.create();
 
+    this.setupSyncedGameData();
+
     // Create a ball and make it bounce around the
     // screen using physics
     const { width, height } = this.scale.gameSize;
@@ -44,6 +51,26 @@ export class MainGameScene extends Generic2DGameScene {
     this.gameStarted = true;
     dispatchCloseLoadingScreenEvent("<TYPE GAME NAME HERE>"); // FIXME: GAME NAME HERE
     dispatchGameStartedEvent("<TYPE GAME NAME HERE>"); // FIXME: GAME NAME HERE
+  }
+
+  setupSyncedGameData() {
+    // Get snapshot of the game data, then load them in and subscribe to changes.
+    const gameData = gameDataStore.getSnapshot();
+
+    this.setGameDataFromStore(gameData);
+
+    gameDataStore.subscribe(() => {
+      const newGameData = gameDataStore.getSnapshot();
+      this.handleGameDataChange(newGameData);
+    });
+  }
+
+  handleGameDataChange = (gameData: GameData) => {
+    this.setGameDataFromStore(gameData);
+  };
+
+  setGameDataFromStore(gameData: GameData) {
+    this.score = gameData.score;
   }
 
   update(time: number, delta: number) {
@@ -146,6 +173,10 @@ export class MainGameScene extends Generic2DGameScene {
 
     const ball = new Ball(this, x, y);
     this.balls.push(ball);
+
+    // Update the game data store with the new "score", which is the number of balls
+    gameDataStore.setScore(this.balls.length);
+    document.dispatchEvent(new CustomEvent("scoreChange"));
   }
 
   /*
@@ -154,6 +185,9 @@ export class MainGameScene extends Generic2DGameScene {
    */
   shutdown() {
     super.shutdown();
+
+    // reset the store
+    gameDataStore.resetData();
 
     // Shutdown logic for this scene
     for (const ball of this.balls) {

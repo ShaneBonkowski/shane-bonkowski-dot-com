@@ -12,3 +12,20 @@ body.game-name-game-background {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+/* FIXME: Replace this as desired w/ your actual game styles */
+.game-template-pulse {
+  animation: game-template-pulse 0.5s ease-in-out;
+}
+
+@keyframes game-template-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

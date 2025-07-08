@@ -1,7 +1,7 @@
 import { GameObject } from "@/src/utils/game-object";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec2 } from "@/src/utils/vector";
-import { MainGameScene } from "@/src/games/game-template/scenes/main-game-scene";
+import { MainGameScene } from "@/src/games/game-template/scenes/main-game-scene"; // FIXME: Update this for your actual game name
 
 export class Ball extends GameObject {
   private scene: MainGameScene | null = null;
