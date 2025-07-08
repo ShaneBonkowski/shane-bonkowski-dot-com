@@ -1,7 +1,7 @@
 import Phaser from "@/public/js/phaser.min.js";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Vec2 } from "@/src/utils/vector";
-import { iosWindowLikelyOpen } from "@/src/utils/heuristics";
+import { virtualKeyboardLikelyOpen } from "@/src/utils/heuristics";
 
 /**
  * Class representing a generic 2D game scene, which can be extended.
@@ -146,7 +146,7 @@ export class Generic2DGameScene extends Phaser.Scene {
     /* eslint-disable no-restricted-syntax */
     if (
       (window.scrollX !== 0 || window.scrollY !== 0) &&
-      !iosWindowLikelyOpen()
+      !virtualKeyboardLikelyOpen()
     ) {
       window.scrollTo(0, 0);
     }
@@ -169,12 +169,13 @@ export class Generic2DGameScene extends Phaser.Scene {
       /* eslint-disable no-restricted-syntax */
       width:
         window.visualViewport?.width ||
-        document.documentElement.clientWidth ||
-        window.innerWidth,
+        window.innerWidth ||
+        document.documentElement.clientWidth,
       height:
         window.visualViewport?.height ||
-        document.documentElement.clientHeight ||
-        window.innerHeight,
+        window.innerHeight ||
+        document.documentElement.clientHeight,
+
       isPortrait: window.matchMedia("(orientation: portrait)").matches,
       /* eslint-enable no-restricted-syntax */
     };
