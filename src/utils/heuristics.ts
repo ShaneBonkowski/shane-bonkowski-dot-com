@@ -17,11 +17,14 @@ export function isInputFocused(): boolean {
 }
 
 /**
- * Estimates if the virtual keyboard is likely open. This is a heuristic and may
- * not be 100% accurate, but it works well in most cases.
+ * Estimates if mobile virtual keyboard is likely open. This is a heuristic and
+ * may not be 100% accurate, but it works well in most cases.
  * @returns {boolean} True if the keyboard is likely open.
  */
-export function virtualKeyboardLikelyOpen(): boolean {
+export function mobileVirtualKeyboardLikelyOpen(): boolean {
+  // Only applies to mobile devices
+  if (!isMobileDevice()) return false;
+
   return isInputFocused();
 }
 
@@ -34,9 +37,12 @@ export function virtualKeyboardLikelyOpen(): boolean {
  * on this site, this heuristic should work will in most cases.
  * @returns {boolean} True if the iOS or similar window is likely open.
  */
-export function iosWindowLikelyOpen(): boolean {
+export function mobileWindowLikelyOpen(): boolean {
   // Return early during SSR/static generation
   if (typeof window === "undefined") return false;
+
+  // Only applies to mobile devices
+  if (!isMobileDevice()) return false;
 
   // eslint-disable-next-line no-restricted-syntax
   const visualHeight = window.visualViewport?.height || window.innerHeight;
@@ -44,7 +50,21 @@ export function iosWindowLikelyOpen(): boolean {
 
   // If the visual height is significantly less than the document height,
   // it suggests that the address bar or similar UI elements are open.
-  return visualHeight < documentHeight * 0.9 || virtualKeyboardLikelyOpen();
+  // Similar for if the mobile virtual keyboard is likely open.
+  return (
+    visualHeight < documentHeight * 0.9 || mobileVirtualKeyboardLikelyOpen()
+  );
+}
+
+/**
+ * Checks if the current device is a mobile device based on the user agent
+ * string and other available properties.
+ * @returns {boolean} True if the device is mobile.
+ */
+export function isMobileDevice(): boolean {
+  return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+    navigator.userAgent
+  );
 }
 
 /**

@@ -8,6 +8,7 @@ import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 import YesNoBox from "@/src/components/YesNoBox";
+import { mobileVirtualKeyboardLikelyOpen } from "@/src/utils/heuristics";
 
 const StartEndMenu: React.FC = () => {
   const {
@@ -105,8 +106,15 @@ const StartEndMenu: React.FC = () => {
 
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      // Start game if Enter is pressed and the menu is visible
-      if (e.key === "Enter" && isVisible) {
+      // Start game if Enter is pressed and the menu is visible. Do NOT do this
+      // if the virtual keyboard is likely open on mobile, since there is a weird
+      // visual bug that can happen when the game starts loading w/ keyboard
+      // visible (https://github.com/ShaneBonkowski/shane-bonkowski-dot-com/issues/179)
+      if (
+        e.key === "Enter" &&
+        isVisible &&
+        !mobileVirtualKeyboardLikelyOpen()
+      ) {
         handleStartLoadingGame();
       }
     };
