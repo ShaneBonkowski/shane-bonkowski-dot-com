@@ -204,10 +204,12 @@ export default function Home() {
         setIsPageChanging(true);
         setRenderKey((prev) => prev + 1);
 
-        // Clear the loading state after a brief moment
-        timeoutRef.current = setTimeout(() => {
-          setIsPageChanging(false);
-        }, 100);
+        // Get 2 full frames to clear the DOM prior to setting changing back to false
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setIsPageChanging(false);
+          });
+        });
 
         return page; // Update to new page
       }
