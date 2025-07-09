@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Dropdown from "@/src/components/Dropdown";
 import { ContentBoxProps } from "@/src/types/content-props";
+import { isMobileDevice } from "@/src/utils/heuristics";
 
 const contentTypeOptions = [
   { value: "all", label: "All" },
@@ -20,6 +21,7 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
   contentData,
   setFilteredContent,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchContentType, setSearchContentType] = useState("all");
 
@@ -57,15 +59,26 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
         title="Filter by Content Type"
       />
       {/* Search Input */}
+      {/* eslint-disable-next-line no-restricted-syntax */}
       <input
         type="text"
+        ref={inputRef}
         placeholder="Search..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={(e) =>
-          e.key === "Enter" &&
-          setSearchTerm((e.target as HTMLInputElement).value)
-        }
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            // Update the search term on submit
+            setSearchTerm((e.target as HTMLInputElement).value);
+
+            // On mobile, we want to prevent the default behavior of the Enter
+            // key which may submit a form or cause unwanted side effects.
+            if (isMobileDevice()) {
+              e.preventDefault();
+              inputRef.current?.blur(); // Hide keyboard
+            }
+          }
+        }}
         className="
         p-2 w-full bg-button-color-light dark:bg-button-color  
         text-primary-text-color-light dark:text-primary-text-color rounded-sm focus:outline-none 

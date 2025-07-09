@@ -8,7 +8,10 @@ import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 import YesNoBox from "@/src/components/YesNoBox";
-import { mobileVirtualKeyboardLikelyOpen } from "@/src/utils/heuristics";
+import {
+  mobileVirtualKeyboardLikelyOpen,
+  isMobileDevice,
+} from "@/src/utils/heuristics";
 
 const StartEndMenu: React.FC = () => {
   const {
@@ -21,6 +24,7 @@ const StartEndMenu: React.FC = () => {
     setPlayerName,
     resetPermanentData,
   } = UseGameData();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [localPlayerName, setLocalPlayerName] = useState(playerName);
   const [isVisible, setIsVisible] = useState(false);
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
@@ -175,11 +179,23 @@ const StartEndMenu: React.FC = () => {
       Go'n remind me what's yer name, then press "Enter" or that play button down there in the corner to git started.`}
           </p>
           {menuType === "start" && (
+            // eslint-disable-next-line no-restricted-syntax
             <input
               type="text"
+              ref={inputRef}
               placeholder="Yer name here..."
               value={localPlayerName}
               onChange={(e) => setLocalPlayerName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  // On mobile, we want to prevent the default behavior of the Enter
+                  // key which may submit a form or cause unwanted side effects.
+                  if (isMobileDevice()) {
+                    e.preventDefault();
+                    inputRef.current?.blur(); // Hide keyboard
+                  }
+                }
+              }}
               maxLength={10}
               className="p-2 flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
               style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
