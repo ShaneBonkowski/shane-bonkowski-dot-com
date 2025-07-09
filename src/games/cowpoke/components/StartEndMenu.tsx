@@ -70,7 +70,7 @@ const StartEndMenu: React.FC = () => {
 
       // Tell the main-game-scene to start loading the game
       document.dispatchEvent(new CustomEvent("startLoadingGame"));
-    }, 150);
+    }, 300); // Slightly longer delay to give the phone keyboard time to retract, so screen resize is not as jarring (https://github.com/ShaneBonkowski/shane-bonkowski-dot-com/issues/179)
   }, [localPlayerName, setPlayerName]);
 
   const handleTryToResetStats = () => {
