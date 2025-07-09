@@ -1,6 +1,6 @@
 "use client"; // need this since this component uses useState
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import ContentSearchBar from "@/src/components/ContentSearchBar";
 import ContentBox from "@/src/components/ContentBox";
 import { ContentBoxProps } from "@/src/types/content-props";
@@ -174,6 +174,9 @@ export default function Home() {
   const [filteredContent, setFilteredContent] =
     useState<ContentBoxProps[]>(contentBoxData);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isPageChanging, setIsPageChanging] = useState(false);
+  const [renderKey, setRenderKey] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Calculate pagination values
   const totalPages = Math.ceil(filteredContent.length / ITEMS_PER_PAGE);
@@ -181,25 +184,59 @@ export default function Home() {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentPageContent = filteredContent.slice(startIndex, endIndex);
 
-  // Reset to page 1 when filtered content changes
   const handleFilteredContentChange = useCallback(
     (newContent: ContentBoxProps[]) => {
       setFilteredContent(newContent);
-      // Reset to first page when search changes
-      setCurrentPage(1);
+      // Try to reset to first page when search changes
+      tryToChangePage(1);
     },
     []
   );
 
+  const tryToChangePage = (page: number) => {
+    // Changes to provided page number if user is not already on that page.
+    // Uses a timeout and updates render state so that there is time for
+    // the old page content to clear prior to re-rendering. Was previously
+    // getting weird bugs where images lingered on etc.
+    setCurrentPage((prevPage) => {
+      // Only run the transition logic if page is actually changing
+      if (prevPage !== page) {
+        setIsPageChanging(true);
+        setRenderKey((prev) => prev + 1);
+
+        // Clear the loading state after a brief moment
+        timeoutRef.current = setTimeout(() => {
+          setIsPageChanging(false);
+        }, 100);
+
+        return page; // Update to new page
+      }
+
+      return prevPage; // No change needed
+    });
+  };
+
   const handlePageChange = (page: number) => {
-    // Return early during SSR/static generation
+    tryToChangePage(page);
+  };
+
+  // useEffect to handle scrolling back to top after currentPage changes
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
-    setCurrentPage(page);
-    // Scroll to top when page changes
     // eslint-disable-next-line no-restricted-syntax
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    window.scrollTo({ top: 0, left: 0 }); // do NOT smoothly scroll here
+  }, [currentPage]);
+
+  // Cleanup timeout on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  });
 
   return (
     <>
@@ -209,12 +246,20 @@ export default function Home() {
       />
 
       <div
+        key={`${currentPage}-${renderKey}`}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-common-p sm:mt-common-p-sm px-common-p sm:px-common-p-sm gap-common-p sm:gap-common-p-sm"
         id="content-boxes"
       >
-        {currentPageContent.length > 0 ? (
+        {isPageChanging ? (
+          // Render an empty div to clear the DOM. This is so that all images
+          // etc. get cleared from the DOM and re-rendered on page change.
+          <div />
+        ) : currentPageContent.length > 0 ? (
           currentPageContent.map((box, index) => (
-            <ContentBox key={startIndex + index} {...box} />
+            <ContentBox
+              key={`page-${currentPage}-${index}-${box.linkUrl}`}
+              {...box}
+            />
           ))
         ) : (
           // Make the message span all columns so that it is centered!

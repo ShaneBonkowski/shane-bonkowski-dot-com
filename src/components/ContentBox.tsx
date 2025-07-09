@@ -69,6 +69,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         aria-label={`View more about ${title}`}
       >
         <Image
+          key={`${imageUrl}-${title}`} // Unique key to prevent caching issues
           src={imageUrl}
           alt={`Image for ${title}`}
           width={500}
