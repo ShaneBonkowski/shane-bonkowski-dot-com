@@ -45,8 +45,8 @@ export default function Page() {
       <WrittenContentLoader {...storyData}>
         <WrittenContentParagraphGroup>
           <WrittenContentParagraphElement
-            fontStyle={"italic"}
-            textAlign={"justify"}
+            fontStyle="italic"
+            textAlign="justify"
           >
             It was a year so far in the distant future that they decided to stop
             counting altogether. Whether they lost count or it simply
@@ -57,8 +57,8 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle={"italic"}
-            textAlign={"justify"}
+            fontStyle="italic"
+            textAlign="justify"
           >
             How they ended up here was unclear, but the planet they sighted was
             scorched beyond recognition. It was a small, rocky planet orbiting a
@@ -69,8 +69,8 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle={"italic"}
-            textAlign={"justify"}
+            fontStyle="italic"
+            textAlign="justify"
           >
             They almost decided against landing altogether. Time and time again,
             they had stopped to visit a rocky planet with faint biosignatures to
@@ -83,8 +83,8 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle={"italic"}
-            textAlign={"justify"}
+            fontStyle="italic"
+            textAlign="justify"
           >
             Just when they thought they had explored enough to conclude this was
             in fact just another lifeless rocky planet, one of them had spotted
@@ -98,8 +98,8 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle={"normal"}
-            textAlign={"justify"}
+            fontStyle="normal"
+            textAlign="justify"
           >
             They ask me why I plan on sticking around this place. Why I
             haven&apos;t jumped ship with the rest of them. I let out a sigh as

@@ -98,10 +98,10 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>Bang. Bang. Bang.</em>
+            Bang. Bang. Bang.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -117,10 +117,10 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>Dong. Dong. Dong.</em>
+            Dong. Dong. Dong.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -152,8 +152,8 @@ export default function Page() {
           >
             The treeline screams in agony all through the long night. The
             townspeople wake the next morning only to find jagged bloody stakes
-            where bodies and trees once were—swift and final justice at the hand
-            of his gilded sword.
+            where bodies and trees once were&mdash;swift and final justice at
+            the hand of his gilded sword.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -272,10 +272,10 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>Tick. Tick. Tick.</em>
+            Tick. Tick. Tick.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -340,14 +340,12 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>
-              Revelation 6:7-8: When the Lamb opened the fourth seal, I heard
-              the voice of the fourth living creature say, &quot;Come!&quot; I
-              looked, and there before me was a pale horse—
-            </em>
+            Revelation 6:7-8: When the Lamb opened the fourth seal, I heard the
+            voice of the fourth living creature say, &quot;Come!&quot; I looked,
+            and there before me was a pale horse&mdash;
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -397,15 +395,13 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>
-              Isaiah 1:18: &quot;Come now, let us reason together,&quot; says
-              the Lord. &quot;Though your sins are like scarlet, they shall be
-              as white as snow; though they are red like crimson, they shall
-              become like wool.&quot;
-            </em>
+            Isaiah 1:18: &apos;Come now, let us reason together,&apos; says the
+            Lord. &apos;Though your sins are like scarlet, they shall be as
+            white as snow; though they are red like crimson, they shall become
+            like wool.&apos;
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -417,18 +413,16 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>
-              Matthew 12:43-45: When an impure spirit comes out of a person, it
-              goes through arid places seeking rest and does not find it. Then
-              it says, &quot;I will return to the house I left.&quot; When it
-              arrives, it finds the house unoccupied, swept clean, and put in
-              order. Then it goes and takes with it seven other spirits more
-              wicked than itself, and they go in and live there. And the final
-              condition of that person is worse than the first.
-            </em>
+            Matthew 12:43-45: When an impure spirit comes out of a person, it
+            goes through arid places seeking rest and does not find it. Then it
+            says, &apos;I will return to the house I left.&apos; When it
+            arrives, it finds the house unoccupied, swept clean, and put in
+            order. Then it goes and takes with it seven other spirits more
+            wicked than itself, and they go in and live there. And the final
+            condition of that person is worse than the first.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -441,15 +435,13 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>
-              Hebrews 10:26-27: If we deliberately keep on sinning after we have
-              received the knowledge of the truth, no sacrifice for sins is
-              left, but only a fearful expectation of judgment and of raging
-              fire that will consume the enemies of God.
-            </em>
+            Hebrews 10:26-27: If we deliberately keep on sinning after we have
+            received the knowledge of the truth, no sacrifice for sins is left,
+            but only a fearful expectation of judgment and of raging fire that
+            will consume the enemies of God.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -570,9 +562,8 @@ export default function Page() {
             turmoil. The pastor&apos;s words echo painfully through his skull as
             if his thoughts are being ripped apart. He paces around his room,
             haunted by the faces of his victims. The questions won&apos;t stop:{" "}
-            <em>
-              How can I leave my job behind? How would I support my family?
-            </em>
+            <em>How can I leave my job behind?</em>{" "}
+            <em>How would I support my family?</em>
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -703,10 +694,10 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>Thump, Thump, Thump, Thump, Thump.</em>
+            Thump, Thump, Thump, Thump, Thump.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -722,10 +713,10 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>Thump… Thump… Thump…</em>
+            Thump… Thump… Thump…
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -736,10 +727,10 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>Thud.</em>
+            Thud.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -779,8 +770,8 @@ export default function Page() {
             They drift through the empty ether for an eternity, lost and without
             purpose, free at last but without a home. Their memories fade as the
             endless dark stretches on. Eventually, they are one with
-            nothingness, as if they had never existed in the first place—an
-            amorphous blob of infinity.
+            nothingness, as if they had never existed in the first
+            place&mdash;an amorphous blob of infinity.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -803,15 +794,13 @@ export default function Page() {
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
-            fontStyle="normal"
+            fontStyle="italic"
             textAlign="justify"
           >
-            <em>
-              Matthew 7:13-14: Enter through the narrow gate. For wide is the
-              gate and broad is the road that leads to destruction, and many
-              enter through it. But small is the gate and narrow the road that
-              leads to life, and only a few find it.
-            </em>
+            Matthew 7:13-14: Enter through the narrow gate. For wide is the gate
+            and broad is the road that leads to destruction, and many enter
+            through it. But small is the gate and narrow the road that leads to
+            life, and only a few find it.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
