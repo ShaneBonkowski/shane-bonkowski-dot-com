@@ -3,6 +3,7 @@
 ### 1. Setup
 
 - Make sure you have a .png file for the original artwork called e.g. `{art-name}.png`.
+- For the actual artwork, size does not matter. Only the cover image "thumbnail" needs to be a particular size. See below for details.
 - Store this in `/public/pngs`.
 - Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
 
@@ -11,9 +12,11 @@
 - Duplicate one of the existing artwork pages in `/app/art`.
 - Rename the duplicated art directory to `{art-name}`.
 - Update the contents of the `imageData`.
-- Make sure `artContent: true` and `body: []` if there is no text desired to be added below the image.
+- Make sure `artContent: true`.
+- If you want text included with the image, use the `WrittenContentParagraphGroup` tags like the `strange-love` artwork does for example.
+- If you just want the image to be shown, delete the `WrittenContentParagraphGroup` tags and their children if they are present. Should only have the `WrittenContentLoader` tag in this case.
 - Link to the **actual** art image that will be displayed on the page.
-- Make sure `width` and `height` match the size of the image.
+- Make sure `width` and `height` match the **actual** size of the image.
 
 ### 3. Create a cover image for the artwork.
 
