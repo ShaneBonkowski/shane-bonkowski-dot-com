@@ -14,7 +14,7 @@ const contentTypeOptions = [
 
 interface ContentSearchBarProps {
   contentData: ContentBoxProps[];
-  setFilteredContent: (filtered: ContentBoxProps[]) => void;
+  setFilteredContent: (content: ContentBoxProps[]) => void;
 }
 
 const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
