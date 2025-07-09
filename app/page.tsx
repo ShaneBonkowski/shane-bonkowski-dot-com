@@ -1,9 +1,10 @@
 "use client"; // need this since this component uses useState
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import ContentSearchBar from "@/src/components/ContentSearchBar";
 import ContentBox from "@/src/components/ContentBox";
 import { ContentBoxProps } from "@/src/types/content-props";
+import Pagination from "@/src/components/Pagination";
 
 const contentBoxData: ContentBoxProps[] = [
   {
@@ -167,24 +168,53 @@ const contentBoxData: ContentBoxProps[] = [
   },
 ];
 
+const ITEMS_PER_PAGE = 12; // divisible by 2 and 3, so full pg looks nice w/ all grid layouts
+
 export default function Home() {
   const [filteredContent, setFilteredContent] =
     useState<ContentBoxProps[]>(contentBoxData);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate pagination values
+  const totalPages = Math.ceil(filteredContent.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentPageContent = filteredContent.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filtered content changes
+  const handleFilteredContentChange = useCallback(
+    (newContent: ContentBoxProps[]) => {
+      setFilteredContent(newContent);
+      // Reset to first page when search changes
+      setCurrentPage(1);
+    },
+    []
+  );
+
+  const handlePageChange = (page: number) => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
+    setCurrentPage(page);
+    // Scroll to top when page changes
+    // eslint-disable-next-line no-restricted-syntax
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <>
       <ContentSearchBar
         contentData={contentBoxData}
-        setFilteredContent={setFilteredContent}
+        setFilteredContent={handleFilteredContentChange}
       />
 
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-common-p sm:mt-common-p-sm px-common-p sm:px-common-p-sm gap-common-p sm:gap-common-p-sm"
         id="content-boxes"
       >
-        {filteredContent.length > 0 ? (
-          filteredContent.map((box, index) => (
-            <ContentBox key={index} {...box} />
+        {currentPageContent.length > 0 ? (
+          currentPageContent.map((box, index) => (
+            <ContentBox key={startIndex + index} {...box} />
           ))
         ) : (
           // Make the message span all columns so that it is centered!
@@ -193,6 +223,16 @@ export default function Home() {
           </p>
         )}
       </div>
+
+      {/* Spacer to push pagination to bottom of viewport if few content boxes */}
+      <div className="flex-grow" />
+
+      {/* Pagination Component */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }
