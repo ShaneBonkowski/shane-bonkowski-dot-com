@@ -111,7 +111,7 @@ export default function Page() {
             extravagant as time went on. Eventually, they set their sights on
             their magnum opus. It was a project that spanned many, many
             centuries. It began long before the technology existed in the first
-            place to reach such heights—a project to <em>infinity</em>.
+            place to reach such heights&mdash;a project to <em>infinity</em>.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -312,7 +312,7 @@ export default function Page() {
             When the other inhabitants arrived, they found their goddess alone,
             clutching the rubble at the tower&apos;s base. Her hands trembled,
             and her face was frozen with a look of shock. The sight was
-            ominous—as if she had been caught in the act. She slipped away
+            ominous&mdash;as if she had been caught in the act. She slipped away
             before they could question her.
           </WrittenContentParagraphElement>
 
@@ -321,8 +321,9 @@ export default function Page() {
             textAlign="justify"
           >
             It didn&apos;t take long for them to jump to their own conclusions.
-            To them, all the destruction—the fires, the tremors, the famine—was
-            her doing, a punishment for their failure to heed her warnings.
+            To them, all the destruction&mdash;the fires, the tremors, the
+            famine&mdash;was her doing, a punishment for their failure to heed
+            her warnings.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -360,8 +361,8 @@ export default function Page() {
             textAlign="justify"
           >
             With unrest spiraling out of control, the leaders hastily devised a
-            plan no one anticipated. They would <em>rebuild</em> the tower—but
-            this time with a far more sinister goal.
+            plan no one anticipated. They would <em>rebuild</em> the
+            tower&mdash;but this time with a far more sinister goal.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -372,8 +373,8 @@ export default function Page() {
             long ago discovered a strong, resilient metal and reserves of fuel
             they could use to power their forges. While they previously had
             little use for this material, they had recently devised an alloy
-            that stood up remarkably well against the ground storms—a new blend
-            for which they had their fallen zealots to thank.
+            that stood up remarkably well against the ground storms&mdash;a new
+            blend for which they had their fallen zealots to thank.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -399,10 +400,10 @@ export default function Page() {
             closer and closer, hotter and hotter. Helplessly, she watched her
             inhabitants sit idly by as thousand-year storms became ten-year
             storms, ten-year storms became five-year storms, and five-year
-            storms became one-year storms—architects of their own destruction.
-            When the heat grew too much to bear, she watched what was left of
-            their once beautiful sea evaporate into the cold, dark expanse
-            above.
+            storms became one-year storms&mdash;architects of their own
+            destruction. When the heat grew too much to bear, she watched what
+            was left of their once beautiful sea evaporate into the cold, dark
+            expanse above.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -506,8 +507,8 @@ export default function Page() {
             When the storm finally passed, so too did the faint blue backdrop,
             all the poison, and all the other innocent clouds that framed the
             sky. All that was left was a stark, empty black backdrop. Somehow,
-            with a deep, prolonged inhale, she achieved the impossible.{" "}
-            <em>She swallowed the sky</em>.
+            with a deep, prolonged inhale, she achieved the impossible.
+            <em> She swallowed the sky</em>.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement

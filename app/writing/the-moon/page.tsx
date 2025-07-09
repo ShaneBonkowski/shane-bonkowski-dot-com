@@ -42,6 +42,7 @@ export default function Page() {
   return (
     <>
       <ResumeScrollProgress pageName={storyData.title} threshold={200} />
+
       <WrittenContentLoader {...storyData}>
         <WrittenContentParagraphGroup>
           <WrittenContentParagraphElement
@@ -60,9 +61,9 @@ export default function Page() {
           >
             On the horizon, gently nestled between two colossal towers lay my
             captor. Ancient beasts of stone and mortar with no apparent entrance
-            or exit. They look as if they have always existed—as if they will
-            exist long after the universe lets out its last whimper and fades
-            into the night.
+            or exit. They look as if they have always existed&mdash;as if they
+            will exist long after the universe lets out its last whimper and
+            fades into the night.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -90,12 +91,13 @@ export default function Page() {
             barren hills and desolate valleys. The landscape stretches out in
             stark emptiness, with jagged rocks and twisted trees grasping at the
             empty sky for anything it has to offer. There are no signs of life
-            along its path, no comforting sounds of nature—I am joined only by
-            those who shimmer in the shadows. Manifestations of horror and evil,
-            whispering and laughing. Those who I cannot directly observe, but
-            whose presence haunts me. They laugh and laugh with awful sounds of
-            metal creaking and whining. They whisper of my weakness. The things
-            they would do to me if not for their ruler holding them back.
+            along its path, no comforting sounds of nature&mdash;I am joined
+            only by those who shimmer in the shadows. Manifestations of horror
+            and evil, whispering and laughing. Those who I cannot directly
+            observe, but whose presence haunts me. They laugh and laugh with
+            awful sounds of metal creaking and whining. They whisper of my
+            weakness. The things they would do to me if not for their ruler
+            holding them back.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -104,8 +106,8 @@ export default function Page() {
           >
             Pausing briefly to catch my breath and rest my tired limbs, I sit
             and ponder for a moment. Drowning out the voices surrounding me, I
-            dwell on questions of existence and purpose—the things I must have
-            done in my past life to have deserved this cruel treatment. My
+            dwell on questions of existence and purpose&mdash;the things I must
+            have done in my past life to have deserved this cruel treatment. My
             introspection is short-lived, as the voices grow impossible to
             ignore any longer. They circle all around me with their silent
             threats, growing closer by the second. Everything in my being tells
@@ -322,9 +324,9 @@ export default function Page() {
             fontStyle="normal"
             textAlign="justify"
           >
-            &quot;The answer lies-&quot; she begins, but she cannot finish her
-            sentence before my legs give out. My body contorts and spins, and
-            the back of my head slams onto the paved path before me. My eyes
+            &quot;The answer lies&ndash;&quot; she begins, but she cannot finish
+            her sentence before my legs give out. My body contorts and spins,
+            and the back of my head slams onto the paved path before me. My eyes
             still locked onto her like a magnet, my body twisted and knotted.
             Sparing no time, the shimmering shadows swoop in to envelop me. They
             creak with their awful grating sounds. Their whispers infest me like
@@ -345,8 +347,8 @@ export default function Page() {
             fontStyle="normal"
             textAlign="justify"
           >
-            &quot;-at the end of the road,&quot; she concludes. Her look of
-            disappointment now a soft smile.
+            &quot;&ndash;at the end of the road,&quot; she concludes. Her look
+            of disappointment now a soft smile.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement

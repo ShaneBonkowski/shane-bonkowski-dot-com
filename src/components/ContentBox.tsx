@@ -48,7 +48,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   return (
     <div
       className="
-      flex flex-col items-stretch mx-auto bg-button-color-light dark:bg-button-color 
+      w-full flex flex-col items-stretch mx-auto bg-button-color-light dark:bg-button-color 
       text-primary-text-color-light dark:text-primary-text-color rounded-lg overflow-hidden"
       id={`content-box-${title.replace(/\s+/g, "-").toLowerCase()}`}
       role="region"
@@ -59,7 +59,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         .replace(/\s+/g, "-")
         .toLowerCase()}`}
     >
-      {/* Image on the Left */}
+      {/* Image on the Top */}
       <Link
         href={linkUrl}
         target={openInNewTab ? "_blank" : "_self"}
@@ -81,9 +81,9 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         />
       </Link>
 
-      {/* Content Box on the Right */}
+      {/* Content Box on the Bottom */}
       <div
-        className="flex flex-col flex-grow items-start justify-start my-3 h-auto p-3 sm:p-5 space-y-2 sm:space-y-3"
+        className="w-full flex flex-col flex-grow items-start justify-start my-3 h-auto p-3 sm:p-5 space-y-2 sm:space-y-3"
         id="content-box-description-container"
       >
         {/* Icon + Title */}

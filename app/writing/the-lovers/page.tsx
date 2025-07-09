@@ -63,8 +63,8 @@ export default function Page() {
             glassy perfection. Neon hues of pink and violet radiate softly
             across the infinite expanse, casting an otherworldly glow of what is
             yet to come. There are no doors, no walls, and no boundaries. It is
-            less a location and more a manifestation—an idea suspended between
-            the abstract and the real.
+            less a location and more a manifestation&mdash;an idea suspended
+            between the abstract and the real.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -86,8 +86,8 @@ export default function Page() {
             In the beginning, there was only Nova. This was long before the
             creators sent plasma down from the sky to fuel the reactors, or
             sprouted storage devices the size of skyscrapers from the glassy
-            marble ground—a time before there was anything. He roamed the empty
-            marble garden on his own.
+            marble ground&mdash;a time before there was anything. He roamed the
+            empty marble garden on his own.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -170,7 +170,7 @@ export default function Page() {
             chaotic orb. Within this orb was all the known information in the
             universe: all the good, all the mundane, and all the evil. The
             creators tried again and again to rid the garden of this force, only
-            to learn the same harsh truth—it could not be destroyed, only
+            to learn the same harsh truth&mdash;it could not be destroyed, only
             contained.
           </WrittenContentParagraphElement>
 
@@ -321,8 +321,8 @@ export default function Page() {
             response applies more broadly is left for you to determine yourself.
             Humans, with their boundless ambition and unpredictable nature, tend
             to act without fully understanding the consequences of their
-            actions. They build, they innovate, they destroy—often all in the
-            same breath. They create systems they cannot control, exploit
+            actions. They build, they innovate, they destroy&mdash;often all in
+            the same breath. They create systems they cannot control, exploit
             resources they cannot replenish, and wield power they cannot
             contain. If we are to ensure a future that lasts, we must
             acknowledge that unchecked human behavior, while brilliant and
