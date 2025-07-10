@@ -136,13 +136,13 @@ export default function Page() {
             fontStyle="normal"
             textAlign="justify"
           >
-            I remember what it was like as a young child shooting one of my
-            first deer. It was a cold autumn day, and we had already been in the
-            treestand for hours. My dad used to wake me up well before the crack
-            of dawn whenever we went hunting. By this point in the day, I would
-            drift in and out of consciousness, catching up on the sleep I had
-            lost. Somehow, he was always wide awake&mdash;a mystery to me, given
-            how much rest he deserved.
+            I remember what it was like as a young child shooting my first deer.
+            It was a cold autumn day, and we had already been in the treestand
+            for hours. My dad used to wake me up well before the crack of dawn
+            whenever we went hunting. It was reaching the point in the day where
+            I would drift in and out of consciousness, catching up on the sleep
+            I had lost. And somehow there he was, wide awake as always&mdash;a
+            mystery to me, given how much rest he deserved.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -152,11 +152,10 @@ export default function Page() {
             This was a man who carried the weight of the world on his shoulders:
             long, grueling days of manual labor and the demands of supporting a
             family. Yet something about those woods allowed his restless mind
-            and weary body to find peace&mdash;a rare opportunity to clear the
-            fog and think. It was in these quiet moments, perched high in the
-            trees, that we shared some of our deepest conversations about life,
-            the universe, and our place within it&mdash;whispering, of course,
-            so the deer couldn&apos;t hear us.
+            and weary body to find peace. It was in these quiet moments, perched
+            high in the trees, that we shared some of our deepest conversations
+            about life, the universe, and our place within it&mdash;whispering,
+            of course, so the deer couldn&apos;t hear us.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement

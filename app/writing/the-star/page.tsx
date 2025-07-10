@@ -111,7 +111,7 @@ export default function Page() {
             extravagant as time went on. Eventually, they set their sights on
             their magnum opus. It was a project that spanned many, many
             centuries. It began long before the technology existed in the first
-            place to reach such heights&mdash;a project to <em>infinity</em>.
+            place to reach such heights. It was a project to <em>infinity</em>.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -311,9 +311,9 @@ export default function Page() {
           >
             When the other inhabitants arrived, they found their goddess alone,
             clutching the rubble at the tower&apos;s base. Her hands trembled,
-            and her face was frozen with a look of shock. The sight was
-            ominous&mdash;as if she had been caught in the act. She slipped away
-            before they could question her.
+            and her face was frozen with a look of shock. The sight was ominous,
+            as if she had been caught in the act. She slipped away before they
+            could question her.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -361,8 +361,8 @@ export default function Page() {
             textAlign="justify"
           >
             With unrest spiraling out of control, the leaders hastily devised a
-            plan no one anticipated. They would <em>rebuild</em> the
-            tower&mdash;but this time with a far more sinister goal.
+            plan no one anticipated. They would <em>rebuild</em> the tower, but
+            this time with a far more sinister goal.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -372,9 +372,9 @@ export default function Page() {
             In their many excursions across the Crystal Sea, the inhabitants had
             long ago discovered a strong, resilient metal and reserves of fuel
             they could use to power their forges. While they previously had
-            little use for this material, they had recently devised an alloy
-            that stood up remarkably well against the ground storms&mdash;a new
-            blend for which they had their fallen zealots to thank.
+            little use for this material, they had recently devised an alloy of
+            it that stood up remarkably well against the ground storms&mdash;a
+            new blend for which they had their fallen zealots to thank.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -383,7 +383,7 @@ export default function Page() {
           >
             And so, they pumped the sea for everything it had to offer and
             watched as it regressed into an opaque sludge. The pumps endlessly
-            churned and spewed dark toxic clouds into the air. The forges raged
+            churned and spewed dark, toxic clouds into the air. The forges raged
             with the beasts of destruction, and the heat only grew harsher.
             Despite their deep hatred for her, she still warned them. Some
             things are beyond even her control, she would tell them. The natural
@@ -396,14 +396,13 @@ export default function Page() {
             fontStyle="normal"
             textAlign="justify"
           >
-            With each trip around their Stellar Guardian, it seemed to grow
-            closer and closer, hotter and hotter. Helplessly, she watched her
-            inhabitants sit idly by as thousand-year storms became ten-year
+            With each trip around their Stellar Guardian, its fire seemed to
+            grow closer and closer, hotter and hotter. Helplessly, she watched
+            her inhabitants sit idly by as thousand-year storms became ten-year
             storms, ten-year storms became five-year storms, and five-year
-            storms became one-year storms&mdash;architects of their own
-            destruction. When the heat grew too much to bear, she watched what
-            was left of their once beautiful sea evaporate into the cold, dark
-            expanse above.
+            storms became one-year storms. When the heat grew too much to bear,
+            she watched what was left of their once beautiful sea evaporate into
+            the cold, dark expanse above.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement

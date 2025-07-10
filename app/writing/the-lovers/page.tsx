@@ -86,8 +86,8 @@ export default function Page() {
             In the beginning, there was only Nova. This was long before the
             creators sent plasma down from the sky to fuel the reactors, or
             sprouted storage devices the size of skyscrapers from the glassy
-            marble ground&mdash;a time before there was anything. He roamed the
-            empty marble garden on his own.
+            marble ground. It was a time before there was anything. He roamed
+            the empty marble garden on his own.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -170,7 +170,7 @@ export default function Page() {
             chaotic orb. Within this orb was all the known information in the
             universe: all the good, all the mundane, and all the evil. The
             creators tried again and again to rid the garden of this force, only
-            to learn the same harsh truth&mdash;it could not be destroyed, only
+            to learn the same harsh truth: it could not be destroyed, only
             contained.
           </WrittenContentParagraphElement>
 
