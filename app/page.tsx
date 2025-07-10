@@ -1,6 +1,6 @@
 "use client"; // need this since this component uses useState
 
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import ContentSearchBar from "@/src/components/ContentSearchBar";
 import ContentBox from "@/src/components/ContentBox";
 import { ContentBoxProps } from "@/src/types/content-props";
@@ -176,7 +176,6 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isPageChanging, setIsPageChanging] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Calculate pagination values
   const totalPages = Math.ceil(filteredContent.length / ITEMS_PER_PAGE);
@@ -195,16 +194,16 @@ export default function Home() {
 
   const tryToChangePage = (page: number) => {
     // Changes to provided page number if user is not already on that page.
-    // Uses a timeout and updates render state so that there is time for
-    // the old page content to clear prior to re-rendering. Was previously
-    // getting weird bugs where images lingered on etc.
+    // Pauses for a couple anim frames and updates render state so that there
+    // is time for the old page content to clear prior to re-rendering. Was
+    // previously getting weird bugs where images lingered when changing.
     setCurrentPage((prevPage) => {
-      // Only run the transition logic if page is actually changing
       if (prevPage !== page) {
         setIsPageChanging(true);
         setRenderKey((prev) => prev + 1);
 
-        // Get 2 full frames to clear the DOM prior to setting changing back to false
+        // Get 2 full frames to clear the DOM prior to setting "changing" state
+        // back to false.
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             setIsPageChanging(false);
@@ -229,16 +228,6 @@ export default function Home() {
     // eslint-disable-next-line no-restricted-syntax
     window.scrollTo({ top: 0, left: 0 }); // do NOT smoothly scroll here
   }, [currentPage]);
-
-  // Cleanup timeout on unmount to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    };
-  });
 
   return (
     <>
