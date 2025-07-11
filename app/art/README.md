@@ -5,7 +5,7 @@
 - Make sure you have a .png file for the original artwork called e.g. `{art-name}.png`.
 - For the actual artwork, size does not matter. Only the cover image "thumbnail" needs to be a particular size. See below for details.
 - Store this in `/public/pngs`.
-- Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
+- Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
 
 ### 2. Create the art `page`.
 
@@ -21,7 +21,7 @@
 ### 3. Create a cover image for the artwork.
 
 - It is likely that your artwork is not the required cover image size of 500x422.
-- Use [image_resize.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_resize.py) to convert **A DUPLICATE** of the existing .webp file you have in `/public/webps` of your artwork to a 500x422 .webp image called e.g. `{art-name}-cover-art.webp`. This will be the cover image for the artwork.
+- Use [image_resize.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_resize.py) to convert **A DUPLICATE** of the existing .webp file you have in `/public/webps` of your artwork to a 500x422 .webp image called e.g. `{art-name}-cover-art.webp`. This will be the cover image for the artwork.
 
 ### 4. Create a content box for the art in `/app/page.tsx`.
 
