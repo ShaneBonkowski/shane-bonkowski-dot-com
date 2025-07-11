@@ -38,7 +38,7 @@ Shane Bonkowski
 **Converting content:**
 
 - Delete all content between (and including) `<WrittenContentLoader {...storyData}>` tags.
-- Run [docx_to_written_content.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/shane_bonkowski_dot_com/docx_to_written_content.py) on your `.docx` file.
+- Run [docx_to_written_content.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/docx_to_written_content.py) on your `.docx` file.
 - Copy the generated React components from the output `.txt` file.
 - Paste them where you deleted the `<WrittenContentLoader>` content.
 
@@ -47,9 +47,9 @@ Shane Bonkowski
 ### 2. Create a cover image for the story.
 
 - Create a 500x422 .png image that will be the cover image for the story.
-- Use [image_resize.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_resize.py) to resize to 500x422 if needed.
+- Use [image_resize.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_resize.py) to resize to 500x422 if needed.
 - Store this image in `/public/pngs`.
-- Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/image/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
+- Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
 
 ### 3. Create a content box for the writing in `/app/page.tsx`.
 
