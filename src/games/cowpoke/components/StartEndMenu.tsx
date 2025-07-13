@@ -27,8 +27,9 @@ const StartEndMenu: React.FC = () => {
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
   const delayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const autoRestartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [autoRestart, setAutoRestart] = useState(false);
+  const autoRestartIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [countdown, setCountdown] = useState(0);
 
   const openWindow = (event?: Event) => {
     // Get menu type from event detail if present
@@ -52,6 +53,10 @@ const StartEndMenu: React.FC = () => {
     dispatchMenuEvent("Start/End", "close");
   };
 
+  const startLoadingGame = () => {
+    document.dispatchEvent(new CustomEvent("startLoadingGame"));
+  };
+
   const handleStartLoadingGame = useCallback(() => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
@@ -73,7 +78,7 @@ const StartEndMenu: React.FC = () => {
       setPlayerName(cleanedName);
 
       // Tell the main-game-scene to start loading the game
-      document.dispatchEvent(new CustomEvent("startLoadingGame"));
+      startLoadingGame();
     }, 150);
   }, [localPlayerName, setPlayerName]);
 
@@ -138,26 +143,39 @@ const StartEndMenu: React.FC = () => {
   }, [handleStartLoadingGame, isVisible]);
 
   useEffect(() => {
-    // Clear any existing timeout first
-    if (autoRestartTimeoutRef.current) {
-      clearTimeout(autoRestartTimeoutRef.current);
-      autoRestartTimeoutRef.current = null;
-    }
-
+    // Start counting down to auto-restart if enabled and on end menu
     if (menuType === "end" && autoRestart && isVisible) {
-      autoRestartTimeoutRef.current = setTimeout(() => {
-        handleStartLoadingGame();
-        autoRestartTimeoutRef.current = null; // Clear ref after execution
-      }, 3000);
+      let count = 3;
+      setCountdown(count);
+
+      // 3... 2... 1...
+      autoRestartIntervalRef.current = setInterval(() => {
+        count--;
+        if (count > 0) {
+          setCountdown(count);
+        } else {
+          setCountdown(0);
+          startLoadingGame();
+        }
+      }, 1000);
+    } else {
+      setCountdown(0);
+
+      // Reset interval countdown if e.g. auto-restart is turned off or menu
+      // is closed
+      if (autoRestartIntervalRef.current) {
+        clearInterval(autoRestartIntervalRef.current);
+        autoRestartIntervalRef.current = null;
+      }
     }
 
     return () => {
-      if (autoRestartTimeoutRef.current) {
-        clearTimeout(autoRestartTimeoutRef.current);
-        autoRestartTimeoutRef.current = null;
+      if (autoRestartIntervalRef.current) {
+        clearInterval(autoRestartIntervalRef.current);
+        autoRestartIntervalRef.current = null;
       }
     };
-  }, [menuType, autoRestart, isVisible, handleStartLoadingGame]);
+  }, [menuType, autoRestart, isVisible]);
 
   return (
     <>
@@ -236,7 +254,13 @@ const StartEndMenu: React.FC = () => {
                   />
                 </div>
                 <label className="cursor-pointer text-primary-text-color-light dark:text-primary-text-color-light">
-                  Auto-restart
+                  {countdown > 0 ? (
+                    <span className="text-red-500 font-bold">
+                      Auto-restart in {countdown}...
+                    </span>
+                  ) : (
+                    "Auto-restart"
+                  )}
                 </label>
               </div>
               {/* Stats */}
