@@ -160,9 +160,7 @@ const StartEndMenu: React.FC = () => {
   }, [menuType, autoRestart, isVisible, handleStartLoadingGame]);
 
   return (
-    // 'app-mode' is necessary to prevent for example pinch-zooming on mobile
-    // devices, which breaks things on games.
-    <div id={"Start/End Menu"} className="app-mode">
+    <>
       {/* --- Background Image --- */}
       {isVisible && (
         <div className="app-mode z-0 absolute inset-0 w-full h-full pointer-events-none">
@@ -311,7 +309,7 @@ const StartEndMenu: React.FC = () => {
           </p>
         </YesNoBox>
       )}
-    </div>
+    </>
   );
 };
 
