@@ -18,7 +18,9 @@ const StartEndMenu: React.FC = () => {
     lifetimeFurthestLevelInPlaythrough,
     lifetimeMostKillsInPlaythrough,
     lifetimeKills,
+    autoRestart,
     setPlayerName,
+    setAutoRestart,
     resetPermanentData,
   } = UseGameData();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,7 +29,6 @@ const StartEndMenu: React.FC = () => {
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
   const delayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [autoRestart, setAutoRestart] = useState(false);
   const autoRestartIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState(0);
 

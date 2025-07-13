@@ -32,6 +32,7 @@ export const UseGameData = () => {
       gameDataStore.setEnemyUpgradePoints.bind(gameDataStore),
     // Game Actions
     setAutoMode: gameDataStore.setAutoMode.bind(gameDataStore),
+    setAutoRestart: gameDataStore.setAutoRestart.bind(gameDataStore),
     setFastMode: gameDataStore.setFastMode.bind(gameDataStore),
     setSettingsSeenHatIds:
       gameDataStore.setSettingsSeenHatIds.bind(gameDataStore),
