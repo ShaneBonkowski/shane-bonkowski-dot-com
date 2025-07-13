@@ -62,7 +62,18 @@ export default function MovingSliderBar({
       if (custom.detail?.sliderId === sliderId) {
         // Pick a random target position (10% to 90%) to place the target bar
         setTargetPos(random.getRandomFloat(0.1, 0.9));
-        setAutoThreshold(random.getRandomFloat(0.2, 0.5));
+
+        // Set auto threshold:
+        // Abs(threshold) = how close the bar must be to the target to auto-select
+        // Negative = bar must be moving left to auto-select
+        // Positive = bar must be moving right to auto-select
+        // Exclude -0.05 to +0.05 range to prevent unobtainably small thresholds
+        const isNegative = random.getRandomFloat(0, 1) < 0.5;
+        const threshold = isNegative
+          ? random.getRandomFloat(-0.3, -0.05)
+          : random.getRandomFloat(0.05, 0.3);
+        setAutoThreshold(threshold);
+
         startMovingSlider();
       }
     };
@@ -109,7 +120,14 @@ export default function MovingSliderBar({
       // options when the bar is within threshold of the target.
       if (autoMode && autoModeOptions.length > 0) {
         const distanceToTarget = Math.abs(barPosRef.current - targetPos);
-        if (distanceToTarget <= autoThreshold) {
+
+        // If autoThreshold is negative, it means the slider must be moving
+        // left and within abs(threshold) of the target to auto-select.
+        // Vice versa for positive.
+        if (
+          distanceToTarget <= Math.abs(autoThreshold) &&
+          Math.sign(direction) === Math.sign(autoThreshold)
+        ) {
           // Pick a random option to execute
           const option =
             autoModeOptions[random.getRandomInt(0, autoModeOptions.length)];
