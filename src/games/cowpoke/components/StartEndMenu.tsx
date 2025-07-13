@@ -26,7 +26,9 @@ const StartEndMenu: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const delayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoRestartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [autoRestart, setAutoRestart] = useState(false);
 
   const openWindow = (event?: Event) => {
     // Get menu type from event detail if present
@@ -54,7 +56,7 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       // Clean up the player name before loading the game..
       // Do this here instead of in the input change handler
       // so that the name is only cleaned on submit.
@@ -79,7 +81,7 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       setResetStatsVisible(true);
     }, 150);
   };
@@ -88,7 +90,7 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       setResetStatsVisible(false);
 
       // Reset the lifetime stats and permanent upgrades
@@ -100,7 +102,7 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       setResetStatsVisible(false);
     }, 150);
   };
@@ -128,12 +130,34 @@ const StartEndMenu: React.FC = () => {
       document.removeEventListener("gameStarted", closeWindow);
       document.removeEventListener("keydown", handleGlobalKeyDown);
 
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
+      if (delayTimeoutRef.current) {
+        clearTimeout(delayTimeoutRef.current);
+        delayTimeoutRef.current = null;
       }
     };
   }, [handleStartLoadingGame, isVisible]);
+
+  useEffect(() => {
+    // Clear any existing timeout first
+    if (autoRestartTimeoutRef.current) {
+      clearTimeout(autoRestartTimeoutRef.current);
+      autoRestartTimeoutRef.current = null;
+    }
+
+    if (menuType === "end" && autoRestart && isVisible) {
+      autoRestartTimeoutRef.current = setTimeout(() => {
+        handleStartLoadingGame();
+        autoRestartTimeoutRef.current = null; // Clear ref after execution
+      }, 3000);
+    }
+
+    return () => {
+      if (autoRestartTimeoutRef.current) {
+        clearTimeout(autoRestartTimeoutRef.current);
+        autoRestartTimeoutRef.current = null;
+      }
+    };
+  }, [menuType, autoRestart, isVisible, handleStartLoadingGame]);
 
   return (
     // 'app-mode' is necessary to prevent for example pinch-zooming on mobile
@@ -174,6 +198,7 @@ const StartEndMenu: React.FC = () => {
               : `It's yer pal Cowpoke Jack talkin'. Hope yer ready to follow in my footsteps 'n set out West.
       Go'n remind me what's yer name, then press "Enter" or that play button down there in the corner to git started.`}
           </p>
+          {/* Player name input only shows on start screen */}
           {menuType === "start" && (
             // eslint-disable-next-line no-restricted-syntax
             <input
@@ -198,9 +223,25 @@ const StartEndMenu: React.FC = () => {
               aria-label="Player name input"
             />
           )}
-          {/* Cowpoke stats only show on end screen */}
+          {/* Cowpoke stats etc. only show on end screen */}
           {menuType === "end" && (
             <>
+              {/* Auto-restart checkbox */}
+              <div className="flex items-center justify-center mb-4">
+                {/* Make clickable area larger */}
+                <div className="px-4">
+                  <input
+                    type="checkbox"
+                    checked={autoRestart}
+                    onChange={(e) => setAutoRestart(e.target.checked)}
+                    className="accent-red-500"
+                  />
+                </div>
+                <label className="cursor-pointer text-primary-text-color-light dark:text-primary-text-color-light">
+                  Auto-restart
+                </label>
+              </div>
+              {/* Stats */}
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
                 <b>Playthrough Level:</b> {playerLevel}
                 {playerLevel >= lifetimeFurthestLevelInPlaythrough &&
