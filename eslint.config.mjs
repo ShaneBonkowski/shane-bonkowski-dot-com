@@ -66,6 +66,18 @@ Since this site is static, make sure to add "if (typeof window === \\"undefined\
 check before 'window' usage to prevent SSR errors. Add eslint-disable comment 
 if already protected, upstream or if dispositioned.`,
   },
+  {
+    selector:
+      "ExpressionStatement > CallExpression[callee.type='MemberExpression'][callee.object.name=/Store$/][callee.property.name=/^set[A-Z]/]",
+    message: `[Custom eslint.config.mjs rule] Store setter methods must be assigned to update local variables. 
+Example: 
+❌ gameDataStore.setPlayerHealth(newHealth);
+✅ this.health = gameDataStore.setPlayerHealth(newHealth);
+This enforces the pattern of keeping local properties in sync with store updates.
+This is a common source of bugs if not followed, since there is often a delay
+between store updates and local property updates. Add eslint-disable comment if 
+dispositioned.`,
+  },
 ];
 
 // TS-specific rule for all .ts files

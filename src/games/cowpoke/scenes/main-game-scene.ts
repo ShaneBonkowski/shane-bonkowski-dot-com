@@ -203,9 +203,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.favoredCombat = gameData.favoredCombat;
 
     // Update fast mode + durations
-    this.fastMode = gameData.fastMode;
-
-    if (this.fastMode) {
+    if (gameData.fastMode) {
       this.combatDuration = COMBAT_DURATION_FAST_MODE;
       this.updateFavoredInterval = UPDATE_FAVORED_INTERVAL_FAST_MODE;
       this.movingDuration = MOVING_DURATION_FAST_MODE;
@@ -253,15 +251,18 @@ export class MainGameScene extends Generic2DGameScene {
     const gameData = gameDataStore.getSnapshot();
 
     if (this.player) {
+      // eslint-disable-next-line no-restricted-syntax
       gameDataStore.setLifetimeKills(
         gameData.lifetimeKills + this.player.kills
       );
 
       if (this.player.level > gameData.lifetimeFurthestLevelInPlaythrough) {
+        // eslint-disable-next-line no-restricted-syntax
         gameDataStore.setLifetimeFurthestLevelInPlaythrough(this.player.level);
       }
 
       if (this.player.kills > gameData.lifetimeMostKillsInPlaythrough) {
+        // eslint-disable-next-line no-restricted-syntax
         gameDataStore.setLifetimeMostKillsInPlaythrough(this.player.kills);
       }
     }
@@ -439,7 +440,7 @@ export class MainGameScene extends Generic2DGameScene {
             nextElement = "rock"; // fallback if null or undefined
             break;
         }
-        gameDataStore.setFavoredElement(nextElement);
+        this.favoredElement = gameDataStore.setFavoredElement(nextElement);
 
         // Cycle through combat: attack -> defend -> counter -> attack
         let nextCombat: "attack" | "defend" | "counter";
@@ -457,7 +458,7 @@ export class MainGameScene extends Generic2DGameScene {
             nextCombat = "attack"; // fallback if null or undefined
             break;
         }
-        gameDataStore.setFavoredCombat(nextCombat);
+        this.favoredCombat = gameDataStore.setFavoredCombat(nextCombat);
 
         this.lastUpdateFavoredTime = time;
       }

@@ -29,7 +29,13 @@ const UiOverlay: React.FC = () => {
   } = UseGameData();
 
   const handleToggleAutoMode = () => {
-    setAutoPlayMode(!autoPlayMode);
+    const desiredAutoPlayMode = !autoPlayMode;
+    setAutoPlayMode(desiredAutoPlayMode);
+
+    // If the game is paused, unpause it if autoplay is turned on (false -> true)
+    if (paused && desiredAutoPlayMode) {
+      handleTogglePause();
+    }
   };
 
   const handleTogglePause = () => {
@@ -45,7 +51,13 @@ const UiOverlay: React.FC = () => {
   };
 
   const handleToggleDisco = () => {
-    setDiscoMode(!discoMode);
+    const desiredDiscoMode = !discoMode;
+    setDiscoMode(desiredDiscoMode);
+
+    // If the game is paused, unpause it if disco mode is turned on (false -> true)
+    if (paused && desiredDiscoMode) {
+      handleTogglePause();
+    }
   };
 
   useEffect(() => {

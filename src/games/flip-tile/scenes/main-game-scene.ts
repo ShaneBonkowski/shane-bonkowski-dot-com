@@ -143,7 +143,7 @@ export class MainGameScene extends Generic2DGameScene {
   resetRevealSolutionToggle() {
     // If the solution is revealed, we need to reset it to false
     if (this.solutionRevealed) {
-      gameDataStore.setSolutionRevealed(false);
+      this.solutionRevealed = gameDataStore.setSolutionRevealed(false);
     }
   }
 
@@ -250,7 +250,7 @@ export class MainGameScene extends Generic2DGameScene {
         }
 
         // Update the game data store with the new score
-        gameDataStore.setScore(desiredScore);
+        this.score = gameDataStore.setScore(desiredScore);
         document.dispatchEvent(new CustomEvent("scoreChange"));
       }
 
@@ -265,7 +265,7 @@ export class MainGameScene extends Generic2DGameScene {
   handleToggleSolution = (event: Event) => {
     const customEvent = event as CustomEvent<{ state: string }>;
     if (customEvent.detail.state === "on") {
-      gameDataStore.setSolutionRevealed(true);
+      this.solutionRevealed = gameDataStore.setSolutionRevealed(true);
       this.revealedAtLeastOnceThisLevel = true;
 
       // Show the solution for all tiles
@@ -279,7 +279,7 @@ export class MainGameScene extends Generic2DGameScene {
         }
       }
     } else {
-      gameDataStore.setSolutionRevealed(false);
+      this.solutionRevealed = gameDataStore.setSolutionRevealed(false);
 
       // Hide the solution for all tiles
       for (let row = 0; row < tiles.length; row++) {

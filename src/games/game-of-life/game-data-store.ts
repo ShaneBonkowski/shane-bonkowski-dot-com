@@ -31,29 +31,39 @@ class GameDataStore extends SyncedStore<GameData> {
     return { ...this.data };
   }
 
-  public setPopulation(value: number) {
+  public setPopulation(value: number): number {
     this.data.population = value;
     this.notify();
+
+    return value;
   }
 
-  public setGeneration(value: number) {
+  public setGeneration(value: number): number {
     this.data.generation = value;
     this.notify();
+
+    return value;
   }
 
-  public setPaused(value: boolean) {
+  public setPaused(value: boolean): boolean {
     this.data.paused = value;
     this.notify();
+
+    return value;
   }
 
-  public setAutoPlayMode(value: boolean) {
+  public setAutoPlayMode(value: boolean): boolean {
     this.data.autoPlayMode = value;
     this.notify();
+
+    return value;
   }
 
-  public setDiscoMode(value: boolean) {
+  public setDiscoMode(value: boolean): boolean {
     this.data.discoMode = value;
     this.notify();
+
+    return value;
   }
 
   public resetData() {

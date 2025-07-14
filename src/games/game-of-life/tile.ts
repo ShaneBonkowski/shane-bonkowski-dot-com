@@ -54,7 +54,7 @@ export class Tile extends GameObject {
 
       // Autopause the game if specified to do such
       if (!this.scene!.paused && this.scene!.autoPause) {
-        gameDataStore.setPaused(true);
+        this.scene!.paused = gameDataStore.setPaused(true);
       }
     }
 

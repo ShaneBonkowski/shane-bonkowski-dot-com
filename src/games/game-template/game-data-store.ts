@@ -23,9 +23,11 @@ class GameDataStore extends SyncedStore<GameData> {
     return { ...this.data };
   }
 
-  public setScore(value: number) {
+  public setScore(value: number): number {
     this.data.score = value;
     this.notify();
+
+    return value;
   }
 
   public resetData() {

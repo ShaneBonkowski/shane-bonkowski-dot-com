@@ -181,7 +181,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.balls.push(ball);
 
     // Update the game data store with the new "score", which is the number of balls
-    gameDataStore.setScore(this.balls.length);
+    this.score = gameDataStore.setScore(this.balls.length);
     document.dispatchEvent(new CustomEvent("scoreChange"));
   }
 
