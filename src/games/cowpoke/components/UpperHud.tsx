@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import CharacterInfoBar from "@/src/games/cowpoke/components/CharacterInfoBar";
 import { CHARACTER_TYPES } from "@/src/games/cowpoke/cowpoke-game-object-types";
-import { FaSkull } from "react-icons/fa";
+import { FaSkull, FaHandPointer, FaRobot } from "react-icons/fa";
 import { GiRabbit, GiSnail, GiCoffin } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
@@ -12,14 +12,28 @@ import YesNoBox from "@/src/components/YesNoBox";
 export default function UpperHud() {
   const [isVisible, setIsVisible] = useState(true);
   const [selectGameOverVisible, setSelectGameOverVisible] = useState(false);
-  const { fastMode, playerKills, setFastMode } = UseGameData();
+  const { fastMode, autoMode, playerKills, setFastMode, setAutoMode } =
+    UseGameData();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleToggleFastMode = () => {
     setFastMode(!fastMode);
   };
 
+  const handleToggleAutoMode = () => {
+    setAutoMode(!autoMode);
+  };
+
   const handleTryToEndGame = () => {
+    // Turn off auto mode if player manually tries to end the game. This prevents
+    // weird states where the game tries to continue playing while the player
+    // is "dead", causing null value errors. NOTE: We do this on the "are you sure"
+    // popup since it buys even more time then if it was on the actual "yes end game"
+    // button press.
+    if (autoMode) {
+      setAutoMode(false);
+    }
+
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
@@ -74,7 +88,7 @@ export default function UpperHud() {
   return (
     <div
       id="upper-hud"
-      className={`w-full max-w-[80vw] flex flex-row items-end justify-between p-2 gap-4 ${
+      className={`w-full max-w-[85vw] flex flex-row items-end justify-between p-2 gap-4 ${
         isVisible ? "" : "hidden"
       }`}
       aria-label="Game upper HUD"
@@ -89,14 +103,14 @@ export default function UpperHud() {
         id="hud-controls"
         aria-label="HUD controls"
       >
-        {/* FIXME: Implement this here: https://github.com/ShaneBonkowski/shane-bonkowski-dot-com/issues/121 */}
-        {/* <GameIconButton
+        <GameIconButton
           onPointerDown={handleToggleAutoMode}
           icon={autoMode ? <FaHandPointer size={30} /> : <FaRobot size={30} />}
           ariaLabel="Toggle Auto Mode"
           darkModeLight={true} // Use light mode colors even in dark mode since it looks better on the bkg
           title="Toggle Auto Mode"
-        /> */}
+          className="pb-0" // override from GameIconButton
+        />
         <GameIconButton
           onPointerDown={handleToggleFastMode}
           icon={fastMode ? <GiSnail size={30} /> : <GiRabbit size={30} />}

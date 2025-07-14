@@ -2,19 +2,31 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
 const random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
+
+type AutoModeOption = {
+  name: string;
+  execute: () => void;
+};
 
 type MovingSliderBarProps = {
   sliderId: string;
   speed?: number;
+  autoMode?: boolean;
+  autoModeOptions?: AutoModeOption[];
 };
 
 export default function MovingSliderBar({
   sliderId,
   speed = 0.9, // percent distance traveled per second
+  autoMode = false,
+  autoModeOptions = [],
 }: MovingSliderBarProps) {
+  const { playerHealth } = UseGameData();
   const [targetPos, setTargetPos] = useState(random.getRandomFloat(0.5, 0.8)); // 0-1, as percent of width
+  const [autoThreshold, setAutoThreshold] = useState(0.3);
   const [moving, setMoving] = useState(false);
   const [barPos, setBarPos] = useState(random.getRandomFloat(0.1, 0.4)); // 0-1, as percent of width
   const [direction, setDirection] = useState(1); // 1 = right, -1 = left
@@ -52,6 +64,18 @@ export default function MovingSliderBar({
       if (custom.detail?.sliderId === sliderId) {
         // Pick a random target position (10% to 90%) to place the target bar
         setTargetPos(random.getRandomFloat(0.1, 0.9));
+
+        // Set auto threshold:
+        // Abs(threshold) = how close the bar must be to the target to auto-select
+        // Negative = bar must be moving left to auto-select
+        // Positive = bar must be moving right to auto-select
+        // Exclude -0.05 to +0.05 range to prevent unobtainably small thresholds
+        const isNegative = random.getRandomFloat(0, 1) < 0.5;
+        const threshold = isNegative
+          ? random.getRandomFloat(-0.3, -0.05)
+          : random.getRandomFloat(0.05, 0.3);
+        setAutoThreshold(threshold);
+
         startMovingSlider();
       }
     };
@@ -93,14 +117,45 @@ export default function MovingSliderBar({
       barPosRef.current = next;
       setBarPos(next); // Only for rendering
       setDirection(newDirection);
+
+      // If in auto mode, "stop" the slider by randomly picking one of the
+      // options when the bar is within threshold of the target. Player
+      // must be alive as well.
+      if (autoMode && autoModeOptions.length > 0 && playerHealth > 0) {
+        const distanceToTarget = Math.abs(barPosRef.current - targetPos);
+
+        // If autoThreshold is negative, it means the slider must be moving
+        // left and within abs(threshold) of the target to auto-select.
+        // Vice versa for positive.
+        if (
+          distanceToTarget <= Math.abs(autoThreshold) &&
+          Math.sign(direction) === Math.sign(autoThreshold)
+        ) {
+          // Pick a random option to execute
+          const option =
+            autoModeOptions[random.getRandomInt(0, autoModeOptions.length)];
+          option.execute();
+        }
+      }
+
       animationRef.current = requestAnimationFrame(animate);
     };
     animationRef.current = requestAnimationFrame(animate);
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
+
     // Only re-run when moving starts/stops or speed changes
-  }, [moving, direction, speed]);
+  }, [
+    moving,
+    direction,
+    speed,
+    autoMode,
+    autoModeOptions,
+    targetPos,
+    autoThreshold,
+    playerHealth,
+  ]);
 
   // Position the moving and target bars
   const barLeft = `calc(${barPos * 100}% - 2px)`;

@@ -18,7 +18,9 @@ const StartEndMenu: React.FC = () => {
     lifetimeFurthestLevelInPlaythrough,
     lifetimeMostKillsInPlaythrough,
     lifetimeKills,
+    autoRestart,
     setPlayerName,
+    setAutoRestart,
     resetPermanentData,
   } = UseGameData();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,7 +28,9 @@ const StartEndMenu: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const delayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoRestartIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [countdown, setCountdown] = useState(0);
 
   const openWindow = (event?: Event) => {
     // Get menu type from event detail if present
@@ -50,11 +54,15 @@ const StartEndMenu: React.FC = () => {
     dispatchMenuEvent("Start/End", "close");
   };
 
+  const startLoadingGame = () => {
+    document.dispatchEvent(new CustomEvent("startLoadingGame"));
+  };
+
   const handleStartLoadingGame = useCallback(() => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       // Clean up the player name before loading the game..
       // Do this here instead of in the input change handler
       // so that the name is only cleaned on submit.
@@ -71,7 +79,7 @@ const StartEndMenu: React.FC = () => {
       setPlayerName(cleanedName);
 
       // Tell the main-game-scene to start loading the game
-      document.dispatchEvent(new CustomEvent("startLoadingGame"));
+      startLoadingGame();
     }, 150);
   }, [localPlayerName, setPlayerName]);
 
@@ -79,7 +87,7 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       setResetStatsVisible(true);
     }, 150);
   };
@@ -88,7 +96,7 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       setResetStatsVisible(false);
 
       // Reset the lifetime stats and permanent upgrades
@@ -100,7 +108,7 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
+    delayTimeoutRef.current = setTimeout(() => {
       setResetStatsVisible(false);
     }, 150);
   };
@@ -128,17 +136,50 @@ const StartEndMenu: React.FC = () => {
       document.removeEventListener("gameStarted", closeWindow);
       document.removeEventListener("keydown", handleGlobalKeyDown);
 
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
+      if (delayTimeoutRef.current) {
+        clearTimeout(delayTimeoutRef.current);
+        delayTimeoutRef.current = null;
       }
     };
   }, [handleStartLoadingGame, isVisible]);
 
+  useEffect(() => {
+    // Start counting down to auto-restart if enabled and on end menu
+    if (menuType === "end" && autoRestart && isVisible) {
+      let count = 3;
+      setCountdown(count);
+
+      // 3... 2... 1...
+      autoRestartIntervalRef.current = setInterval(() => {
+        count--;
+        if (count > 0) {
+          setCountdown(count);
+        } else {
+          setCountdown(0);
+          startLoadingGame();
+        }
+      }, 1000);
+    } else {
+      setCountdown(0);
+
+      // Reset interval countdown if e.g. auto-restart is turned off or menu
+      // is closed
+      if (autoRestartIntervalRef.current) {
+        clearInterval(autoRestartIntervalRef.current);
+        autoRestartIntervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (autoRestartIntervalRef.current) {
+        clearInterval(autoRestartIntervalRef.current);
+        autoRestartIntervalRef.current = null;
+      }
+    };
+  }, [menuType, autoRestart, isVisible]);
+
   return (
-    // 'app-mode' is necessary to prevent for example pinch-zooming on mobile
-    // devices, which breaks things on games.
-    <div id={"Start/End Menu"} className="app-mode">
+    <>
       {/* --- Background Image --- */}
       {isVisible && (
         <div className="app-mode z-0 absolute inset-0 w-full h-full pointer-events-none">
@@ -174,6 +215,7 @@ const StartEndMenu: React.FC = () => {
               : `It's yer pal Cowpoke Jack talkin'. Hope yer ready to follow in my footsteps 'n set out West.
       Go'n remind me what's yer name, then press "Enter" or that play button down there in the corner to git started.`}
           </p>
+          {/* Player name input only shows on start screen */}
           {menuType === "start" && (
             // eslint-disable-next-line no-restricted-syntax
             <input
@@ -198,9 +240,31 @@ const StartEndMenu: React.FC = () => {
               aria-label="Player name input"
             />
           )}
-          {/* Cowpoke stats only show on end screen */}
+          {/* Cowpoke stats etc. only show on end screen */}
           {menuType === "end" && (
             <>
+              {/* Auto-restart checkbox */}
+              <div className="flex items-center justify-center mb-4">
+                {/* Make clickable area larger */}
+                <div className="px-4">
+                  <input
+                    type="checkbox"
+                    checked={autoRestart}
+                    onChange={(e) => setAutoRestart(e.target.checked)}
+                    className="accent-red-500"
+                  />
+                </div>
+                <label className="cursor-pointer text-primary-text-color-light dark:text-primary-text-color-light">
+                  {countdown > 0 ? (
+                    <span className="text-red-500 font-bold">
+                      Auto-restart in {countdown}...
+                    </span>
+                  ) : (
+                    "Auto-restart"
+                  )}
+                </label>
+              </div>
+              {/* Stats */}
               <p className="text-center text-primary-text-color-light dark:text-primary-text-color-light">
                 <b>Playthrough Level:</b> {playerLevel}
                 {playerLevel >= lifetimeFurthestLevelInPlaythrough &&
@@ -270,7 +334,7 @@ const StartEndMenu: React.FC = () => {
           </p>
         </YesNoBox>
       )}
-    </div>
+    </>
   );
 };
 

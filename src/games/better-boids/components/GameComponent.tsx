@@ -83,9 +83,7 @@ const GameComponent: React.FC = () => {
   }, []);
 
   return (
-    // 'app-mode' is necessary to prevent for example pinch-zooming on mobile
-    // devices, which breaks things on games.
-    <div id={"Prevent zoom"} className="app-mode">
+    <>
       {/* UI */}
       <SettingsContainer />
       <GameInfoContainer>
@@ -138,7 +136,7 @@ const GameComponent: React.FC = () => {
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}
-    </div>
+    </>
   );
 };
 

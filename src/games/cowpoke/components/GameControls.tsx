@@ -9,7 +9,7 @@ import {
   GiShield,
   GiSprint,
 } from "react-icons/gi";
-import MovingSliderBar from "@/src/components/MovingSliderBar";
+import MovingSliderBar from "@/src/games/cowpoke/components/MovingSliderBar";
 import GameIconButton from "@/src/components/GameIconButton";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 import Feed from "@/src/games/cowpoke/components/Feed";
@@ -18,7 +18,7 @@ export default function GameControls() {
   const [isVisible, setIsVisible] = useState(true);
   const [elementDisabled, setElementDisabled] = useState(true);
   const [combatDisabled, setCombatDisabled] = useState(true);
-  const { fastMode, favoredElement, favoredCombat } = UseGameData();
+  const { fastMode, autoMode, favoredElement, favoredCombat } = UseGameData();
 
   const selectRock = () => {
     const event = new CustomEvent("selectElement", {
@@ -88,21 +88,23 @@ export default function GameControls() {
     const handleUiMenuClose = () => setIsVisible(true);
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!elementDisabled) {
-        if (e.key === "1") {
-          selectRock();
-        } else if (e.key === "2") {
-          selectPaper();
-        } else if (e.key === "3") {
-          selectScissors();
-        }
-      } else if (!combatDisabled) {
-        if (e.key === "1") {
-          selectAttack();
-        } else if (e.key === "2") {
-          selectDefend();
-        } else if (e.key === "3") {
-          selectCounter();
+      if (!autoMode) {
+        if (!elementDisabled) {
+          if (e.key === "1") {
+            selectRock();
+          } else if (e.key === "2") {
+            selectPaper();
+          } else if (e.key === "3") {
+            selectScissors();
+          }
+        } else if (!combatDisabled) {
+          if (e.key === "1") {
+            selectAttack();
+          } else if (e.key === "2") {
+            selectDefend();
+          } else if (e.key === "3") {
+            selectCounter();
+          }
         }
       }
     };
@@ -125,7 +127,7 @@ export default function GameControls() {
       // eslint-disable-next-line no-restricted-syntax
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [elementDisabled, combatDisabled]);
+  }, [elementDisabled, combatDisabled, autoMode]);
 
   return (
     <div
@@ -135,14 +137,23 @@ export default function GameControls() {
     >
       {/* Controls */}
       <div className="h-8 flex flex-row gap-3 justify-center items-stretch">
-        <MovingSliderBar sliderId={"win-element"} speed={fastMode ? 2 : 1.25} />
+        <MovingSliderBar
+          sliderId={"win-element"}
+          speed={fastMode ? 2 : 1.25}
+          autoMode={autoMode}
+          autoModeOptions={[
+            { name: "rock", execute: selectRock },
+            { name: "paper", execute: selectPaper },
+            { name: "scissors", execute: selectScissors },
+          ]}
+        />
         <div className="flex flex-row gap-0 items-center justify-center">
           <GameIconButton
             onPointerDown={selectRock}
             icon={<GiRock size={30} />}
             ariaLabel="Select Rock"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-            disabled={elementDisabled}
+            disabled={elementDisabled || autoMode}
             className={
               favoredElement === "rock" && !elementDisabled
                 ? "ring-2 ring-green-500"
@@ -155,7 +166,7 @@ export default function GameControls() {
             icon={<GiPaper size={30} />}
             ariaLabel="Select Paper"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-            disabled={elementDisabled}
+            disabled={elementDisabled || autoMode}
             className={
               favoredElement === "paper" && !elementDisabled
                 ? "ring-2 ring-green-500"
@@ -168,7 +179,7 @@ export default function GameControls() {
             icon={<GiScissors size={30} />}
             ariaLabel="Select Scissors"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-            disabled={elementDisabled}
+            disabled={elementDisabled || autoMode}
             className={
               favoredElement === "scissors" && !elementDisabled
                 ? "ring-2 ring-green-500"
@@ -180,14 +191,23 @@ export default function GameControls() {
       </div>
 
       <div className="h-8 flex flex-row gap-3 justify-center items-stretch">
-        <MovingSliderBar sliderId={"win-combat"} speed={fastMode ? 2 : 1.25} />
+        <MovingSliderBar
+          sliderId={"win-combat"}
+          speed={fastMode ? 2 : 1.25}
+          autoMode={autoMode}
+          autoModeOptions={[
+            { name: "attack", execute: selectAttack },
+            { name: "defend", execute: selectDefend },
+            { name: "counter", execute: selectCounter },
+          ]}
+        />
         <div className="flex flex-row gap-0 items-center justify-center">
           <GameIconButton
             onPointerDown={selectAttack}
             icon={<GiCrossedSwords size={30} />}
             ariaLabel="Select Attack"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-            disabled={combatDisabled}
+            disabled={combatDisabled || autoMode}
             className={
               favoredCombat === "attack" && !combatDisabled
                 ? "ring-2 ring-green-500"
@@ -200,7 +220,7 @@ export default function GameControls() {
             icon={<GiShield size={30} />}
             ariaLabel="Select Defend"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-            disabled={combatDisabled}
+            disabled={combatDisabled || autoMode}
             className={
               favoredCombat === "defend" && !combatDisabled
                 ? "ring-2 ring-green-500"
@@ -213,7 +233,7 @@ export default function GameControls() {
             icon={<GiSprint size={30} />}
             ariaLabel="Select Counter"
             darkModeLight={true} // Want the black buttons this game! Since bkg is light.
-            disabled={combatDisabled}
+            disabled={combatDisabled || autoMode}
             className={
               favoredCombat === "counter" && !combatDisabled
                 ? "ring-2 ring-green-500"

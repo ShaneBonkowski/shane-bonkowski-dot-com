@@ -47,8 +47,8 @@ export class SeededRandom {
 
   /**
    * Generates a pseudo-random float within the specified range.
-   * @param {number} min - The minimum value (inclusive).
-   * @param {number} max - The maximum value (exclusive).
+   * @param {number} min - The minimum value (inclusive). Can be negative.
+   * @param {number} max - The maximum value (exclusive). Can be negative.
    * @returns {number} A pseudo-random float within the specified range.
    */
   getRandomFloat(min: number, max: number): number {
@@ -57,8 +57,8 @@ export class SeededRandom {
 
   /**
    * Generates a pseudo-random integer within the specified range.
-   * @param {number} min - The minimum value (inclusive).
-   * @param {number} max - The maximum value (exclusive).
+   * @param {number} min - The minimum value (inclusive). Can be negative.
+   * @param {number} max - The maximum value (exclusive). Can be negative.
    * @returns {number} A pseudo-random integer within the specified range.
    */
   getRandomInt(min: number, max: number): number {
