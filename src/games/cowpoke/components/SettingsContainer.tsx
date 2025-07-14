@@ -69,8 +69,10 @@ const SettingsContainer: React.FC = () => {
     permaElementLevel,
     settingsSeenHatIds,
     settingsSeenGunIds,
+    autoMode,
     setSettingsSeenHatIds,
     setSettingsSeenGunIds,
+    setAutoMode,
   } = UseGameData();
 
   const handleEquipHat = (hatId: number) => {
@@ -133,6 +135,12 @@ const SettingsContainer: React.FC = () => {
   const isGunNew = (gunId: number) => !settingsSeenGunIds.includes(gunId);
 
   const openWindow = () => {
+    // Turn off auto mode since ui menu being open can break some things in
+    // auto mode
+    if (autoMode) {
+      setAutoMode(false);
+    }
+
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {

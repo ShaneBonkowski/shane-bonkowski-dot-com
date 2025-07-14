@@ -14,6 +14,7 @@ import UpperHud from "@/src/games/cowpoke/components/UpperHud";
 import GameControls from "@/src/games/cowpoke/components/GameControls";
 import StartEndMenu from "@/src/games/cowpoke/components/StartEndMenu";
 import GamePreventPortraitOrLandscapeMode from "@/src/components/GamePreventPortraitOrLandscapeMode";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
 // Singleton Phaser game instance
 let game: Phaser.Game | null = null;
@@ -21,6 +22,7 @@ let game: Phaser.Game | null = null;
 const GameComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const isLoadingPhaser = useRef(false);
+  const { autoMode, setAutoMode } = UseGameData();
 
   const handleFadeOutComplete = () => {
     // Hides the loading screen
@@ -95,6 +97,13 @@ const GameComponent: React.FC = () => {
       <GameInfoContainer
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
+        onOpenPreDelay={() => {
+          // Turn off auto mode since ui menu being open can break some things
+          // in auto mode
+          if (autoMode) {
+            setAutoMode(false);
+          }
+        }}
       >
         <div
           className="written-content-container"
