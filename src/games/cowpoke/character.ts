@@ -225,17 +225,27 @@ export class Character extends GameObject {
       const { type } = customEvent.detail;
 
       if (type === "health") {
-        gameDataStore.setPermaHealthLevel(this.permanentHealthBonus + 1);
+        this.permanentHealthBonus = gameDataStore.setPermaHealthLevel(
+          this.permanentHealthBonus + 1
+        );
       } else if (type === "damage") {
-        gameDataStore.setPermaDamageLevel(this.permanentDamageBonus + 1);
+        this.permanentDamageBonus = gameDataStore.setPermaDamageLevel(
+          this.permanentDamageBonus + 1
+        );
       } else if (type === "combat") {
-        gameDataStore.setPermaCombatLevel(this.permanentCombatBonus + 1);
+        this.permanentCombatBonus = gameDataStore.setPermaCombatLevel(
+          this.permanentCombatBonus + 1
+        );
       } else if (type === "element") {
-        gameDataStore.setPermaElementLevel(this.permanentElementBonus + 1);
+        this.permanentElementBonus = gameDataStore.setPermaElementLevel(
+          this.permanentElementBonus + 1
+        );
       }
 
       // Update upgrade points
-      gameDataStore.setPlayerUpgradePoints(this.upgradePoints - 1);
+      this.upgradePoints = gameDataStore.setPlayerUpgradePoints(
+        this.upgradePoints - 1
+      );
     }
   };
 
@@ -328,7 +338,7 @@ export class Character extends GameObject {
 
     // Set level, this will set max health, xp, etc.
     this.updateLevel(5, true);
-    gameDataStore.setPlayerUpgradePoints(0); // player should start with 0 upgrade points
+    this.upgradePoints = gameDataStore.setPlayerUpgradePoints(0); // player should start with 0 upgrade points
 
     // Setup the character
     this.spawnCharacterSetup();
@@ -395,7 +405,7 @@ export class Character extends GameObject {
     );
 
     // Update name
-    gameDataStore.setEnemyName(
+    this.name = gameDataStore.setEnemyName(
       `${randomTitleOptions[randomTitleIndex]} ${randomNameOptions[randomNameIndex]}`
     );
 
@@ -462,9 +472,9 @@ export class Character extends GameObject {
     this.hatStarSprite!.setScale(0.7, 0.7);
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerEquippedHatId(id);
+      this.equippedHatId = gameDataStore.setPlayerEquippedHatId(id);
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyEquippedHatId(id);
+      this.equippedHatId = gameDataStore.setEnemyEquippedHatId(id);
     }
     this.addNewOwnedHat(id);
 
@@ -509,9 +519,9 @@ export class Character extends GameObject {
     this.gunStarSprite!.setScale(0.6, 0.6);
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerEquippedGunId(id);
+      this.equippedGunId = gameDataStore.setPlayerEquippedGunId(id);
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyEquippedGunId(id);
+      this.equippedGunId = gameDataStore.setEnemyEquippedGunId(id);
     }
 
     this.addNewOwnedGun(id);
@@ -593,7 +603,7 @@ export class Character extends GameObject {
       newOwnedHatIds.push(id);
 
       if (this.type === CHARACTER_TYPES.PLAYER) {
-        gameDataStore.setPlayerOwnedHatIds(newOwnedHatIds);
+        this.ownedHatIds = gameDataStore.setPlayerOwnedHatIds(newOwnedHatIds);
       }
     }
   }
@@ -604,7 +614,7 @@ export class Character extends GameObject {
       newOwnedGunIds.push(id);
 
       if (this.type === CHARACTER_TYPES.PLAYER) {
-        gameDataStore.setPlayerOwnedGunIds(newOwnedGunIds);
+        this.ownedGunIds = gameDataStore.setPlayerOwnedGunIds(newOwnedGunIds);
       }
     }
   }
@@ -635,7 +645,7 @@ export class Character extends GameObject {
     // Calculate base dmg + gun and hat bonuses.
     // Enemies have reduced base dmg.
     let baseDmg =
-      (5 + this.level * 0.2) * (this.type === CHARACTER_TYPES.ENEMY ? 0.25 : 1);
+      (5 + this.level * 0.2) * (this.type === CHARACTER_TYPES.ENEMY ? 0.8 : 1);
 
     // If in GOD_MODE, set base dmg to 999,999
     if (this.name === "GOD_MODE") {
@@ -805,9 +815,9 @@ export class Character extends GameObject {
     newHealth = Math.round(newHealth);
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerHealth(newHealth);
+      this.health = gameDataStore.setPlayerHealth(newHealth);
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyHealth(newHealth);
+      this.health = gameDataStore.setEnemyHealth(newHealth);
     }
   }
 
@@ -815,8 +825,9 @@ export class Character extends GameObject {
     // Calculate new max health based on level, bonuses, and equipped items.
     // Enemies have reduced max health.
     let newMaxHealth =
-      (10 + this.level * 1.2 + this.permanentHealthBonus) *
-      (this.type === CHARACTER_TYPES.ENEMY ? 0.25 : 1);
+      10 +
+      (this.level * 1.2 + this.permanentHealthBonus) *
+        (this.type === CHARACTER_TYPES.ENEMY ? 0.75 : 1);
 
     newMaxHealth +=
       HAT_LOOT_MAP[this.equippedHatId].addHealth +
@@ -831,9 +842,9 @@ export class Character extends GameObject {
     newMaxHealth = Math.round(newMaxHealth);
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerMaxHealth(newMaxHealth);
+      this.maxHealth = gameDataStore.setPlayerMaxHealth(newMaxHealth);
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyMaxHealth(newMaxHealth);
+      this.maxHealth = gameDataStore.setEnemyMaxHealth(newMaxHealth);
     }
   }
 
@@ -848,15 +859,19 @@ export class Character extends GameObject {
     }
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerLevel(newLevel);
+      this.level = gameDataStore.setPlayerLevel(newLevel);
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyLevel(newLevel);
+      this.level = gameDataStore.setEnemyLevel(newLevel);
     }
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerUpgradePoints(this.upgradePoints + 1);
+      this.upgradePoints = gameDataStore.setPlayerUpgradePoints(
+        this.upgradePoints + 1
+      );
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyUpgradePoints(this.upgradePoints + 1);
+      this.upgradePoints = gameDataStore.setEnemyUpgradePoints(
+        this.upgradePoints + 1
+      );
     }
 
     // Update max health on level up, then restore health
@@ -883,9 +898,9 @@ export class Character extends GameObject {
     }
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerXp(newXp);
+      this.xp = gameDataStore.setPlayerXp(newXp);
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyXp(newXp);
+      this.xp = gameDataStore.setEnemyXp(newXp);
     }
 
     // Level up!
@@ -898,15 +913,15 @@ export class Character extends GameObject {
     const newMaxXp = 1 + this.level * 2;
 
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerMaxXp(newMaxXp);
+      this.maxXp = gameDataStore.setPlayerMaxXp(newMaxXp);
     } else if (this.type === CHARACTER_TYPES.ENEMY) {
-      gameDataStore.setEnemyMaxXp(newMaxXp);
+      this.maxXp = gameDataStore.setEnemyMaxXp(newMaxXp);
     }
   }
 
   handleKill(otherCharacter: Character) {
     if (this.type === CHARACTER_TYPES.PLAYER) {
-      gameDataStore.setPlayerKills(this.kills + 1);
+      this.kills = gameDataStore.setPlayerKills(this.kills + 1);
 
       const addXp = Math.floor(otherCharacter.level * 1.5);
 
@@ -974,7 +989,7 @@ export class Character extends GameObject {
         }
       }
     } else {
-      gameDataStore.setEnemyKills(this.kills + 1);
+      this.kills = gameDataStore.setEnemyKills(this.kills + 1);
 
       // Enemy says a quip when killing player
       sendFeedMessage(

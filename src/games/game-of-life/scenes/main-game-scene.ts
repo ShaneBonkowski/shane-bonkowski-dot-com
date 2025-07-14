@@ -164,23 +164,11 @@ export class MainGameScene extends Generic2DGameScene {
   };
 
   setGameDataFromStore(gameData: GameData) {
-    const incomingAutoPlayMode = this.autoPlayMode;
-    const incomingDiscoMode = this.discoMode;
-
     this.population = gameData.population;
     this.generation = gameData.generation;
     this.paused = gameData.paused;
     this.autoPlayMode = gameData.autoPlayMode;
     this.discoMode = gameData.discoMode;
-
-    // If the game is paused, unpause it if autoplay is turned on (false -> true)
-    if (this.paused && !incomingAutoPlayMode && this.autoPlayMode) {
-      gameDataStore.setPaused(false);
-    }
-    // If the game is paused, unpause it if disco mode is turned on (false -> true)
-    if (this.paused && !incomingDiscoMode && this.discoMode) {
-      gameDataStore.setPaused(false);
-    }
   }
 
   update(time: number, delta: number) {
@@ -292,7 +280,7 @@ export class MainGameScene extends Generic2DGameScene {
       newGenerationVal = 0;
     }
 
-    gameDataStore.setGeneration(newGenerationVal);
+    this.generation = gameDataStore.setGeneration(newGenerationVal);
   }
 
   updatePopulation(newPopulationVal: number) {
@@ -305,11 +293,11 @@ export class MainGameScene extends Generic2DGameScene {
     // ONLY IF NOT IN AUTOPLAY MODE!
     if (newPopulationVal == 0 && !this.autoPlayMode) {
       if (!this.paused) {
-        gameDataStore.setPaused(true);
+        this.paused = gameDataStore.setPaused(true);
       }
     }
 
-    gameDataStore.setPopulation(newPopulationVal);
+    this.population = gameDataStore.setPopulation(newPopulationVal);
   }
 
   checkForNeighborTiles(
@@ -394,7 +382,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.resetTiles();
 
     if (!this.paused) {
-      gameDataStore.setPaused(true);
+      this.paused = gameDataStore.setPaused(true);
     }
   };
 
@@ -491,7 +479,7 @@ export class MainGameScene extends Generic2DGameScene {
       this.runGameOfLifeIteration();
     } else {
       // Manually pause on advance if playing already
-      gameDataStore.setPaused(true);
+      this.paused = gameDataStore.setPaused(true);
     }
   }
 
@@ -584,7 +572,7 @@ export class MainGameScene extends Generic2DGameScene {
       desiredColorTheme = 0;
     }
 
-    settingsStore.setColorTheme(desiredColorTheme);
+    this.colorTheme = settingsStore.setColorTheme(desiredColorTheme);
   }
 
   decreaseToPreviousColorTheme() {
@@ -593,7 +581,7 @@ export class MainGameScene extends Generic2DGameScene {
       desiredColorTheme = tileAndBackgroundColors.length - 1;
     }
 
-    settingsStore.setColorTheme(desiredColorTheme);
+    this.colorTheme = settingsStore.setColorTheme(desiredColorTheme);
   }
 
   destroyTiles() {

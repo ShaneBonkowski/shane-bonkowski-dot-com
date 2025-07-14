@@ -44,45 +44,61 @@ class SettingsStore extends SyncedStore<Settings> {
     return { ...this.data };
   }
 
-  public setUpdateInterval(value: number) {
+  public setUpdateInterval(value: number): number {
     this.data.updateInterval = value;
     this.notify();
+
+    return value;
   }
 
-  public setUnderpopulation(value: number) {
+  public setUnderpopulation(value: number): number {
     this.data.underpopulation = value;
     this.notify();
+
+    return value;
   }
 
-  public setOverpopulation(value: number) {
+  public setOverpopulation(value: number): number {
     this.data.overpopulation = value;
     this.notify();
+
+    return value;
   }
 
-  public setReproduction(value: number) {
+  public setReproduction(value: number): number {
     this.data.reproduction = value;
     this.notify();
+
+    return value;
   }
 
-  public setColorTheme(value: number) {
+  public setColorTheme(value: number): number {
     this.data.colorTheme = value;
     this.setLocalStorage("gameOfLifeColorTheme", value);
     this.notify();
+
+    return value;
   }
 
-  public setAutoPause(value: boolean) {
+  public setAutoPause(value: boolean): boolean {
     this.data.autoPause = value;
     this.notify();
+
+    return value;
   }
 
-  public setInfiniteEdges(value: boolean) {
+  public setInfiniteEdges(value: boolean): boolean {
     this.data.infiniteEdges = value;
     this.notify();
+
+    return value;
   }
 
-  public setDiagonalNeighbors(value: boolean) {
+  public setDiagonalNeighbors(value: boolean): boolean {
     this.data.diagonalNeighbors = value;
     this.notify();
+
+    return value;
   }
 
   public resetData() {

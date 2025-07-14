@@ -33,34 +33,46 @@ class SettingsStore extends SyncedStore<Settings> {
     return { ...this.data };
   }
 
-  public setAlignmentFactor(value: number) {
+  public setAlignmentFactor(value: number): number {
     this.data.alignmentFactor = value;
     this.notify();
+
+    return value;
   }
 
-  public setCohesionFactor(value: number) {
+  public setCohesionFactor(value: number): number {
     this.data.cohesionFactor = value;
     this.notify();
+
+    return value;
   }
 
-  public setSeparationFactor(value: number) {
+  public setSeparationFactor(value: number): number {
     this.data.separationFactor = value;
     this.notify();
+
+    return value;
   }
 
-  public setSpeed(value: number) {
+  public setSpeed(value: number): number {
     this.data.speed = value;
     this.notify();
+
+    return value;
   }
 
-  public setFlockSearchRadius(value: number) {
+  public setFlockSearchRadius(value: number): number {
     this.data.flockSearchRadius = value;
     this.notify();
+
+    return value;
   }
 
-  public setLeaderBoidEnabled(value: boolean) {
+  public setLeaderBoidEnabled(value: boolean): boolean {
     this.data.leaderBoidEnabled = value;
     this.notify();
+
+    return value;
   }
 
   public resetData() {

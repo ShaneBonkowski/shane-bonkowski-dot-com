@@ -216,207 +216,283 @@ class GameDataStore extends SyncedStore<GameData> {
   }
 
   // Player methods
-  public setPlayerName(value: string) {
+  public setPlayerName(value: string): string {
     this.data.playerName = value;
     this.setLocalStorage("cowpokePlayerName", value);
     this.notify();
+
+    return value;
   }
 
-  public setPlayerLevel(value: number) {
+  public setPlayerLevel(value: number): number {
     this.data.playerLevel = value;
     this.notify();
+
+    return value;
   }
 
-  public setPlayerHealth(value: number) {
+  public setPlayerHealth(value: number): number {
     this.data.playerHealth = value;
     this.notify();
+
+    return value;
   }
 
-  public setPlayerMaxHealth(value: number) {
+  public setPlayerMaxHealth(value: number): number {
     this.data.playerMaxHealth = value;
     this.notify();
+
+    return value;
   }
 
-  public setPlayerXp(value: number) {
+  public setPlayerXp(value: number): number {
     this.data.playerXp = value;
     this.notify();
+
+    return value;
   }
 
-  public setPlayerMaxXp(value: number) {
+  public setPlayerMaxXp(value: number): number {
     this.data.playerMaxXp = value;
     this.notify();
+
+    return value;
   }
 
-  public setPlayerUpgradePoints(value: number) {
+  public setPlayerUpgradePoints(value: number): number {
     this.data.playerUpgradePoints = value;
     this.notify();
+
+    return value;
   }
 
-  public setPlayerKills(value: number) {
+  public setPlayerKills(value: number): number {
     this.data.playerKills = value;
     this.notify();
+
+    return value;
   }
 
-  public setPlayerEquippedHatId(value: number) {
+  public setPlayerEquippedHatId(value: number): number {
     this.data.playerEquippedHatId = value;
     this.setLocalStorage("cowpokePlayerEquippedHatId", value);
     this.notify();
+
+    return value;
   }
 
-  public setPlayerEquippedGunId(value: number) {
+  public setPlayerEquippedGunId(value: number): number {
     this.data.playerEquippedGunId = value;
     this.setLocalStorage("cowpokePlayerEquippedGunId", value);
     this.notify();
+
+    return value;
   }
 
-  public setPlayerOwnedHatIds(value: number[]) {
+  public setPlayerOwnedHatIds(value: number[]): number[] {
     this.data.playerOwnedHatIds = value;
     this.setLocalStorage("cowpokePlayerOwnedHatIds", value);
     this.notify();
+
+    return value;
   }
 
-  public setPlayerOwnedGunIds(value: number[]) {
+  public setPlayerOwnedGunIds(value: number[]): number[] {
     this.data.playerOwnedGunIds = value;
     this.setLocalStorage("cowpokePlayerOwnedGunIds", value);
     this.notify();
+
+    return value;
   }
 
-  public setPermaDamageLevel(value: number) {
+  public setPermaDamageLevel(value: number): number {
     this.data.permaDamageLevel = value;
     this.setLocalStorage("cowpokePlayerPermaDamageLevel", value);
     this.notify();
+
+    return value;
   }
 
-  public setPermaHealthLevel(value: number) {
+  public setPermaHealthLevel(value: number): number {
     this.data.permaHealthLevel = value;
     this.setLocalStorage("cowpokePlayerPermaHealthLevel", value);
     this.notify();
+
+    return value;
   }
 
-  public setPermaCombatLevel(value: number) {
+  public setPermaCombatLevel(value: number): number {
     this.data.permaCombatLevel = value;
     this.setLocalStorage("cowpokePlayerPermaCombatLevel", value);
     this.notify();
+
+    return value;
   }
 
-  public setPermaElementLevel(value: number) {
+  public setPermaElementLevel(value: number): number {
     this.data.permaElementLevel = value;
     this.setLocalStorage("cowpokePlayerPermaElementLevel", value);
     this.notify();
+
+    return value;
   }
 
   // Enemy methods
-  public setEnemyName(value: string) {
+  public setEnemyName(value: string): string {
     this.data.enemyName = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyLevel(value: number) {
+  public setEnemyLevel(value: number): number {
     this.data.enemyLevel = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyHealth(value: number) {
+  public setEnemyHealth(value: number): number {
     this.data.enemyHealth = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyMaxHealth(value: number) {
+  public setEnemyMaxHealth(value: number): number {
     this.data.enemyMaxHealth = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyXp(value: number) {
+  public setEnemyXp(value: number): number {
     this.data.enemyXp = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyMaxXp(value: number) {
+  public setEnemyMaxXp(value: number): number {
     this.data.enemyMaxXp = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyUpgradePoints(value: number) {
+  public setEnemyUpgradePoints(value: number): number {
     this.data.enemyUpgradePoints = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyKills(value: number) {
+  public setEnemyKills(value: number): number {
     this.data.enemyKills = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyEquippedHatId(value: number) {
+  public setEnemyEquippedHatId(value: number): number {
     // Not saved to localStorage as enemies don't have persistent data
     this.data.enemyEquippedHatId = value;
     this.notify();
+
+    return value;
   }
 
-  public setEnemyEquippedGunId(value: number) {
+  public setEnemyEquippedGunId(value: number): number {
     // Not saved to localStorage as enemies don't have persistent data
     this.data.enemyEquippedGunId = value;
     this.notify();
+
+    return value;
   }
 
   // Game mode methods
-  public setAutoMode(value: boolean) {
+  public setAutoMode(value: boolean): boolean {
     this.data.autoMode = value;
     this.setLocalStorage("cowpokeAutoMode", value);
     this.notify();
+
+    return value;
   }
 
-  public setAutoRestart(value: boolean) {
+  public setAutoRestart(value: boolean): boolean {
     this.data.autoRestart = value;
     this.setLocalStorage("cowpokeAutoRestart", value);
     this.notify();
+
+    return value;
   }
 
-  public setFastMode(value: boolean) {
+  public setFastMode(value: boolean): boolean {
     this.data.fastMode = value;
     this.setLocalStorage("cowpokeFastMode", value);
     this.notify();
+
+    return value;
   }
 
-  public setFavoredElement(value: null | "rock" | "paper" | "scissors") {
+  public setFavoredElement(
+    value: null | "rock" | "paper" | "scissors"
+  ): null | "rock" | "paper" | "scissors" {
     this.data.favoredElement = value;
     this.notify();
+
+    return value;
   }
 
-  public setFavoredCombat(value: null | "attack" | "defend" | "counter") {
+  public setFavoredCombat(
+    value: null | "attack" | "defend" | "counter"
+  ): null | "attack" | "defend" | "counter" {
     this.data.favoredCombat = value;
     this.notify();
+
+    return value;
   }
 
   // Stats methods
-  public setLifetimeKills(value: number) {
+  public setLifetimeKills(value: number): number {
     this.data.lifetimeKills = value;
     this.setLocalStorage("cowpokeLifetimeKills", value);
     this.notify();
+
+    return value;
   }
 
-  public setLifetimeFurthestLevelInPlaythrough(value: number) {
+  public setLifetimeFurthestLevelInPlaythrough(value: number): number {
     this.data.lifetimeFurthestLevelInPlaythrough = value;
     this.setLocalStorage("cowpokeLifetimeFurthestLevelInPlaythrough", value);
     this.notify();
+
+    return value;
   }
 
-  public setLifetimeMostKillsInPlaythrough(value: number) {
+  public setLifetimeMostKillsInPlaythrough(value: number): number {
     this.data.lifetimeMostKillsInPlaythrough = value;
     this.setLocalStorage("cowpokeLifetimeMostKillsInPlaythrough", value);
     this.notify();
+
+    return value;
   }
 
   // Settings seen methods
-  public setSettingsSeenHatIds(value: number[]) {
+  public setSettingsSeenHatIds(value: number[]): number[] {
     this.data.settingsSeenHatIds = value;
     this.setLocalStorage("cowpokeSettingsSeenHatIds", value);
     this.notify();
+
+    return value;
   }
 
-  public setSettingsSeenGunIds(value: number[]) {
+  public setSettingsSeenGunIds(value: number[]): number[] {
     this.data.settingsSeenGunIds = value;
     this.setLocalStorage("cowpokeSettingsSeenGunIds", value);
     this.notify();
+
+    return value;
   }
 
   public resetData() {
