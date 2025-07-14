@@ -621,23 +621,23 @@ export class Character extends GameObject {
 
   getCombatIncrease() {
     // +10% win chance per addCombat bonus from gun and hat
-    // +1% per permanentCombatBonus
+    // +0.5% per permanentCombatBonus
     return (
       0.1 *
         (GUN_LOOT_MAP[this.equippedGunId].addCombat +
           HAT_LOOT_MAP[this.equippedHatId].addCombat) +
-      0.01 * this.permanentCombatBonus
+      0.005 * this.permanentCombatBonus
     );
   }
 
   getElementIncrease() {
     // +10% win chance per addElement bonus from gun and hat
-    // +1% per permanentElementBonus
+    // +0.5% per permanentElementBonus
     return (
       0.1 *
         (GUN_LOOT_MAP[this.equippedGunId].addElement +
           HAT_LOOT_MAP[this.equippedHatId].addElement) +
-      0.01 * this.permanentElementBonus
+      0.005 * this.permanentElementBonus
     );
   }
 
@@ -645,7 +645,7 @@ export class Character extends GameObject {
     // Calculate base dmg + gun and hat bonuses.
     // Enemies have reduced base dmg.
     let baseDmg =
-      (5 + this.level * 0.2) * (this.type === CHARACTER_TYPES.ENEMY ? 0.8 : 1);
+      (5 + this.level * 0.2) * (this.type === CHARACTER_TYPES.ENEMY ? 0.55 : 1);
 
     // If in GOD_MODE, set base dmg to 999,999
     if (this.name === "GOD_MODE") {
@@ -825,9 +825,8 @@ export class Character extends GameObject {
     // Calculate new max health based on level, bonuses, and equipped items.
     // Enemies have reduced max health.
     let newMaxHealth =
-      10 +
-      (this.level * 1.2 + this.permanentHealthBonus) *
-        (this.type === CHARACTER_TYPES.ENEMY ? 0.75 : 1);
+      (10 + this.level * 1.2 + this.permanentHealthBonus) *
+      (this.type === CHARACTER_TYPES.ENEMY ? 0.55 : 1);
 
     newMaxHealth +=
       HAT_LOOT_MAP[this.equippedHatId].addHealth +
