@@ -25,6 +25,15 @@ export default function UpperHud() {
   };
 
   const handleTryToEndGame = () => {
+    // Turn off auto mode if player manually tries to end the game. This prevents
+    // weird states where the game tries to continue playing while the player
+    // is "dead", causing null value errors. NOTE: We do this on the "are you sure"
+    // popup since it buys even more time then if it was on the actual "yes end game"
+    // button press.
+    if (autoMode) {
+      setAutoMode(false);
+    }
+
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
@@ -79,7 +88,7 @@ export default function UpperHud() {
   return (
     <div
       id="upper-hud"
-      className={`w-full max-w-[80vw] flex flex-row items-end justify-between p-2 gap-4 ${
+      className={`w-full max-w-[85vw] flex flex-row items-end justify-between p-2 gap-4 ${
         isVisible ? "" : "hidden"
       }`}
       aria-label="Game upper HUD"

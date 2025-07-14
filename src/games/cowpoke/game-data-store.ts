@@ -97,7 +97,9 @@ class GameDataStore extends SyncedStore<GameData> {
 
   private loadFromLocalStorage() {
     const savedPlayerName = this.getLocalStorage("cowpokePlayerName", "");
+    const savedAutoMode = this.getLocalStorage("cowpokeAutoMode", false);
     const savedAutoRestart = this.getLocalStorage("cowpokeAutoRestart", false);
+    const savedFastMode = this.getLocalStorage("cowpokeFastMode", false);
     const savedLifetimeKills = this.getLocalStorage("cowpokeLifetimeKills", 0);
     const savedLifetimeFurthestLevelInPlaythrough = this.getLocalStorage(
       "cowpokeLifetimeFurthestLevelInPlaythrough",
@@ -150,7 +152,9 @@ class GameDataStore extends SyncedStore<GameData> {
 
     this.setLocalStorageFields(
       savedPlayerName,
+      savedAutoMode,
       savedAutoRestart,
+      savedFastMode,
       savedLifetimeKills,
       savedLifetimeFurthestLevelInPlaythrough,
       savedLifetimeMostKillsInPlaythrough,
@@ -169,7 +173,9 @@ class GameDataStore extends SyncedStore<GameData> {
 
   private setLocalStorageFields(
     savedPlayerName: string,
+    savedAutoMode: boolean,
     savedAutoRestart: boolean,
+    savedFastMode: boolean,
     savedLifetimeKills: number,
     savedLifetimeFurthestLevelInPlaythrough: number,
     savedLifetimeMostKillsInPlaythrough: number,
@@ -185,7 +191,9 @@ class GameDataStore extends SyncedStore<GameData> {
     savedSettingsSeenGunIds: number[]
   ) {
     this.setPlayerName(savedPlayerName);
+    this.setAutoMode(savedAutoMode);
     this.setAutoRestart(savedAutoRestart);
+    this.setFastMode(savedFastMode);
     this.setLifetimeKills(savedLifetimeKills);
     this.setLifetimeFurthestLevelInPlaythrough(
       savedLifetimeFurthestLevelInPlaythrough
@@ -353,6 +361,7 @@ class GameDataStore extends SyncedStore<GameData> {
   // Game mode methods
   public setAutoMode(value: boolean) {
     this.data.autoMode = value;
+    this.setLocalStorage("cowpokeAutoMode", value);
     this.notify();
   }
 
@@ -364,6 +373,7 @@ class GameDataStore extends SyncedStore<GameData> {
 
   public setFastMode(value: boolean) {
     this.data.fastMode = value;
+    this.setLocalStorage("cowpokeFastMode", value);
     this.notify();
   }
 
@@ -414,7 +424,9 @@ class GameDataStore extends SyncedStore<GameData> {
     this.data = {
       ...this.defaultData,
       playerName: this.data.playerName,
+      autoMode: this.data.autoMode,
       autoRestart: this.data.autoRestart,
+      fastMode: this.data.fastMode,
       lifetimeKills: this.data.lifetimeKills,
       lifetimeFurthestLevelInPlaythrough:
         this.data.lifetimeFurthestLevelInPlaythrough,
@@ -442,7 +454,9 @@ class GameDataStore extends SyncedStore<GameData> {
     // Reset all data that writes to localStorage
     this.setLocalStorageFields(
       this.defaultData.playerName,
+      this.defaultData.autoMode,
       this.defaultData.autoRestart,
+      this.defaultData.fastMode,
       this.defaultData.lifetimeKills,
       this.defaultData.lifetimeFurthestLevelInPlaythrough,
       this.defaultData.lifetimeMostKillsInPlaythrough,

@@ -53,7 +53,7 @@ export default function CharacterInfoBar({
       <div className="flex flex-row items-center w-full">
         {position === "top-left" && (
           <span className="mr-2 font-semibold text-red-700 text-right">
-            {health}/{maxHealth} HP
+            {health}/{maxHealth}
           </span>
         )}
         <div className="relative h-5 bg-transparent overflow-hidden flex-1">
@@ -80,7 +80,7 @@ export default function CharacterInfoBar({
         </div>
         {position === "top-right" && (
           <span className="ml-2 font-semibold text-red-700 text-right">
-            {health}/{maxHealth} HP
+            {health}/{maxHealth}
           </span>
         )}
       </div>

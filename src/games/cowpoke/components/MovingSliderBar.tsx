@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
+import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
 const random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
 
@@ -23,6 +24,7 @@ export default function MovingSliderBar({
   autoMode = false,
   autoModeOptions = [],
 }: MovingSliderBarProps) {
+  const { playerHealth } = UseGameData();
   const [targetPos, setTargetPos] = useState(random.getRandomFloat(0.5, 0.8)); // 0-1, as percent of width
   const [autoThreshold, setAutoThreshold] = useState(0.3);
   const [moving, setMoving] = useState(false);
@@ -117,8 +119,9 @@ export default function MovingSliderBar({
       setDirection(newDirection);
 
       // If in auto mode, "stop" the slider by randomly picking one of the
-      // options when the bar is within threshold of the target.
-      if (autoMode && autoModeOptions.length > 0) {
+      // options when the bar is within threshold of the target. Player
+      // must be alive as well.
+      if (autoMode && autoModeOptions.length > 0 && playerHealth > 0) {
         const distanceToTarget = Math.abs(barPosRef.current - targetPos);
 
         // If autoThreshold is negative, it means the slider must be moving
@@ -151,6 +154,7 @@ export default function MovingSliderBar({
     autoModeOptions,
     targetPos,
     autoThreshold,
+    playerHealth,
   ]);
 
   // Position the moving and target bars
