@@ -12,11 +12,15 @@ const GameInfoContainer: React.FC<{
   darkModeLight?: boolean;
   whiteBackground?: boolean;
   children: React.ReactNode;
+  onOpenPreDelay?: () => void;
+  onOpenPostDelay?: () => void;
 }> = ({
   lightModeDark = false,
   darkModeLight = false,
   whiteBackground = false,
   children,
+  onOpenPreDelay,
+  onOpenPostDelay,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
@@ -31,9 +35,17 @@ const GameInfoContainer: React.FC<{
   const fadeOutDuration = 500;
 
   const openInfoWindow = () => {
+    if (onOpenPreDelay) {
+      onOpenPreDelay();
+    }
+
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click.
     timeoutRef.current = setTimeout(() => {
+      if (onOpenPostDelay) {
+        onOpenPostDelay();
+      }
+
       setIsVisible(true);
       // no need to show tutorial text anymore since player has clicked the button
       setShowTutorialText(false);
