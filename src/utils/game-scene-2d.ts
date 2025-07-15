@@ -2,6 +2,7 @@ import Phaser from "@/public/js/phaser.min.js";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Vec2 } from "@/src/utils/vector";
 import { mobileVirtualKeyboardLikelyOpen } from "@/src/utils/heuristics";
+import { screenWakeLock } from "@/src/utils/screen-wake-lock";
 
 /**
  * Class representing a generic 2D game scene, which can be extended.
@@ -58,6 +59,9 @@ export class Generic2DGameScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.shutdown, this);
     this.events.once(Phaser.Scenes.Events.DESTROY, this.shutdown, this);
 
+    // Request a screen wake lock to keep the screen on during gameplay
+    screenWakeLock.requestWakeLock();
+
     this.subscribeToEvents();
 
     // Make sure canvas is the right size at the start
@@ -84,6 +88,7 @@ export class Generic2DGameScene extends Phaser.Scene {
     this.setUpWindowResizeHandling();
     document.addEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.addEventListener("uiMenuClose", this.handleUiMenuClose);
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
   }
 
   setUpWindowResizeHandling() {
@@ -109,6 +114,10 @@ export class Generic2DGameScene extends Phaser.Scene {
     this.tearDownWindowResizeHandling();
     document.removeEventListener("uiMenuOpen", this.handleUiMenuOpen);
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
   }
 
   tearDownWindowResizeHandling() {
@@ -148,7 +157,11 @@ export class Generic2DGameScene extends Phaser.Scene {
       (window.scrollX !== 0 || window.scrollY !== 0) &&
       !mobileVirtualKeyboardLikelyOpen()
     ) {
-      window.scrollTo(0, 0);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant", // do NOT smoothly scroll here
+      });
     }
     /* eslint-enable no-restricted-syntax */
 
@@ -212,10 +225,19 @@ export class Generic2DGameScene extends Phaser.Scene {
     // ...
   }
 
+  handleVisibilityChange = async () => {
+    // If the document becomes visible again, re-request the wake lock if needed
+    if (document.visibilityState === "visible" && !screenWakeLock.isActive) {
+      await screenWakeLock.requestWakeLock();
+    }
+  };
+
   shutdown(): void {
     this.unsubscribeFromEvents();
 
-    // Add shutdown logic, such as cleaning up event listeners for the scene
-    // ...
+    // Release wake lock gracefully, but don't force this to be async. This allows
+    // the shutdown to complete even if the wake lock release has issues, and allows
+    // shutdown to remain synchronous as Phaser expects.
+    screenWakeLock.releaseWakeLock().catch(console.error);
   }
 }

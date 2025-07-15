@@ -226,7 +226,11 @@ export default function Home() {
     if (typeof window === "undefined") return;
 
     // eslint-disable-next-line no-restricted-syntax
-    window.scrollTo({ top: 0, left: 0 }); // do NOT smoothly scroll here
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant", // do NOT smoothly scroll here
+    });
   }, [currentPage]);
 
   return (
