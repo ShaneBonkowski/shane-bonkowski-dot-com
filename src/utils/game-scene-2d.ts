@@ -157,7 +157,11 @@ export class Generic2DGameScene extends Phaser.Scene {
       (window.scrollX !== 0 || window.scrollY !== 0) &&
       !mobileVirtualKeyboardLikelyOpen()
     ) {
-      window.scrollTo(0, 0);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant", // do NOT smoothly scroll here
+      });
     }
     /* eslint-enable no-restricted-syntax */
 
