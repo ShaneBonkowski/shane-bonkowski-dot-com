@@ -6,6 +6,7 @@ import GameInfoWindow from "@/src/components/GameInfoWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { FaInfoCircle } from "react-icons/fa";
 import Fade from "@/src/components/Fade";
+import { isMobileDevice } from "@/src/utils/heuristics";
 
 const GameInfoContainer: React.FC<{
   lightModeDark?: boolean;
@@ -41,26 +42,32 @@ const GameInfoContainer: React.FC<{
 
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click.
-    timeoutRef.current = setTimeout(() => {
-      if (onOpenPostDelay) {
-        onOpenPostDelay();
-      }
+    timeoutRef.current = setTimeout(
+      () => {
+        if (onOpenPostDelay) {
+          onOpenPostDelay();
+        }
 
-      setIsVisible(true);
-      // no need to show tutorial text anymore since player has clicked the button
-      setShowTutorialText(false);
-      dispatchMenuEvent("Info", "open");
-    }, 150);
+        setIsVisible(true);
+        // no need to show tutorial text anymore since player has clicked the button
+        setShowTutorialText(false);
+        dispatchMenuEvent("Info", "open");
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const closeInfoWindow = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-      dispatchMenuEvent("Info", "close");
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(false);
+        dispatchMenuEvent("Info", "close");
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   useEffect(() => {

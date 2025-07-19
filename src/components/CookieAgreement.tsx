@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import YesNoBox from "@/src/components/YesNoBox";
 import useIsGamesPath from "@/src/hooks/useIsGamesPath";
+import { isMobileDevice } from "@/src/utils/heuristics";
 
 const CookieAgreement: React.FC = () => {
   const isGamesPath = useIsGamesPath();
@@ -18,9 +19,12 @@ const CookieAgreement: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(false);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const disableCookies = () => {
@@ -32,9 +36,12 @@ const CookieAgreement: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(false);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const disableTracking = () => {

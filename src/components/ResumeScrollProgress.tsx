@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import YesNoBox from "@/src/components/YesNoBox";
 import { debounce } from "@/src/utils/debounce";
+import { isMobileDevice } from "@/src/utils/heuristics";
 
 interface ResumeScrollProgressProps {
   pageName: string;
@@ -41,9 +42,12 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
 
         // Add a small delay before revealing.
         // This is a hack b/c phones sometimes double click.
-        timeoutRef.current = setTimeout(() => {
-          setIsVisible(true);
-        }, 150);
+        timeoutRef.current = setTimeout(
+          () => {
+            setIsVisible(true);
+          },
+          isMobileDevice() ? 220 : 150
+        );
       }
     }
 
@@ -87,18 +91,24 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(false);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const handleNo = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(false);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   return (

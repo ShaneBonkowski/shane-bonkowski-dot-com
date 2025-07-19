@@ -8,6 +8,7 @@ import { GiRabbit, GiSnail, GiCoffin } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 import YesNoBox from "@/src/components/YesNoBox";
+import { isMobileDevice } from "@/src/utils/heuristics";
 
 export default function UpperHud() {
   const [isVisible, setIsVisible] = useState(true);
@@ -37,30 +38,39 @@ export default function UpperHud() {
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setSelectGameOverVisible(true);
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setSelectGameOverVisible(true);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const onYesGameOver = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setSelectGameOverVisible(false);
+    timeoutRef.current = setTimeout(
+      () => {
+        setSelectGameOverVisible(false);
 
-      // Dispatch the event to end the game manually
-      document.dispatchEvent(new CustomEvent("manualEndGame"));
-    }, 150);
+        // Dispatch the event to end the game manually
+        document.dispatchEvent(new CustomEvent("manualEndGame"));
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const onNoGameOver = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setSelectGameOverVisible(false);
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setSelectGameOverVisible(false);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   useEffect(() => {
