@@ -62,55 +62,67 @@ const StartEndMenu: React.FC = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(() => {
-      // Clean up the player name before loading the game..
-      // Do this here instead of in the input change handler
-      // so that the name is only cleaned on submit.
-      let cleanedName = localPlayerName.trim();
-      if (cleanedName.length > 10) {
-        cleanedName = cleanedName.slice(0, 10);
-      }
+    delayTimeoutRef.current = setTimeout(
+      () => {
+        // Clean up the player name before loading the game..
+        // Do this here instead of in the input change handler
+        // so that the name is only cleaned on submit.
+        let cleanedName = localPlayerName.trim();
+        if (cleanedName.length > 10) {
+          cleanedName = cleanedName.slice(0, 10);
+        }
 
-      if (cleanedName.trim() === "") {
-        cleanedName = "Shaner";
-      }
+        if (cleanedName.trim() === "") {
+          cleanedName = "Shaner";
+        }
 
-      // Update the player name in the game data store
-      setPlayerName(cleanedName);
+        // Update the player name in the game data store
+        setPlayerName(cleanedName);
 
-      // Tell the main-game-scene to start loading the game
-      startLoadingGame();
-    }, 150);
+        // Tell the main-game-scene to start loading the game
+        startLoadingGame();
+      },
+      isMobileDevice() ? 220 : 150
+    );
   }, [localPlayerName, setPlayerName]);
 
   const handleTryToResetStats = () => {
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(() => {
-      setResetStatsVisible(true);
-    }, 150);
+    delayTimeoutRef.current = setTimeout(
+      () => {
+        setResetStatsVisible(true);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const onYesReset = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(() => {
-      setResetStatsVisible(false);
+    delayTimeoutRef.current = setTimeout(
+      () => {
+        setResetStatsVisible(false);
 
-      // Reset the lifetime stats and permanent upgrades
-      resetPermanentData();
-    }, 150);
+        // Reset the lifetime stats and permanent upgrades
+        resetPermanentData();
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const onNoReset = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(() => {
-      setResetStatsVisible(false);
-    }, 150);
+    delayTimeoutRef.current = setTimeout(
+      () => {
+        setResetStatsVisible(false);
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   useEffect(() => {

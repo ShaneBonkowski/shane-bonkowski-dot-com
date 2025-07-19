@@ -8,6 +8,7 @@ import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import LootContainer from "@/src/games/cowpoke/components/LootContainer";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
+import { isMobileDevice } from "@/src/utils/heuristics";
 
 const UpgradeButton = ({
   type,
@@ -143,21 +144,27 @@ const SettingsContainer: React.FC = () => {
 
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(true);
-      dispatchMenuEvent("Settings", "open");
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(true);
+        dispatchMenuEvent("Settings", "open");
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const closeWindow = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-      updateSeenLoot(); // Update seen loot before closing
-      dispatchMenuEvent("Settings", "close");
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(false);
+        updateSeenLoot(); // Update seen loot before closing
+        dispatchMenuEvent("Settings", "close");
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const getNewItemsCount = () => {

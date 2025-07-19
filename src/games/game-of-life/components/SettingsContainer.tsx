@@ -8,6 +8,7 @@ import { dispatchMenuEvent } from "@/src/events/game-events";
 import { tileAndBackgroundColors } from "@/src/games/game-of-life/tile-utils";
 import { UseSettings } from "@/src/games/game-of-life/components/UseSettings";
 import { UseGameData } from "@/src/games/game-of-life/components/UseGameData";
+import { isMobileDevice } from "@/src/utils/heuristics";
 
 const settingsConfig = {
   updateInterval: {
@@ -78,20 +79,26 @@ const SettingsContainer: React.FC = () => {
   const openWindow = () => {
     // Add a small delay before revealing.
     // This is a hack b/c phones sometimes double click.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(true);
-      dispatchMenuEvent("Settings", "open");
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(true);
+        dispatchMenuEvent("Settings", "open");
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const closeWindow = () => {
     // Add a small delay before hiding the box.
     // This is a hack b/c phones sometimes double click and
     // click on the box behind the button.
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(false);
-      dispatchMenuEvent("Settings", "close");
-    }, 150);
+    timeoutRef.current = setTimeout(
+      () => {
+        setIsVisible(false);
+        dispatchMenuEvent("Settings", "close");
+      },
+      isMobileDevice() ? 220 : 150
+    );
   };
 
   const handleSliderChange = (key: string, value: number) => {
