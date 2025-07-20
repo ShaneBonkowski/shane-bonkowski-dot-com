@@ -97,7 +97,7 @@ const GameComponent: React.FC = () => {
       <GameInfoContainer
         darkModeLight={true} // Want the black buttons this game! Since bkg is light.
         whiteBackground={true} // White bkg so that the dust etc. on the bkg gets covered
-        onOpenPreDelay={() => {
+        onOpen={() => {
           // Turn off auto mode since ui menu being open can break some things
           // in auto mode
           if (autoMode) {

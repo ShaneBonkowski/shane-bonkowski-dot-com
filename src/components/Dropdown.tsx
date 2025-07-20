@@ -18,7 +18,6 @@ const Dropdown: React.FC<DropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   /* Only allow hover on hover-supported devices */
   const [isHoverable, setIsHoverable] = useState(false);
@@ -45,11 +44,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     document.addEventListener("pointerdown", handleClickOutside);
     return () => {
       document.removeEventListener("pointerdown", handleClickOutside);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
     };
   }, []);
 
@@ -74,8 +68,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               : ""
           } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
         onPointerDown={() => {
-          // Add a small delay before hiding the dropdown (since it can double
-          // click on phone sometimes and click behind it)
+          // Prevent touch-through on mobile devices when window is toggled.
           installTouchThroughBlocker();
           setIsOpen(!isOpen);
         }}
@@ -106,8 +99,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               key={option.value}
               onPointerDown={() => {
                 setSelected(option.value);
-                // Add a small delay before hiding the dropdown (since it can
-                // double click on phone sometimes and click behind it)
+                // Prevent touch-through on mobile devices when window is toggled.
                 installTouchThroughBlocker();
                 setIsOpen(false);
               }}

@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCog } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { UseSettings } from "@/src/games/better-boids/components/UseSettings";
 import Image from "next/image";
-import { isMobileDevice } from "@/src/utils/heuristics";
+import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
 
 const settingsConfig = {
   alignmentFactor: {
@@ -67,33 +67,21 @@ const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const settings = UseSettings();
 
   const openWindow = () => {
-    // Add a small delay before revealing.
-    // This is a hack b/c phones sometimes double click.
-    timeoutRef.current = setTimeout(
-      () => {
-        setIsVisible(true);
-        dispatchMenuEvent("Settings", "open");
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(true);
+    dispatchMenuEvent("Settings", "open");
   };
 
   const closeWindow = () => {
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    timeoutRef.current = setTimeout(
-      () => {
-        setIsVisible(false);
-        dispatchMenuEvent("Settings", "close");
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(false);
+    dispatchMenuEvent("Settings", "close");
   };
 
   const handleSliderChange = (key: string, value: number) => {
@@ -139,11 +127,6 @@ const SettingsContainer: React.FC = () => {
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
     };
   }, []);
 

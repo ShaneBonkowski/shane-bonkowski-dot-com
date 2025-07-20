@@ -6,26 +6,23 @@ import GameInfoWindow from "@/src/components/GameInfoWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { FaInfoCircle } from "react-icons/fa";
 import Fade from "@/src/components/Fade";
-import { isMobileDevice } from "@/src/utils/heuristics";
+import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
 
 const GameInfoContainer: React.FC<{
   lightModeDark?: boolean;
   darkModeLight?: boolean;
   whiteBackground?: boolean;
   children: React.ReactNode;
-  onOpenPreDelay?: () => void;
-  onOpenPostDelay?: () => void;
+  onOpen?: () => void;
 }> = ({
   lightModeDark = false,
   darkModeLight = false,
   whiteBackground = false,
   children,
-  onOpenPreDelay,
-  onOpenPostDelay,
+  onOpen,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -36,38 +33,24 @@ const GameInfoContainer: React.FC<{
   const fadeOutDuration = 500;
 
   const openInfoWindow = () => {
-    if (onOpenPreDelay) {
-      onOpenPreDelay();
+    if (onOpen) {
+      onOpen();
     }
 
-    // Add a small delay before revealing.
-    // This is a hack b/c phones sometimes double click.
-    timeoutRef.current = setTimeout(
-      () => {
-        if (onOpenPostDelay) {
-          onOpenPostDelay();
-        }
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(true);
 
-        setIsVisible(true);
-        // no need to show tutorial text anymore since player has clicked the button
-        setShowTutorialText(false);
-        dispatchMenuEvent("Info", "open");
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // no need to show tutorial text anymore since player has clicked the button
+    setShowTutorialText(false);
+    dispatchMenuEvent("Info", "open");
   };
 
   const closeInfoWindow = () => {
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    timeoutRef.current = setTimeout(
-      () => {
-        setIsVisible(false);
-        dispatchMenuEvent("Info", "close");
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(false);
+    dispatchMenuEvent("Info", "close");
   };
 
   useEffect(() => {
@@ -80,11 +63,6 @@ const GameInfoContainer: React.FC<{
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
     };
   }, []);
 

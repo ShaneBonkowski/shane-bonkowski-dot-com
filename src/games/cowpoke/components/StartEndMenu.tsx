@@ -9,6 +9,7 @@ import { dispatchMenuEvent } from "@/src/events/game-events";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 import YesNoBox from "@/src/components/YesNoBox";
 import { isMobileDevice } from "@/src/utils/heuristics";
+import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
 
 const StartEndMenu: React.FC = () => {
   const {
@@ -28,7 +29,6 @@ const StartEndMenu: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
   const [menuType, setMenuType] = useState<"start" | "end">("start");
-  const delayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const autoRestartIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState(0);
 
@@ -59,70 +59,47 @@ const StartEndMenu: React.FC = () => {
   };
 
   const handleStartLoadingGame = useCallback(() => {
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(
-      () => {
-        // Clean up the player name before loading the game..
-        // Do this here instead of in the input change handler
-        // so that the name is only cleaned on submit.
-        let cleanedName = localPlayerName.trim();
-        if (cleanedName.length > 10) {
-          cleanedName = cleanedName.slice(0, 10);
-        }
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
 
-        if (cleanedName.trim() === "") {
-          cleanedName = "Shaner";
-        }
+    // Clean up the player name before loading the game..
+    // Do this here instead of in the input change handler
+    // so that the name is only cleaned on submit.
+    let cleanedName = localPlayerName.trim();
+    if (cleanedName.length > 10) {
+      cleanedName = cleanedName.slice(0, 10);
+    }
 
-        // Update the player name in the game data store
-        setPlayerName(cleanedName);
+    if (cleanedName.trim() === "") {
+      cleanedName = "Shaner";
+    }
 
-        // Tell the main-game-scene to start loading the game
-        startLoadingGame();
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Update the player name in the game data store
+    setPlayerName(cleanedName);
+
+    // Tell the main-game-scene to start loading the game
+    startLoadingGame();
   }, [localPlayerName, setPlayerName]);
 
   const handleTryToResetStats = () => {
-    // Add a small delay before revealing.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(
-      () => {
-        setResetStatsVisible(true);
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setResetStatsVisible(true);
   };
 
   const onYesReset = () => {
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(
-      () => {
-        setResetStatsVisible(false);
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setResetStatsVisible(false);
 
-        // Reset the lifetime stats and permanent upgrades
-        resetPermanentData();
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Reset the lifetime stats and permanent upgrades
+    resetPermanentData();
   };
 
   const onNoReset = () => {
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    delayTimeoutRef.current = setTimeout(
-      () => {
-        setResetStatsVisible(false);
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setResetStatsVisible(false);
   };
 
   useEffect(() => {
@@ -147,11 +124,6 @@ const StartEndMenu: React.FC = () => {
       document.removeEventListener("openStartEndMenu", openWindow);
       document.removeEventListener("gameStarted", closeWindow);
       document.removeEventListener("keydown", handleGlobalKeyDown);
-
-      if (delayTimeoutRef.current) {
-        clearTimeout(delayTimeoutRef.current);
-        delayTimeoutRef.current = null;
-      }
     };
   }, [handleStartLoadingGame, isVisible]);
 
