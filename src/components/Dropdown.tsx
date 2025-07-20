@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { isMobileDevice } from "@/src/utils/heuristics";
+import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
 
 interface DropdownProps {
   options: { value: string; label: string }[];
@@ -38,13 +38,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
-        timeoutRef.current = setTimeout(
-          () => {
-            setIsOpen(false);
-          },
-          isMobileDevice() ? 220 : 150
-        );
+        setIsOpen(false);
       }
     }
 
@@ -80,13 +74,10 @@ const Dropdown: React.FC<DropdownProps> = ({
               : ""
           } active:bg-secondary-hover-color-light dark:active:bg-secondary-hover-color`}
         onPointerDown={() => {
-          // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
-          timeoutRef.current = setTimeout(
-            () => {
-              setIsOpen(!isOpen);
-            },
-            isMobileDevice() ? 220 : 150
-          );
+          // Add a small delay before hiding the dropdown (since it can double
+          // click on phone sometimes and click behind it)
+          installTouchThroughBlocker();
+          setIsOpen(!isOpen);
         }}
         aria-controls="dropdown-list"
         aria-label="Select an option"
@@ -115,13 +106,10 @@ const Dropdown: React.FC<DropdownProps> = ({
               key={option.value}
               onPointerDown={() => {
                 setSelected(option.value);
-                // Add a small delay before hiding the dropdown (since it can double click on phone sometimes and click behind it)
-                timeoutRef.current = setTimeout(
-                  () => {
-                    setIsOpen(false);
-                  },
-                  isMobileDevice() ? 220 : 150
-                );
+                // Add a small delay before hiding the dropdown (since it can
+                // double click on phone sometimes and click behind it)
+                installTouchThroughBlocker();
+                setIsOpen(false);
               }}
               className={`p-2 my-0 text-small sm:text-small-sm cursor-pointer ${
                 isHoverable
