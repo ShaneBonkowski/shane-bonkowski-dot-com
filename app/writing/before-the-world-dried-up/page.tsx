@@ -50,10 +50,10 @@ export default function Page() {
           >
             It was a year so far in the distant future that they decided to stop
             counting altogether. Whether they lost count or it simply
-            didn&apos;t matter anymore remains a mystery. Two distant cosmic
+            didn&apos;t matter anymore remains a mystery. Two cosmic
             archaeologists, armed with the goal of tracking the origins of man,
-            find themselves in a long-forgotten corner of some long since
-            forgotten galaxy.
+            find themselves in a long-forgotten corner of some
+            long-since-forgotten galaxy.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -63,9 +63,9 @@ export default function Page() {
             How they ended up here was unclear, but the planet they sighted was
             scorched beyond recognition. It was a small, rocky planet orbiting a
             dim White Dwarf with just enough energy to glow, and nothing more.
-            Cleary not a place hospitable for life, but maybe one day years and
-            years ago it would have been ripe for life. Or so the faint
-            biosignatures radiating off of it led them to believe.
+            Clearly inhospitable, but perhaps one day, years and years ago, it
+            would have been ripe for life. Or so the faint biosignatures
+            radiating off of it led them to believe.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
@@ -92,19 +92,19 @@ export default function Page() {
             surprisingly good shape. This was especially peculiar, considering
             that everything else in this godforsaken wasteland had been scorched
             beyond recognition. Its pure white frame stood out against the burnt
-            black landscape like a star in an empty sky. Inside, they found a
-            pristine skeleton clutching some sort of ancient recording
-            mechanism. They pressed play.
+            black landscape like a star in an empty night sky. Inside, they
+            found a pristine skeleton clutching some sort of ancient recording
+            device. They pressed play.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
             fontStyle="normal"
             textAlign="justify"
           >
-            They ask me why I plan on sticking around this place. Why I
+            They ask me why I plan on sticking around this place, why I
             haven&apos;t jumped ship with the rest of them. I let out a sigh as
             I gaze off across the lifeless desertscape from the helm of my
-            beached vessel. Its dry, relentless blight siphoning every ounce of
+            beached vessel, its dry, relentless blight siphoning every ounce of
             life that crosses its path.
           </WrittenContentParagraphElement>
 
@@ -127,7 +127,7 @@ export default function Page() {
 
           <WrittenContentParagraphElement fontStyle="normal" textAlign="center">
             A time of mystery and wonder. <br></br>
-            Sunken cities, lost treasures,<br></br>
+            Sunken cities, lost treasures.<br></br>
             Fantastic Aquatic Beasts, just out of reach.<br></br>
             Waiting to be discovered.
           </WrittenContentParagraphElement>
@@ -138,14 +138,14 @@ export default function Page() {
           >
             I remember a time when the mighty, unforgiving sea was King. A
             gentle beast of immense, unrelenting power that was not to be
-            underestimated. Whose mighty, chaotic waves upheld order and
-            prosperity on this planet.
+            underestimated. Whose chaotic waves upheld order and prosperity on
+            this planet.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement fontStyle="normal" textAlign="center">
             Gone are those days, they say.<br></br>
-            Or so they say at least.<br></br>
-            As long as I am here to tell the story,<br></br>
+            Or so they say, at least.<br></br>
+            For as long as I am here to tell the story,<br></br>
             Those days will live on.
           </WrittenContentParagraphElement>
 
@@ -153,8 +153,8 @@ export default function Page() {
             fontStyle="normal"
             textAlign="justify"
           >
-            Or maybe it was our lonely Lunar Guardian who was King. Who with
-            each pass commanded the ravenous tides to devour the earth. Waging
+            Or maybe it was our lonely Lunar Guardian who was King. Who, with
+            each pass, commanded the ravenous tides to devour the earth, waging
             war amidst the threshold between land and sea. Each pass signaling a
             new dawn. A new opportunity to begin again.
           </WrittenContentParagraphElement>
@@ -163,18 +163,18 @@ export default function Page() {
             Maybe I stick around to pay my respects.<br></br>
             To watch after the throne.<br></br>
             Maybe I stick around to admire it all.<br></br>
-            Or maybe to bask in the absurdity of it all.
+            To bask in the absurdity.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement
             fontStyle="normal"
             textAlign="justify"
           >
-            As the years pass, my memory of it fades. I dust off the thick
-            coating of dust from the windshield and close my eyes, trying to
-            remind myself what it was like to cruise on this vessel. When we
-            rode, not even the mighty sea could hold us back. Tides would part
-            beneath us like the Red Sea.
+            As the years pass, my memory fades like the paint on this hull. I
+            wipe a thick coating of dust from the windshield and ease into the
+            captain&apos;s seat, trying to remind myself what it was like to
+            cruise on this vessel. When we rode, not even the mighty sea could
+            hold us back.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement fontStyle="normal" textAlign="center">
@@ -188,15 +188,14 @@ export default function Page() {
             fontStyle="normal"
             textAlign="justify"
           >
-            They say that our poor Stellar Guardian doesn&apos;t have much time
-            left. I wipe the sweat off as its fiery fury beats down on my neck.
-            Well, at least in terms of its lifespan. I&apos;ll be long gone
-            before then. For billions of years, this blazing ball of life,
-            destruction, and sustenance has watched over us.
+            They say that our tired Stellar Guardian doesn&apos;t have much time
+            left. I wipe the sweat off my neck as its fiery fury beats down on
+            me. I&apos;m seventy-three years old today. These days, it&apos;s
+            starting to feel like neither do I.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement fontStyle="normal" textAlign="center">
-            Now we sit in the wake of its death throes.<br></br>
+            Here I sit in the wake of its death throes.<br></br>
             Watching as its hellish flames grow closer.<br></br>
             Ever larger.<br></br>
             Ever hotter.
@@ -206,33 +205,16 @@ export default function Page() {
             fontStyle="normal"
             textAlign="justify"
           >
-            It&apos;s humbling to think that no matter how far we progress, we
-            will always be at the whims of the Celestial Beasts. To think that
-            somewhere in this grand cosmic balance it was decided that
-            everything we hold dearly would have an expiration date.
-          </WrittenContentParagraphElement>
-
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="center">
-            Maybe it is by design.<br></br>
-            Why race if there is no finish line?<br></br>
-            Life has so much impact in just a small blip in time.<br></br>I
-            stand in awe at their chaotic beauty.
-          </WrittenContentParagraphElement>
-
-          <WrittenContentParagraphElement
-            fontStyle="normal"
-            textAlign="justify"
-          >
-            Maybe I&apos;m old fashioned, but I have no intentions of following
-            the droves of those who plan to escape. To find a new Stellar
+            Maybe I&apos;m old-fashioned, but I have no intentions of following
+            the droves of those escaping. Those who plan to find a new Stellar
             Guardian, dooming their descendants to this same fate. No, I think
-            I&apos;ll just wait this one out as the universe has intended.
+            I&apos;ll wait this one out as the universe intended.
           </WrittenContentParagraphElement>
 
           <WrittenContentParagraphElement fontStyle="normal" textAlign="center">
-            Sitting here on my long since beached vessel.<br></br>
-            Dreaming of the days that have long since passed.<br></br>
-            What is yet to come for those who never knew.<br></br>
+            Sitting here on my long-since beached vessel.<br></br>
+            Dreaming of the days that have long since passed,<br></br>
+            What is yet to come for those who never knew<br></br>
             The days before the world dried up.
           </WrittenContentParagraphElement>
         </WrittenContentParagraphGroup>
