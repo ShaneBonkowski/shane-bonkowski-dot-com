@@ -27,18 +27,25 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
 
   // This will trigger search when either searchTerm or searchContentType changes
   useEffect(() => {
-    const filteredResults = contentData.filter((box) => {
-      const matchesType =
-        searchContentType === "all" || box.contentType === searchContentType;
+    const filteredResults = contentData
+      .filter((box) => {
+        const matchesType =
+          searchContentType === "all" || box.contentType === searchContentType;
 
-      const matchesQuery =
-        searchTerm === "" ||
-        box.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        box.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        box.searchTags.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesQuery =
+          searchTerm === "" ||
+          box.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          box.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          box.searchTags.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesType && matchesQuery;
-    });
+        return matchesType && matchesQuery;
+      })
+      .sort((a, b) => {
+        // Sort by date, newest first
+        const dateA = new Date(a.dateISO);
+        const dateB = new Date(b.dateISO);
+        return dateB.getTime() - dateA.getTime();
+      });
 
     setFilteredContent(filteredResults);
   }, [searchTerm, searchContentType, contentData, setFilteredContent]);
