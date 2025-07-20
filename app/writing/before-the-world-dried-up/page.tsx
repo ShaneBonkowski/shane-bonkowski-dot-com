@@ -92,7 +92,7 @@ export default function Page() {
             surprisingly good shape. This was especially peculiar, considering
             that everything else in this godforsaken wasteland had been scorched
             beyond recognition. Its pure white frame stood out against the burnt
-            black landscape like a star in an empty night sky. Inside, they
+            black landscape like a star in the empty night sky. Inside, they
             found a pristine skeleton clutching some sort of ancient recording
             device. They pressed play.
           </WrittenContentParagraphElement>
@@ -127,8 +127,8 @@ export default function Page() {
 
           <WrittenContentParagraphElement fontStyle="normal" textAlign="center">
             A time of mystery and wonder. <br></br>
-            Sunken cities, lost treasures.<br></br>
-            Fantastic Aquatic Beasts, just out of reach.<br></br>
+            Sunken cities, lost treasures,<br></br>
+            Fantastic Aquatic Beasts, just out of reach,<br></br>
             Waiting to be discovered.
           </WrittenContentParagraphElement>
 
