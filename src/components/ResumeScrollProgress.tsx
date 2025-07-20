@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import YesNoBox from "@/src/components/YesNoBox";
 import { debounce } from "@/src/utils/debounce";
-import { isMobileDevice } from "@/src/utils/heuristics";
+import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
 
 interface ResumeScrollProgressProps {
   pageName: string;
@@ -17,8 +17,6 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const currentPageName = useRef(pageName);
-
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Return early during SSR/static generation.
@@ -40,14 +38,9 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
       if (scrollValue > threshold) {
         setScrollProgress(scrollValue);
 
-        // Add a small delay before revealing.
-        // This is a hack b/c phones sometimes double click.
-        timeoutRef.current = setTimeout(
-          () => {
-            setIsVisible(true);
-          },
-          isMobileDevice() ? 220 : 150
-        );
+        // Prevent touch-through on mobile devices when window is toggled.
+        installTouchThroughBlocker();
+        setIsVisible(true);
       }
     }
 
@@ -76,11 +69,6 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     return () => {
       // eslint-disable-next-line no-restricted-syntax
       window.removeEventListener("scroll", handleScroll);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
     };
   }, [pageName, threshold]);
 
@@ -88,27 +76,15 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     // eslint-disable-next-line no-restricted-syntax
     window.scrollTo({ top: scrollProgress, behavior: "smooth" });
 
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    timeoutRef.current = setTimeout(
-      () => {
-        setIsVisible(false);
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(false);
   };
 
   const handleNo = () => {
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    timeoutRef.current = setTimeout(
-      () => {
-        setIsVisible(false);
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(false);
   };
 
   return (

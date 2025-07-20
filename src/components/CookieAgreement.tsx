@@ -1,30 +1,23 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import YesNoBox from "@/src/components/YesNoBox";
 import useIsGamesPath from "@/src/hooks/useIsGamesPath";
-import { isMobileDevice } from "@/src/utils/heuristics";
+import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
 
 const CookieAgreement: React.FC = () => {
   const isGamesPath = useIsGamesPath();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const enableCookies = () => {
     console.log("Cookies enabled");
     // eslint-disable-next-line no-restricted-syntax
     localStorage.setItem("cookieConsent", "true");
 
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    timeoutRef.current = setTimeout(
-      () => {
-        setIsVisible(false);
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(false);
   };
 
   const disableCookies = () => {
@@ -33,15 +26,9 @@ const CookieAgreement: React.FC = () => {
     localStorage.setItem("cookieConsent", "false");
     disableTracking();
 
-    // Add a small delay before hiding the box.
-    // This is a hack b/c phones sometimes double click and
-    // click on the box behind the button.
-    timeoutRef.current = setTimeout(
-      () => {
-        setIsVisible(false);
-      },
-      isMobileDevice() ? 220 : 150
-    );
+    // Prevent touch-through on mobile devices when window is toggled.
+    installTouchThroughBlocker();
+    setIsVisible(false);
   };
 
   const disableTracking = () => {
@@ -66,13 +53,6 @@ const CookieAgreement: React.FC = () => {
     if (cookieConsent !== "true" && cookieConsent !== "false") {
       setIsVisible(true);
     }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    };
   }, []);
 
   return (
