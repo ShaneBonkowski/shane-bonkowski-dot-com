@@ -12,6 +12,7 @@ const contentBoxData: ContentBoxProps[] = [
     linkUrl:
       "https://store.steampowered.com/app/2061040/Save_Our_Solar_System/",
     title: "Save Our Solar System",
+    dateISO: "2023/03/28",
     description:
       "(Steam Game) Stave off countless waves of asteroids as you fight to protect the Solar System from extinction. A fresh look on the tower defense genre!",
     searchTags: "SOSS, SOS, radiohead, radio, head, asteroid",
@@ -22,6 +23,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/games/abyssal-descent.webp",
     linkUrl: "https://store.steampowered.com/app/2506740/Abyssal_Descent/",
     title: "Abyssal Descent",
+    dateISO: "2024/06/06",
     description:
       "(Steam Game) Embark on an epic platformer adventure through procedurally generated caves, solving intricate puzzles, and battling fearsome enemies!",
     searchTags: "ghost, boi, boy, jump, endless",
@@ -32,6 +34,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/games/better-boids-cover.webp",
     linkUrl: "/games/better-boids",
     title: "Better Boids",
+    dateISO: "2024/05/25",
     description:
       "A unique twist to the classic Boids algorithm. Player controlled Boid, predator-prey relationships, customizable toggles & more.",
     searchTags: "birds, bird, boid, flying, simulation",
@@ -42,6 +45,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/games/cowpoke-game-cover.webp",
     linkUrl: "/games/cowpoke",
     title: "Cowpoke",
+    dateISO: "2025/06/07",
     description:
       "Endless wild west side-scroller with turn-based combat. Face ruthless outlaws, scavenge powerful loot, and grow stronger with every showdown.",
     searchTags:
@@ -53,6 +57,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/games/flip-tile-cover.webp",
     linkUrl: "/games/flip-tile",
     title: "Flip Tile",
+    dateISO: "2024/07/14",
     description:
       "Classic 'lights out' style puzzle game. Flipping one tile causes neighboring tiles to flip as well. Match them all to advance further!",
     searchTags: "flip, flop, tile, matrix",
@@ -63,6 +68,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/games/game-of-life-cover.webp",
     linkUrl: "/games/game-of-life",
     title: "Game of Life",
+    dateISO: "2025/01/22",
     description:
       "Experience the emergent world of cellular automata. Classic Conway's Game of Life with advanced customization options to create your own.",
     searchTags:
@@ -74,6 +80,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/the-lovers.webp",
     linkUrl: "/writing/the-lovers",
     title: "The Lovers",
+    dateISO: "2025/01/11",
     description:
       "Deep within the hidden corridors of Genesis Labs, two scientists are developing what may go down as mankind's final invention.",
     searchTags:
@@ -85,6 +92,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/death.webp",
     linkUrl: "/writing/death",
     title: "Death",
+    dateISO: "2024/09/10",
     description:
       "A man sits alone at a rundown bar after a long day of work, his soulless eyes projecting a heavy, lingering despair. Deep in the mind of the troubled man, a war is brewing.",
     searchTags:
@@ -96,6 +104,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/the-star.webp",
     linkUrl: "/writing/the-star",
     title: "The Star",
+    dateISO: "2024/08/12",
     description:
       "She was the healer. The silent observer. The glue that held it all together until the very end. Great fires would rage and she would drag the ocean down from the heavens.",
     searchTags:
@@ -107,6 +116,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/the-sun.webp",
     linkUrl: "/writing/the-sun",
     title: "The Sun",
+    dateISO: "2024/08/25",
     description:
       "To my firstborn: Do you ever stop and wonder, if the wind did not blow, would the wilted flowers remain in frozen perfection for all eternity?",
     searchTags:
@@ -118,6 +128,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/the-moon.webp",
     linkUrl: "/writing/the-moon",
     title: "The Moon",
+    dateISO: "2024/07/13",
     description:
       "Step by step, I trudge on through the long night. My body aches and my bones tremble under the weight of her gaze, a constant reminder of my imprisonment.",
     searchTags: "Tarot, Moon, Stars, Star, Sun, Card, Shimmer, Glitter, Space",
@@ -128,6 +139,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/my-final-thought.webp",
     linkUrl: "/writing/my-final-thought",
     title: "My Final Thought",
+    dateISO: "2024/12/08",
     description:
       "As I sit here and watch the unforgiving grains of sand trickle down from my hourglass, there is nothing left to do but ponder.",
     searchTags: "Death, Bible, Hunting, Deer, Life, Universe, dad",
@@ -138,6 +150,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/I-am-immortal.webp",
     linkUrl: "/writing/I-am-immortal",
     title: "I am Immortal",
+    dateISO: "2024/03/16",
     description:
       "If you ask me, I'm at least 13.8 billion years old. Born in the aftermath of the Big Bang. My life began the same way it will end: Scattered across Infinity.",
     searchTags:
@@ -149,6 +162,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/writing/before-the-world-dried-up.webp",
     linkUrl: "/writing/before-the-world-dried-up",
     title: "Before the World Dried Up",
+    dateISO: "2024/06/20",
     description:
       "They ask me why I plan on sticking around this place. Why I haven't jumped ship with the rest of them. I let out a sigh as I gaze off across the lifeless desertscape.",
     searchTags:
@@ -160,6 +174,7 @@ const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/art/strange-love-cover-art.webp",
     linkUrl: "/art/strange-love",
     title: "Strange Love",
+    dateISO: "2022/04/06",
     description:
       "Bone of my bones, flesh of my flesh. A piece of me, now a piece of you.",
     searchTags: "art, scifi, science, fiction, strange, love, heart",
