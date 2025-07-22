@@ -1,0 +1,13 @@
+/* NOTE: The code uses a common naming convention for css game background 
+classes (e.g. "better-boids-game-background"). This is because cleanup logic 
+keys off of "game-background" being in the name. However, the game name should
+also be in the class name as well in order to keep the names unique and prevent 
+CSS class name collisions. */
+body.perlin-noise-game-background {
+  overflow: hidden; /* Prevent scrolling */
+  /* FIXME: UPDATE TO GAME'S BKG IMG */
+  background-image: url("/webps/games/better-boids-background.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

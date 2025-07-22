@@ -8,6 +8,17 @@ import Pagination from "@/src/components/Pagination";
 
 const contentBoxData: ContentBoxProps[] = [
   {
+    imageUrl: "/webps/art/strange-love-cover-art.webp", // FIXME: UPDATE THIS
+    linkUrl: "/games/perlin-noise",
+    title: "Perlin Noise",
+    dateISO: "2025/07/21",
+    description:
+      "Explore the complex world procedural generation with Perlin Noise.",
+    searchTags: "game, perlin, noise, procedural, generation, world",
+    contentType: "games",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/games/save-our-solar-system.webp",
     linkUrl:
       "https://store.steampowered.com/app/2061040/Save_Our_Solar_System/",
