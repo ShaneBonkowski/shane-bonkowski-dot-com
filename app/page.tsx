@@ -7,6 +7,8 @@ import { ContentBoxProps } from "@/src/types/content-props";
 import Pagination from "@/src/components/Pagination";
 
 const contentBoxData: ContentBoxProps[] = [
+  // ADD NEW CONTENT BOXES AT THE TOP! TRY TO KEEP THEM IN DESCENDING ORDER BY
+  // DATE! THAT WAY THERE IS NOT A FLICKER WHEN IT SORTS!
   {
     imageUrl: "/webps/art/strange-love-cover-art.webp", // FIXME: UPDATE THIS
     linkUrl: "/games/perlin-noise",
@@ -19,40 +21,6 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/games/save-our-solar-system.webp",
-    linkUrl:
-      "https://store.steampowered.com/app/2061040/Save_Our_Solar_System/",
-    title: "Save Our Solar System",
-    dateISO: "2023/03/28",
-    description:
-      "(Steam Game) Stave off countless waves of asteroids as you fight to protect the Solar System from extinction. A fresh look on the tower defense genre!",
-    searchTags: "SOSS, SOS, radiohead, radio, head, asteroid",
-    contentType: "games",
-    openInNewTab: true,
-  },
-  {
-    imageUrl: "/webps/games/abyssal-descent.webp",
-    linkUrl: "https://store.steampowered.com/app/2506740/Abyssal_Descent/",
-    title: "Abyssal Descent",
-    dateISO: "2024/06/06",
-    description:
-      "(Steam Game) Embark on an epic platformer adventure through procedurally generated caves, solving intricate puzzles, and battling fearsome enemies!",
-    searchTags: "ghost, boi, boy, jump, endless",
-    contentType: "games",
-    openInNewTab: true,
-  },
-  {
-    imageUrl: "/webps/games/better-boids-cover.webp",
-    linkUrl: "/games/better-boids",
-    title: "Better Boids",
-    dateISO: "2024/05/25",
-    description:
-      "A unique twist to the classic Boids algorithm. Player controlled Boid, predator-prey relationships, customizable toggles & more.",
-    searchTags: "birds, bird, boid, flying, simulation",
-    contentType: "games",
-    openInNewTab: false,
-  },
-  {
     imageUrl: "/webps/games/cowpoke-game-cover.webp",
     linkUrl: "/games/cowpoke",
     title: "Cowpoke",
@@ -61,17 +29,6 @@ const contentBoxData: ContentBoxProps[] = [
       "Endless wild west side-scroller with turn-based combat. Face ruthless outlaws, scavenge powerful loot, and grow stronger with every showdown.",
     searchTags:
       "cowpoke, cow, poke, western, wild, west, side-scroller, fighting, fight",
-    contentType: "games",
-    openInNewTab: false,
-  },
-  {
-    imageUrl: "/webps/games/flip-tile-cover.webp",
-    linkUrl: "/games/flip-tile",
-    title: "Flip Tile",
-    dateISO: "2024/07/14",
-    description:
-      "Classic 'lights out' style puzzle game. Flipping one tile causes neighboring tiles to flip as well. Match them all to advance further!",
-    searchTags: "flip, flop, tile, matrix",
     contentType: "games",
     openInNewTab: false,
   },
@@ -100,6 +57,17 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
+    imageUrl: "/webps/writing/my-final-thought.webp",
+    linkUrl: "/writing/my-final-thought",
+    title: "My Final Thought",
+    dateISO: "2024/12/08",
+    description:
+      "As I sit here and watch the unforgiving grains of sand trickle down from my hourglass, there is nothing left to do but ponder.",
+    searchTags: "Death, Bible, Hunting, Deer, Life, Universe, dad",
+    contentType: "writing",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/writing/death.webp",
     linkUrl: "/writing/death",
     title: "Death",
@@ -108,18 +76,6 @@ const contentBoxData: ContentBoxProps[] = [
       "A man sits alone at a rundown bar after a long day of work, his soulless eyes projecting a heavy, lingering despair. Deep in the mind of the troubled man, a war is brewing.",
     searchTags:
       "Tarot, Death, Revelation, Card, Revelations, Bible, Space, Goddess, God, Horse",
-    contentType: "writing",
-    openInNewTab: false,
-  },
-  {
-    imageUrl: "/webps/writing/the-star.webp",
-    linkUrl: "/writing/the-star",
-    title: "The Star",
-    dateISO: "2024/08/12",
-    description:
-      "She was the healer. The silent observer. The glue that held it all together until the very end. Great fires would rage and she would drag the ocean down from the heavens.",
-    searchTags:
-      "Tarot, Stars, Star, Card, Shimmer, Glitter, Space, Goddess, God",
     contentType: "writing",
     openInNewTab: false,
   },
@@ -136,6 +92,29 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
+    imageUrl: "/webps/writing/the-star.webp",
+    linkUrl: "/writing/the-star",
+    title: "The Star",
+    dateISO: "2024/08/12",
+    description:
+      "She was the healer. The silent observer. The glue that held it all together until the very end. Great fires would rage and she would drag the ocean down from the heavens.",
+    searchTags:
+      "Tarot, Stars, Star, Card, Shimmer, Glitter, Space, Goddess, God",
+    contentType: "writing",
+    openInNewTab: false,
+  },
+  {
+    imageUrl: "/webps/games/flip-tile-cover.webp",
+    linkUrl: "/games/flip-tile",
+    title: "Flip Tile",
+    dateISO: "2024/07/14",
+    description:
+      "Classic 'lights out' style puzzle game. Flipping one tile causes neighboring tiles to flip as well. Match them all to advance further!",
+    searchTags: "flip, flop, tile, matrix",
+    contentType: "games",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/writing/the-moon.webp",
     linkUrl: "/writing/the-moon",
     title: "The Moon",
@@ -147,14 +126,37 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/writing/my-final-thought.webp",
-    linkUrl: "/writing/my-final-thought",
-    title: "My Final Thought",
-    dateISO: "2024/12/08",
+    imageUrl: "/webps/writing/before-the-world-dried-up.webp",
+    linkUrl: "/writing/before-the-world-dried-up",
+    title: "Before the World Dried Up",
+    dateISO: "2024/06/20",
     description:
-      "As I sit here and watch the unforgiving grains of sand trickle down from my hourglass, there is nothing left to do but ponder.",
-    searchTags: "Death, Bible, Hunting, Deer, Life, Universe, dad",
+      "They ask me why I plan on sticking around this place. Why I haven't jumped ship with the rest of them. I let out a sigh as I gaze off across the lifeless desertscape.",
+    searchTags:
+      "earth, world, universe, boat, water, ocean, existential, spooky, eerie, sci-fi, science, fiction",
     contentType: "writing",
+    openInNewTab: false,
+  },
+  {
+    imageUrl: "/webps/games/abyssal-descent.webp",
+    linkUrl: "https://store.steampowered.com/app/2506740/Abyssal_Descent/",
+    title: "Abyssal Descent",
+    dateISO: "2024/06/06",
+    description:
+      "(Steam Game) Embark on an epic platformer adventure through procedurally generated caves, solving intricate puzzles, and battling fearsome enemies!",
+    searchTags: "ghost, boi, boy, jump, endless",
+    contentType: "games",
+    openInNewTab: true,
+  },
+  {
+    imageUrl: "/webps/games/better-boids-cover.webp",
+    linkUrl: "/games/better-boids",
+    title: "Better Boids",
+    dateISO: "2024/05/25",
+    description:
+      "A unique twist to the classic Boids algorithm. Player controlled Boid, predator-prey relationships, customizable toggles & more.",
+    searchTags: "birds, bird, boid, flying, simulation",
+    contentType: "games",
     openInNewTab: false,
   },
   {
@@ -170,16 +172,16 @@ const contentBoxData: ContentBoxProps[] = [
     openInNewTab: false,
   },
   {
-    imageUrl: "/webps/writing/before-the-world-dried-up.webp",
-    linkUrl: "/writing/before-the-world-dried-up",
-    title: "Before the World Dried Up",
-    dateISO: "2024/06/20",
+    imageUrl: "/webps/games/save-our-solar-system.webp",
+    linkUrl:
+      "https://store.steampowered.com/app/2061040/Save_Our_Solar_System/",
+    title: "Save Our Solar System",
+    dateISO: "2023/03/28",
     description:
-      "They ask me why I plan on sticking around this place. Why I haven't jumped ship with the rest of them. I let out a sigh as I gaze off across the lifeless desertscape.",
-    searchTags:
-      "earth, world, universe, boat, water, ocean, existential, spooky, eerie, sci-fi, science, fiction",
-    contentType: "writing",
-    openInNewTab: false,
+      "(Steam Game) Stave off countless waves of asteroids as you fight to protect the Solar System from extinction. A fresh look on the tower defense genre!",
+    searchTags: "SOSS, SOS, radiohead, radio, head, asteroid",
+    contentType: "games",
+    openInNewTab: true,
   },
   {
     imageUrl: "/webps/art/strange-love-cover-art.webp",
