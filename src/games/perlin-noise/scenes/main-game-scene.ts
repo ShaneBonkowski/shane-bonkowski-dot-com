@@ -53,7 +53,7 @@ export class MainGameScene extends Generic2DGameScene {
     super.preload();
 
     // Preload logic for this scene
-    this.load.image("Tile Blank", "/webps/games/game-of-life-tile-blank.webp");
+    this.load.image("Tile Blank", "/webps/games/generic-tile-blank.webp");
   }
 
   create() {
