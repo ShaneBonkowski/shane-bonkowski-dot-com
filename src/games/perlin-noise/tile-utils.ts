@@ -14,20 +14,20 @@ export enum tileTypes {
 }
 
 export const tileColorMap: Record<tileTypes, number> = {
-  [tileTypes.DEEP_WATER]: 0x0000ff,
-  [tileTypes.SHALLOW_WATER]: 0x00ffff,
-  [tileTypes.BEACH]: 0xd2b48c,
-  [tileTypes.SOIL]: 0x8b4513,
-  [tileTypes.GRASS]: 0x00ff00,
-  [tileTypes.FOREST]: 0x228b22,
-  [tileTypes.MOUNTAIN]: 0x808080,
-  [tileTypes.SNOW]: 0xffffff,
+  [tileTypes.DEEP_WATER]: 0x386d9b,
+  [tileTypes.SHALLOW_WATER]: 0x5ec1c7,
+  [tileTypes.BEACH]: 0xf1d3a8,
+  [tileTypes.SOIL]: 0xa87656,
+  [tileTypes.GRASS]: 0x6fb560,
+  [tileTypes.FOREST]: 0x44702d,
+  [tileTypes.MOUNTAIN]: 0x394a50,
+  [tileTypes.SNOW]: 0xf1f6f0,
 };
 
-export const tileGridWidthPhone = 40;
-export const tileGridHeightPhone = 80;
-export const tileGridWidthComputer = 100;
-export const tileGridHeightComputer = 50;
+export const tileGridWidthPhone = 120;
+export const tileGridHeightPhone = 240;
+export const tileGridWidthComputer = 400;
+export const tileGridHeightComputer = 200;
 
 export const tileGridSize: Vec2 = new Vec2(
   tileGridWidthComputer,

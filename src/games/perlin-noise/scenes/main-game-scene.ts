@@ -28,11 +28,13 @@ export class MainGameScene extends Generic2DGameScene {
 
   private noise3D = createNoise3D();
   public perlinCoordinates: Vec3 = new Vec3(0, 0, 0);
-  public perlinZoom: number = 0.1;
-
-  public autoPlay: boolean = true;
+  public perlinZoom: number = 0;
+  private zoomScale: number = 0.0005;
+  private walkSpeed: number = 0;
+  private speedScale: number = 0.0005;
+  private zSliceScale: number = 0.01; // Scale for the z-slice value
   private lastWalkDirection: Vec3 = new Vec3(1, 0, 0); // right
-  private zoomScale: number = 0.005;
+  public autoPlay: boolean = true;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -89,6 +91,11 @@ export class MainGameScene extends Generic2DGameScene {
 
   setSettingsFromStore(settings: Settings) {
     this.autoPlay = settings.autoPlay;
+
+    // Update derived values based on settings
+    this.walkSpeed = settings.walkSpeedSliderValue * this.speedScale;
+    this.perlinCoordinates.z = settings.zSliceSliderValue * this.zSliceScale;
+    this.perlinZoom = settings.zoomSliderValue * this.zoomScale;
   }
 
   update(time: number, delta: number) {
@@ -146,24 +153,10 @@ export class MainGameScene extends Generic2DGameScene {
     super.subscribeToEvents();
 
     // Subscribe to events for this scene
-    document.addEventListener("perlinZoomIn", this.handleZoomIn);
-    document.addEventListener("perlinZoomOut", this.handleZoomOut);
-    document.addEventListener(
-      "perlinWalkUp",
-      this.walk.bind(this, new Vec3(0, 1, 0))
-    );
-    document.addEventListener(
-      "perlinWalkDown",
-      this.walk.bind(this, new Vec3(0, -1, 0))
-    );
-    document.addEventListener(
-      "perlinWalkLeft",
-      this.walk.bind(this, new Vec3(-1, 0, 0))
-    );
-    document.addEventListener(
-      "perlinWalkRight",
-      this.walk.bind(this, new Vec3(1, 0, 0))
-    );
+    document.addEventListener("perlinWalkUp", this.handleWalkUp);
+    document.addEventListener("perlinWalkDown", this.handleWalkDown);
+    document.addEventListener("perlinWalkLeft", this.handleWalkLeft);
+    document.addEventListener("perlinWalkRight", this.handleWalkRight);
   }
 
   /*
@@ -174,26 +167,30 @@ export class MainGameScene extends Generic2DGameScene {
     super.unsubscribeFromEvents();
 
     // Unsubscribe from events for this scene
-    document.removeEventListener("perlinZoomIn", this.handleZoomIn);
-    document.removeEventListener("perlinZoomOut", this.handleZoomOut);
+    document.removeEventListener("perlinWalkUp", this.handleWalkUp);
+    document.removeEventListener("perlinWalkDown", this.handleWalkDown);
+    document.removeEventListener("perlinWalkLeft", this.handleWalkLeft);
+    document.removeEventListener("perlinWalkRight", this.handleWalkRight);
   }
 
-  handleZoomIn = () => {
-    this.perlinZoom += 1 * this.zoomScale;
+  handleWalkUp = () => {
+    this.walk(new Vec3(0, 1, 0));
   };
 
-  handleZoomOut = () => {
-    this.perlinZoom -= 1 * this.zoomScale;
+  handleWalkDown = () => {
+    this.walk(new Vec3(0, -1, 0));
+  };
 
-    // Prevent zooming out too far
-    if (this.perlinZoom < 0.01) {
-      this.perlinZoom = 0.01;
-    }
+  handleWalkLeft = () => {
+    this.walk(new Vec3(-1, 0, 0));
+  };
+
+  handleWalkRight = () => {
+    this.walk(new Vec3(1, 0, 0));
   };
 
   walk = (walkDirection: Vec3) => {
-    const speed = this.perlinZoom; // if speed = zoom, then it will not flicker
-    const scaledDirection = Vec3.scale(walkDirection, speed);
+    const scaledDirection = Vec3.scale(walkDirection, this.walkSpeed);
     this.perlinCoordinates = Vec3.add(this.perlinCoordinates, scaledDirection);
     this.lastWalkDirection = walkDirection;
   };

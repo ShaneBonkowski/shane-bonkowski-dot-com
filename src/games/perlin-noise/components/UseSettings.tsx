@@ -14,5 +14,10 @@ export const UseSettings = () => {
     ...settings,
     // Actions
     setAutoPlay: settingsStore.setAutoPlay.bind(settingsStore),
+    setZSliceSliderValue:
+      settingsStore.setZSliceSliderValue.bind(settingsStore),
+    setWalkSpeedSliderValue:
+      settingsStore.setWalkSpeedSliderValue.bind(settingsStore),
+    setZoomSliderValue: settingsStore.setZoomSliderValue.bind(settingsStore),
   };
 };
