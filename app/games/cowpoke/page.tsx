@@ -5,7 +5,7 @@ import GameComponent from "@/src/games/cowpoke/components/GameComponent";
 const gameMetadata: GameMetadataProps = {
   title: "Cowpoke",
   description: "A game by Shane Bonkowski.",
-  coverImageUrl: "/webps/games/cowpoke-game-cover.webp",
+  coverImageUrl: "/webps/games/cowpoke-cover.webp",
   imageAlt: "Cowpoke",
 };
 
