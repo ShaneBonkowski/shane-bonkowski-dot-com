@@ -55,7 +55,10 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
       {/* Preset Name and controls */}
       <div className="mb-4 gap-2 flex items-center justify-between">
         <GameIconButton
-          onPointerDown={onReset}
+          onPointerDown={() => {
+            onReset();
+            setTempName(preset.name);
+          }}
           icon={<FaUndo size={30} />}
           ariaLabel="Reset Preset"
           title="Reset Preset"

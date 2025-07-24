@@ -19,7 +19,11 @@ class SettingsStore extends SyncedStore<Settings> {
     zSliceSliderValue: 50,
     walkSpeedSliderValue: 50,
     zoomSliderValue: -25,
-    customColorPresets: DEFAULT_COLOR_PRESETS,
+    // Set default to deep copies of default presets
+    customColorPresets: DEFAULT_COLOR_PRESETS.map((preset) => ({
+      ...preset,
+      colors: { ...preset.colors },
+    })),
     currentColorPresetIndex: 0,
   };
 
@@ -31,6 +35,80 @@ class SettingsStore extends SyncedStore<Settings> {
 
     // Return early during SSR/static generation (need to call super first)
     if (typeof window === "undefined") return;
+
+    this.loadFromLocalStorage();
+  }
+
+  private loadFromLocalStorage() {
+    const savedCurrentColorPresetIndex = this.getLocalStorage(
+      "perlinNoiseCurrentColorPresetIndex",
+      this.defaultData.currentColorPresetIndex
+    );
+    const savedCustomColorPreset1 = this.getLocalStorage(
+      "perlinNoiseCustomColorPreset1",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_COLOR_PRESETS[0],
+        colors: { ...DEFAULT_COLOR_PRESETS[0].colors },
+      }
+    );
+    const savedCustomColorPreset2 = this.getLocalStorage(
+      "perlinNoiseCustomColorPreset2",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_COLOR_PRESETS[1],
+        colors: { ...DEFAULT_COLOR_PRESETS[1].colors },
+      }
+    );
+    const savedCustomColorPreset3 = this.getLocalStorage(
+      "perlinNoiseCustomColorPreset3",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_COLOR_PRESETS[2],
+        colors: { ...DEFAULT_COLOR_PRESETS[2].colors },
+      }
+    );
+    const savedCustomColorPreset4 = this.getLocalStorage(
+      "perlinNoiseCustomColorPreset4",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_COLOR_PRESETS[3],
+        colors: { ...DEFAULT_COLOR_PRESETS[3].colors },
+      }
+    );
+    const savedCustomColorPreset5 = this.getLocalStorage(
+      "perlinNoiseCustomColorPreset5",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_COLOR_PRESETS[4],
+        colors: { ...DEFAULT_COLOR_PRESETS[4].colors },
+      }
+    );
+
+    this.setLocalStorageFields(
+      savedCurrentColorPresetIndex,
+      savedCustomColorPreset1,
+      savedCustomColorPreset2,
+      savedCustomColorPreset3,
+      savedCustomColorPreset4,
+      savedCustomColorPreset5
+    );
+  }
+
+  private setLocalStorageFields(
+    currentColorPresetIndex: number,
+    customColorPreset1: ColorPreset,
+    customColorPreset2: ColorPreset,
+    customColorPreset3: ColorPreset,
+    customColorPreset4: ColorPreset,
+    customColorPreset5: ColorPreset
+  ) {
+    this.setCurrentColorPresetIndex(currentColorPresetIndex);
+    this.setCustomColorPreset(0, customColorPreset1);
+    this.setCustomColorPreset(1, customColorPreset2);
+    this.setCustomColorPreset(2, customColorPreset3);
+    this.setCustomColorPreset(3, customColorPreset4);
+    this.setCustomColorPreset(4, customColorPreset5);
   }
 
   protected getData(): Settings {
@@ -66,16 +144,13 @@ class SettingsStore extends SyncedStore<Settings> {
   }
 
   setCustomColorPreset(index: number, value: ColorPreset): ColorPreset {
-    if (!this.data.customColorPresets) {
-      this.data.customColorPresets = [...DEFAULT_COLOR_PRESETS];
-    }
-
     // Ensure the index is within bounds
     if (index < 0 || index >= this.data.customColorPresets.length) {
       throw new Error("Index out of bounds for custom color presets");
     }
 
     this.data.customColorPresets[index] = value;
+    this.setLocalStorage(`perlinNoiseCustomColorPreset${index + 1}`, value);
     this.notify();
 
     return value;
@@ -83,14 +158,44 @@ class SettingsStore extends SyncedStore<Settings> {
 
   setCurrentColorPresetIndex(value: number): number {
     this.data.currentColorPresetIndex = value;
+    this.setLocalStorage("perlinNoiseCurrentColorPresetIndex", value);
     this.notify();
 
     return value;
   }
 
   public resetData() {
-    // Reset to base defaults
-    this.data = { ...this.defaultData };
+    // Reset session data but preserve persistent data
+    this.data = {
+      ...this.defaultData,
+      customColorPresets: [
+        this.data.customColorPresets[0],
+        this.data.customColorPresets[1],
+        this.data.customColorPresets[2],
+        this.data.customColorPresets[3],
+        this.data.customColorPresets[4],
+      ],
+      currentColorPresetIndex: this.data.currentColorPresetIndex,
+    };
+
+    this.notify();
+  }
+
+  public resetPermanentData() {
+    // Reset data
+    this.data = {
+      ...this.defaultData,
+    };
+
+    // Reset all data that writes to localStorage
+    this.setLocalStorageFields(
+      this.defaultData.currentColorPresetIndex,
+      this.defaultData.customColorPresets[0],
+      this.defaultData.customColorPresets[1],
+      this.defaultData.customColorPresets[2],
+      this.defaultData.customColorPresets[3],
+      this.defaultData.customColorPresets[4]
+    );
 
     this.notify();
   }

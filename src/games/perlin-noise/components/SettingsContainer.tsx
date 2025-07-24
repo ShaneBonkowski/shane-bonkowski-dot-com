@@ -43,10 +43,22 @@ const ColorPresetSettings: React.FC = () => {
   };
 
   const handleReset = (index: number) => {
-    const defaultPreset = DEFAULT_COLOR_PRESETS[index];
-    if (defaultPreset) {
-      setCustomColorPreset(index, { ...defaultPreset });
+    if (index < 0 || index >= DEFAULT_COLOR_PRESETS.length) {
+      console.warn(
+        `Reset failed: index ${index} out of bounds (0-${
+          DEFAULT_COLOR_PRESETS.length - 1
+        })`
+      );
+      return;
     }
+
+    // Reset to deep copy of default preset
+    const defaultPreset = DEFAULT_COLOR_PRESETS[index];
+    const resetPreset = {
+      ...defaultPreset,
+      colors: { ...defaultPreset.colors },
+    };
+    setCustomColorPreset(index, resetPreset);
   };
 
   return (

@@ -96,58 +96,73 @@ class GameDataStore extends SyncedStore<GameData> {
   }
 
   private loadFromLocalStorage() {
-    const savedPlayerName = this.getLocalStorage("cowpokePlayerName", "");
-    const savedAutoMode = this.getLocalStorage("cowpokeAutoMode", false);
-    const savedAutoRestart = this.getLocalStorage("cowpokeAutoRestart", false);
-    const savedFastMode = this.getLocalStorage("cowpokeFastMode", false);
-    const savedLifetimeKills = this.getLocalStorage("cowpokeLifetimeKills", 0);
+    const savedPlayerName = this.getLocalStorage(
+      "cowpokePlayerName",
+      this.defaultData.playerName
+    );
+    const savedAutoMode = this.getLocalStorage(
+      "cowpokeAutoMode",
+      this.defaultData.autoMode
+    );
+    const savedAutoRestart = this.getLocalStorage(
+      "cowpokeAutoRestart",
+      this.defaultData.autoRestart
+    );
+    const savedFastMode = this.getLocalStorage(
+      "cowpokeFastMode",
+      this.defaultData.fastMode
+    );
+    const savedLifetimeKills = this.getLocalStorage(
+      "cowpokeLifetimeKills",
+      this.defaultData.lifetimeKills
+    );
     const savedLifetimeFurthestLevelInPlaythrough = this.getLocalStorage(
       "cowpokeLifetimeFurthestLevelInPlaythrough",
-      1
+      this.defaultData.lifetimeFurthestLevelInPlaythrough
     );
     const savedLifetimeMostKillsInPlaythrough = this.getLocalStorage(
       "cowpokeLifetimeMostKillsInPlaythrough",
-      0
+      this.defaultData.lifetimeMostKillsInPlaythrough
     );
     const savedPlayerEquippedHatId = this.getLocalStorage(
       "cowpokePlayerEquippedHatId",
-      0
+      this.defaultData.playerEquippedHatId
     );
     const savedPlayerEquippedGunId = this.getLocalStorage(
       "cowpokePlayerEquippedGunId",
-      0
+      this.defaultData.playerEquippedGunId
     );
     const savedPlayerOwnedHatIds = this.getLocalStorage(
       "cowpokePlayerOwnedHatIds",
-      [0]
+      this.defaultData.playerOwnedHatIds
     );
     const savedPlayerOwnedGunIds = this.getLocalStorage(
       "cowpokePlayerOwnedGunIds",
-      [0]
+      this.defaultData.playerOwnedGunIds
     );
     const savedPermaDamageLevel = this.getLocalStorage(
       "cowpokePlayerPermaDamageLevel",
-      0
+      this.defaultData.permaDamageLevel
     );
     const savedPermaHealthLevel = this.getLocalStorage(
       "cowpokePlayerPermaHealthLevel",
-      0
+      this.defaultData.permaHealthLevel
     );
     const savedPermaCombatLevel = this.getLocalStorage(
       "cowpokePlayerPermaCombatLevel",
-      0
+      this.defaultData.permaCombatLevel
     );
     const savedPermaElementLevel = this.getLocalStorage(
       "cowpokePlayerPermaElementLevel",
-      0
+      this.defaultData.permaElementLevel
     );
     const savedSettingsSeenHatIds = this.getLocalStorage(
       "cowpokeSettingsSeenHatIds",
-      []
+      this.defaultData.settingsSeenHatIds
     );
     const savedSettingsSeenGunIds = this.getLocalStorage(
       "cowpokeSettingsSeenGunIds",
-      []
+      this.defaultData.settingsSeenGunIds
     );
 
     this.setLocalStorageFields(

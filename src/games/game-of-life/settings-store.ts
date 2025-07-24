@@ -36,7 +36,10 @@ class SettingsStore extends SyncedStore<Settings> {
   }
 
   private loadFromLocalStorage() {
-    const savedColorTheme = this.getLocalStorage("gameOfLifeColorTheme", 0);
+    const savedColorTheme = this.getLocalStorage(
+      "gameOfLifeColorTheme",
+      this.defaultData.colorTheme
+    );
     this.setColorTheme(savedColorTheme);
   }
 
