@@ -8,6 +8,10 @@ import {
   DEFAULT_GENERATION_PRESETS,
 } from "@/src/games/perlin-noise/generation-presets";
 import { TILE_TYPES } from "@/src/games/perlin-noise/tile-utils";
+import {
+  QualityLevel,
+  QUALITY_LEVELS,
+} from "@/src/games/perlin-noise/tile-utils";
 
 export interface Settings {
   autoPlay: boolean;
@@ -18,6 +22,7 @@ export interface Settings {
   currentColorPresetIndex: number;
   customGenerationPresets: GenerationPreset[];
   currentGenerationPresetIndex: number;
+  qualityLevel: QualityLevel;
 }
 
 class SettingsStore extends SyncedStore<Settings> {
@@ -38,6 +43,7 @@ class SettingsStore extends SyncedStore<Settings> {
       generation: { ...preset.generation },
     })),
     currentGenerationPresetIndex: 0,
+    qualityLevel: QUALITY_LEVELS.MEDIUM,
   };
 
   private data: Settings = { ...this.defaultData };
@@ -141,6 +147,10 @@ class SettingsStore extends SyncedStore<Settings> {
         generation: { ...DEFAULT_GENERATION_PRESETS[4].generation },
       }
     );
+    const savedQualityLevel = this.getLocalStorage(
+      "perlinNoiseQualityLevel",
+      this.defaultData.qualityLevel
+    );
 
     this.setLocalStorageFields(
       savedCurrentColorPresetIndex,
@@ -154,7 +164,8 @@ class SettingsStore extends SyncedStore<Settings> {
       savedCustomGenerationPreset2,
       savedCustomGenerationPreset3,
       savedCustomGenerationPreset4,
-      savedCustomGenerationPreset5
+      savedCustomGenerationPreset5,
+      savedQualityLevel
     );
   }
 
@@ -170,7 +181,8 @@ class SettingsStore extends SyncedStore<Settings> {
     customGenerationPreset2: GenerationPreset,
     customGenerationPreset3: GenerationPreset,
     customGenerationPreset4: GenerationPreset,
-    customGenerationPreset5: GenerationPreset
+    customGenerationPreset5: GenerationPreset,
+    qualityLevel: QualityLevel
   ) {
     this.setCurrentColorPresetIndex(currentColorPresetIndex);
     this.setCustomColorPreset(0, customColorPreset1);
@@ -184,6 +196,7 @@ class SettingsStore extends SyncedStore<Settings> {
     this.setCustomGenerationPreset(2, customGenerationPreset3);
     this.setCustomGenerationPreset(3, customGenerationPreset4);
     this.setCustomGenerationPreset(4, customGenerationPreset5);
+    this.setQualityLevel(qualityLevel);
   }
 
   protected getData(): Settings {
@@ -274,6 +287,14 @@ class SettingsStore extends SyncedStore<Settings> {
     return value;
   }
 
+  setQualityLevel(value: QualityLevel): QualityLevel {
+    this.data.qualityLevel = value;
+    this.setLocalStorage("perlinNoiseQualityLevel", value);
+    this.notify();
+
+    return value;
+  }
+
   public resetData() {
     // Reset session data but preserve persistent data
     this.data = {
@@ -294,6 +315,7 @@ class SettingsStore extends SyncedStore<Settings> {
         this.data.customGenerationPresets[4],
       ],
       currentGenerationPresetIndex: this.data.currentGenerationPresetIndex,
+      qualityLevel: this.data.qualityLevel,
     };
 
     this.notify();
@@ -318,7 +340,8 @@ class SettingsStore extends SyncedStore<Settings> {
       this.defaultData.customGenerationPresets[1],
       this.defaultData.customGenerationPresets[2],
       this.defaultData.customGenerationPresets[3],
-      this.defaultData.customGenerationPresets[4]
+      this.defaultData.customGenerationPresets[4],
+      this.defaultData.qualityLevel
     );
 
     this.notify();

@@ -9,8 +9,6 @@ import { isMobileDevice } from "@/src/utils/heuristics";
 
 interface GenerationPresetBoxProps {
   preset: GenerationPreset;
-  isSelected: boolean;
-  onSelect: () => void;
   onUpdateName: (name: string) => void;
   onUpdateOctaves: (octaves: number) => void;
   onUpdateThreshold: (tileType: TileType, threshold: number) => void;
@@ -19,8 +17,6 @@ interface GenerationPresetBoxProps {
 
 const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
   preset,
-  isSelected,
-  onSelect,
   onUpdateName,
   onUpdateOctaves,
   onUpdateThreshold,
@@ -64,17 +60,7 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
   };
 
   return (
-    <div
-      className={`
-        p-4 rounded-lg border-2 cursor-pointer
-        ${
-          isSelected
-            ? "border-blue-500"
-            : "border-gray-500 hover:border-gray-400"
-        }
-      `}
-      onPointerDown={onSelect}
-    >
+    <div className={"p-4 rounded-lg border-2 cursor-pointer border-gray-500"}>
       {/* Preset Name and controls */}
       <div className="mb-4 gap-2 flex items-center justify-between">
         <GameIconButton
@@ -124,7 +110,7 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
           <input
             type="range"
             min="1"
-            max="8"
+            max="4"
             step="1"
             value={preset.octaves}
             onChange={(e) => onUpdateOctaves(parseInt(e.target.value))}

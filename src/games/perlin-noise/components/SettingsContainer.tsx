@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FaCog } from "react-icons/fa";
+import { FaCog, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
@@ -13,6 +13,44 @@ import ColorPresetBox from "@/src/games/perlin-noise/components/ColorPresetBox";
 import { DEFAULT_GENERATION_PRESETS } from "@/src/games/perlin-noise/generation-presets";
 import GenerationPresetBox from "@/src/games/perlin-noise/components/GenerationPresetBox";
 
+const QualitySettings: React.FC = () => {
+  const { qualityLevel, setQualityLevel } = UseSettings();
+
+  const qualityOptions = [
+    { value: "LOW", label: "Low" },
+    { value: "MEDIUM", label: "Medium" },
+    { value: "HIGH", label: "High" },
+  ] as const;
+
+  return (
+    <div className="flex flex-col items-center gap-4 mb-4">
+      {/* Title and Description */}
+      <div id="perlin-noise-quality-header">
+        <h2 className="text-center">Quality Level</h2>
+        <p className="text-center">
+          Higher quality increases grid resolution but may impact performance.
+        </p>
+      </div>
+
+      {/* Quality Checkboxes */}
+      <div className="flex gap-4 justify-center">
+        {qualityOptions.map((option) => (
+          // Use 'label' to make clickable area larger
+          <label key={option.value} className="flex items-center p-4 gap-2">
+            <input
+              type="checkbox"
+              checked={qualityLevel === option.value}
+              onChange={() => setQualityLevel(option.value)}
+              aria-label={`Set quality to ${option.label}`}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const GenerationPresetSettings: React.FC = () => {
   const {
     customGenerationPresets,
@@ -20,6 +58,24 @@ const GenerationPresetSettings: React.FC = () => {
     setCustomGenerationPreset,
     setCurrentGenerationPresetIndex,
   } = UseSettings();
+
+  const currentPreset = customGenerationPresets[currentGenerationPresetIndex];
+
+  const handlePrevious = () => {
+    const newIndex =
+      currentGenerationPresetIndex === 0
+        ? customGenerationPresets.length - 1
+        : currentGenerationPresetIndex - 1;
+    setCurrentGenerationPresetIndex(newIndex);
+  };
+
+  const handleNext = () => {
+    const newIndex =
+      currentGenerationPresetIndex === customGenerationPresets.length - 1
+        ? 0
+        : currentGenerationPresetIndex + 1;
+    setCurrentGenerationPresetIndex(newIndex);
+  };
 
   const handleUpdateName = (index: number, name: string) => {
     const updatedPreset = {
@@ -78,26 +134,53 @@ const GenerationPresetSettings: React.FC = () => {
         <h2 className="text-center">Generation Presets</h2>
         <p className="text-center">
           Configure terrain generation thresholds and octaves for different
-          landscape types.
+          landscape types. Higher octaves increase detail but may impact
+          performance.
         </p>
       </div>
 
-      {/* Generation Preset Boxes */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {customGenerationPresets.map((preset, index) => (
-          <GenerationPresetBox
-            key={index}
-            preset={preset}
-            isSelected={currentGenerationPresetIndex === index}
-            onSelect={() => setCurrentGenerationPresetIndex(index)}
-            onUpdateName={(name) => handleUpdateName(index, name)}
-            onUpdateOctaves={(octaves) => handleUpdateOctaves(index, octaves)}
-            onUpdateThreshold={(tileType, threshold) =>
-              handleUpdateThreshold(index, tileType, threshold)
-            }
-            onReset={() => handleReset(index)}
-          />
-        ))}
+      {/* Navigation Controls */}
+      <div className="flex items-center gap-4 w-full max-w-md">
+        <GameIconButton
+          onPointerDown={handlePrevious}
+          icon={<FaChevronLeft size={20} />}
+          ariaLabel="Previous preset"
+          title="Previous preset"
+        />
+        <div className="flex-1 text-center">
+          <span className="text-gray-500">
+            {currentGenerationPresetIndex + 1} of{" "}
+            {customGenerationPresets.length}
+          </span>
+        </div>
+        <GameIconButton
+          onPointerDown={handleNext}
+          icon={<FaChevronRight size={20} />}
+          ariaLabel="Next preset"
+          title="Next preset"
+        />
+      </div>
+
+      {/* Single Preset Box */}
+      <div className="w-full max-w-md">
+        <GenerationPresetBox
+          key={currentGenerationPresetIndex}
+          preset={currentPreset}
+          onUpdateName={(name) =>
+            handleUpdateName(currentGenerationPresetIndex, name)
+          }
+          onUpdateOctaves={(octaves) =>
+            handleUpdateOctaves(currentGenerationPresetIndex, octaves)
+          }
+          onUpdateThreshold={(tileType, threshold) =>
+            handleUpdateThreshold(
+              currentGenerationPresetIndex,
+              tileType,
+              threshold
+            )
+          }
+          onReset={() => handleReset(currentGenerationPresetIndex)}
+        />
       </div>
     </div>
   );
@@ -110,6 +193,24 @@ const ColorPresetSettings: React.FC = () => {
     setCustomColorPreset,
     setCurrentColorPresetIndex,
   } = UseSettings();
+
+  const currentPreset = customColorPresets[currentColorPresetIndex];
+
+  const handlePrevious = () => {
+    const newIndex =
+      currentColorPresetIndex === 0
+        ? customColorPresets.length - 1
+        : currentColorPresetIndex - 1;
+    setCurrentColorPresetIndex(newIndex);
+  };
+
+  const handleNext = () => {
+    const newIndex =
+      currentColorPresetIndex === customColorPresets.length - 1
+        ? 0
+        : currentColorPresetIndex + 1;
+    setCurrentColorPresetIndex(newIndex);
+  };
 
   const handleUpdateName = (index: number, name: string) => {
     const updatedPreset = {
@@ -171,21 +272,40 @@ const ColorPresetSettings: React.FC = () => {
         </p>
       </div>
 
-      {/* Color Preset Boxes */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {customColorPresets.map((preset, index) => (
-          <ColorPresetBox
-            key={index}
-            preset={preset}
-            isSelected={currentColorPresetIndex === index}
-            onSelect={() => setCurrentColorPresetIndex(index)}
-            onUpdateName={(name) => handleUpdateName(index, name)}
-            onUpdateColor={(tileType, color) =>
-              handleUpdateColor(index, tileType, color)
-            }
-            onReset={() => handleReset(index)}
-          />
-        ))}
+      {/* Navigation Controls */}
+      <div className="flex items-center gap-4 w-full max-w-md">
+        <GameIconButton
+          onPointerDown={handlePrevious}
+          icon={<FaChevronLeft size={20} />}
+          ariaLabel="Previous preset"
+          title="Previous preset"
+        />
+        <div className="flex-1 text-center">
+          <span className="text-gray-500">
+            {currentColorPresetIndex + 1} of {customColorPresets.length}
+          </span>
+        </div>
+        <GameIconButton
+          onPointerDown={handleNext}
+          icon={<FaChevronRight size={20} />}
+          ariaLabel="Next preset"
+          title="Next preset"
+        />
+      </div>
+
+      {/* Single Preset Box */}
+      <div className="w-full max-w-md">
+        <ColorPresetBox
+          key={currentColorPresetIndex}
+          preset={currentPreset}
+          onUpdateName={(name) =>
+            handleUpdateName(currentColorPresetIndex, name)
+          }
+          onUpdateColor={(tileType, color) =>
+            handleUpdateColor(currentColorPresetIndex, tileType, color)
+          }
+          onReset={() => handleReset(currentColorPresetIndex)}
+        />
       </div>
     </div>
   );
@@ -245,6 +365,7 @@ const SettingsContainer: React.FC = () => {
             id="perlin-noise-settings-description"
           >
             <h1 className="text-center">Settings</h1>
+            <QualitySettings />
             <GenerationPresetSettings />
             <ColorPresetSettings />
           </div>

@@ -21,6 +21,10 @@ import {
   Settings,
 } from "@/src/games/perlin-noise/settings-store";
 import { GenerationPreset } from "@/src/games/perlin-noise/generation-presets";
+import {
+  QualityLevel,
+  QUALITY_LEVELS,
+} from "@/src/games/perlin-noise/tile-utils";
 
 export class MainGameScene extends Generic2DGameScene {
   public tiles: Tile[][] = [];
@@ -46,6 +50,7 @@ export class MainGameScene extends Generic2DGameScene {
   private currentColorPresetIndex: number = 0;
   private customGenerationPresets: GenerationPreset[] = [];
   private currentGenerationPresetIndex: number = 0;
+  private qualityLevel: QualityLevel = QUALITY_LEVELS.MEDIUM;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -107,6 +112,17 @@ export class MainGameScene extends Generic2DGameScene {
     this.customGenerationPresets = settings.customGenerationPresets;
     this.currentGenerationPresetIndex = settings.currentGenerationPresetIndex;
 
+    // Only update quality level if it changes, and in that case request a layout change
+    if (this.qualityLevel !== settings.qualityLevel) {
+      this.qualityLevel = settings.qualityLevel;
+
+      if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
+        this.requestSetPhoneLayout = true;
+      } else {
+        this.requestSetComputerLayout = true;
+      }
+    }
+
     // Update derived values based on settings
     this.walkSpeed = settings.walkSpeedSliderValue * this.speedScale;
     this.perlinCoordinates.z = settings.zSliceSliderValue * this.zSliceScale;
@@ -125,16 +141,8 @@ export class MainGameScene extends Generic2DGameScene {
       // Update the perlin noise value of tiles based on perlin coordinates and scale
       for (let row = 0; row < this.tiles.length; row++) {
         for (let col = 0; col < this.tiles[row].length; col++) {
-          const newPerlinValue =
-            (this.noise3D(
-              this.perlinCoordinates.x + row * this.perlinZoom,
-              this.perlinCoordinates.y + col * this.perlinZoom,
-              this.perlinCoordinates.z
-            ) +
-              1) *
-            0.5; // Normalize from [-1,1] to [0,1]
           this.tiles[row][col].updatePerlinValue(
-            newPerlinValue,
+            this.computePerlin(row, col),
             this.customGenerationPresets[this.currentGenerationPresetIndex]
           );
         }
@@ -171,6 +179,35 @@ export class MainGameScene extends Generic2DGameScene {
     // Refresh texture and update graphic (scale etc.)
     this.tileGridTexture!.refresh();
     this.tileGridTexture!.updateGraphic();
+  }
+
+  // Add this method to MainGameScene class
+  private computePerlin(row: number, col: number): number {
+    let value = 0;
+    let amplitude = 1;
+    let frequency = 1;
+    let maxValue = 0; // Used for normalizing result to 0.0 - 1.0
+
+    for (
+      let i = 0;
+      i <
+      this.customGenerationPresets[this.currentGenerationPresetIndex].octaves;
+      i++
+    ) {
+      value +=
+        this.noise3D(
+          (this.perlinCoordinates.x + row * this.perlinZoom) * frequency,
+          (this.perlinCoordinates.y + col * this.perlinZoom) * frequency,
+          this.perlinCoordinates.z * frequency
+        ) * amplitude;
+
+      maxValue += amplitude;
+      amplitude *= 0.5; // Each octave has half the amplitude
+      frequency *= 2; // Each octave has double the frequency
+    }
+
+    // Normalize from [-maxValue, maxValue] to [0, 1]
+    return (value / maxValue + 1) * 0.5;
   }
 
   /*
@@ -269,8 +306,8 @@ export class MainGameScene extends Generic2DGameScene {
       if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
         // Only update layout if it changed!
         if (
-          this.tileGridWidth != tileGridWidthPhone ||
-          this.tileGridHeight != tileGridHeightPhone
+          this.tileGridWidth != tileGridWidthPhone[this.qualityLevel] ||
+          this.tileGridHeight != tileGridHeightPhone[this.qualityLevel]
         ) {
           // See update loop for why we request this instead of doing it now
           this.requestSetPhoneLayout = true;
@@ -278,8 +315,8 @@ export class MainGameScene extends Generic2DGameScene {
       } else {
         // Only update layout if it changed!
         if (
-          this.tileGridWidth != tileGridWidthComputer ||
-          this.tileGridHeight != tileGridHeightComputer
+          this.tileGridWidth != tileGridWidthComputer[this.qualityLevel] ||
+          this.tileGridHeight != tileGridHeightComputer[this.qualityLevel]
         ) {
           // See update loop for why we request this instead of doing it now
           this.requestSetComputerLayout = true;
@@ -292,8 +329,8 @@ export class MainGameScene extends Generic2DGameScene {
     // init or re-init all tiles
     this.destroyTiles();
 
-    this.tileGridWidth = tileGridWidthPhone;
-    this.tileGridHeight = tileGridHeightPhone;
+    this.tileGridWidth = tileGridWidthPhone[this.qualityLevel];
+    this.tileGridHeight = tileGridHeightPhone[this.qualityLevel];
 
     this.tiles = instantiateTiles(this.tileGridWidth, this.tileGridHeight);
 
@@ -310,8 +347,8 @@ export class MainGameScene extends Generic2DGameScene {
     // init or re-init all tiles
     this.destroyTiles();
 
-    this.tileGridWidth = tileGridWidthComputer;
-    this.tileGridHeight = tileGridHeightComputer;
+    this.tileGridWidth = tileGridWidthComputer[this.qualityLevel];
+    this.tileGridHeight = tileGridHeightComputer[this.qualityLevel];
 
     this.tiles = instantiateTiles(this.tileGridWidth, this.tileGridHeight);
 

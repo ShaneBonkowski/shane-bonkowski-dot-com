@@ -13,10 +13,37 @@ export const TILE_TYPES = {
 
 export type TileType = (typeof TILE_TYPES)[keyof typeof TILE_TYPES];
 
-export const tileGridWidthPhone = 200;
-export const tileGridHeightPhone = 400;
-export const tileGridWidthComputer = 500;
-export const tileGridHeightComputer = 250;
+export const QUALITY_LEVELS = {
+  LOW: "LOW",
+  MEDIUM: "MEDIUM",
+  HIGH: "HIGH",
+} as const;
+
+export type QualityLevel = (typeof QUALITY_LEVELS)[keyof typeof QUALITY_LEVELS];
+
+export const tileGridWidthPhone = {
+  [QUALITY_LEVELS.LOW]: 100,
+  [QUALITY_LEVELS.MEDIUM]: 150,
+  [QUALITY_LEVELS.HIGH]: 300,
+};
+
+export const tileGridHeightPhone = {
+  [QUALITY_LEVELS.LOW]: 200,
+  [QUALITY_LEVELS.MEDIUM]: 300,
+  [QUALITY_LEVELS.HIGH]: 600,
+};
+
+export const tileGridWidthComputer = {
+  [QUALITY_LEVELS.LOW]: 200,
+  [QUALITY_LEVELS.MEDIUM]: 300,
+  [QUALITY_LEVELS.HIGH]: 600,
+};
+
+export const tileGridHeightComputer = {
+  [QUALITY_LEVELS.LOW]: 100,
+  [QUALITY_LEVELS.MEDIUM]: 150,
+  [QUALITY_LEVELS.HIGH]: 300,
+};
 
 export function instantiateTiles(w: number, h: number): Tile[][] {
   let tiles: Tile[][] = [];

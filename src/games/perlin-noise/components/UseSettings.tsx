@@ -27,5 +27,6 @@ export const UseSettings = () => {
       settingsStore.setCustomGenerationPreset.bind(settingsStore),
     setCurrentGenerationPresetIndex:
       settingsStore.setCurrentGenerationPresetIndex.bind(settingsStore),
+    setQualityLevel: settingsStore.setQualityLevel.bind(settingsStore),
   };
 };

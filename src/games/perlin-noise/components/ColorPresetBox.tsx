@@ -9,8 +9,6 @@ import { isMobileDevice } from "@/src/utils/heuristics";
 
 interface ColorPresetBoxProps {
   preset: ColorPreset;
-  isSelected: boolean;
-  onSelect: () => void;
   onUpdateName: (name: string) => void;
   onUpdateColor: (tileType: TileType, color: number) => void;
   onReset: () => void;
@@ -18,8 +16,6 @@ interface ColorPresetBoxProps {
 
 const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
   preset,
-  isSelected,
-  onSelect,
   onUpdateName,
   onUpdateColor,
   onReset,
@@ -41,17 +37,7 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
   };
 
   return (
-    <div
-      className={`
-        p-4 rounded-lg border-2 cursor-pointer
-        ${
-          isSelected
-            ? "border-blue-500"
-            : "border-gray-500 hover:border-gray-400"
-        }
-      `}
-      onPointerDown={onSelect}
-    >
+    <div className={"p-4 rounded-lg border-2 cursor-pointer border-gray-500"}>
       {/* Preset Name and controls */}
       <div className="mb-4 gap-2 flex items-center justify-between">
         <GameIconButton

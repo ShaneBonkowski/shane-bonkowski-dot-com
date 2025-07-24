@@ -35,7 +35,7 @@ export const DEFAULT_GENERATION_PRESETS: GenerationPreset[] = [
       [TILE_TYPES.MOUNTAIN]: 1.0,
       [TILE_TYPES.SNOW]: 1.0, // MUST be 1.0 since it is the last tile type
     },
-    octaves: 1,
+    octaves: 2,
   },
   {
     name: "Mountainous",
@@ -49,7 +49,7 @@ export const DEFAULT_GENERATION_PRESETS: GenerationPreset[] = [
       [TILE_TYPES.MOUNTAIN]: 1.0,
       [TILE_TYPES.SNOW]: 1.0, // MUST be 1.0 since it is the last tile type
     },
-    octaves: 1,
+    octaves: 4,
   },
   {
     name: "Desert",
@@ -63,7 +63,7 @@ export const DEFAULT_GENERATION_PRESETS: GenerationPreset[] = [
       [TILE_TYPES.MOUNTAIN]: 1.0,
       [TILE_TYPES.SNOW]: 1.0, // MUST be 1.0 since it is the last tile type
     },
-    octaves: 1,
+    octaves: 2,
   },
   {
     name: "The Plains",
@@ -77,6 +77,6 @@ export const DEFAULT_GENERATION_PRESETS: GenerationPreset[] = [
       [TILE_TYPES.MOUNTAIN]: 1.0,
       [TILE_TYPES.SNOW]: 1.0, // MUST be 1.0 since it is the last tile type
     },
-    octaves: 1,
+    octaves: 2,
   },
 ];
