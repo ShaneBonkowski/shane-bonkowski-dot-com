@@ -140,6 +140,7 @@ export class GameObject {
                 | Phaser.GameObjects.Sprite
                 | Phaser.GameObjects.Shape
                 | Phaser.GameObjects.Text
+                | Phaser.GameObjects.Image
             ) => {
               if ("setTint" in child) {
                 child.setTint(newColor);

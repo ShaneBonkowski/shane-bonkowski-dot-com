@@ -23,5 +23,9 @@ export const UseSettings = () => {
       settingsStore.setCustomColorPreset.bind(settingsStore),
     setCurrentColorPresetIndex:
       settingsStore.setCurrentColorPresetIndex.bind(settingsStore),
+    setCustomGenerationPreset:
+      settingsStore.setCustomGenerationPreset.bind(settingsStore),
+    setCurrentGenerationPresetIndex:
+      settingsStore.setCurrentGenerationPresetIndex.bind(settingsStore),
   };
 };

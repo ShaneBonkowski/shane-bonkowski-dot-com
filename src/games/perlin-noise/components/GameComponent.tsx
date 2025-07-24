@@ -97,7 +97,6 @@ const GameComponent: React.FC = () => {
           id={"info-window"}
           aria-label={`Page content for 'info-window'`}
         >
-          {/* FIXME: UPDATE THIS TO THE GAME-SPECIFIC GAME INFO */}
           <h1>Perlin Noise</h1>
           <p>
             FIXME... Perlin Noise.. Well really Simplex Noise but close enough.

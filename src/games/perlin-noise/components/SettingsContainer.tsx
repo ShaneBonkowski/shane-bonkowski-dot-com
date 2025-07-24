@@ -10,6 +10,98 @@ import { UseSettings } from "@/src/games/perlin-noise/components/UseSettings";
 import { TileType } from "@/src/games/perlin-noise/tile-utils";
 import { DEFAULT_COLOR_PRESETS } from "@/src/games/perlin-noise/color-presets";
 import ColorPresetBox from "@/src/games/perlin-noise/components/ColorPresetBox";
+import { DEFAULT_GENERATION_PRESETS } from "@/src/games/perlin-noise/generation-presets";
+import GenerationPresetBox from "@/src/games/perlin-noise/components/GenerationPresetBox";
+
+const GenerationPresetSettings: React.FC = () => {
+  const {
+    customGenerationPresets,
+    currentGenerationPresetIndex,
+    setCustomGenerationPreset,
+    setCurrentGenerationPresetIndex,
+  } = UseSettings();
+
+  const handleUpdateName = (index: number, name: string) => {
+    const updatedPreset = {
+      ...customGenerationPresets[index],
+      name,
+    };
+    setCustomGenerationPreset(index, updatedPreset);
+  };
+
+  const handleUpdateOctaves = (index: number, octaves: number) => {
+    const updatedPreset = {
+      ...customGenerationPresets[index],
+      octaves,
+    };
+    setCustomGenerationPreset(index, updatedPreset);
+  };
+
+  const handleUpdateThreshold = (
+    index: number,
+    tileType: TileType,
+    threshold: number
+  ) => {
+    const updatedPreset = {
+      ...customGenerationPresets[index],
+      generation: {
+        ...customGenerationPresets[index].generation,
+        [tileType]: threshold,
+      },
+    };
+    setCustomGenerationPreset(index, updatedPreset);
+  };
+
+  const handleReset = (index: number) => {
+    if (index < 0 || index >= DEFAULT_GENERATION_PRESETS.length) {
+      console.warn(
+        `Reset failed: index ${index} out of bounds (0-${
+          DEFAULT_GENERATION_PRESETS.length - 1
+        })`
+      );
+      return;
+    }
+
+    // Reset to deep copy of default preset
+    const defaultPreset = DEFAULT_GENERATION_PRESETS[index];
+    const resetPreset = {
+      ...defaultPreset,
+      generation: { ...defaultPreset.generation },
+    };
+    setCustomGenerationPreset(index, resetPreset);
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-4 mb-4">
+      {/* Title and Description */}
+      <div id="perlin-noise-generation-preset-header">
+        <h2 className="text-center">Generation Presets</h2>
+        <p className="text-center">
+          Configure terrain generation thresholds and octaves for different
+          landscape types.
+        </p>
+      </div>
+
+      {/* Generation Preset Boxes */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {customGenerationPresets.map((preset, index) => (
+          <GenerationPresetBox
+            key={index}
+            preset={preset}
+            isSelected={currentGenerationPresetIndex === index}
+            onSelect={() => setCurrentGenerationPresetIndex(index)}
+            onUpdateName={(name) => handleUpdateName(index, name)}
+            onUpdateOctaves={(octaves) => handleUpdateOctaves(index, octaves)}
+            onUpdateThreshold={(tileType, threshold) =>
+              handleUpdateThreshold(index, tileType, threshold)
+            }
+            onReset={() => handleReset(index)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const ColorPresetSettings: React.FC = () => {
   const {
@@ -153,6 +245,7 @@ const SettingsContainer: React.FC = () => {
             id="perlin-noise-settings-description"
           >
             <h1 className="text-center">Settings</h1>
+            <GenerationPresetSettings />
             <ColorPresetSettings />
           </div>
         </div>

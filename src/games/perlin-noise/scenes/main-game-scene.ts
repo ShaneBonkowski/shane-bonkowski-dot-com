@@ -20,6 +20,7 @@ import {
   settingsStore,
   Settings,
 } from "@/src/games/perlin-noise/settings-store";
+import { GenerationPreset } from "@/src/games/perlin-noise/generation-presets";
 
 export class MainGameScene extends Generic2DGameScene {
   public tiles: Tile[][] = [];
@@ -43,6 +44,8 @@ export class MainGameScene extends Generic2DGameScene {
   public autoPlay: boolean = true;
   private customColorPresets: ColorPreset[] = [];
   private currentColorPresetIndex: number = 0;
+  private customGenerationPresets: GenerationPreset[] = [];
+  private currentGenerationPresetIndex: number = 0;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -101,6 +104,8 @@ export class MainGameScene extends Generic2DGameScene {
     this.autoPlay = settings.autoPlay;
     this.customColorPresets = settings.customColorPresets;
     this.currentColorPresetIndex = settings.currentColorPresetIndex;
+    this.customGenerationPresets = settings.customGenerationPresets;
+    this.currentGenerationPresetIndex = settings.currentGenerationPresetIndex;
 
     // Update derived values based on settings
     this.walkSpeed = settings.walkSpeedSliderValue * this.speedScale;
@@ -128,7 +133,10 @@ export class MainGameScene extends Generic2DGameScene {
             ) +
               1) *
             0.5; // Normalize from [-1,1] to [0,1]
-          this.tiles[row][col].updatePerlinValue(newPerlinValue);
+          this.tiles[row][col].updatePerlinValue(
+            newPerlinValue,
+            this.customGenerationPresets[this.currentGenerationPresetIndex]
+          );
         }
       }
 

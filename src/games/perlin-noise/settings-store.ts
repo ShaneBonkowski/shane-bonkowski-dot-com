@@ -3,6 +3,11 @@ import {
   ColorPreset,
   DEFAULT_COLOR_PRESETS,
 } from "@/src/games/perlin-noise/color-presets";
+import {
+  GenerationPreset,
+  DEFAULT_GENERATION_PRESETS,
+} from "@/src/games/perlin-noise/generation-presets";
+import { TILE_TYPES } from "@/src/games/perlin-noise/tile-utils";
 
 export interface Settings {
   autoPlay: boolean;
@@ -11,6 +16,8 @@ export interface Settings {
   zoomSliderValue: number;
   customColorPresets: ColorPreset[];
   currentColorPresetIndex: number;
+  customGenerationPresets: GenerationPreset[];
+  currentGenerationPresetIndex: number;
 }
 
 class SettingsStore extends SyncedStore<Settings> {
@@ -25,6 +32,12 @@ class SettingsStore extends SyncedStore<Settings> {
       colors: { ...preset.colors },
     })),
     currentColorPresetIndex: 0,
+    // Set default to deep copies of default presets
+    customGenerationPresets: DEFAULT_GENERATION_PRESETS.map((preset) => ({
+      ...preset,
+      generation: { ...preset.generation },
+    })),
+    currentGenerationPresetIndex: 0,
   };
 
   private data: Settings = { ...this.defaultData };
@@ -84,6 +97,50 @@ class SettingsStore extends SyncedStore<Settings> {
         colors: { ...DEFAULT_COLOR_PRESETS[4].colors },
       }
     );
+    const savedCurrentGenerationPresetIndex = this.getLocalStorage(
+      "perlinNoiseCurrentGenerationPresetIndex",
+      this.defaultData.currentGenerationPresetIndex
+    );
+    const savedCustomGenerationPreset1 = this.getLocalStorage(
+      "perlinNoiseCustomGenerationPreset1",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_GENERATION_PRESETS[0],
+        generation: { ...DEFAULT_GENERATION_PRESETS[0].generation },
+      }
+    );
+    const savedCustomGenerationPreset2 = this.getLocalStorage(
+      "perlinNoiseCustomGenerationPreset2",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_GENERATION_PRESETS[1],
+        generation: { ...DEFAULT_GENERATION_PRESETS[1].generation },
+      }
+    );
+    const savedCustomGenerationPreset3 = this.getLocalStorage(
+      "perlinNoiseCustomGenerationPreset3",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_GENERATION_PRESETS[2],
+        generation: { ...DEFAULT_GENERATION_PRESETS[2].generation },
+      }
+    );
+    const savedCustomGenerationPreset4 = this.getLocalStorage(
+      "perlinNoiseCustomGenerationPreset4",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_GENERATION_PRESETS[3],
+        generation: { ...DEFAULT_GENERATION_PRESETS[3].generation },
+      }
+    );
+    const savedCustomGenerationPreset5 = this.getLocalStorage(
+      "perlinNoiseCustomGenerationPreset5",
+      // Set default to a deep copy
+      {
+        ...DEFAULT_GENERATION_PRESETS[4],
+        generation: { ...DEFAULT_GENERATION_PRESETS[4].generation },
+      }
+    );
 
     this.setLocalStorageFields(
       savedCurrentColorPresetIndex,
@@ -91,7 +148,13 @@ class SettingsStore extends SyncedStore<Settings> {
       savedCustomColorPreset2,
       savedCustomColorPreset3,
       savedCustomColorPreset4,
-      savedCustomColorPreset5
+      savedCustomColorPreset5,
+      savedCurrentGenerationPresetIndex,
+      savedCustomGenerationPreset1,
+      savedCustomGenerationPreset2,
+      savedCustomGenerationPreset3,
+      savedCustomGenerationPreset4,
+      savedCustomGenerationPreset5
     );
   }
 
@@ -101,7 +164,13 @@ class SettingsStore extends SyncedStore<Settings> {
     customColorPreset2: ColorPreset,
     customColorPreset3: ColorPreset,
     customColorPreset4: ColorPreset,
-    customColorPreset5: ColorPreset
+    customColorPreset5: ColorPreset,
+    currentGenerationPresetIndex: number,
+    customGenerationPreset1: GenerationPreset,
+    customGenerationPreset2: GenerationPreset,
+    customGenerationPreset3: GenerationPreset,
+    customGenerationPreset4: GenerationPreset,
+    customGenerationPreset5: GenerationPreset
   ) {
     this.setCurrentColorPresetIndex(currentColorPresetIndex);
     this.setCustomColorPreset(0, customColorPreset1);
@@ -109,6 +178,12 @@ class SettingsStore extends SyncedStore<Settings> {
     this.setCustomColorPreset(2, customColorPreset3);
     this.setCustomColorPreset(3, customColorPreset4);
     this.setCustomColorPreset(4, customColorPreset5);
+    this.setCurrentGenerationPresetIndex(currentGenerationPresetIndex);
+    this.setCustomGenerationPreset(0, customGenerationPreset1);
+    this.setCustomGenerationPreset(1, customGenerationPreset2);
+    this.setCustomGenerationPreset(2, customGenerationPreset3);
+    this.setCustomGenerationPreset(3, customGenerationPreset4);
+    this.setCustomGenerationPreset(4, customGenerationPreset5);
   }
 
   protected getData(): Settings {
@@ -164,6 +239,41 @@ class SettingsStore extends SyncedStore<Settings> {
     return value;
   }
 
+  setCustomGenerationPreset(
+    index: number,
+    value: GenerationPreset
+  ): GenerationPreset {
+    // Ensure the index is within bounds
+    if (index < 0 || index >= this.data.customGenerationPresets.length) {
+      throw new Error("Index out of bounds for custom generation presets");
+    }
+
+    // Enforce that the SNOW preset is always == 1 since it is the last tile type
+    if (value.generation[TILE_TYPES.SNOW] !== 1) {
+      console.warn(
+        "SNOW value must be set to 1 since it is the last tile type. Overriding to 1."
+      );
+      value.generation[TILE_TYPES.SNOW] = 1;
+    }
+
+    this.data.customGenerationPresets[index] = value;
+    this.setLocalStorage(
+      `perlinNoiseCustomGenerationPreset${index + 1}`,
+      value
+    );
+    this.notify();
+
+    return value;
+  }
+
+  setCurrentGenerationPresetIndex(value: number): number {
+    this.data.currentGenerationPresetIndex = value;
+    this.setLocalStorage("perlinNoiseCurrentGenerationPresetIndex", value);
+    this.notify();
+
+    return value;
+  }
+
   public resetData() {
     // Reset session data but preserve persistent data
     this.data = {
@@ -176,6 +286,14 @@ class SettingsStore extends SyncedStore<Settings> {
         this.data.customColorPresets[4],
       ],
       currentColorPresetIndex: this.data.currentColorPresetIndex,
+      customGenerationPresets: [
+        this.data.customGenerationPresets[0],
+        this.data.customGenerationPresets[1],
+        this.data.customGenerationPresets[2],
+        this.data.customGenerationPresets[3],
+        this.data.customGenerationPresets[4],
+      ],
+      currentGenerationPresetIndex: this.data.currentGenerationPresetIndex,
     };
 
     this.notify();
@@ -194,7 +312,13 @@ class SettingsStore extends SyncedStore<Settings> {
       this.defaultData.customColorPresets[1],
       this.defaultData.customColorPresets[2],
       this.defaultData.customColorPresets[3],
-      this.defaultData.customColorPresets[4]
+      this.defaultData.customColorPresets[4],
+      this.defaultData.currentGenerationPresetIndex,
+      this.defaultData.customGenerationPresets[0],
+      this.defaultData.customGenerationPresets[1],
+      this.defaultData.customGenerationPresets[2],
+      this.defaultData.customGenerationPresets[3],
+      this.defaultData.customGenerationPresets[4]
     );
 
     this.notify();
