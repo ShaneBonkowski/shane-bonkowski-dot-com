@@ -50,6 +50,9 @@ const UiOverlay: React.FC = () => {
   };
 
   useEffect(() => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
     const handleUiMenuOpen = () => {
       setIsUiVisible(false);
     };
@@ -57,12 +60,28 @@ const UiOverlay: React.FC = () => {
       setIsUiVisible(true);
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
+        document.dispatchEvent(new CustomEvent("perlinWalkUp"));
+      } else if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
+        document.dispatchEvent(new CustomEvent("perlinWalkDown"));
+      } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+        document.dispatchEvent(new CustomEvent("perlinWalkLeft"));
+      } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+        document.dispatchEvent(new CustomEvent("perlinWalkRight"));
+      }
+    };
+
     document.addEventListener("uiMenuOpen", handleUiMenuOpen);
     document.addEventListener("uiMenuClose", handleUiMenuClose);
+    // eslint-disable-next-line no-restricted-syntax
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener("uiMenuOpen", handleUiMenuOpen);
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
+      // eslint-disable-next-line no-restricted-syntax
+      window.removeEventListener("keydown", handleKeyDown);
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -91,7 +110,9 @@ const UiOverlay: React.FC = () => {
             }
             icon={<FaArrowUp size={30} />}
             ariaLabel="Walk Up"
-            title="Walk Up"
+            title="Shortcut: Arrow Key Up"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+            blackShadow={true} // Use a black shadow for the button
           />
           <div /> {/* Empty Gap */}
           <GameIconButton
@@ -100,13 +121,17 @@ const UiOverlay: React.FC = () => {
             }
             icon={<FaArrowLeft size={30} />}
             ariaLabel="Walk Left"
-            title="Walk Left"
+            title="Shortcut: Arrow Key Left"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+            blackShadow={true} // Use a black shadow for the button
           />
           <GameIconButton
             onPointerDown={handleToggleAutoPlay}
             icon={autoPlay ? <FaPause size={30} /> : <FaRobot size={30} />}
             ariaLabel="Toggle Auto Mode"
             title="Toggle Auto Mode"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+            blackShadow={true} // Use a black shadow for the button
           />
           <GameIconButton
             onPointerDown={() =>
@@ -114,7 +139,9 @@ const UiOverlay: React.FC = () => {
             }
             icon={<FaArrowRight size={30} />}
             ariaLabel="Walk Right"
-            title="Walk Right"
+            title="Shortcut: Arrow Key Right"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+            blackShadow={true} // Use a black shadow for the button
           />
           <div /> {/* Empty Gap */}
           <GameIconButton
@@ -123,7 +150,9 @@ const UiOverlay: React.FC = () => {
             }
             icon={<FaArrowDown size={30} />}
             ariaLabel="Walk Down"
-            title="Walk Down"
+            title="Shortcut: Arrow Key Down"
+            lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+            blackShadow={true} // Use a black shadow for the button
           />
           <div /> {/* Empty Gap */}
         </div>
@@ -145,7 +174,7 @@ const UiOverlay: React.FC = () => {
             </div>
             <FaLayerGroup
               size={30}
-              className="text-primary-text-color-light dark:text-primary-text-color"
+              className="text-primary-text-color drop-shadow-black"
             />
           </div>
           {/* Speed slider */}
@@ -164,7 +193,7 @@ const UiOverlay: React.FC = () => {
             </div>
             <GiRabbit
               size={30}
-              className="text-primary-text-color-light dark:text-primary-text-color"
+              className="text-primary-text-color drop-shadow-black"
             />
           </div>
           {/* Zoom slider */}
@@ -173,8 +202,8 @@ const UiOverlay: React.FC = () => {
             <div className="pt-4 pb-2">
               <input
                 type="range"
-                min={1} // no zero zoom
-                max={200}
+                min={-50} // no zero zoom
+                max={-1}
                 step={1}
                 value={zoomSliderValue}
                 onChange={handleZoomChange}
@@ -183,7 +212,7 @@ const UiOverlay: React.FC = () => {
             </div>
             <FaSearchPlus
               size={30}
-              className="text-primary-text-color-light dark:text-primary-text-color"
+              className="text-primary-text-color drop-shadow-black"
             />
           </div>
         </div>

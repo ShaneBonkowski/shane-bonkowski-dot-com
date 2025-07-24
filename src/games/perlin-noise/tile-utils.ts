@@ -1,31 +1,22 @@
 import { Tile } from "@/src/games/perlin-noise/tile";
 
-export enum tileTypes {
-  DEEP_WATER,
-  SHALLOW_WATER,
-  BEACH,
-  SOIL,
-  GRASS,
-  FOREST,
-  MOUNTAIN,
-  SNOW,
-}
+export const TILE_TYPES = {
+  DEEP_WATER: "DEEP_WATER",
+  SHALLOW_WATER: "SHALLOW_WATER",
+  BEACH: "BEACH",
+  SOIL: "SOIL",
+  GRASS: "GRASS",
+  FOREST: "FOREST",
+  MOUNTAIN: "MOUNTAIN",
+  SNOW: "SNOW",
+} as const;
 
-export const tileColorMap: Record<tileTypes, number> = {
-  [tileTypes.DEEP_WATER]: 0x386d9b,
-  [tileTypes.SHALLOW_WATER]: 0x5ec1c7,
-  [tileTypes.BEACH]: 0xf1d3a8,
-  [tileTypes.SOIL]: 0xa87656,
-  [tileTypes.GRASS]: 0x6fb560,
-  [tileTypes.FOREST]: 0x44702d,
-  [tileTypes.MOUNTAIN]: 0x394a50,
-  [tileTypes.SNOW]: 0xf1f6f0,
-};
+export type TileType = (typeof TILE_TYPES)[keyof typeof TILE_TYPES];
 
-export const tileGridWidthPhone = 250;
-export const tileGridHeightPhone = 500;
-export const tileGridWidthComputer = 1000;
-export const tileGridHeightComputer = 500;
+export const tileGridWidthPhone = 200;
+export const tileGridHeightPhone = 400;
+export const tileGridWidthComputer = 500;
+export const tileGridHeightComputer = 250;
 
 export function instantiateTiles(w: number, h: number): Tile[][] {
   let tiles: Tile[][] = [];

@@ -94,8 +94,12 @@ const UiOverlay: React.FC = () => {
         className="pointer-events-none flex justify-center items-center gap-6"
         aria-label="Game State Info"
       >
-        <p className="mb-0 text-primary-text-color">Population: {population}</p>
-        <p className="mb-0 text-primary-text-color">Generation: {generation}</p>
+        <p className="mb-0 text-outline-dark text-primary-text-color">
+          <b>Population: {population}</b>
+        </p>
+        <p className="mb-0 text-outline-dark text-primary-text-color">
+          <b>Generation: {generation}</b>
+        </p>
       </div>
 
       {/* Buttons and Toggles */}
@@ -110,6 +114,7 @@ const UiOverlay: React.FC = () => {
           icon={discoMode ? <FaBan size={30} /> : <FaMagic size={30} />}
           ariaLabel="Toggle Disco Mode"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          blackShadow={true} // Use a black shadow for the button
           title="Toggle Disco Mode"
         />
 
@@ -121,6 +126,7 @@ const UiOverlay: React.FC = () => {
           }
           ariaLabel="Toggle Auto Mode"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          blackShadow={true} // Use a black shadow for the button
           title="Toggle Auto Mode"
         />
 
@@ -130,6 +136,7 @@ const UiOverlay: React.FC = () => {
           icon={paused ? <FaPlay size={30} /> : <FaPause size={30} />}
           ariaLabel={paused ? "Play" : "Pause"}
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          blackShadow={true} // Use a black shadow for the button
           title={paused ? "Play" : "Pause"}
         />
 
@@ -139,6 +146,7 @@ const UiOverlay: React.FC = () => {
           icon={<FaGreaterThan size={30} />}
           ariaLabel="Advance to Next Generation"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          blackShadow={true} // Use a black shadow for the button
           title="Advance to Next Generation"
         />
 
@@ -148,6 +156,7 @@ const UiOverlay: React.FC = () => {
           icon={<FaRedo size={30} />}
           ariaLabel="Reset Tiles"
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+          blackShadow={true} // Use a black shadow for the button
           title="Reset Tiles"
         />
       </div>

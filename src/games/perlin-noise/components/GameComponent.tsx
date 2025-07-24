@@ -88,7 +88,10 @@ const GameComponent: React.FC = () => {
       {/* UI */}
       <UiOverlay />
       <SettingsContainer />
-      <GameInfoContainer>
+      <GameInfoContainer
+        lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+        blackShadow={true} // Use a black shadow for the button
+      >
         <div
           className="written-content-container"
           id={"info-window"}
@@ -99,6 +102,21 @@ const GameComponent: React.FC = () => {
           <p>
             FIXME... Perlin Noise.. Well really Simplex Noise but close enough.
           </p>
+          <h2>Keyboard Shortcuts</h2>
+          <ul>
+            <li>
+              <b>Up Arrow</b>: Move Up
+            </li>
+            <li>
+              <b>Down Arrow</b>: Move Down
+            </li>
+            <li>
+              <b>Left Arrow</b>: Move Left
+            </li>
+            <li>
+              <b>Right Arrow</b>: Move Right
+            </li>
+          </ul>
         </div>
       </GameInfoContainer>
 

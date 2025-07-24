@@ -11,8 +11,8 @@ import {
   tileGridHeightComputer,
   tileGridWidthPhone,
   tileGridHeightPhone,
-  tileColorMap,
 } from "@/src/games/perlin-noise/tile-utils";
+import { ColorPreset } from "@/src/games/perlin-noise/color-presets";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec3 } from "@/src/utils/vector";
 import { createNoise3D } from "simplex-noise";
@@ -26,6 +26,7 @@ export class MainGameScene extends Generic2DGameScene {
   public tileGridWidth: number = 0;
   public tileGridHeight: number = 0;
   public tileGridTexture: TileGridTexture | null = null;
+
   private requestSetComputerLayout: boolean = false;
   private requestSetPhoneLayout: boolean = false;
   public random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
@@ -38,7 +39,10 @@ export class MainGameScene extends Generic2DGameScene {
   private speedScale: number = 0.0005;
   private zSliceScale: number = 0.01; // Scale for the z-slice value
   private lastWalkDirection: Vec3 = new Vec3(1, 0, 0); // right
+
   public autoPlay: boolean = true;
+  private customColorPresets: ColorPreset[] = [];
+  private currentColorPresetIndex: number = 0;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -95,6 +99,8 @@ export class MainGameScene extends Generic2DGameScene {
 
   setSettingsFromStore(settings: Settings) {
     this.autoPlay = settings.autoPlay;
+    this.customColorPresets = settings.customColorPresets;
+    this.currentColorPresetIndex = settings.currentColorPresetIndex;
 
     // Update derived values based on settings
     this.walkSpeed = settings.walkSpeedSliderValue * this.speedScale;
@@ -147,7 +153,9 @@ export class MainGameScene extends Generic2DGameScene {
         this.tileGridTexture!.setPixelHex(
           row,
           col,
-          tileColorMap[this.tiles[row][col].tileType]
+          this.customColorPresets[this.currentColorPresetIndex].colors[
+            this.tiles[row][col].tileType
+          ]
         );
       }
     }
@@ -194,11 +202,11 @@ export class MainGameScene extends Generic2DGameScene {
   };
 
   handleWalkLeft = () => {
-    this.walk(new Vec3(-1, 0, 0));
+    this.walk(new Vec3(1, 0, 0));
   };
 
   handleWalkRight = () => {
-    this.walk(new Vec3(1, 0, 0));
+    this.walk(new Vec3(-1, 0, 0));
   };
 
   walk = (walkDirection: Vec3) => {

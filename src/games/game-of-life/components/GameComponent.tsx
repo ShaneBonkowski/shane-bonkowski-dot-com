@@ -90,6 +90,7 @@ const GameComponent: React.FC = () => {
       <SettingsContainer />
       <GameInfoContainer
         lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+        blackShadow={true} // Use a black shadow for the button
       >
         <div
           className="written-content-container"

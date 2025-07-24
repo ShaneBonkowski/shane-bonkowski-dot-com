@@ -1,10 +1,10 @@
 import { Vec2 } from "@/src/utils/vector";
-import { tileTypes } from "@/src/games/perlin-noise/tile-utils";
+import { TileType, TILE_TYPES } from "@/src/games/perlin-noise/tile-utils";
 
 export class Tile {
   public gridSpaceLoc: Vec2 = new Vec2(0, 0);
   public perlinValue: number = 0;
-  public tileType: tileTypes = tileTypes.DEEP_WATER;
+  public tileType: TileType = TILE_TYPES.DEEP_WATER;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor(gridX: number, gridY: number) {
@@ -26,21 +26,21 @@ export class Tile {
 
   updateType() {
     if (this.perlinValue < 0.15) {
-      this.tileType = tileTypes.DEEP_WATER;
+      this.tileType = TILE_TYPES.DEEP_WATER;
     } else if (this.perlinValue < 0.35) {
-      this.tileType = tileTypes.SHALLOW_WATER;
+      this.tileType = TILE_TYPES.SHALLOW_WATER;
     } else if (this.perlinValue < 0.45) {
-      this.tileType = tileTypes.BEACH;
+      this.tileType = TILE_TYPES.BEACH;
     } else if (this.perlinValue < 0.55) {
-      this.tileType = tileTypes.SOIL;
+      this.tileType = TILE_TYPES.SOIL;
     } else if (this.perlinValue < 0.65) {
-      this.tileType = tileTypes.GRASS;
+      this.tileType = TILE_TYPES.GRASS;
     } else if (this.perlinValue < 0.75) {
-      this.tileType = tileTypes.FOREST;
+      this.tileType = TILE_TYPES.FOREST;
     } else if (this.perlinValue < 0.88) {
-      this.tileType = tileTypes.MOUNTAIN;
+      this.tileType = TILE_TYPES.MOUNTAIN;
     } else {
-      this.tileType = tileTypes.SNOW;
+      this.tileType = TILE_TYPES.SNOW;
     }
   }
 

@@ -19,5 +19,9 @@ export const UseSettings = () => {
     setWalkSpeedSliderValue:
       settingsStore.setWalkSpeedSliderValue.bind(settingsStore),
     setZoomSliderValue: settingsStore.setZoomSliderValue.bind(settingsStore),
+    setCustomColorPreset:
+      settingsStore.setCustomColorPreset.bind(settingsStore),
+    setCurrentColorPresetIndex:
+      settingsStore.setCurrentColorPresetIndex.bind(settingsStore),
   };
 };
