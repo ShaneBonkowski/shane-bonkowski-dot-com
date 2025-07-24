@@ -62,7 +62,6 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
           icon={<FaUndo size={30} />}
           ariaLabel="Reset Preset"
           title="Reset Preset"
-          lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
         />
         {/* eslint-disable-next-line no-restricted-syntax */}
         <input
@@ -91,7 +90,6 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
           icon={<FaSave size={30} />}
           ariaLabel="Save Preset"
           title="Save Preset"
-          lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
         />
       </div>
 

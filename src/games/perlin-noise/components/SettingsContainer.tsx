@@ -67,7 +67,15 @@ const ColorPresetSettings: React.FC = () => {
       <div id="perlin-noise-color-preset-header">
         <h2 className="text-center">Color Presets</h2>
         <p className="text-center">
-          Click a preset to select it, then customize colors and names
+          Click a preset to select it, then customize colors and names. See{" "}
+          <a
+            href="https://lospec.com/palette-list"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lospec
+          </a>{" "}
+          for color palette inspiration.
         </p>
       </div>
 
