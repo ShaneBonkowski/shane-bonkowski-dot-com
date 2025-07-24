@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { FaUndo, FaSave } from "react-icons/fa";
+import React, { useRef } from "react";
+import { FaUndo } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import { GenerationPreset } from "@/src/games/perlin-noise/generation-presets";
 import { TILE_TYPES, TileType } from "@/src/games/perlin-noise/tile-utils";
@@ -22,12 +22,7 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
   onUpdateThreshold,
   onReset,
 }) => {
-  const [tempName, setTempName] = useState(preset.name);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleNameSubmit = () => {
-    onUpdateName(tempName);
-  };
 
   // Get ordered tile types for proper threshold constraints
   const orderedTileTypes = [
@@ -63,22 +58,21 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
     <div className={"p-4 rounded-lg border-2 cursor-pointer border-gray-500"}>
       {/* Preset Name and controls */}
       <div className="mb-4 gap-2 flex items-center justify-between">
+        {/* Use a fake button as a spacer to allow the text to be centered properly */}
         <GameIconButton
-          onPointerDown={() => {
-            onReset();
-            setTempName(preset.name);
-          }}
+          onPointerDown={() => {}}
           icon={<FaUndo size={30} />}
-          ariaLabel="Reset Preset"
-          title="Reset Preset"
+          ariaLabel="Fake Invisible Button (Spacer)"
+          className="invisible"
+          disabled={true}
         />
         {/* eslint-disable-next-line no-restricted-syntax */}
         <input
           type="text"
           ref={inputRef}
           placeholder="Preset name here..."
-          value={tempName}
-          onChange={(e) => setTempName(e.target.value)}
+          value={preset.name}
+          onChange={(e) => onUpdateName(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               // On mobile, we want to prevent the default behavior of the Enter
@@ -95,10 +89,10 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
           aria-label="Preset name input"
         />
         <GameIconButton
-          onPointerDown={handleNameSubmit}
-          icon={<FaSave size={30} />}
-          ariaLabel="Save Preset"
-          title="Save Preset"
+          onPointerDown={onReset}
+          icon={<FaUndo size={30} />}
+          ariaLabel="Reset Preset"
+          title="Reset Preset"
         />
       </div>
 
