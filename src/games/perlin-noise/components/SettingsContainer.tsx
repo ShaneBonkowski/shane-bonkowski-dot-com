@@ -23,7 +23,7 @@ const QualitySettings: React.FC = () => {
   ] as const;
 
   return (
-    <div className="flex flex-col items-center gap-4 mb-4">
+    <div className="flex flex-col items-center gap-4 mb-4 max-w-xl">
       {/* Title and Description */}
       <div id="perlin-noise-quality-header">
         <h2 className="text-center">Quality Level</h2>
@@ -128,19 +128,18 @@ const GenerationPresetSettings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 mb-4">
+    <div className="flex flex-col items-center gap-4 mb-4 max-w-xl">
       {/* Title and Description */}
       <div id="perlin-noise-generation-preset-header">
         <h2 className="text-center">Generation Presets</h2>
         <p className="text-center">
-          Configure terrain generation thresholds and octaves for different
-          landscape types. Higher octaves increase detail but may impact
-          performance.
+          Configure terrain generation parameters for different landscape types.
+          Higher octaves increase detail but may impact performance.
         </p>
       </div>
 
       {/* Navigation Controls */}
-      <div className="flex items-center gap-4 w-full max-w-md">
+      <div className="flex items-center gap-4 w-full">
         <GameIconButton
           onPointerDown={handlePrevious}
           icon={<FaChevronLeft size={20} />}
@@ -162,7 +161,7 @@ const GenerationPresetSettings: React.FC = () => {
       </div>
 
       {/* Single Preset Box */}
-      <div className="w-full max-w-md">
+      <div className="w-full">
         <GenerationPresetBox
           key={currentGenerationPresetIndex}
           preset={currentPreset}
@@ -255,12 +254,12 @@ const ColorPresetSettings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 mb-4">
+    <div className="flex flex-col items-center gap-4 mb-4 max-w-xl">
       {/* Title and Description */}
       <div id="perlin-noise-color-preset-header">
         <h2 className="text-center">Color Presets</h2>
         <p className="text-center">
-          Click a preset to select it, then customize colors and names. See{" "}
+          Customize terrain colors and names. See{" "}
           <a
             href="https://lospec.com/palette-list"
             target="_blank"
@@ -273,7 +272,7 @@ const ColorPresetSettings: React.FC = () => {
       </div>
 
       {/* Navigation Controls */}
-      <div className="flex items-center gap-4 w-full max-w-md">
+      <div className="flex items-center gap-4 w-full">
         <GameIconButton
           onPointerDown={handlePrevious}
           icon={<FaChevronLeft size={20} />}
@@ -294,7 +293,7 @@ const ColorPresetSettings: React.FC = () => {
       </div>
 
       {/* Single Preset Box */}
-      <div className="w-full max-w-md">
+      <div className="w-full">
         <ColorPresetBox
           key={currentColorPresetIndex}
           preset={currentPreset}

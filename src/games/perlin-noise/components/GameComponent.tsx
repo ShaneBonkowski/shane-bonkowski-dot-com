@@ -99,8 +99,53 @@ const GameComponent: React.FC = () => {
         >
           <h1>Perlin Noise</h1>
           <p>
-            FIXME... Perlin Noise.. Well really Simplex Noise but close enough.
+            Explore procedurally generated landscapes using{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Perlin_noise"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Perlin Noise
+            </a>{" "}
+            terrain generation. From this fairly simple algorithm, it is
+            possible to create realistic, organic-looking terrain patterns in
+            real-time.
           </p>
+
+          <h2>How It Works</h2>
+          <p>
+            Noise functions generate pseudo-random values that create smooth,
+            natural-looking patterns. Each point on the terrain corresponds to a
+            noise value between 0 and 1, which determines the tile type. These
+            tile types range from deep water (low values) to snow-capped
+            mountains (high values).
+          </p>
+
+          <h3>Terrain Thresholds</h3>
+          <p>
+            The generation presets use threshold values to map noise output to
+            terrain types. For example, values below 0.15 may become deep water,
+            0.15-0.35 may become shallow water, and so on. This creates distinct
+            biomes with smooth transitions. These values are fully customizable
+            in the settings menu.
+          </p>
+
+          <h3>Octaves</h3>
+          <p>
+            Octaves add detail by layering multiple noise functions together.
+            Each octave has double the frequency and half the amplitude of the
+            previous one:
+          </p>
+          <ul>
+            <li>
+              <b>1 Octave</b>: Smooth, rolling hills with broad features
+            </li>
+            <li>
+              <b>2-4 Octaves</b>: More realistic terrain with medium-to-high
+              detail
+            </li>
+          </ul>
+
           <h2>Keyboard Shortcuts</h2>
           <ul>
             <li>
@@ -116,6 +161,22 @@ const GameComponent: React.FC = () => {
               <b>Right Arrow</b>: Move Right
             </li>
           </ul>
+
+          <h2>Technical Note</h2>
+          <p>
+            While called &quot;Perlin Noise,&quot; this implementation actually
+            uses{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Simplex_noise"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Simplex Noise
+            </a>
+            , developed by Ken Perlin as an improvement over his original
+            algorithm. Simplex Noise offers better performance and visual
+            quality, especially in higher dimensions.
+          </p>
         </div>
       </GameInfoContainer>
 

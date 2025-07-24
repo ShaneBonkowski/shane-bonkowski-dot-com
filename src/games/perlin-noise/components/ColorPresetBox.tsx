@@ -6,6 +6,7 @@ import { ColorPreset } from "@/src/games/perlin-noise/color-presets";
 import { TileType } from "@/src/games/perlin-noise/tile-utils";
 import GameIconButton from "@/src/components/GameIconButton";
 import { isMobileDevice } from "@/src/utils/heuristics";
+import GameFakeIconButton from "@/src/components/GameFakeIconButton";
 
 interface ColorPresetBoxProps {
   preset: ColorPreset;
@@ -32,17 +33,11 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
   };
 
   return (
-    <div className={"p-4 rounded-lg border-2 cursor-pointer border-gray-500"}>
+    <div className={"p-4 rounded-lg border-2 border-gray-500"}>
       {/* Preset Name and controls */}
       <div className="mb-4 gap-2 flex items-center justify-between">
         {/* Use a fake button as a spacer to allow the text to be centered properly */}
-        <GameIconButton
-          onPointerDown={() => {}}
-          icon={<FaUndo size={30} />}
-          ariaLabel="Fake Invisible Button (Spacer)"
-          className="invisible"
-          disabled={true}
-        />
+        <GameFakeIconButton sizeFallback={30} invisible={true} />
         {/* eslint-disable-next-line no-restricted-syntax */}
         <input
           type="text"

@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import { GiRabbit } from "react-icons/gi";
 import GameIconButton from "@/src/components/GameIconButton";
+import GameFakeIconButton from "@/src/components/GameFakeIconButton";
 import { UseSettings } from "@/src/games/perlin-noise/components/UseSettings";
 
 const UiOverlay: React.FC = () => {
@@ -172,9 +173,14 @@ const UiOverlay: React.FC = () => {
                 className="z-20 pointer-events-auto"
               />
             </div>
-            <FaLayerGroup
-              size={30}
-              className="text-primary-text-color drop-shadow-black"
+            {/* Have the icon emulate a button so that it has the same padding etc. */}
+            <GameFakeIconButton
+              icon={
+                <FaLayerGroup
+                  size={30}
+                  className="text-primary-text-color drop-shadow-black"
+                />
+              }
             />
           </div>
           {/* Speed slider */}
@@ -191,9 +197,14 @@ const UiOverlay: React.FC = () => {
                 className="z-20 pointer-events-auto"
               />
             </div>
-            <GiRabbit
-              size={30}
-              className="text-primary-text-color drop-shadow-black"
+            {/* Have the icon emulate a button so that it has the same padding etc. */}
+            <GameFakeIconButton
+              icon={
+                <GiRabbit
+                  size={30}
+                  className="text-primary-text-color drop-shadow-black"
+                />
+              }
             />
           </div>
           {/* Zoom slider */}
@@ -210,9 +221,14 @@ const UiOverlay: React.FC = () => {
                 className="z-20 pointer-events-auto"
               />
             </div>
-            <FaSearchPlus
-              size={30}
-              className="text-primary-text-color drop-shadow-black"
+            {/* Have the icon emulate a button so that it has the same padding etc. */}
+            <GameFakeIconButton
+              icon={
+                <FaSearchPlus
+                  size={30}
+                  className="text-primary-text-color drop-shadow-black"
+                />
+              }
             />
           </div>
         </div>

@@ -15,7 +15,7 @@ const contentBoxData: ContentBoxProps[] = [
     title: "Perlin Noise",
     dateISO: "2025/07/21",
     description:
-      "Explore the complex world procedural generation with Perlin Noise.",
+      "Explore the complex world of procedural generation with Perlin Noise.",
     searchTags: "game, perlin, noise, procedural, generation, world",
     contentType: "games",
     openInNewTab: false,
