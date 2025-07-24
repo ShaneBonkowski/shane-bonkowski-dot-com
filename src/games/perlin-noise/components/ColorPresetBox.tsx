@@ -81,7 +81,7 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
               }
             }
           }}
-          maxLength={10}
+          maxLength={16}
           className="w-full p-2 text-center bg-transparent border-b border-transparent focus:border-gray-500 outline-none"
           style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
           aria-label="Preset name input"

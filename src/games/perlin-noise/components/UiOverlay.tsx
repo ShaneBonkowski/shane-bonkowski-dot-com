@@ -61,13 +61,13 @@ const UiOverlay: React.FC = () => {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
+      if (e.key === "ArrowUp") {
         document.dispatchEvent(new CustomEvent("perlinWalkUp"));
-      } else if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
+      } else if (e.key === "ArrowDown") {
         document.dispatchEvent(new CustomEvent("perlinWalkDown"));
-      } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+      } else if (e.key === "ArrowLeft") {
         document.dispatchEvent(new CustomEvent("perlinWalkLeft"));
-      } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+      } else if (e.key === "ArrowRight") {
         document.dispatchEvent(new CustomEvent("perlinWalkRight"));
       }
     };
