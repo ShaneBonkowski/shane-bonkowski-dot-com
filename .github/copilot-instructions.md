@@ -106,3 +106,4 @@ Follow official [Next.js documentation](https://nextjs.org/docs) for:
 - When adding new features, ensure they are consistent with the existing code style and architecture.
 - Feel free to ask for clarification if the requirements are ambiguous or incomplete prior to generating code.
 - Refrain from generating the entire code for a given file when asked to make small changes. It is better to send just the relevant snippets or diffs, with comments indicating where they fit in the overall file structure.
+- Any input elements such as `<input>`, `<button>`, etc. should have padding around them so that mobile users can easily tap them without accidentally hitting adjacent elements. See related examples of this in the source code, or leave a placeholder so that the user can add padding later.

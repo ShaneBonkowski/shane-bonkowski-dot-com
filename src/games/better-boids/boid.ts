@@ -90,16 +90,18 @@ export class Boid extends GameObject {
     this.graphic.setOrigin(0.5, 0.5);
 
     // Define an animation for the sprite
-    this.graphic.anims.create({
-      key: "boidAnimation",
-      frames: this.graphic.anims.generateFrameNumbers(boidAnimName, {
-        start: 0,
-        end: -1,
-      }), // -1 to use all frames
-      frameRate: 6,
-      repeat: -1, // Repeat indefinitely
-    });
-    this.graphic.anims.play("boidAnimation");
+    if ("anims" in this.graphic) {
+      this.graphic.anims.create({
+        key: "boidAnimation",
+        frames: this.graphic.anims.generateFrameNumbers(boidAnimName, {
+          start: 0,
+          end: -1,
+        }), // -1 to use all frames
+        frameRate: 6,
+        repeat: -1, // Repeat indefinitely
+      });
+      this.graphic.anims.play("boidAnimation");
+    }
   }
 
   handlePointerDown = (pointer: Phaser.Input.Pointer) => {

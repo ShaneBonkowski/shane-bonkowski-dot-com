@@ -10,6 +10,7 @@ interface GameIconButtonProps {
   lightModeDark?: boolean;
   darkModeLight?: boolean;
   whiteBackground?: boolean;
+  blackShadow?: boolean;
   disabled?: boolean;
   title?: string;
 }
@@ -22,6 +23,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
   lightModeDark = false, // true -> make the light mode be the dark mode colors
   darkModeLight = false, // true -> make the dark mode be the light mode colors
   whiteBackground = false, // true -> use a white background for the button
+  blackShadow = false, // true -> use a black shadow for the button
   disabled = false, // Whether the button is disabled
   title = undefined, // Optional tooltip text
 }) => {
@@ -65,8 +67,9 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
       className={
         (whiteBackground ? "bg-white " : "") +
         `app-mode p-[8px] z-20 pointer-events-auto flex items-center justify-center cursor-pointer 
-        disabled:cursor-not-allowed
-        ${lightModeClass} ${darkModeClass} ${className}`
+        disabled:cursor-not-allowed 
+        ${lightModeClass} ${darkModeClass} ${className}
+        ${blackShadow ? "drop-shadow-black" : ""}`
       }
       onPointerDown={disabled ? undefined : onPointerDown}
       aria-label={ariaLabel}

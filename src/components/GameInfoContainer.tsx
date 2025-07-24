@@ -12,12 +12,14 @@ const GameInfoContainer: React.FC<{
   lightModeDark?: boolean;
   darkModeLight?: boolean;
   whiteBackground?: boolean;
+  blackShadow?: boolean;
   children: React.ReactNode;
   onOpen?: () => void;
 }> = ({
   lightModeDark = false,
   darkModeLight = false,
   whiteBackground = false,
+  blackShadow = false,
   children,
   onOpen,
 }) => {
@@ -139,6 +141,7 @@ const GameInfoContainer: React.FC<{
           lightModeDark={lightModeDark}
           darkModeLight={darkModeLight}
           whiteBackground={whiteBackground}
+          blackShadow={blackShadow}
           title="Game Information"
         />
       </div>

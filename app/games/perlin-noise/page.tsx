@@ -1,12 +1,12 @@
 import dynamic from "next/dynamic";
 import { GameMetadataProps } from "@/src/types/data-props";
-import GameComponent from "@/src/games/cowpoke/components/GameComponent";
+import GameComponent from "@/src/games/perlin-noise/components/GameComponent";
 
 const gameMetadata: GameMetadataProps = {
-  title: "Cowpoke",
+  title: "Perlin Noise",
   description: "A game by Shane Bonkowski.",
-  coverImageUrl: "/webps/games/cowpoke-cover.webp",
-  imageAlt: "Cowpoke",
+  coverImageUrl: "/webps/games/perlin-noise-cover.webp",
+  imageAlt: "Perlin Noise",
 };
 
 export const metadata = {

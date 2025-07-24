@@ -18,6 +18,7 @@ export class GameObject {
     | Phaser.GameObjects.Sprite
     | Phaser.GameObjects.Shape
     | Phaser.GameObjects.Container
+    | Phaser.GameObjects.Image
     | null = null;
   public physicsBody2D: PhysicsBody2D | null = null;
   public rigidBody2D: RigidBody2D | null = null;
@@ -139,6 +140,7 @@ export class GameObject {
                 | Phaser.GameObjects.Sprite
                 | Phaser.GameObjects.Shape
                 | Phaser.GameObjects.Text
+                | Phaser.GameObjects.Image
             ) => {
               if ("setTint" in child) {
                 child.setTint(newColor);

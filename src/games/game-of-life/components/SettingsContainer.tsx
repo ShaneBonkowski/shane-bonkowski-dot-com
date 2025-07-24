@@ -151,6 +151,7 @@ const SettingsContainer: React.FC = () => {
         ariaLabel="Settings"
         className={`fixed bottom-3 left-3 ${isButtonVisible ? "" : "hidden"}`}
         lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
+        blackShadow={true} // Use a black shadow for the button
         title="Settings"
       />
 
