@@ -3,10 +3,13 @@ import { Vec2 } from "@/src/utils/vector";
 import { MoreMath } from "@/src/utils/more-math";
 import {
   tileStates,
-  tileGridAttrs,
   tileAndBackgroundColors,
 } from "@/src/games/game-of-life/tile-utils";
-import { MainGameScene } from "@/src/games/game-of-life/scenes/main-game-scene";
+import {
+  MainGameScene,
+  tileGridWidth,
+  tileGridHeight,
+} from "@/src/games/game-of-life/scenes/main-game-scene";
 import { gameDataStore } from "@/src/games/game-of-life/game-data-store";
 
 const TILE_ON_SCALE_FACTOR = 1.2;
@@ -220,8 +223,8 @@ export class Tile extends GameObject {
     // Calculate the total grid size in pixels (taking into account scale and tile "ON" size)
     const tileScale = this.calculateDefaultScale() * TILE_ON_SCALE_FACTOR;
     const tileSizePx = 600 * tileScale; // = size of tile png of 600px * "ON" scale
-    const gridWidthPx = tileSizePx * tileGridAttrs.tileGridWidth;
-    const gridHeightPx = tileSizePx * tileGridAttrs.tileGridHeight;
+    const gridWidthPx = tileSizePx * tileGridWidth;
+    const gridHeightPx = tileSizePx * tileGridHeight;
 
     // Calculate min/max center positions so grid stays on screen (clamps so
     // that at least 1 tile is visible)
@@ -249,24 +252,20 @@ export class Tile extends GameObject {
     const tileSpacing = tileSizePx + smallAmountForGrid;
     let startGridX, startGridY;
 
-    if (tileGridAttrs.tileGridWidth % 2 === 0) {
+    if (tileGridWidth % 2 === 0) {
       // Even grid size
-      startGridX =
-        centerX - (tileGridAttrs.tileGridWidth / 2 - 0.5) * tileSpacing;
+      startGridX = centerX - (tileGridWidth / 2 - 0.5) * tileSpacing;
     } else {
       // Odd grid size
-      startGridX =
-        centerX - ((tileGridAttrs.tileGridWidth - 1) / 2) * tileSpacing;
+      startGridX = centerX - ((tileGridWidth - 1) / 2) * tileSpacing;
     }
 
-    if (tileGridAttrs.tileGridHeight % 2 === 0) {
+    if (tileGridHeight % 2 === 0) {
       // Even grid size
-      startGridY =
-        centerY + (tileGridAttrs.tileGridHeight / 2 - 0.5) * tileSpacing;
+      startGridY = centerY + (tileGridHeight / 2 - 0.5) * tileSpacing;
     } else {
       // Odd grid size
-      startGridY =
-        centerY + ((tileGridAttrs.tileGridHeight - 1) / 2) * tileSpacing;
+      startGridY = centerY + ((tileGridHeight - 1) / 2) * tileSpacing;
     }
 
     // Calculate the position of the current tile in the grid from bottom-left

@@ -108,7 +108,7 @@ const GameComponent: React.FC = () => {
       {/* Loading Screen */}
       {isLoading && (
         <GameLoadingScreen
-          coverImage="/webps/games/better-boids-cover.webp" // FIXME: UPDATE THIS TO THE GAME-SPECIFIC COVER IMAGE
+          coverImage="/webps/games/perlin-noise-cover.webp"
           onFadeOutComplete={handleFadeOutComplete}
         />
       )}

@@ -1,6 +1,4 @@
 import { Tile } from "@/src/games/perlin-noise/tile";
-import { MainGameScene } from "@/src/games/perlin-noise/scenes/main-game-scene";
-import { Vec2 } from "@/src/utils/vector";
 
 export enum tileTypes {
   DEEP_WATER,
@@ -24,21 +22,16 @@ export const tileColorMap: Record<tileTypes, number> = {
   [tileTypes.SNOW]: 0xf1f6f0,
 };
 
-export const tileGridWidthPhone = 120;
-export const tileGridHeightPhone = 240;
-export const tileGridWidthComputer = 400;
-export const tileGridHeightComputer = 200;
+export const tileGridWidthPhone = 250;
+export const tileGridHeightPhone = 500;
+export const tileGridWidthComputer = 1000;
+export const tileGridHeightComputer = 500;
 
-export const tileGridSize: Vec2 = new Vec2(
-  tileGridWidthComputer,
-  tileGridHeightComputer
-);
-
-export function instantiateTiles(scene: MainGameScene): Tile[][] {
+export function instantiateTiles(w: number, h: number): Tile[][] {
   let tiles: Tile[][] = [];
 
-  if (tileGridSize.x > 0 && tileGridSize.y > 0) {
-    tiles = createTilegrid(scene);
+  if (w > 0 && h > 0) {
+    tiles = createTilegrid(w, h);
   } else {
     console.log(`Not spawning in tiles, tile grid width and/or height is <= 0`);
   }
@@ -46,13 +39,13 @@ export function instantiateTiles(scene: MainGameScene): Tile[][] {
   return tiles;
 }
 
-function createTilegrid(scene: MainGameScene): Tile[][] {
+function createTilegrid(w: number, h: number): Tile[][] {
   const tiles: Tile[][] = [];
 
-  for (let i = 0; i < tileGridSize.x; i++) {
+  for (let i = 0; i < w; i++) {
     tiles[i] = []; // Initialize an array for the current row
-    for (let j = 0; j < tileGridSize.y; j++) {
-      const tile = new Tile(scene, i, j);
+    for (let j = 0; j < h; j++) {
+      const tile = new Tile(i, j);
       tiles[i][j] = tile;
     }
   }

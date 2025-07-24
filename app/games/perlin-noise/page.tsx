@@ -5,7 +5,7 @@ import GameComponent from "@/src/games/perlin-noise/components/GameComponent";
 const gameMetadata: GameMetadataProps = {
   title: "Perlin Noise",
   description: "A game by Shane Bonkowski.",
-  coverImageUrl: "/webps/games/better-boids-cover.webp", // FIXME: UPDATE THIS
+  coverImageUrl: "/webps/games/perlin-noise-cover.webp",
   imageAlt: "Perlin Noise",
 };
 

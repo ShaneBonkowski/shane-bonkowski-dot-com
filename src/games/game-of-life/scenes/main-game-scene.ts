@@ -5,7 +5,6 @@ import {
 } from "@/src/events/game-events";
 import {
   instantiateTiles,
-  tileGridAttrs,
   tileGridWidthComputer,
   tileGridHeightComputer,
   tileGridWidthPhone,
@@ -31,6 +30,8 @@ import {
 } from "@/src/games/game-of-life/game-data-store";
 
 export let tiles: Tile[][] = [];
+export let tileGridWidth: number = 0;
+export let tileGridHeight: number = 0;
 
 const unseededRandom = new SeededRandom();
 
@@ -409,8 +410,8 @@ export class MainGameScene extends Generic2DGameScene {
     if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
       // Only update layout if it changed!
       if (
-        tileGridAttrs.tileGridWidth != tileGridWidthPhone ||
-        tileGridAttrs.tileGridHeight != tileGridHeightPhone
+        tileGridWidth != tileGridWidthPhone ||
+        tileGridHeight != tileGridHeightPhone
       ) {
         // See update loop for why we request this instead of doing it now
         this.requestSetPhoneLayout = true;
@@ -418,8 +419,8 @@ export class MainGameScene extends Generic2DGameScene {
     } else {
       // Only update layout if it changed!
       if (
-        tileGridAttrs.tileGridWidth != tileGridWidthComputer ||
-        tileGridAttrs.tileGridHeight != tileGridHeightComputer
+        tileGridWidth != tileGridWidthComputer ||
+        tileGridHeight != tileGridHeightComputer
       ) {
         // See update loop for why we request this instead of doing it now
         this.requestSetComputerLayout = true;
@@ -428,10 +429,6 @@ export class MainGameScene extends Generic2DGameScene {
   }
 
   setTileLayoutForPhone() {
-    // Update layout for phone
-    tileGridAttrs.tileGridWidth = tileGridWidthPhone;
-    tileGridAttrs.tileGridHeight = tileGridHeightPhone;
-
     // Set different zoom / drag rates on phone
     this.gestureManager.setDragRate(1.3);
     this.gestureManager.setZoomRate(0.1);
@@ -439,14 +436,12 @@ export class MainGameScene extends Generic2DGameScene {
     // init or re-init all tiles
     this.livingTilespaceSet.clear();
     this.destroyTiles();
-    tiles = instantiateTiles(this);
+    tileGridWidth = tileGridWidthPhone;
+    tileGridHeight = tileGridHeightPhone;
+    tiles = instantiateTiles(this, tileGridWidth, tileGridHeight);
   }
 
   setLayoutForComputer() {
-    // Update layout for computer
-    tileGridAttrs.tileGridWidth = tileGridWidthComputer;
-    tileGridAttrs.tileGridHeight = tileGridHeightComputer;
-
     // Set different zoom / drag rates on phone
     this.gestureManager.setDragRate(0.85);
     this.gestureManager.setZoomRate(0.065);
@@ -454,7 +449,9 @@ export class MainGameScene extends Generic2DGameScene {
     // init or re-init all tiles
     this.livingTilespaceSet.clear();
     this.destroyTiles();
-    tiles = instantiateTiles(this);
+    tileGridWidth = tileGridWidthComputer;
+    tileGridHeight = tileGridHeightComputer;
+    tiles = instantiateTiles(this, tileGridWidth, tileGridHeight);
   }
 
   resetTiles() {

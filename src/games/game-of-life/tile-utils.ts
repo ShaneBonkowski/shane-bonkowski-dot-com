@@ -15,11 +15,6 @@ export const tileGridHeightPhone = 80;
 export const tileGridWidthComputer = 100;
 export const tileGridHeightComputer = 50;
 
-export const tileGridAttrs = {
-  tileGridWidth: tileGridWidthComputer,
-  tileGridHeight: tileGridHeightComputer,
-};
-
 export const tileAndBackgroundColors = [
   // Each sub-array contains [ON color, OFF color, background color]
   [0x000000, 0xa9a9a9, 0xd3d3d3], // Black on dark gray, light gray background
@@ -120,11 +115,15 @@ export const cgolTileShapes = {
   },
 };
 
-export function instantiateTiles(scene: MainGameScene): Tile[][] {
+export function instantiateTiles(
+  scene: MainGameScene,
+  w: number,
+  h: number
+): Tile[][] {
   let tiles: Tile[][] = [];
 
-  if (tileGridAttrs.tileGridWidth > 0 && tileGridAttrs.tileGridHeight > 0) {
-    tiles = createTilegrid(scene);
+  if (w > 0 && h > 0) {
+    tiles = createTilegrid(scene, w, h);
   } else {
     console.log(`Not spawning in tiles, tile grid width and/or height is <= 0`);
   }
@@ -132,12 +131,12 @@ export function instantiateTiles(scene: MainGameScene): Tile[][] {
   return tiles;
 }
 
-function createTilegrid(scene: MainGameScene): Tile[][] {
+function createTilegrid(scene: MainGameScene, w: number, h: number): Tile[][] {
   const tiles: Tile[][] = [];
 
-  for (let i = 0; i < tileGridAttrs.tileGridWidth; i++) {
+  for (let i = 0; i < w; i++) {
     tiles[i] = []; // Initialize an array for the current row
-    for (let j = 0; j < tileGridAttrs.tileGridHeight; j++) {
+    for (let j = 0; j < h; j++) {
       const tile = new Tile(scene, i, j);
       tiles[i][j] = tile;
     }

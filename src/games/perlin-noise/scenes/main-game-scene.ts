@@ -4,13 +4,14 @@ import {
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
 import { Tile } from "@/src/games/perlin-noise/tile";
+import { TileGridTexture } from "@/src/games/perlin-noise/tile-grid-texture";
 import {
   instantiateTiles,
-  tileGridSize,
   tileGridWidthComputer,
   tileGridHeightComputer,
   tileGridWidthPhone,
   tileGridHeightPhone,
+  tileColorMap,
 } from "@/src/games/perlin-noise/tile-utils";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
 import { Vec3 } from "@/src/utils/vector";
@@ -21,7 +22,10 @@ import {
 } from "@/src/games/perlin-noise/settings-store";
 
 export class MainGameScene extends Generic2DGameScene {
-  private tiles: Tile[][] = [];
+  public tiles: Tile[][] = [];
+  public tileGridWidth: number = 0;
+  public tileGridHeight: number = 0;
+  public tileGridTexture: TileGridTexture | null = null;
   private requestSetComputerLayout: boolean = false;
   private requestSetPhoneLayout: boolean = false;
   public random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
@@ -52,8 +56,8 @@ export class MainGameScene extends Generic2DGameScene {
   preload() {
     super.preload();
 
-    // Preload logic for this scene
-    this.load.image("Tile Blank", "/webps/games/generic-tile-blank.webp");
+    // Do preload logic for this scene
+    // ...
   }
 
   create() {
@@ -140,9 +144,17 @@ export class MainGameScene extends Generic2DGameScene {
   renderPass() {
     for (let row = 0; row < this.tiles.length; row++) {
       for (let col = 0; col < this.tiles[row].length; col++) {
-        this.tiles[row][col].renderGraphics();
+        this.tileGridTexture!.setPixelHex(
+          row,
+          col,
+          tileColorMap[this.tiles[row][col].tileType]
+        );
       }
     }
+
+    // Refresh texture and update graphic (scale etc.)
+    this.tileGridTexture!.refresh();
+    this.tileGridTexture!.updateGraphic();
   }
 
   /*
@@ -199,47 +211,101 @@ export class MainGameScene extends Generic2DGameScene {
   // This will get called automatically by the parent class's handleWindowResize()
   // method.
   handleWindowResizeHook() {
-    // If it switches from landscape to portrait (aka phone) or vice versa,
-    // update the layout of the tile grid.
-    if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
-      // Only update layout if it changed!
-      if (
-        tileGridSize.x != tileGridWidthPhone ||
-        tileGridSize.y != tileGridHeightPhone
-      ) {
-        // See update loop for why we request this instead of doing it now
-        this.requestSetPhoneLayout = true;
-      }
+    // Handle resizing of game objs etc.
+    if (
+      !this.lastKnownWindowSize ||
+      this.lastKnownWindowSize.x == null ||
+      this.lastKnownWindowSize.y == null
+    ) {
+      console.warn(
+        "lastKnownWindowSize is not properly initialized. Skipping resize handling."
+      );
+      return;
     } else {
-      // Only update layout if it changed!
+      // Do not update if screen size has not changed
       if (
-        tileGridSize.x != tileGridWidthComputer ||
-        tileGridSize.y != tileGridHeightComputer
+        this.lastKnownWindowSize.x === this.screenInfo.width &&
+        this.lastKnownWindowSize.y === this.screenInfo.height
       ) {
-        // See update loop for why we request this instead of doing it now
-        this.requestSetComputerLayout = true;
+        return;
+      }
+
+      // Update bkg pos etc. We want to retain the general location of the obj,
+      // so we try to position it the same screen % it was before on the new screen.
+      let newX: number | null = null;
+      let newY: number | null = null;
+
+      if (this.tileGridTexture) {
+        newX =
+          (this.tileGridTexture.physicsBody2D!.position.x /
+            this.lastKnownWindowSize.x) *
+          this.screenInfo.width;
+        newY =
+          (this.tileGridTexture.physicsBody2D!.position.y /
+            this.lastKnownWindowSize.y) *
+          this.screenInfo.height;
+
+        this.tileGridTexture.handleWindowResize(newX, newY);
+      }
+
+      // If it switches from landscape to portrait (aka phone) or vice versa,
+      // update the layout of the tile grid.
+      if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
+        // Only update layout if it changed!
+        if (
+          this.tileGridWidth != tileGridWidthPhone ||
+          this.tileGridHeight != tileGridHeightPhone
+        ) {
+          // See update loop for why we request this instead of doing it now
+          this.requestSetPhoneLayout = true;
+        }
+      } else {
+        // Only update layout if it changed!
+        if (
+          this.tileGridWidth != tileGridWidthComputer ||
+          this.tileGridHeight != tileGridHeightComputer
+        ) {
+          // See update loop for why we request this instead of doing it now
+          this.requestSetComputerLayout = true;
+        }
       }
     }
   }
 
   setTileLayoutForPhone() {
-    // Update layout for phone
-    tileGridSize.x = tileGridWidthPhone;
-    tileGridSize.y = tileGridHeightPhone;
-
     // init or re-init all tiles
     this.destroyTiles();
-    this.tiles = instantiateTiles(this);
+
+    this.tileGridWidth = tileGridWidthPhone;
+    this.tileGridHeight = tileGridHeightPhone;
+
+    this.tiles = instantiateTiles(this.tileGridWidth, this.tileGridHeight);
+
+    // init or re-init the tile grid texture
+    this.destroyTileGridTexture();
+    this.tileGridTexture = new TileGridTexture(
+      this,
+      this.tileGridWidth,
+      this.tileGridHeight
+    );
   }
 
   setLayoutForComputer() {
-    // Update layout for computer
-    tileGridSize.x = tileGridWidthComputer;
-    tileGridSize.y = tileGridHeightComputer;
-
     // init or re-init all tiles
     this.destroyTiles();
-    this.tiles = instantiateTiles(this);
+
+    this.tileGridWidth = tileGridWidthComputer;
+    this.tileGridHeight = tileGridHeightComputer;
+
+    this.tiles = instantiateTiles(this.tileGridWidth, this.tileGridHeight);
+
+    // init or re-init the tile grid texture
+    this.destroyTileGridTexture();
+    this.tileGridTexture = new TileGridTexture(
+      this,
+      this.tileGridWidth,
+      this.tileGridHeight
+    );
   }
 
   destroyTiles() {
@@ -252,6 +318,13 @@ export class MainGameScene extends Generic2DGameScene {
     this.tiles.length = 0; // Clear the tiles array
   }
 
+  destroyTileGridTexture() {
+    if (this.tileGridTexture) {
+      this.tileGridTexture.destroy();
+      this.tileGridTexture = null;
+    }
+  }
+
   /*
    * Note that this function is called by GameScene2D during shutdown,
    * so no need to call it! That is handled automatically.
@@ -262,5 +335,6 @@ export class MainGameScene extends Generic2DGameScene {
     // Shutdown logic for this scene
     settingsStore.resetData();
     this.destroyTiles();
+    this.destroyTileGridTexture();
   }
 }

@@ -10,7 +10,7 @@ const contentBoxData: ContentBoxProps[] = [
   // ADD NEW CONTENT BOXES AT THE TOP! TRY TO KEEP THEM IN DESCENDING ORDER BY
   // DATE! THAT WAY THERE IS NOT A FLICKER WHEN IT SORTS!
   {
-    imageUrl: "/webps/art/strange-love-cover-art.webp", // FIXME: UPDATE THIS
+    imageUrl: "/webps/games/perlin-noise-cover.webp",
     linkUrl: "/games/perlin-noise",
     title: "Perlin Noise",
     dateISO: "2025/07/21",
