@@ -8,6 +8,8 @@ class ScreenWakeLock {
    * @returns {Promise<boolean>} True if wake lock acquired, false otherwise.
    * */
   async requestWakeLock(): Promise<boolean> {
+    if (typeof navigator === "undefined") return false;
+
     if (!("wakeLock" in navigator)) {
       console.warn("Screen Wake Lock API not supported");
       return false;

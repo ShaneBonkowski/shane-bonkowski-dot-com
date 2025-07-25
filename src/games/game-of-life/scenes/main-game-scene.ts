@@ -29,13 +29,13 @@ import {
   GameData,
 } from "@/src/games/game-of-life/game-data-store";
 
-export let tiles: Tile[][] = [];
-export let tileGridWidth: number = 0;
-export let tileGridHeight: number = 0;
-
 const unseededRandom = new SeededRandom();
 
 export class MainGameScene extends Generic2DGameScene {
+  public tiles: Tile[][] = [];
+  public tileGridWidth: number = 0;
+  public tileGridHeight: number = 0;
+
   public paused: boolean = false;
   public gameOfLifeType: string = "";
   public livingTilespaceSet: LivingTilespaceSet = new LivingTilespaceSet();
@@ -238,9 +238,9 @@ export class MainGameScene extends Generic2DGameScene {
 
   renderPass() {
     // Update tile graphics / color etc.
-    for (let row = 0; row < tiles.length; row++) {
-      for (let col = 0; col < tiles[row].length; col++) {
-        tiles[row][col].renderTileGraphics();
+    for (let row = 0; row < this.tiles.length; row++) {
+      for (let col = 0; col < this.tiles[row].length; col++) {
+        this.tiles[row][col].renderTileGraphics();
       }
     }
 
@@ -316,11 +316,11 @@ export class MainGameScene extends Generic2DGameScene {
       const [x, y] = loc;
 
       // Add the living tile itself
-      toCheckTilespaceSet.add(tiles[x][y]);
+      toCheckTilespaceSet.add(this.tiles[x][y]);
 
       // Add its neighbors
-      const neighborTiles = tiles[x][y].getNeighbors(
-        tiles,
+      const neighborTiles = this.tiles[x][y].getNeighbors(
+        this.tiles,
         countCorners,
         countTorusNeighbors
       );
@@ -334,8 +334,8 @@ export class MainGameScene extends Generic2DGameScene {
     const toCheckTileGridSpaceLocs = toCheckTilespaceSet.getTilespaceArray();
     for (const loc of toCheckTileGridSpaceLocs) {
       const [x, y] = loc;
-      tiles[x][y].getQtyLivingNeighbors(
-        tiles,
+      this.tiles[x][y].getQtyLivingNeighbors(
+        this.tiles,
         countCorners,
         countTorusNeighbors
       );
@@ -348,7 +348,7 @@ export class MainGameScene extends Generic2DGameScene {
   handleConwayLifeIteration(toCheckTileGridSpaceLocs: [number, number][]) {
     for (const loc of toCheckTileGridSpaceLocs) {
       const [x, y] = loc;
-      const tile = tiles[x][y];
+      const tile = this.tiles[x][y];
       tile.handleConwayLifeIteration();
     }
   }
@@ -410,8 +410,8 @@ export class MainGameScene extends Generic2DGameScene {
     if (this.screenInfo.width <= 600 || this.screenInfo.isPortrait) {
       // Only update layout if it changed!
       if (
-        tileGridWidth != tileGridWidthPhone ||
-        tileGridHeight != tileGridHeightPhone
+        this.tileGridWidth != tileGridWidthPhone ||
+        this.tileGridHeight != tileGridHeightPhone
       ) {
         // See update loop for why we request this instead of doing it now
         this.requestSetPhoneLayout = true;
@@ -419,8 +419,8 @@ export class MainGameScene extends Generic2DGameScene {
     } else {
       // Only update layout if it changed!
       if (
-        tileGridWidth != tileGridWidthComputer ||
-        tileGridHeight != tileGridHeightComputer
+        this.tileGridWidth != tileGridWidthComputer ||
+        this.tileGridHeight != tileGridHeightComputer
       ) {
         // See update loop for why we request this instead of doing it now
         this.requestSetComputerLayout = true;
@@ -436,9 +436,13 @@ export class MainGameScene extends Generic2DGameScene {
     // init or re-init all tiles
     this.livingTilespaceSet.clear();
     this.destroyTiles();
-    tileGridWidth = tileGridWidthPhone;
-    tileGridHeight = tileGridHeightPhone;
-    tiles = instantiateTiles(this, tileGridWidth, tileGridHeight);
+    this.tileGridWidth = tileGridWidthPhone;
+    this.tileGridHeight = tileGridHeightPhone;
+    this.tiles = instantiateTiles(
+      this,
+      this.tileGridWidth,
+      this.tileGridHeight
+    );
   }
 
   setLayoutForComputer() {
@@ -449,9 +453,13 @@ export class MainGameScene extends Generic2DGameScene {
     // init or re-init all tiles
     this.livingTilespaceSet.clear();
     this.destroyTiles();
-    tileGridWidth = tileGridWidthComputer;
-    tileGridHeight = tileGridHeightComputer;
-    tiles = instantiateTiles(this, tileGridWidth, tileGridHeight);
+    this.tileGridWidth = tileGridWidthComputer;
+    this.tileGridHeight = tileGridHeightComputer;
+    this.tiles = instantiateTiles(
+      this,
+      this.tileGridWidth,
+      this.tileGridHeight
+    );
   }
 
   resetTiles() {
@@ -459,9 +467,9 @@ export class MainGameScene extends Generic2DGameScene {
     this.gestureManager.resetDrag();
     this.gestureManager.resetZoom();
 
-    for (let row = 0; row < tiles.length; row++) {
-      for (let col = 0; col < tiles[row].length; col++) {
-        tiles[row][col].resetTile();
+    for (let row = 0; row < this.tiles.length; row++) {
+      for (let col = 0; col < this.tiles[row].length; col++) {
+        this.tiles[row][col].resetTile();
       }
     }
 
@@ -499,8 +507,8 @@ export class MainGameScene extends Generic2DGameScene {
     // Random shape has a shapeTileSpace indicating which tiles to turn on/off,
     // starting from the top left. Need to find a random location on the real tileGridSpace
     // that can fit the shape!
-    const tileSpaceWidth = tiles.length;
-    const tileSpaceHeight = tiles[0].length;
+    const tileSpaceWidth = this.tiles.length;
+    const tileSpaceHeight = this.tiles[0].length;
 
     const shapeWidth = randomShape.getWidth();
     const shapeHeight = randomShape.getHeight();
@@ -549,7 +557,7 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // Only add to the grid, dont remove anything!
-      const tile = tiles[tileSpawnLocX][tileSpawnLocY];
+      const tile = this.tiles[tileSpawnLocX][tileSpawnLocY];
       if (
         tile.tileState == tileStates.OFF &&
         shape.getStateAtCoords(shapeX, shapeY) == tileStates.ON
@@ -583,12 +591,12 @@ export class MainGameScene extends Generic2DGameScene {
 
   destroyTiles() {
     // Clear the existing tiles
-    for (let row = 0; row < tiles.length; row++) {
-      for (let col = 0; col < tiles[row].length; col++) {
-        tiles[row][col].destroy();
+    for (let row = 0; row < this.tiles.length; row++) {
+      for (let col = 0; col < this.tiles[row].length; col++) {
+        this.tiles[row][col].destroy();
       }
     }
-    tiles.length = 0; // Clear the tiles array
+    this.tiles.length = 0; // Clear the tiles array
   }
 
   /*

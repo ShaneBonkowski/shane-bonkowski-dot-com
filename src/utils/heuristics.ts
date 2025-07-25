@@ -62,6 +62,8 @@ export function mobileWindowLikelyOpen(): boolean {
  * @returns {boolean} True if the device is mobile.
  */
 export function isMobileDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+
   return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
     navigator.userAgent
   );
@@ -72,5 +74,7 @@ export function isMobileDevice(): boolean {
  * @returns {boolean} True if the device is iOS.
  */
 export function isIOS(): boolean {
+  if (typeof navigator === "undefined") return false;
+
   return /iphone|ipod|ipad/i.test(navigator.userAgent);
 }
