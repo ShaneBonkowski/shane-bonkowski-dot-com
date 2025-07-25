@@ -94,16 +94,16 @@ const UiOverlay: React.FC = () => {
   return (
     // z-20 so that its behind z-30 windows, but above mostly everything else
     <div
-      className={`z-20 pointer-events-none fixed bottom-3 w-full flex flex-col gap-1 ${
+      className={`z-20 pointer-events-none fixed bottom-20 sm:bottom-3 w-full flex flex-col gap-1 ${
         isUiVisible ? "" : "hidden"
       }`}
       id="ui-overlay"
       aria-label="Game UI Overlay"
     >
       {/* Controls */}
-      <div className="flex flex-row items-center mx-auto gap-4">
+      <div className="flex flex-row items-center mx-auto gap-1 sm:gap-4">
         {/* Control buttons */}
-        <div className="gap-1 grid grid-cols-3 grid-rows-3 mx-auto">
+        <div className="gap-0 sm:gap-1 grid grid-cols-3 grid-rows-3 mx-auto">
           <div /> {/* Empty Gap */}
           <GameIconButton
             onPointerDown={() =>
