@@ -10,6 +10,18 @@ const contentBoxData: ContentBoxProps[] = [
   // ADD NEW CONTENT BOXES AT THE TOP! TRY TO KEEP THEM IN DESCENDING ORDER BY
   // DATE! THAT WAY THERE IS NOT A FLICKER WHEN IT SORTS!
   {
+    imageUrl: "/webps/writing/the-devil.webp",
+    linkUrl: "/writing/the-devil",
+    title: "The Devil",
+    dateISO: "2025/10/11",
+    description:
+      "In the time of flourishing, man stood on the precipice of endless prosperity. When all that lay between him and his goals were mere questions, he sought to create the answer.",
+    searchTags:
+      "Tarot, Devil, Revelation, Card, Revelations, Bible, Goddess, God, Golem, Demon",
+    contentType: "writing",
+    openInNewTab: false,
+  },
+  {
     imageUrl: "/webps/games/perlin-noise-cover.webp",
     linkUrl: "/games/perlin-noise",
     title: "Perlin Noise",
