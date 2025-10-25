@@ -5,7 +5,7 @@
 - Make sure you have a .png file for the original artwork called e.g. `{art-name}.png`.
 - For the actual artwork, size does not matter. Only the cover image "thumbnail" needs to be a particular size. See below for details.
 - Store this in `/public/pngs`.
-- Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
+- Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`. For art, it is advised to convert with the `--lossless` flag, so that no detail is lost.
 
 ### 2. Create the art `page`.
 
