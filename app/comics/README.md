@@ -13,12 +13,15 @@ If creating a new comic series, or a one-off comic:
 
 - Duplicate one of the existing comic pages in `/app/comic`.
 - Rename the duplicated comic directory to `{comic-series-name}`.
-- ...FIXME: add details here...
+- Update the `comicData` variable in the `page.tsx` with information about your new comic.
+- Go into `/src/data/comic-data` and add a new variable for your new comic series. This is where in the future you can add any new entry into the series. In other words, each element in this list is a comic in your series. For now, just add the first comic you intend to create here.
+- Update the import `... from "@/src/data/comic-data";` to be your new "children comic data" for the series that we just created.
+- Update the `ComicContentLoader` call to use the new imported variable.
 
 If adding to an existing comic series:
 
-- ...FIXME: add details here...
-- It should be as simple as that! No need to do the further steps.
+- Add the information for the new comic child to the correct `/src/data/comic-data` variable that corresponds to your series at the top.
+- It should be as simple as that! No need to do any further steps!
 
 ### 3. Create a cover image for the comic series.
 
@@ -33,4 +36,4 @@ If creating a new comic series, or a one-off comic:
 If creating a new comic series, or a one-off comic:
 
 - Fill in the data accordingly, updating the links, title, description, etc.
-- NOTE: This will link to the comic cover image (e.g. `{comic-series-name}-cover-art.webp`), not the actual comic! The actual comic and the cover image will typically be different sizes.
+- NOTE: This will link to the comic cover image (e.g. `{comic-series-name}-cover-art.webp`), not the actual comic!

@@ -9,9 +9,15 @@ import Pagination from "@/src/components/Pagination";
 
 const ITEMS_PER_PAGE = 12; // divisible by 2 and 3, so full pg looks nice w/ all grid layouts
 
+// Sort content boxes from NEWEST to OLDEST, so that there is not a flicker when
+// loading the boxes in then sorting them
+const sortedContentBoxData = [...contentBoxData].sort(
+  (a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime()
+);
+
 export default function Home() {
   const [filteredContent, setFilteredContent] =
-    useState<ContentBoxProps[]>(contentBoxData);
+    useState<ContentBoxProps[]>(sortedContentBoxData);
   const [currentPage, setCurrentPage] = useState(1);
   const [isPageChanging, setIsPageChanging] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
@@ -75,7 +81,7 @@ export default function Home() {
   return (
     <>
       <ContentSearchBar
-        contentData={contentBoxData}
+        contentData={sortedContentBoxData}
         setFilteredContent={handleFilteredContentChange}
       />
 

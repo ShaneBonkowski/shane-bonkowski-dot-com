@@ -1,14 +1,13 @@
-import ComicContentLoader from "@/src/components/WrittenContentLoader";
+import ComicContentLoader from "@/src/components/ComicContentLoader";
 import { ComicMetadataProps } from "@/src/types/data-props";
 import { southwardFallsComicData } from "@/src/data/comic-data";
-
-// FIXME: implenment ComicContentLoader...  also be able to turn iso date into the types out date we use for stories etc. I want it to look like an art page, where it has the subtitle there and the date below. Shold prolly import the writing content laoder and just extend some functionality
 
 const comicData: ComicMetadataProps = {
   title: "Southward Falls",
   subtitle: "Shane Bonkowski",
   description: "A comic by Shane Bonkowski.",
-  // Cover for the comic series, not an individual comic
+  // Cover for the comic series. This is not, for example, an individual comic.
+  // Individual comic data would come from `@/src/data/comic-data`.
   coverImageUrl: "/webps/comics/SF-comic-cover-art.webp",
 };
 
@@ -38,5 +37,10 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <ComicContentLoader {...southwardFallsComicData} />;
+  return (
+    <ComicContentLoader
+      comicData={comicData}
+      childrenComicsData={southwardFallsComicData}
+    />
+  );
 }

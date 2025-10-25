@@ -8,7 +8,13 @@ export const contentBoxData: ContentBoxProps[] = [
     imageUrl: "/webps/comics/SF-comic-cover-art.webp",
     linkUrl: "/comics/southward-falls",
     title: "Southward Falls",
-    dateISO: southwardFallsComicData[0].dateISO,
+    // Date of the comic content box is the newest date of it's children comics.
+    // That way new entries cause this to pop up at the top of the main page.
+    dateISO: southwardFallsComicData.sort((a, b) => {
+      const dateA = new Date(a.dateISO);
+      const dateB = new Date(b.dateISO);
+      return dateB.getTime() - dateA.getTime();
+    })[0].dateISO,
     description:
       "What whacky adventures lie ahead for the man who fell into a giant hole one day?",
     searchTags:
