@@ -28,7 +28,7 @@ If creating a new comic series, or a one-off comic:
 - Use [image_resize.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_resize.py) to convert **A DUPLICATE** of the existing .webp file you have in `/public/webps` of your comic to a 500x422 .webp image called e.g. `{comic-series-name}-cover-art.webp`. This will be the cover image for the comic.
 - Or, you can have an entirely custom image for the cover image of the series. Up to you!
 
-### 4. Create a content box for the comic in `/app/page.tsx`.
+### 4. Create a content box for the comic in `/src/data/content-box-data.ts`.
 
 If creating a new comic series, or a one-off comic:
 

@@ -11,9 +11,9 @@ const WrittenContentLoader: React.FC<WrittenContentMetadataProps> = ({
   title,
   subtitle,
   date,
-  coverImageUrl,
-  coverImageWidth = 500,
-  coverImageHeight = 422,
+  contentImageUrl,
+  contentImageWidth = 500,
+  contentImageHeight = 422,
   artContent = false,
   children = null,
 }) => {
@@ -50,10 +50,10 @@ const WrittenContentLoader: React.FC<WrittenContentMetadataProps> = ({
         } ${artContent && children !== null ? "mb-0" : ""}`}
       >
         <Image
-          src={coverImageUrl}
+          src={contentImageUrl}
           alt={title}
-          width={coverImageWidth}
-          height={coverImageHeight}
+          width={contentImageWidth}
+          height={contentImageHeight}
           className="object-contain"
         />
       </div>

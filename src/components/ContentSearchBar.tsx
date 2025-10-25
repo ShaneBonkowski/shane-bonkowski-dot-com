@@ -10,6 +10,7 @@ const contentTypeOptions = [
   { value: "games", label: "Games" },
   { value: "writing", label: "Writing" },
   { value: "art", label: "Art" },
+  { value: "comics", label: "Comics" },
 ];
 
 interface ContentSearchBarProps {

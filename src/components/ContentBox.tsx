@@ -3,7 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaGamepad, FaPenNib, FaPaintBrush } from "react-icons/fa";
+import {
+  FaGamepad,
+  FaPenNib,
+  FaPaintBrush,
+  FaRegNewspaper,
+} from "react-icons/fa";
 import { ContentBoxProps } from "@/src/types/content-props";
 
 const getIcon = (contentType: string) => {
@@ -19,6 +24,10 @@ const getIcon = (contentType: string) => {
     case "art":
       return (
         <FaPaintBrush className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
+      );
+    case "comics":
+      return (
+        <FaRegNewspaper className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
       );
     default:
       return null;
