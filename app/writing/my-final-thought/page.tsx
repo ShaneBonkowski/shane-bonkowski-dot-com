@@ -7,23 +7,25 @@ import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagra
 const storyData: WrittenContentMetadataProps = {
   title: "My Final Thought",
   subtitle: "Shane Bonkowski",
+  description: "A short story by Shane Bonkowski.",
   date: "December 8, 2024",
   coverImageUrl: "/webps/writing/my-final-thought.webp",
-  coverImageWidth: 500,
-  coverImageHeight: 422,
+  contentImageUrl: "/webps/writing/my-final-thought.webp",
+  contentImageWidth: 500,
+  contentImageHeight: 422,
 };
 
 export const metadata = {
   title: storyData.title,
-  description: "A short story by Shane Bonkowski.",
+  description: storyData.description,
   openGraph: {
     title: storyData.title,
-    description: "A short story by Shane Bonkowski.",
+    description: storyData.description,
     url: "https://shanebonkowski.com",
     images: [
       {
         url: `https://shanebonkowski.com${storyData.coverImageUrl}`,
-        alt: "A short story by Shane Bonkowski.",
+        alt: storyData.description,
       },
     ],
     type: "website",
@@ -32,9 +34,9 @@ export const metadata = {
     card: "summary_large_image",
     site: "@ShaneBonkowski",
     title: storyData.title,
-    description: "A short story by Shane Bonkowski.",
+    description: storyData.description,
     image: `https://shanebonkowski.com${storyData.coverImageUrl}`,
-    imageAlt: "A short story by Shane Bonkowski.",
+    imageAlt: storyData.description,
   },
 };
 

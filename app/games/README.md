@@ -14,7 +14,7 @@
 - Store this image in `/public/pngs`.
 - Use [image_convert.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/image_convert.py) to convert the image to a .webp image. Store this image in `/public/webps`.
 
-### 3. Create a content box for the game in `/app/page.tsx`.
+### 3. Create a content box for the game in `/src/data/content-box-data.ts`.
 
 - Fill in the data accordingly, updating the link to the image page, title, description, etc.
 

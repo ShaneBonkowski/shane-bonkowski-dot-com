@@ -6,24 +6,26 @@ import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagra
 const imageData: WrittenContentMetadataProps = {
   title: "Strange Love",
   subtitle: "Shane Bonkowski",
+  description: "An artwork by Shane Bonkowski.",
   date: "April 6, 2022",
-  coverImageUrl: "/webps/art/strange-love.webp",
-  coverImageWidth: 1194,
-  coverImageHeight: 834,
+  coverImageUrl: "/webps/art/strange-love-cover-art.webp",
+  contentImageUrl: "/webps/art/strange-love.webp",
+  contentImageWidth: 1194,
+  contentImageHeight: 834,
   artContent: true,
 };
 
 export const metadata = {
   title: imageData.title,
-  description: "A short story by Shane Bonkowski.",
+  description: imageData.description,
   openGraph: {
     title: imageData.title,
-    description: "A short story by Shane Bonkowski.",
+    description: imageData.description,
     url: "https://shanebonkowski.com",
     images: [
       {
         url: `https://shanebonkowski.com${imageData.coverImageUrl}`,
-        alt: "A short story by Shane Bonkowski.",
+        alt: imageData.description,
       },
     ],
     type: "website",
@@ -32,9 +34,9 @@ export const metadata = {
     card: "summary_large_image",
     site: "@ShaneBonkowski",
     title: imageData.title,
-    description: "A short story by Shane Bonkowski.",
+    description: imageData.description,
     image: `https://shanebonkowski.com${imageData.coverImageUrl}`,
-    imageAlt: "A short story by Shane Bonkowski.",
+    imageAlt: imageData.description,
   },
 };
 

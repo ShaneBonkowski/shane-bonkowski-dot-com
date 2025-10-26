@@ -5,6 +5,15 @@ export interface ContentBoxProps {
   dateISO: string;
   description: string;
   searchTags: string;
-  contentType: "games" | "writing" | "art";
+  contentType: "games" | "writing" | "art" | "comics";
   openInNewTab: boolean;
+}
+
+export interface ComicDataProps {
+  imageUrl: string;
+  captionOrTitle: string;
+  dateISO: string;
+  contentImageWidth: number;
+  contentImageHeight: number;
+  comicNum: number;
 }

@@ -10,10 +10,20 @@ export interface GameMetadataProps {
 export interface WrittenContentMetadataProps {
   title: string;
   subtitle: string;
+  description: string;
   date: string;
   coverImageUrl: string;
-  coverImageWidth: number;
-  coverImageHeight: number;
+  contentImageUrl: string;
+  contentImageWidth: number;
+  contentImageHeight: number;
   artContent?: boolean;
   children?: React.ReactNode;
+}
+
+export interface ComicMetadataProps {
+  title: string;
+  subtitle: string;
+  description: string;
+  coverImageUrl: string;
+  firstComicShown: "FIRST" | "LAST" | "FIRST_IF_NOT_SEEN_THEN_LAST";
 }

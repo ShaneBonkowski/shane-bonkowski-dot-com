@@ -2,18 +2,28 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { WrittenContentMetadataProps } from "@/src/types/data-props";
 
 // Avg WPM source https://www.sciencedirect.com/science/article/abs/pii/S0749596X19300786#:~:text=Based%20on%20the%20analysis%20of,and%20260%20wpm%20for%20fiction.
 const avgWPMReading = 238;
 
-const WrittenContentLoader: React.FC<WrittenContentMetadataProps> = ({
+interface WrittenContentLoaderProps {
+  title: string;
+  subtitle: string;
+  date: string;
+  contentImageUrl: string;
+  contentImageWidth?: number;
+  contentImageHeight?: number;
+  artContent?: boolean;
+  children?: React.ReactNode;
+}
+
+const WrittenContentLoader: React.FC<WrittenContentLoaderProps> = ({
   title,
   subtitle,
   date,
-  coverImageUrl,
-  coverImageWidth = 500,
-  coverImageHeight = 422,
+  contentImageUrl,
+  contentImageWidth = 500,
+  contentImageHeight = 422,
   artContent = false,
   children = null,
 }) => {
@@ -50,10 +60,10 @@ const WrittenContentLoader: React.FC<WrittenContentMetadataProps> = ({
         } ${artContent && children !== null ? "mb-0" : ""}`}
       >
         <Image
-          src={coverImageUrl}
+          src={contentImageUrl}
           alt={title}
-          width={coverImageWidth}
-          height={coverImageHeight}
+          width={contentImageWidth}
+          height={contentImageHeight}
           className="object-contain"
         />
       </div>
