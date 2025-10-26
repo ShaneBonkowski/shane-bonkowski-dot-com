@@ -7,25 +7,33 @@ import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagra
 import { ComicMetadataProps } from "@/src/types/data-props";
 import { ComicDataProps } from "@/src/types/content-props";
 import { SeededRandom, randomType } from "@/src/utils/seedable-random";
+import {
+  FaStepBackward,
+  FaBackward,
+  FaRandom,
+  FaForward,
+  FaStepForward,
+} from "react-icons/fa";
 
 const random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
 
-const ComicSelectorButton: React.FC<{
-  disabled: boolean;
+const ComicIconButton: React.FC<{
   onClick: () => void;
-  buttonLabel: string;
-}> = ({ disabled, onClick, buttonLabel }) => (
+  disabled?: boolean;
+  icon: React.ReactNode;
+  ariaLabel: string;
+}> = ({ onClick, disabled = false, icon, ariaLabel }) => (
   <button
     onClick={onClick}
-    className={`p-4 rounded min-w-[40px] text-sm  ${
+    className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
       disabled
-        ? "text-secondary-text-color-light dark:text-secondary-text-color"
-        : "bg-button-color-light dark:bg-button-color text-primary-text-color-light dark:text-primary-text-color hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color hover:text-primary-text-color-light dark:hover:text-primary-text-color"
-    }`}
-    aria-label={`${buttonLabel} comic`}
+        ? "text-secondary-text-color-light dark:text-secondary-text-color cursor-not-allowed"
+        : "hover:text-secondary-text-color-light dark:hover:text-secondary-hover-color cursor-pointer"
+    } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
+    aria-label={ariaLabel}
     disabled={disabled}
   >
-    {buttonLabel}
+    {icon}
   </button>
 );
 
@@ -156,30 +164,35 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
       {/* Buttons to cycle through comics if there are multiple */}
       {hasMultiple && (
         <div className="flex gap-2 justify-center mt-4">
-          <ComicSelectorButton
+          <ComicIconButton
             onClick={goOldest}
+            icon={<FaStepBackward size={24} />}
             disabled={currentIndex === 0}
-            buttonLabel="Oldest"
+            ariaLabel="Oldest"
           />
-          <ComicSelectorButton
+          <ComicIconButton
             onClick={goPrevious}
+            icon={<FaBackward size={24} />}
             disabled={currentIndex === 0}
-            buttonLabel="Previous"
+            ariaLabel="Previous"
           />
-          <ComicSelectorButton
+          <ComicIconButton
             onClick={goRandom}
+            icon={<FaRandom size={24} />}
             disabled={false}
-            buttonLabel="Random"
+            ariaLabel="Random"
           />
-          <ComicSelectorButton
+          <ComicIconButton
             onClick={goNext}
+            icon={<FaForward size={24} />}
             disabled={currentIndex === sortedComics.length - 1}
-            buttonLabel="Next"
+            ariaLabel="Next"
           />
-          <ComicSelectorButton
+          <ComicIconButton
             onClick={goNewest}
+            icon={<FaStepForward size={24} />}
             disabled={currentIndex === sortedComics.length - 1}
-            buttonLabel="Newest"
+            ariaLabel="Newest"
           />
         </div>
       )}
