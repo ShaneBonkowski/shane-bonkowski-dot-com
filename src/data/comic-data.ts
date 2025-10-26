@@ -9,6 +9,7 @@ export const southwardFallsComicData: ComicDataProps[] = [
     dateISO: "2025/10/25",
     contentImageWidth: 1280,
     contentImageHeight: 1080,
+    comicNum: 2,
   },
   {
     imageUrl: "/webps/comics/SF-comic-1.webp",
@@ -16,5 +17,6 @@ export const southwardFallsComicData: ComicDataProps[] = [
     dateISO: "2025/10/23",
     contentImageWidth: 1280,
     contentImageHeight: 1080,
+    comicNum: 1,
   },
 ];

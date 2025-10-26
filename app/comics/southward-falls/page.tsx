@@ -9,6 +9,7 @@ const comicData: ComicMetadataProps = {
   // Cover for the comic series. This is not, for example, an individual comic.
   // Individual comic data would come from `@/src/data/comic-data`.
   coverImageUrl: "/webps/comics/SF-comic-cover-art.webp",
+  firstComicShown: "FIRST_IF_NOT_SEEN_THEN_LAST",
 };
 
 export const metadata = {

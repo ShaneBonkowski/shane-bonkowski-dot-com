@@ -25,4 +25,5 @@ export interface ComicMetadataProps {
   subtitle: string;
   description: string;
   coverImageUrl: string;
+  firstComicShown: "FIRST" | "LAST" | "FIRST_IF_NOT_SEEN_THEN_LAST";
 }

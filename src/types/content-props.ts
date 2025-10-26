@@ -15,4 +15,5 @@ export interface ComicDataProps {
   dateISO: string;
   contentImageWidth: number;
   contentImageHeight: number;
+  comicNum: number;
 }
