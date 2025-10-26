@@ -38,6 +38,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   imageUrl,
   linkUrl,
   title,
+  dateISO,
   description,
   contentType,
   openInNewTab,
@@ -54,6 +55,14 @@ const ContentBox: React.FC<ContentBoxProps> = ({
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
   }, []);
 
+  // Consider this a new piece of content if its within ~30 days of it being made
+  const isNew = (() => {
+    const comicDate = new Date(dateISO).getTime();
+    const now = Date.now();
+    const oneMonthMs = 30 * 24 * 60 * 60 * 1000; // 30 days in ms
+    return now - comicDate <= oneMonthMs;
+  })();
+
   return (
     <div
       className="
@@ -68,28 +77,37 @@ const ContentBox: React.FC<ContentBoxProps> = ({
         .replace(/\s+/g, "-")
         .toLowerCase()}`}
     >
-      {/* Image on the Top */}
-      <Link
-        href={linkUrl}
-        target={openInNewTab ? "_blank" : "_self"}
-        rel="noopener noreferrer"
-        className="link flex-shrink-0"
-        id="content-box-image-link"
-        aria-label={`View more about ${title}`}
-      >
-        <Image
-          key={`${imageUrl}-${title}`} // Unique key to prevent caching issues
-          src={imageUrl}
-          alt={`Image for ${title}`}
-          width={500}
-          height={422}
-          className={`w-full h-full object-cover transform transition-transform duration-0 ${
-            isHoverable && isHovered ? "scale-105" : "scale-100"
-          } cursor-pointer`}
-          onPointerEnter={() => isHoverable && setIsHovered(true)}
-          onPointerLeave={() => isHoverable && setIsHovered(false)}
-        />
-      </Link>
+      <div className="relative">
+        {/* Image on the Top */}
+        <Link
+          href={linkUrl}
+          target={openInNewTab ? "_blank" : "_self"}
+          rel="noopener noreferrer"
+          className="link flex-shrink-0"
+          id="content-box-image-link"
+          aria-label={`View more about ${title}`}
+        >
+          <Image
+            key={`${imageUrl}-${title}`} // Unique key to prevent caching issues
+            src={imageUrl}
+            alt={`Image for ${title}`}
+            width={500}
+            height={422}
+            className={`w-full h-full object-cover transform transition-transform duration-0 ${
+              isHoverable && isHovered ? "scale-105" : "scale-100"
+            } cursor-pointer`}
+            onPointerEnter={() => isHoverable && setIsHovered(true)}
+            onPointerLeave={() => isHoverable && setIsHovered(false)}
+          />
+        </Link>
+
+        {/* New Content Indicator */}
+        {isNew && (
+          <div className="absolute top-0 right-0 bg-red-500 text-white text-sm px-1 rounded-bl">
+            New
+          </div>
+        )}
+      </div>
 
       {/* Content Box on the Bottom */}
       <div
