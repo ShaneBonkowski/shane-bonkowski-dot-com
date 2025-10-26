@@ -22,13 +22,18 @@ const ComicIconButton: React.FC<{
   disabled?: boolean;
   icon: React.ReactNode;
   ariaLabel: string;
-}> = ({ onClick, disabled = false, icon, ariaLabel }) => (
+  isHoverable: boolean;
+}> = ({ onClick, disabled = false, icon, ariaLabel, isHoverable }) => (
   <button
     onClick={onClick}
     className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
       disabled
         ? "text-secondary-text-color-light dark:text-secondary-text-color cursor-not-allowed"
-        : "hover:text-secondary-text-color-light dark:hover:text-secondary-hover-color cursor-pointer"
+        : `cursor-pointer ${
+            isHoverable
+              ? "hover:text-secondary-text-color-light dark:hover:text-secondary-hover-color"
+              : ""
+          }`
     } active:text-secondary-text-color-light dark:active:text-secondary-text-color`}
     aria-label={ariaLabel}
     disabled={disabled}
@@ -46,6 +51,16 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
   comicData,
   childrenComicsData,
 }) => {
+  const [isHoverable, setIsHoverable] = useState(false);
+
+  useEffect(() => {
+    // Return early during SSR/static generation
+    if (typeof window === "undefined") return;
+
+    // eslint-disable-next-line no-restricted-syntax
+    setIsHoverable(window.matchMedia("(hover: hover)").matches);
+  }, []);
+
   // Sort comics first to last (which is the same as oldest to newest, but it keeps order even if two comics share the same date)
   const sortedComics = useMemo(
     () => [...childrenComicsData].sort((a, b) => a.comicNum - b.comicNum),
@@ -169,30 +184,35 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
             icon={<FaStepBackward size={24} />}
             disabled={currentIndex === 0}
             ariaLabel="Oldest"
+            isHoverable={isHoverable}
           />
           <ComicIconButton
             onClick={goPrevious}
             icon={<FaBackward size={24} />}
             disabled={currentIndex === 0}
             ariaLabel="Previous"
+            isHoverable={isHoverable}
           />
           <ComicIconButton
             onClick={goRandom}
             icon={<FaRandom size={24} />}
             disabled={false}
             ariaLabel="Random"
+            isHoverable={isHoverable}
           />
           <ComicIconButton
             onClick={goNext}
             icon={<FaForward size={24} />}
             disabled={currentIndex === sortedComics.length - 1}
             ariaLabel="Next"
+            isHoverable={isHoverable}
           />
           <ComicIconButton
             onClick={goNewest}
             icon={<FaStepForward size={24} />}
             disabled={currentIndex === sortedComics.length - 1}
             ariaLabel="Newest"
+            isHoverable={isHoverable}
           />
         </div>
       )}
