@@ -6,7 +6,7 @@ export const southwardFallsComicData: ComicDataProps[] = [
   {
     imageUrl: "/webps/comics/SF-comic-3.webp",
     captionOrTitle: "Southward Falls #3: A Hollow Earth?",
-    dateISO: "2025/10/25",
+    dateISO: "2025/10/27",
     contentImageWidth: 1280,
     contentImageHeight: 1080,
     comicNum: 3,
