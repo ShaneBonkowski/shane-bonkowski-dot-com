@@ -11,7 +11,7 @@
 
 - Duplicate one of the existing artwork pages in `/app/art`.
 - Rename the duplicated art directory to `{art-name}`.
-- Update the contents of the `imageData`.
+- Update the contents of the `imageMetadata`.
 - Make sure `artContent: true`.
 - If you want text included with the image, use the `WrittenContentParagraphGroup` tags like the `strange-love` artwork does for example.
 - If you just want the image to be shown, delete the `WrittenContentParagraphGroup` tags and their children if they are present. Should only have the `WrittenContentLoader` tag in this case.

@@ -7,6 +7,7 @@ export interface ContentBoxProps {
   searchTags: string;
   contentType: "games" | "writing" | "art" | "comics";
   openInNewTab: boolean;
+  childDataKey: string | null;
 }
 
 export interface ComicDataProps {

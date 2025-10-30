@@ -1,5 +1,5 @@
 import { ContentBoxProps } from "@/src/types/content-props";
-import { southwardFallsComicData } from "@/src/data/comic-data";
+import { comicData } from "@/src/data/comic-data";
 
 export const contentBoxData: ContentBoxProps[] = [
   // ADD NEW CONTENT BOXES AT THE TOP! TRY TO KEEP THEM IN DESCENDING ORDER BY
@@ -10,7 +10,7 @@ export const contentBoxData: ContentBoxProps[] = [
     title: "Southward Falls",
     // Date of the comic content box is the newest date of it's children comics.
     // That way new entries cause this to pop up at the top of the main page.
-    dateISO: southwardFallsComicData.sort((a, b) => {
+    dateISO: comicData["southward_falls"].sort((a, b) => {
       const dateA = new Date(a.dateISO);
       const dateB = new Date(b.dateISO);
       return dateB.getTime() - dateA.getTime();
@@ -21,6 +21,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "art, comic, comics, south, southward, fall, falls, hole, underground, webcomic",
     contentType: "comics",
     openInNewTab: false,
+    childDataKey: "southward_falls", // IMPORTANT! Provide this field for comics!
   },
   {
     imageUrl: "/webps/writing/the-devil.webp",
@@ -33,6 +34,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "Tarot, Devil, Revelation, Card, Revelations, Bible, Goddess, God, Golem, Demon",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/games/perlin-noise-cover.webp",
@@ -44,6 +46,7 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "game, perlin, noise, procedural, generation, world",
     contentType: "games",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/games/cowpoke-cover.webp",
@@ -56,6 +59,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "cowpoke, cow, poke, western, wild, west, side-scroller, fighting, fight",
     contentType: "games",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/games/game-of-life-cover.webp",
@@ -68,6 +72,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "conway, conways, conway's, game, of, life, cell, cellular, automata",
     contentType: "games",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/the-lovers.webp",
@@ -80,6 +85,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "Love, Lovers, Bible, Adam, Eve, Universe, Nova, Lux, Mammon, Barachiel, Dr, Dr., Doctor, Scientist, AI, Artificial, Intelligence",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/my-final-thought.webp",
@@ -91,6 +97,7 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "Death, Bible, Hunting, Deer, Life, Universe, dad",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/death.webp",
@@ -103,6 +110,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "Tarot, Death, Revelation, Card, Revelations, Bible, Space, Goddess, God, Horse",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/the-sun.webp",
@@ -115,6 +123,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "Tarot, Sun, Stars, Star, Sun, Card, Shimmer, Glitter, Space, Crow, Crows, Bird, Birds, Flowers, Flower, tree, forest",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/the-star.webp",
@@ -127,6 +136,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "Tarot, Stars, Star, Card, Shimmer, Glitter, Space, Goddess, God",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/games/flip-tile-cover.webp",
@@ -138,6 +148,7 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "flip, flop, tile, matrix",
     contentType: "games",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/the-moon.webp",
@@ -149,6 +160,7 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "Tarot, Moon, Stars, Star, Sun, Card, Shimmer, Glitter, Space",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/before-the-world-dried-up.webp",
@@ -161,6 +173,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "earth, world, universe, boat, water, ocean, existential, spooky, eerie, sci-fi, science, fiction",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/games/abyssal-descent.webp",
@@ -172,6 +185,7 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "ghost, boi, boy, jump, endless",
     contentType: "games",
     openInNewTab: true,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/games/better-boids-cover.webp",
@@ -183,6 +197,7 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "birds, bird, boid, flying, simulation",
     contentType: "games",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/writing/I-am-immortal.webp",
@@ -195,6 +210,7 @@ export const contentBoxData: ContentBoxProps[] = [
       "life, death, universe, immortal, live, forever, spooky, eerie, sci-fi, science, fiction",
     contentType: "writing",
     openInNewTab: false,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/games/save-our-solar-system.webp",
@@ -207,6 +223,7 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "SOSS, SOS, radiohead, radio, head, asteroid",
     contentType: "games",
     openInNewTab: true,
+    childDataKey: null,
   },
   {
     imageUrl: "/webps/art/strange-love-cover-art.webp",
@@ -218,5 +235,6 @@ export const contentBoxData: ContentBoxProps[] = [
     searchTags: "art, scifi, science, fiction, strange, love, heart",
     contentType: "art",
     openInNewTab: false,
+    childDataKey: null,
   },
 ];
