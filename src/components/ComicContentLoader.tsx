@@ -44,12 +44,12 @@ const ComicIconButton: React.FC<{
 );
 
 interface ComicContentLoaderProps {
-  comicData: ComicMetadataProps;
+  comicMetadata: ComicMetadataProps;
   childrenComicsData: ComicDataProps[];
 }
 
 const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
-  comicData,
+  comicMetadata,
   childrenComicsData,
 }) => {
   const [isHoverable, setIsHoverable] = useState(false);
@@ -109,11 +109,11 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
       );
       /* eslint-disable no-restricted-syntax */
       const seenFirstComic =
-        localStorage.getItem(`${comicData.title}-${firstComicNum}-seen`) ==
+        localStorage.getItem(`${comicMetadata.title}-${firstComicNum}-seen`) ==
         "true";
       /* eslint-enable no-restricted-syntax */
 
-      switch (comicData.firstComicShown) {
+      switch (comicMetadata.firstComicShown) {
         case "FIRST":
           newIndex = 0;
           break;
@@ -128,7 +128,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
           break;
         default:
           console.error(
-            `Unexpected firstComicShown value: ${comicData.firstComicShown}`
+            `Unexpected firstComicShown value: ${comicMetadata.firstComicShown}`
           );
       }
     }
@@ -136,8 +136,8 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     setCurrentIndex(newIndex);
     setInitialized(true);
   }, [
-    comicData.firstComicShown,
-    comicData.title,
+    comicMetadata.firstComicShown,
+    comicMetadata.title,
     childrenComicsData,
     sortedComics,
     initialized,
@@ -158,7 +158,10 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     if (currentComicNum == null) return;
 
     // eslint-disable-next-line no-restricted-syntax
-    localStorage.setItem(`${comicData.title}-${currentComicNum}-seen`, "true");
+    localStorage.setItem(
+      `${comicMetadata.title}-${currentComicNum}-seen`,
+      "true"
+    );
 
     // Update the url to reflect the current comic shown
     // eslint-disable-next-line no-restricted-syntax
@@ -166,7 +169,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     if (currentParams.get("comic") !== String(currentComicNum)) {
       router.replace(`?comic=${currentComicNum}`, { scroll: false });
     }
-  }, [currentIndex, sortedComics, comicData.title, initialized, router]);
+  }, [currentIndex, sortedComics, comicMetadata.title, initialized, router]);
 
   const currentChildComicData = useMemo(
     () => sortedComics[currentIndex],
@@ -190,8 +193,8 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
 
   return (
     <WrittenContentLoader
-      title={comicData.title}
-      subtitle={comicData.subtitle}
+      title={comicMetadata.title}
+      subtitle={comicMetadata.subtitle}
       date={new Date(currentChildComicData.dateISO).toLocaleDateString(
         "en-US",
         { year: "numeric", month: "long", day: "numeric" }

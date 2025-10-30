@@ -4,7 +4,7 @@ import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
 import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagraphGroup";
 
-const storyData: WrittenContentMetadataProps = {
+const storyMetadata: WrittenContentMetadataProps = {
   title: "I am Immortal",
   subtitle: "Shane Bonkowski",
   description: "A short story by Shane Bonkowski.",
@@ -16,16 +16,16 @@ const storyData: WrittenContentMetadataProps = {
 };
 
 export const metadata = {
-  title: storyData.title,
-  description: storyData.description,
+  title: storyMetadata.title,
+  description: storyMetadata.description,
   openGraph: {
-    title: storyData.title,
-    description: storyData.description,
+    title: storyMetadata.title,
+    description: storyMetadata.description,
     url: "https://shanebonkowski.com",
     images: [
       {
-        url: `https://shanebonkowski.com${storyData.coverImageUrl}`,
-        alt: storyData.description,
+        url: `https://shanebonkowski.com${storyMetadata.coverImageUrl}`,
+        alt: storyMetadata.description,
       },
     ],
     type: "website",
@@ -33,18 +33,18 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@ShaneBonkowski",
-    title: storyData.title,
-    description: storyData.description,
-    image: `https://shanebonkowski.com${storyData.coverImageUrl}`,
-    imageAlt: storyData.description,
+    title: storyMetadata.title,
+    description: storyMetadata.description,
+    image: `https://shanebonkowski.com${storyMetadata.coverImageUrl}`,
+    imageAlt: storyMetadata.description,
   },
 };
 
 export default function Page() {
   return (
     <>
-      <ResumeScrollProgress pageName={storyData.title} threshold={200} />
-      <WrittenContentLoader {...storyData}>
+      <ResumeScrollProgress pageName={storyMetadata.title} threshold={200} />
+      <WrittenContentLoader {...storyMetadata}>
         <WrittenContentParagraphGroup>
           <WrittenContentParagraphElement
             fontStyle="normal"

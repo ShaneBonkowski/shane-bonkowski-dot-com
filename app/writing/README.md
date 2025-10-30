@@ -32,12 +32,12 @@ Shane Bonkowski
 
 - Duplicate one of the existing stories in `/app/writing`.
 - Rename the duplicated story directory to `{story-name}`.
-- Update the `storyData` variable.
+- Update the `storyMetadata` variable.
 - Replace the title, date, etc.
 
 **Converting content:**
 
-- Delete all content between (and including) `<WrittenContentLoader {...storyData}>` tags.
+- Delete all content between (and including) `<WrittenContentLoader {...storyMetadata}>` tags.
 - Run [docx_to_written_content.py](https://github.com/ShaneBonkowski/file-utilities/blob/main/src/file_utilities/tools/docx_to_written_content.py) on your `.docx` file.
 - Copy the generated React components from the output `.txt` file.
 - Paste them where you deleted the `<WrittenContentLoader>` content.

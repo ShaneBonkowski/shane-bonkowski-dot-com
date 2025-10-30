@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import ComicContentLoader from "@/src/components/ComicContentLoader";
 import { ComicMetadataProps } from "@/src/types/data-props";
-import { southwardFallsComicData } from "@/src/data/comic-data";
+import { comicData } from "@/src/data/comic-data";
 
-const comicData: ComicMetadataProps = {
+const comicMetadata: ComicMetadataProps = {
   title: "Southward Falls",
   subtitle: "Shane Bonkowski",
   description: "A comic by Shane Bonkowski.",
@@ -14,16 +14,16 @@ const comicData: ComicMetadataProps = {
 };
 
 export const metadata = {
-  title: comicData.title,
-  description: comicData.description,
+  title: comicMetadata.title,
+  description: comicMetadata.description,
   openGraph: {
-    title: comicData.title,
-    description: comicData.description,
+    title: comicMetadata.title,
+    description: comicMetadata.description,
     url: "https://shanebonkowski.com",
     images: [
       {
-        url: `https://shanebonkowski.com${comicData.coverImageUrl}`,
-        alt: comicData.description,
+        url: `https://shanebonkowski.com${comicMetadata.coverImageUrl}`,
+        alt: comicMetadata.description,
       },
     ],
     type: "website",
@@ -31,10 +31,10 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@ShaneBonkowski",
-    title: comicData.title,
-    description: comicData.description,
-    image: `https://shanebonkowski.com${comicData.coverImageUrl}`,
-    imageAlt: comicData.description,
+    title: comicMetadata.title,
+    description: comicMetadata.description,
+    image: `https://shanebonkowski.com${comicMetadata.coverImageUrl}`,
+    imageAlt: comicMetadata.description,
   },
 };
 
@@ -46,7 +46,7 @@ export default async function Page() {
     // prefer it to just show the home page for longer rather than a few milliseconds
     // of a loading screen
     <Suspense
-      key={comicData.title}
+      key={comicMetadata.title}
       fallback={
         <div className="flex items-center justify-center h-full my-auto">
           <h3>Loading comic content...</h3>
@@ -54,8 +54,8 @@ export default async function Page() {
       }
     >
       <ComicContentLoader
-        comicData={comicData}
-        childrenComicsData={southwardFallsComicData}
+        comicMetadata={comicMetadata}
+        childrenComicsData={comicData["southward_falls"]}
       />
     </Suspense>
   );
