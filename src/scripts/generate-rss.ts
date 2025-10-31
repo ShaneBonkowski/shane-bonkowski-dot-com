@@ -8,6 +8,27 @@ const siteUrl =
     ? "http://localhost:3000"
     : "https://shanebonkowski.com";
 
+function generateFeedDescription(contentType: string) {
+  let typeText = "A post";
+
+  switch (contentType) {
+    case "comics":
+      typeText = "A comic";
+      break;
+    case "writing":
+      typeText = "A story";
+      break;
+    case "games":
+      typeText = "A game";
+      break;
+    case "art":
+      typeText = "An artwork";
+      break;
+  }
+
+  return `${typeText} by Shane Bonkowski`;
+}
+
 // --- Collect all feed items as structured data before converting to XML
 const allItems: {
   title: string;
@@ -28,12 +49,12 @@ for (const item of contentBoxData) {
       link: item.linkUrl.startsWith("http")
         ? item.linkUrl
         : `${siteUrl}${item.linkUrl}`,
-      description: item.description,
+      description: generateFeedDescription(item.contentType),
       date: new Date(item.dateISO.replace(/\//g, "-")),
       guid: item.linkUrl.startsWith("http")
         ? item.linkUrl
         : `${siteUrl}${item.linkUrl}`,
-      category: item.contentType || "",
+      category: item.contentType,
       imageUrl: item.imageUrl ? `${siteUrl}${item.imageUrl}` : undefined,
     });
   } else {
@@ -62,12 +83,12 @@ for (const item of contentBoxData) {
         link: item.linkUrl.startsWith("http")
           ? item.linkUrl
           : `${siteUrl}${item.linkUrl}/?comic=${comic.comicNum}`,
-        description: comic.captionOrTitle,
+        description: generateFeedDescription(item.contentType),
         date: new Date(comic.dateISO.replace(/\//g, "-")),
         guid: item.linkUrl.startsWith("http")
           ? item.linkUrl
           : `${siteUrl}${item.linkUrl}/?comic=${comic.comicNum}`,
-        category: item.contentType || "",
+        category: item.contentType,
         imageUrl: `${siteUrl}${comic.imageUrl}`,
       });
     }
@@ -86,7 +107,7 @@ const itemsXml = allItems
         <description><![CDATA[${entry.description}]]></description>
         <pubDate>${entry.date.toUTCString()}</pubDate>
         <guid>${entry.guid}</guid>
-        <category><![CDATA[${entry.category || ""}]]></category>
+        <category><![CDATA[${entry.category}]]></category>
         ${
           entry.imageUrl
             ? `<enclosure url="${entry.imageUrl}" length="0" type="image/webp" />`

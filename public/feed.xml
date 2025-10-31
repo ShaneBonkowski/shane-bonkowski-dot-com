@@ -6,11 +6,11 @@
     <atom:link href="https://shanebonkowski.com/feed.xml" rel="self" type="application/rss+xml" />
     <description>Recent posts</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 31 Oct 2025 04:26:56 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 31 Oct 2025 06:19:22 GMT</lastBuildDate>
     <item>
         <title><![CDATA[Southward Falls #3]]></title>
         <link>https://shanebonkowski.com/comics/southward-falls/?comic=3</link>
-        <description><![CDATA[Southward Falls #3: A Hollow Earth?]]></description>
+        <description><![CDATA[A comic by Shane Bonkowski]]></description>
         <pubDate>Mon, 27 Oct 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/comics/southward-falls/?comic=3</guid>
         <category><![CDATA[comics]]></category>
@@ -19,7 +19,7 @@
 	<item>
         <title><![CDATA[Southward Falls #2]]></title>
         <link>https://shanebonkowski.com/comics/southward-falls/?comic=2</link>
-        <description><![CDATA[Southward Falls #2: Into the abyss.]]></description>
+        <description><![CDATA[A comic by Shane Bonkowski]]></description>
         <pubDate>Sat, 25 Oct 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/comics/southward-falls/?comic=2</guid>
         <category><![CDATA[comics]]></category>
@@ -28,7 +28,7 @@
 	<item>
         <title><![CDATA[Southward Falls #1]]></title>
         <link>https://shanebonkowski.com/comics/southward-falls/?comic=1</link>
-        <description><![CDATA[Southward Falls #1: Look out. Hole!]]></description>
+        <description><![CDATA[A comic by Shane Bonkowski]]></description>
         <pubDate>Thu, 23 Oct 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/comics/southward-falls/?comic=1</guid>
         <category><![CDATA[comics]]></category>
@@ -37,7 +37,7 @@
 	<item>
         <title><![CDATA[The Devil]]></title>
         <link>https://shanebonkowski.com/writing/the-devil</link>
-        <description><![CDATA[In the time of flourishing, man stood on the precipice of endless prosperity. When all that lay between him and his goals were mere questions, he sought to create the answer.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Sat, 11 Oct 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/the-devil</guid>
         <category><![CDATA[writing]]></category>
@@ -46,7 +46,7 @@
 	<item>
         <title><![CDATA[Perlin Noise]]></title>
         <link>https://shanebonkowski.com/games/perlin-noise</link>
-        <description><![CDATA[Explore the complex world of procedural generation with Perlin Noise.]]></description>
+        <description><![CDATA[A game by Shane Bonkowski]]></description>
         <pubDate>Mon, 21 Jul 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/games/perlin-noise</guid>
         <category><![CDATA[games]]></category>
@@ -55,7 +55,7 @@
 	<item>
         <title><![CDATA[Cowpoke]]></title>
         <link>https://shanebonkowski.com/games/cowpoke</link>
-        <description><![CDATA[Endless wild west side-scroller with turn-based combat. Face ruthless outlaws, scavenge powerful loot, and grow stronger with every showdown.]]></description>
+        <description><![CDATA[A game by Shane Bonkowski]]></description>
         <pubDate>Sat, 07 Jun 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/games/cowpoke</guid>
         <category><![CDATA[games]]></category>
@@ -64,7 +64,7 @@
 	<item>
         <title><![CDATA[Game of Life]]></title>
         <link>https://shanebonkowski.com/games/game-of-life</link>
-        <description><![CDATA[Experience the emergent world of cellular automata. Classic Conway's Game of Life with advanced customization options to create your own.]]></description>
+        <description><![CDATA[A game by Shane Bonkowski]]></description>
         <pubDate>Wed, 22 Jan 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/games/game-of-life</guid>
         <category><![CDATA[games]]></category>
@@ -73,7 +73,7 @@
 	<item>
         <title><![CDATA[The Lovers]]></title>
         <link>https://shanebonkowski.com/writing/the-lovers</link>
-        <description><![CDATA[Deep within the hidden corridors of Genesis Labs, two scientists are developing what may go down as mankind's final invention.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Sat, 11 Jan 2025 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/the-lovers</guid>
         <category><![CDATA[writing]]></category>
@@ -82,7 +82,7 @@
 	<item>
         <title><![CDATA[My Final Thought]]></title>
         <link>https://shanebonkowski.com/writing/my-final-thought</link>
-        <description><![CDATA[As I sit here and watch the unforgiving grains of sand trickle down from my hourglass, there is nothing left to do but ponder.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Sun, 08 Dec 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/my-final-thought</guid>
         <category><![CDATA[writing]]></category>
@@ -91,7 +91,7 @@
 	<item>
         <title><![CDATA[Death]]></title>
         <link>https://shanebonkowski.com/writing/death</link>
-        <description><![CDATA[A man sits alone at a rundown bar after a long day of work, his soulless eyes projecting a heavy, lingering despair. Deep in the mind of the troubled man, a war is brewing.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Tue, 10 Sep 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/death</guid>
         <category><![CDATA[writing]]></category>
@@ -100,7 +100,7 @@
 	<item>
         <title><![CDATA[The Sun]]></title>
         <link>https://shanebonkowski.com/writing/the-sun</link>
-        <description><![CDATA[To my firstborn: Do you ever stop and wonder, if the wind did not blow, would the wilted flowers remain in frozen perfection for all eternity?]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Sun, 25 Aug 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/the-sun</guid>
         <category><![CDATA[writing]]></category>
@@ -109,7 +109,7 @@
 	<item>
         <title><![CDATA[The Star]]></title>
         <link>https://shanebonkowski.com/writing/the-star</link>
-        <description><![CDATA[She was the healer. The silent observer. The glue that held it all together until the very end. Great fires would rage and she would drag the ocean down from the heavens.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Mon, 12 Aug 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/the-star</guid>
         <category><![CDATA[writing]]></category>
@@ -118,7 +118,7 @@
 	<item>
         <title><![CDATA[Flip Tile]]></title>
         <link>https://shanebonkowski.com/games/flip-tile</link>
-        <description><![CDATA[Classic 'lights out' style puzzle game. Flipping one tile causes neighboring tiles to flip as well. Match them all to advance further!]]></description>
+        <description><![CDATA[A game by Shane Bonkowski]]></description>
         <pubDate>Sun, 14 Jul 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/games/flip-tile</guid>
         <category><![CDATA[games]]></category>
@@ -127,7 +127,7 @@
 	<item>
         <title><![CDATA[The Moon]]></title>
         <link>https://shanebonkowski.com/writing/the-moon</link>
-        <description><![CDATA[Step by step, I trudge on through the long night. My body aches and my bones tremble under the weight of her gaze, a constant reminder of my imprisonment.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Sat, 13 Jul 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/the-moon</guid>
         <category><![CDATA[writing]]></category>
@@ -136,7 +136,7 @@
 	<item>
         <title><![CDATA[Before the World Dried Up]]></title>
         <link>https://shanebonkowski.com/writing/before-the-world-dried-up</link>
-        <description><![CDATA[They ask me why I plan on sticking around this place. Why I haven't jumped ship with the rest of them. I let out a sigh as I gaze off across the lifeless desertscape.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Thu, 20 Jun 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/before-the-world-dried-up</guid>
         <category><![CDATA[writing]]></category>
@@ -145,7 +145,7 @@
 	<item>
         <title><![CDATA[Abyssal Descent]]></title>
         <link>https://store.steampowered.com/app/2506740/Abyssal_Descent/</link>
-        <description><![CDATA[(Steam Game) Embark on an epic platformer adventure through procedurally generated caves, solving intricate puzzles, and battling fearsome enemies!]]></description>
+        <description><![CDATA[A game by Shane Bonkowski]]></description>
         <pubDate>Thu, 06 Jun 2024 00:00:00 GMT</pubDate>
         <guid>https://store.steampowered.com/app/2506740/Abyssal_Descent/</guid>
         <category><![CDATA[games]]></category>
@@ -154,7 +154,7 @@
 	<item>
         <title><![CDATA[Better Boids]]></title>
         <link>https://shanebonkowski.com/games/better-boids</link>
-        <description><![CDATA[A unique twist to the classic Boids algorithm. Player controlled Boid, predator-prey relationships, customizable toggles & more.]]></description>
+        <description><![CDATA[A game by Shane Bonkowski]]></description>
         <pubDate>Sat, 25 May 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/games/better-boids</guid>
         <category><![CDATA[games]]></category>
@@ -163,7 +163,7 @@
 	<item>
         <title><![CDATA[I am Immortal]]></title>
         <link>https://shanebonkowski.com/writing/I-am-immortal</link>
-        <description><![CDATA[If you ask me, I'm at least 13.8 billion years old. Born in the aftermath of the Big Bang. My life began the same way it will end: Scattered across Infinity.]]></description>
+        <description><![CDATA[A story by Shane Bonkowski]]></description>
         <pubDate>Sat, 16 Mar 2024 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/writing/I-am-immortal</guid>
         <category><![CDATA[writing]]></category>
@@ -172,7 +172,7 @@
 	<item>
         <title><![CDATA[Save Our Solar System]]></title>
         <link>https://store.steampowered.com/app/2061040/Save_Our_Solar_System/</link>
-        <description><![CDATA[(Steam Game) Stave off countless waves of asteroids as you fight to protect the Solar System from extinction. A fresh look on the tower defense genre!]]></description>
+        <description><![CDATA[A game by Shane Bonkowski]]></description>
         <pubDate>Tue, 28 Mar 2023 00:00:00 GMT</pubDate>
         <guid>https://store.steampowered.com/app/2061040/Save_Our_Solar_System/</guid>
         <category><![CDATA[games]]></category>
@@ -181,7 +181,7 @@
 	<item>
         <title><![CDATA[Strange Love]]></title>
         <link>https://shanebonkowski.com/art/strange-love</link>
-        <description><![CDATA[Bone of my bones, flesh of my flesh. A piece of me, now a piece of you.]]></description>
+        <description><![CDATA[An artwork by Shane Bonkowski]]></description>
         <pubDate>Wed, 06 Apr 2022 00:00:00 GMT</pubDate>
         <guid>https://shanebonkowski.com/art/strange-love</guid>
         <category><![CDATA[art]]></category>

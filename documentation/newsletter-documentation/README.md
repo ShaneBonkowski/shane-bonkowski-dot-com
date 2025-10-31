@@ -29,13 +29,13 @@ Users can subscribe to the feed [here](https://follow.it/shane-s-games?leanpub),
 
 This setup is simple, reliable, and keeps the content subscription-friendly without additional compliance overhead.
 
-In order to verify that I am the owner of this site to `Follow/it`, I needed to add the `verification-follow_it-FuM824HaauE8Nq9z8C75.html` file to `/public`.
-
 ## Adding new data types
 
 In the future, if there is ever new data types outside of `content-box-data.ts` and `comic-data.ts`, there will likely need to be updates to `src/scripts/generate-rss.ts` so that the rss feed still gets automatically updated when new content is created.
 
 ## Developer Notes
+
+### Dev
 
 To generate the RSS feed locally without rebuilding the whole site:
 
@@ -44,3 +44,9 @@ npm run postbuild
 ```
 
 This will update `public/feed.xml` so you can preview the feed.
+
+### Maintenance
+
+In order to verify that I am the owner of this site to `Follow/it`, I needed to add the `verification-follow_it-FuM824HaauE8Nq9z8C75.html` file to `/public`.
+
+To manage the feed and view followers, etc. go to https://follow.it/offered-feed/shane-s-games/.
