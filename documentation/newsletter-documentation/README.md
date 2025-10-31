@@ -25,9 +25,11 @@ An RSS feed is used instead of a traditional newsletter because:
 - RSS allows users to subscribe easily using an RSS feed watcher, without all the extra steps.
 - When the RSS feed updates (new posts, comics, etc.), the feed watcher detects the change and sends an email to subscribers automatically.
 
-Currently, users can subscribe to the feed via [Follow.it](https://follow.it/) (or any other RSS subscription tool) by providing the following link to the RSS feed: https://shanebonkowski.com/feed.xml.
+Users can subscribe to the feed [here](https://follow.it/shane-s-games?leanpub), which links to the [Follow.it](https://follow.it/) RSS feed notifier service. More advanced users could also use any other RSS subscription tool by providing the following link to the RSS feed: https://shanebonkowski.com/feed.xml.
 
 This setup is simple, reliable, and keeps the content subscription-friendly without additional compliance overhead.
+
+In order to verify that I am the owner of this site to `Follow/it`, I needed to add the `verification-follow_it-FuM824HaauE8Nq9z8C75.html` file to `/public`.
 
 ## Adding new data types
 
