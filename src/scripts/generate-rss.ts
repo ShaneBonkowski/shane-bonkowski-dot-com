@@ -80,8 +80,7 @@ allItems.sort((a, b) => b.date.getTime() - a.date.getTime());
 // --- Convert sorted items to XML
 const itemsXml = allItems
   .map(
-    (entry) => `
-      <item>
+    (entry) => `<item>
         <title><![CDATA[${entry.title}]]></title>
         <link>${entry.link}</link>
         <description><![CDATA[${entry.description}]]></description>
@@ -93,10 +92,9 @@ const itemsXml = allItems
             ? `<enclosure url="${entry.imageUrl}" length="0" type="image/webp" />`
             : ""
         }
-      </item>
-    `
+    </item>`
   )
-  .join("");
+  .join("\n\t");
 
 // --- Build final XML
 const lastBuildDate = new Date().toUTCString();
