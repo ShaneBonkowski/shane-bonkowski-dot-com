@@ -14,7 +14,7 @@
     "jsx": "preserve",
     "incremental": true,
     "allowImportingTsExtensions": true,
-    "types": ["phaser"],
+    "types": ["phaser", "node"],
     "plugins": [
       {
         "name": "next"
