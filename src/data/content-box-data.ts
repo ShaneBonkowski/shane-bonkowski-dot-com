@@ -1,3 +1,4 @@
+// REMINDER: /data/*.ts files need to have a corresponding implementation in `generate-rss.ts` so that the rss feed works as intended
 import { ContentBoxProps } from "@/src/types/content-props";
 import { comicData } from "@/src/data/comic-data";
 

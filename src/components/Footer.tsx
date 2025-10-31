@@ -30,6 +30,17 @@ const Footer: React.FC = () => {
       >
         {/* Main Text */}
         <p className="text-center mb-2">Thanks for visiting Shanes Games!</p>
+        <p className="text-center mb-2">
+          <a
+            href="https://follow.it/shane-s-games?leanpub"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={"link"}
+          >
+            Subscribe
+          </a>{" "}
+          to never miss a post
+        </p>
 
         {/* Social Icons */}
         <div
