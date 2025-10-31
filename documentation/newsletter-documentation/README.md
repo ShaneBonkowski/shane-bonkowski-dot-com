@@ -29,6 +29,10 @@ Currently, users can subscribe to the feed via [Follow.it](https://follow.it/) (
 
 This setup is simple, reliable, and keeps the content subscription-friendly without additional compliance overhead.
 
+## Adding new data types
+
+In the future, if there is ever new data types outside of `content-box-data.ts` and `comic-data.ts`, there will likely need to be updates to `src/scripts/generate-rss.ts` so that the rss feed still gets automatically updated when new content is created.
+
 ## Developer Notes
 
 To generate the RSS feed locally without rebuilding the whole site:
