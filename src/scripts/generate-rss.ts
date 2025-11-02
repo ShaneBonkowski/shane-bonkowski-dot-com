@@ -134,8 +134,8 @@ const rssXml = `<?xml version="1.0" encoding="UTF-8" ?>
   </channel>
 </rss>`;
 
-// --- Write to /public/feed.xml
-const outputPath = path.join(process.cwd(), "public", "feed.xml");
+// --- Write to /out/feed.xml
+const outputPath = path.join(process.cwd(), "out", "feed.xml");
 fs.writeFileSync(outputPath, rssXml);
 
 console.log(`RSS feed written to ${outputPath} (${allItems.length} items)`);

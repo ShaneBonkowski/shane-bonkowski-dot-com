@@ -11,7 +11,7 @@ This project uses an RSS feed to provide a lightweight newsletter mechanism for 
    The script is automatically called after every build via the postbuild script in `package.json`.
 
 3. **Output**
-   The script generates the RSS XML file and writes it to: `public/feed.xml`. This file is then available to be served as the canonical RSS feed for the site.
+   The script generates the RSS XML file and writes it to: `out/feed.xml` (so that it is present in the deployed build). This file is then available to be served as the canonical RSS feed for the site.
 
 ## What an RSS Feed Is
 
@@ -43,7 +43,7 @@ To generate the RSS feed locally without rebuilding the whole site:
 npm run postbuild
 ```
 
-This will update `public/feed.xml` so you can preview the feed.
+This will update `out/feed.xml` so you can preview the feed.
 
 ### Maintenance
 
