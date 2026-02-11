@@ -6,6 +6,19 @@ export const contentBoxData: ContentBoxProps[] = [
   // ADD NEW CONTENT BOXES AT THE TOP! TRY TO KEEP THEM IN DESCENDING ORDER BY
   // DATE! THAT WAY THERE IS NOT A FLICKER WHEN IT SORTS!
   {
+    imageUrl: "/webps/writing/wheel-of-fortune.webp",
+    linkUrl: "/writing/wheel-of-fortune",
+    title: "Wheel of Fortune",
+    dateISO: "2026/02/10",
+    description:
+      "At the end of a long, mundane, tedious life of ups, downs, hope, happiness, sorrow, and regret, the man of fortune found himself slumped across his deathbed, looking back at his life to figure out exactly where it all went wrong.",
+    searchTags:
+      "Tarot, Wheel, Fortune, Card, Fox, Cloud, Clouds, Gold, Golden, Disc",
+    contentType: "writing",
+    openInNewTab: false,
+    childDataKey: null,
+  },
+  {
     imageUrl: "/webps/comics/SF-comic-cover-art.webp",
     linkUrl: "/comics/southward-falls",
     title: "Southward Falls",
