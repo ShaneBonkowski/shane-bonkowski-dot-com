@@ -46,7 +46,10 @@ export default function Page() {
       <ResumeScrollProgress pageName={storyMetadata.title} threshold={200} />
       <WrittenContentLoader {...storyMetadata}>
         <WrittenContentParagraphGroup>
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             At the end of a long, mundane, tedious life of ups, downs, hope,
             happiness, sorrow, and regret, the man of fortune found himself
             slumped across his deathbed, looking back at his life to figure out
@@ -61,7 +64,10 @@ export default function Page() {
             despair they must have felt. The horror of it all.
           </WrittenContentParagraphElement>
 
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Slumped across that deathbed, the man of fortune fought until the
             bitter end, not because he wanted to live, but because he was too
             stubborn to die. At his hour of reckoning, with three long, heavy
@@ -78,7 +84,10 @@ export default function Page() {
             care in the world.
           </WrittenContentParagraphElement>
 
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             As the disc kissed the ground, the man rose from what was his final
             resting place. All the critters who had previously paid no mind
             suddenly stopped their laughter and play to glare through him. Even
@@ -92,7 +101,10 @@ export default function Page() {
             And there was a fox.
           </WrittenContentParagraphElement>
 
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             At this point, the man was trembling. Nervously, he opened his mouth
             and began to speak, but was immediately cut off by the fox, who made
             it very clear that this was not a negotiation. He didn&apos;t
@@ -103,7 +115,10 @@ export default function Page() {
             dark, eternal slumber for the rest of time.
           </WrittenContentParagraphElement>
 
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Just as any of us would do if faced with such a dilemma, the man
             first hesitated, then deliberated, then ultimately made the
             not-so-reasonable decision: he would try his luck. And so, with a
@@ -113,15 +128,24 @@ export default function Page() {
             excited, the man of fortune carefully watched the options tick by.
           </WrittenContentParagraphElement>
 
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Farmer. Banker. Dog. Elephant. Deer. Politician. Rabbit.
           </WrittenContentParagraphElement>
 
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             The sly fox smirked as the final option ticked by.
           </WrittenContentParagraphElement>
 
-          <WrittenContentParagraphElement fontStyle="normal" textAlign="left">
+          <WrittenContentParagraphElement
+            fontStyle="normal"
+            textAlign="justify"
+          >
             Pig.
           </WrittenContentParagraphElement>
         </WrittenContentParagraphGroup>
