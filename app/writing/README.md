@@ -24,6 +24,7 @@ Shane Bonkowski
 ```
 
 - **Supported formatting:** italics, bold, paragraph structure, left/right/center/justified text alignment.
+- **Reminder:** Stories published here are typically "justified" or "centered". Make sure that the format of the text on the document makes sense prior to moving on to the next steps. If the text is "left" or "right" alignment, it is probably wrong.
 - **Export:** Save as `.docx` format and download locally.
 
 **Note:** The converter will automatically parse this header format and apply the appropriate styling to your story content. See the steps below for more information.
