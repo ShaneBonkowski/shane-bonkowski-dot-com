@@ -7,7 +7,7 @@ export const comicData: Record<string, ComicDataProps[]> = {
   southward_falls: [
     {
       imageUrl: "/webps/comics/SF-comic-21.webp",
-      captionOrTitle: "Southward Falls #21: Southward Pod.",
+      captionOrTitle: "Southward Falls #21: The Southward Pod.",
       dateISO: "2026/02/10",
       contentImageWidth: 1280,
       contentImageHeight: 1080,
@@ -23,7 +23,7 @@ export const comicData: Record<string, ComicDataProps[]> = {
     },
     {
       imageUrl: "/webps/comics/SF-comic-19.webp",
-      captionOrTitle: "Southward Falls #19: Needle inna Haystack.",
+      captionOrTitle: "Southward Falls #19: Needle inna haystack.",
       dateISO: "2026/01/10",
       contentImageWidth: 1280,
       contentImageHeight: 1080,
