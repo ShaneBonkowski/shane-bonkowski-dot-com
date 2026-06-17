@@ -6,6 +6,22 @@ export const comicData: Record<string, ComicDataProps[]> = {
   // DATE! THAT WAY THERE IS NOT A FLICKER WHEN IT SORTS!
   southward_falls: [
     {
+      imageUrl: "/webps/comics/SF-comic-26.webp",
+      captionOrTitle: "Southward Falls #26: That ain't no zebra!",
+      dateISO: "2026/06/16",
+      contentImageWidth: 1280,
+      contentImageHeight: 1080,
+      comicNum: 26,
+    },
+    {
+      imageUrl: "/webps/comics/SF-comic-25.webp",
+      captionOrTitle: "Southward Falls #25: Yum.",
+      dateISO: "2026/06/12",
+      contentImageWidth: 1280,
+      contentImageHeight: 1080,
+      comicNum: 25,
+    },
+    {
       imageUrl: "/webps/comics/SF-comic-24.webp",
       captionOrTitle: "Southward Falls #24: Flip the switch.",
       dateISO: "2026/05/09",
