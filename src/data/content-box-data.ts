@@ -6,6 +6,17 @@ export const contentBoxData: ContentBoxProps[] = [
   // ADD NEW CONTENT BOXES AT THE TOP! TRY TO KEEP THEM IN DESCENDING ORDER BY
   // DATE! THAT WAY THERE IS NOT A FLICKER WHEN IT SORTS!
   {
+    imageUrl: "/webps/art/quite-the-leap-cover-art.webp",
+    linkUrl: "/art/quite-the-leap",
+    title: "Quite the Leap",
+    dateISO: "2026/06/14",
+    description: "This was supposed to be a diving board.",
+    searchTags: "art, boat, dive, diving, board, man, water, sun, sunset",
+    contentType: "art",
+    openInNewTab: false,
+    childDataKey: null,
+  },
+  {
     imageUrl: "/webps/writing/wheel-of-fortune.webp",
     linkUrl: "/writing/wheel-of-fortune",
     title: "Wheel of Fortune",
