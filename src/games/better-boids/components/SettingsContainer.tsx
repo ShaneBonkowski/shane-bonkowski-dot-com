@@ -163,7 +163,7 @@ const SettingsContainer: React.FC = () => {
           >
             {/* Image */}
             <div
-              className="min-h-[30vh] p-4 landscape:sm:p-8 w-full landscape:sm:w-1/2 relative"
+              className="min-h-[calc(var(--app-vh)*0.3)] p-4 landscape:sm:p-8 w-full landscape:sm:w-1/2 relative"
               id="boids-settings-image"
             >
               <Image
@@ -225,7 +225,7 @@ const SettingsContainer: React.FC = () => {
                             onChange={(e) =>
                               handleSliderChange(
                                 key,
-                                parseFloat(e.target.value)
+                                parseFloat(e.target.value),
                               )
                             }
                             className="w-full"

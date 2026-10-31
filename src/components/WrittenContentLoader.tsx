@@ -56,7 +56,9 @@ const WrittenContentLoader: React.FC<WrittenContentLoaderProps> = ({
       {/* NOTE: mb-0 on artwork with body text since there is no date to serve as a buffer */}
       <div
         className={`my-8 mx-auto flex justify-center ${
-          artContent ? "max-h-[90vh] w-auto" : "w-3/4 h-3/4 sm:w-1/2 sm:h-1/2"
+          artContent
+            ? "max-h-[calc(var(--app-vh)*0.9)] w-auto"
+            : "w-3/4 h-3/4 sm:w-1/2 sm:h-1/2"
         } ${artContent && children !== null ? "mb-0" : ""}`}
       >
         <Image

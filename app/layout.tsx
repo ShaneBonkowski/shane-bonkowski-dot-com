@@ -48,6 +48,46 @@ export default function RootLayout({
       </Head>
       {/* Add components to the body of the website */}
       <body className="flex flex-col min-h-screen" id="website-body">
+        <Script
+          id="viewport-height"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (() => {
+                const setViewportHeight = () => {
+                  const viewportHeight =
+                    window.visualViewport?.height ||
+                    window.innerHeight ||
+                    document.documentElement.clientHeight ||
+                    0;
+                  const viewportWidth =
+                    window.visualViewport?.width ||
+                    window.innerWidth ||
+                    document.documentElement.clientWidth ||
+                    0;
+
+                  document.documentElement.style.setProperty(
+                    '--app-vh',
+                    viewportHeight + 'px'
+                  );
+                  document.documentElement.style.setProperty(
+                    '--app-vw',
+                    viewportWidth + 'px'
+                  );
+                };
+
+                setViewportHeight();
+                window.visualViewport?.addEventListener('resize', setViewportHeight, {
+                  passive: true,
+                });
+                window.addEventListener('resize', setViewportHeight, { passive: true });
+                window.addEventListener('orientationchange', setViewportHeight, {
+                  passive: true,
+                });
+              })();
+            `,
+          }}
+        />
         {/* Add Google Analytics  */}
         <Script
           strategy="beforeInteractive"
