@@ -232,13 +232,17 @@ const StartEndMenu: React.FC = () => {
                 {/* Make clickable area larger */}
                 <div className="px-4">
                   <input
+                    id="cowpoke-auto-restart"
                     type="checkbox"
                     checked={autoRestart}
                     onChange={(e) => setAutoRestart(e.target.checked)}
                     className="accent-red-500"
                   />
                 </div>
-                <label className="cursor-pointer text-primary-text-color-light dark:text-primary-text-color-light">
+                <label
+                  htmlFor="cowpoke-auto-restart"
+                  className="cursor-pointer text-primary-text-color-light dark:text-primary-text-color-light"
+                >
                   {countdown > 0 ? (
                     <span className="text-red-500 font-bold">
                       Auto-restart in {countdown}...

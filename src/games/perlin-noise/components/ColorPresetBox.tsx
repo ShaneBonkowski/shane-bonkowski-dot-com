@@ -78,6 +78,7 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
               value={formatHexColor(color)}
               onChange={(e) => handleColorChange(tileType, e.target.value)}
               className="w-full border border-gray-300 rounded cursor-pointer"
+              aria-label={`${tileType.replace("_", " ").toLowerCase()} color`}
               title={tileType.replace("_", " ").toLowerCase()}
               key={tileType}
             />

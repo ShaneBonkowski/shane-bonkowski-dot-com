@@ -181,6 +181,7 @@ const SettingsContainer: React.FC = () => {
                         {/* Make clickable area larger */}
                         <div className="pr-4 pb-2">
                           <input
+                            id={`game-of-life-setting-${key}`}
                             type="checkbox"
                             checked={currentValue as boolean}
                             onChange={(e) =>
@@ -188,7 +189,10 @@ const SettingsContainer: React.FC = () => {
                             }
                           />
                         </div>
-                        <label className="mb-2 text-md font-bold">
+                        <label
+                          htmlFor={`game-of-life-setting-${key}`}
+                          className="mb-2 text-md font-bold"
+                        >
                           {config.title}
                         </label>
                       </div>
@@ -196,13 +200,17 @@ const SettingsContainer: React.FC = () => {
                     </div>
                   ) : (
                     <div className="flex flex-col">
-                      <label className="text-md font-bold mb-2">
+                      <label
+                        htmlFor={`game-of-life-slider-${key}`}
+                        className="text-md font-bold mb-2"
+                      >
                         {config.title}: {currentValue as number}
                       </label>
                       <label className="text-sm mb-2">{config.desc}</label>
                       {/* Make clickable area larger */}
                       <div className="py-4">
                         <input
+                          id={`game-of-life-slider-${key}`}
                           type="range"
                           min={config.lowerBound}
                           max={config.upperBound}
