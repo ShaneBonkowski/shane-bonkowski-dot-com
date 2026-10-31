@@ -77,7 +77,9 @@ const Header: React.FC = () => {
       className={`z-50 app-mode pointer-events-none flex justify-between items-center ${
         isButtonVisible ? "" : "hidden"
       } ${
-        isGamesPath ? "absolute top-4 left-4" : "p-common-p sm:p-common-p-sm"
+        isGamesPath
+          ? "fixed top-4 left-4"
+          : "p-common-p sm:p-common-p-sm"
       }`}
       id="header"
       aria-label="Header"
