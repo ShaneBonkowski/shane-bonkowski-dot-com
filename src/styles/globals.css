@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --app-vh: 100vh;
+  --app-vw: 100vw;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -11,9 +16,17 @@ body {
   /* Shift up a lil to fix the rendering bug seen on phone with 1px thick line */
   background-position: center calc(100% - 4px);
   background-repeat: repeat-y;
-  height: 100%;
+  height: var(--app-vh);
+  min-height: var(--app-vh);
   display: flex;
   flex-direction: column;
+}
+
+html,
+body,
+#website-body {
+  min-height: var(--app-vh);
+  width: 100%;
 }
 
 /* Only have the starry sky on dark mode! */
@@ -211,11 +224,17 @@ body {
   }
 
   .text-outline-light {
-    text-shadow: 0 0 2px #c6c6c6, 0 0 4px #c6c6c6, 0 0 6px #c6c6c6;
+    text-shadow:
+      0 0 2px #c6c6c6,
+      0 0 4px #c6c6c6,
+      0 0 6px #c6c6c6;
   }
 
   .text-outline-dark {
-    text-shadow: 0 0 2px #000, 0 0 4px #000, 0 0 6px #000;
+    text-shadow:
+      0 0 2px #000,
+      0 0 4px #000,
+      0 0 6px #000;
   }
 
   .drop-shadow-black {

@@ -32,7 +32,7 @@ const UiOverlay: React.FC = () => {
 
     document.addEventListener(
       "scoreChange",
-      handleScoreChange as EventListener
+      handleScoreChange as EventListener,
     );
 
     return () => {
@@ -41,7 +41,7 @@ const UiOverlay: React.FC = () => {
 
       document.removeEventListener(
         "scoreChange",
-        handleScoreChange as EventListener
+        handleScoreChange as EventListener,
       );
 
       if (timeoutRef.current) {
@@ -61,7 +61,7 @@ const UiOverlay: React.FC = () => {
       {/* Score Text */}
       <div
         id="score-display-container"
-        className="fixed pointer-events-none top-[12vh] landscape:top-5 w-full flex justify-center items-center"
+        className="fixed pointer-events-none top-[calc(var(--app-vh)*0.12)] landscape:top-5 w-full flex justify-center items-center"
       >
         <p
           id="score-display"

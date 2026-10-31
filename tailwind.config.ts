@@ -33,9 +33,9 @@ export default {
         "flip-tile-small-mx": "6vw",
         "flip-tile-med-mx": "12vw",
         "flip-tile-tiny-mb": "6vw",
-        "flip-tile-low-mb": "13vh",
-        "flip-tile-med-mb": "23vh",
-        "flip-tile-high-mb": "30vh",
+        "flip-tile-low-mb": "calc(var(--app-vh) * 0.13)",
+        "flip-tile-med-mb": "calc(var(--app-vh) * 0.23)",
+        "flip-tile-high-mb": "calc(var(--app-vh) * 0.3)",
       },
       width: {
         "header-btn-h": "7rem",
