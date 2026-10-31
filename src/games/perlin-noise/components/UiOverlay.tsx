@@ -158,11 +158,11 @@ const UiOverlay: React.FC = () => {
           <div /> {/* Empty Gap */}
         </div>
         {/* Sliders */}
-        <div className="flex flex-col items-center">
+        <div className="w-[35vw] max-w-[26rem] flex flex-col items-center">
           {/* Z-slice slider */}
           <div className="z-20 flex flex-row items-center gap-4">
             {/* Make clickable area larger */}
-            <div className="pt-4 pb-2">
+            <div className="w-full pt-4 pb-2">
               <input
                 type="range"
                 min={0}
@@ -170,7 +170,7 @@ const UiOverlay: React.FC = () => {
                 step={1}
                 value={zSliceSliderValue}
                 onChange={handleZSliceChange}
-                className="z-20 pointer-events-auto"
+                className="z-20 w-full pointer-events-auto"
               />
             </div>
             {/* Have the icon emulate a button so that it has the same padding etc. */}
@@ -186,7 +186,7 @@ const UiOverlay: React.FC = () => {
           {/* Speed slider */}
           <div className="z-20 flex flex-row items-center gap-4">
             {/* Make clickable area larger */}
-            <div className="pt-4 pb-2">
+            <div className="w-full pt-4 pb-2">
               <input
                 type="range"
                 min={1} // no zero speed
@@ -194,7 +194,7 @@ const UiOverlay: React.FC = () => {
                 step={1}
                 value={walkSpeedSliderValue}
                 onChange={handleWalkSpeedChange}
-                className="z-20 pointer-events-auto"
+                className="z-20 w-full pointer-events-auto"
               />
             </div>
             {/* Have the icon emulate a button so that it has the same padding etc. */}
@@ -210,7 +210,7 @@ const UiOverlay: React.FC = () => {
           {/* Zoom slider */}
           <div className="z-20 flex flex-row items-center gap-4">
             {/* Make clickable area larger */}
-            <div className="pt-4 pb-2">
+            <div className="w-full pt-4 pb-2">
               <input
                 type="range"
                 min={-50} // no zero zoom
@@ -218,7 +218,7 @@ const UiOverlay: React.FC = () => {
                 step={1}
                 value={zoomSliderValue}
                 onChange={handleZoomChange}
-                className="z-20 pointer-events-auto"
+                className="z-20 w-full pointer-events-auto"
               />
             </div>
             {/* Have the icon emulate a button so that it has the same padding etc. */}

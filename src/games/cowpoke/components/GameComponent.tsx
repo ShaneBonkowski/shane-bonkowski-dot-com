@@ -54,9 +54,8 @@ const GameComponent: React.FC = () => {
       }
 
       try {
-        const { MainGameScene } = await import(
-          "@/src/games/cowpoke/scenes/main-game-scene"
-        );
+        const { MainGameScene } =
+          await import("@/src/games/cowpoke/scenes/main-game-scene");
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
           type: Phaser.AUTO,
@@ -249,8 +248,9 @@ const GameComponent: React.FC = () => {
           </ul>
         </div>
       </GameInfoContainer>
-      <div className="relative p-5 flex flex-col gap-4 justify-center items-center">
-        <UpperHud />
+      <UpperHud />
+      <div className="relative z-20 p-5 pt-4 flex flex-col gap-4 justify-center items-center">
+        <div className="h-14 w-full" aria-hidden="true" />
         <GameControls />
       </div>
 

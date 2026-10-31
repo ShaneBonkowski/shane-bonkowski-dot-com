@@ -5,6 +5,36 @@
 :root {
   --app-vh: 100vh;
   --app-vw: 100vw;
+  --game-home-logo-half-size: 0.875rem;
+  --game-home-centerline: calc(1.25rem + var(--game-home-logo-half-size));
+  --control-accent: theme("colors.link-color-light");
+  --control-track: theme("colors.secondary-text-color-light");
+  --control-surface: theme("colors.primary-color-light");
+}
+
+@media (min-width: 640px) {
+  :root {
+    --game-home-logo-half-size: 1.125rem;
+  }
+}
+
+.dark {
+  --control-accent: theme("colors.link-color");
+  --control-track: theme("colors.secondary-text-color");
+  --control-surface: theme("colors.primary-color");
+}
+
+.cowpoke-upper-hud {
+  position: fixed;
+  z-index: 40;
+  top: var(--game-home-centerline);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.cowpoke-upper-hud button {
+  pointer-events: auto;
 }
 
 body {
@@ -27,6 +57,87 @@ body,
 #website-body {
   min-height: var(--app-vh);
   width: 100%;
+}
+
+@layer base {
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    accent-color: var(--control-accent);
+    cursor: pointer;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    background: transparent;
+    accent-color: var(--control-accent);
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--control-track);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    margin-top: -9px;
+    border: 2px solid var(--control-surface);
+    border-radius: 50%;
+    background: var(--control-accent);
+    box-shadow: 0 0 0 1px var(--control-accent);
+  }
+
+  input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--control-track);
+  }
+
+  input[type="range"]::-moz-range-progress {
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--control-accent);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--control-surface);
+    border-radius: 50%;
+    background: var(--control-accent);
+    box-shadow: 0 0 0 1px var(--control-accent);
+  }
+
+  input[type="range"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  input[type="color"] {
+    min-height: 44px;
+    padding: 1px;
+    cursor: pointer;
+  }
+
+  input[type="text"] {
+    min-height: 44px;
+  }
+
+  input:focus-visible {
+    outline: 2px solid var(--control-accent);
+    outline-offset: 2px;
+  }
 }
 
 /* Only have the starry sky on dark mode! */

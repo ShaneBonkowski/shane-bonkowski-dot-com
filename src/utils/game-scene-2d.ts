@@ -45,7 +45,7 @@ export class Generic2DGameScene extends Phaser.Scene {
     // Initial last known window size
     this.lastKnownWindowSize = new Vec2(
       this.screenInfo.width,
-      this.screenInfo.height
+      this.screenInfo.height,
     );
   }
 
@@ -105,10 +105,7 @@ export class Generic2DGameScene extends Phaser.Scene {
     /* eslint-disable no-restricted-syntax */
     window.addEventListener("resize", this.handleWindowResize);
     window.addEventListener("orientationchange", this.handleWindowResize);
-    window.visualViewport?.addEventListener(
-      "resize",
-      this.handleWindowResize
-    );
+    window.visualViewport?.addEventListener("resize", this.handleWindowResize);
     /* eslint-enable no-restricted-syntax */
   }
 
@@ -120,7 +117,7 @@ export class Generic2DGameScene extends Phaser.Scene {
     document.removeEventListener("uiMenuClose", this.handleUiMenuClose);
     document.removeEventListener(
       "visibilitychange",
-      this.handleVisibilityChange
+      this.handleVisibilityChange,
     );
   }
 
@@ -134,7 +131,7 @@ export class Generic2DGameScene extends Phaser.Scene {
     window.removeEventListener("orientationchange", this.handleWindowResize);
     window.visualViewport?.removeEventListener(
       "resize",
-      this.handleWindowResize
+      this.handleWindowResize,
     );
     /* eslint-enable no-restricted-syntax */
   }
@@ -181,7 +178,7 @@ export class Generic2DGameScene extends Phaser.Scene {
     // size if needed.
     this.lastKnownWindowSize = new Vec2(
       this.screenInfo.width,
-      this.screenInfo.height
+      this.screenInfo.height,
     );
   };
 

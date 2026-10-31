@@ -163,7 +163,7 @@ const SettingsContainer: React.FC = () => {
           >
             {/* Image */}
             <div
-              className="min-h-[calc(var(--app-vh)*0.3)] p-4 landscape:sm:p-8 w-full landscape:sm:w-1/2 relative"
+              className="min-h-[calc(var(--app-vh)*0.3)] w-full landscape:sm:w-1/2 flex items-center justify-center px-8 py-4 landscape:sm:px-12"
               id="boids-settings-image"
             >
               <Image
@@ -172,8 +172,10 @@ const SettingsContainer: React.FC = () => {
                     ?.image || settingsConfig.alignmentFactor.image
                 }
                 alt={selectedSetting || "Description Image"}
-                fill
-                style={{ objectFit: "contain" }}
+                width={600}
+                height={600}
+                sizes="(min-width: 640px) 40vw, 80vw"
+                className="h-auto w-full max-h-[calc(var(--app-vh)*0.55)] landscape:sm:max-h-[calc(var(--app-vh)*0.72)] max-w-full object-contain"
               />
             </div>
 
@@ -189,7 +191,10 @@ const SettingsContainer: React.FC = () => {
                   <div key={key}>
                     {config.type === "checkbox" ? (
                       <div className="flex items-center">
-                        <label className="text-sm font-medium">
+                        <label
+                          htmlFor={`boids-setting-${key}`}
+                          className="text-sm font-medium"
+                        >
                           {config.title}
                         </label>
                         {/* Make clickable area larger */}
@@ -198,6 +203,7 @@ const SettingsContainer: React.FC = () => {
                           onPointerDown={() => setSelectedSetting(key)}
                         >
                           <input
+                            id={`boids-setting-${key}`}
                             type="checkbox"
                             checked={currentValue as boolean}
                             onChange={(e) => {
@@ -208,15 +214,19 @@ const SettingsContainer: React.FC = () => {
                       </div>
                     ) : (
                       <>
-                        <label className="block text-sm font-medium mb-2">
+                        <label
+                          htmlFor={`boids-slider-${key}`}
+                          className="block text-sm font-medium mb-2"
+                        >
                           {config.title}: {currentValue as number}
                         </label>
                         {/* Make clickable area larger */}
                         <div
-                          className="pt-2 pb-4"
+                          className="pt-1 pb-2"
                           onPointerDown={() => setSelectedSetting(key)}
                         >
                           <input
+                            id={`boids-slider-${key}`}
                             type="range"
                             min={config.lowerBound}
                             max={config.upperBound}

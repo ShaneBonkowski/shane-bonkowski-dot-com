@@ -47,7 +47,7 @@ export default function CharacterInfoBar({
       id="character-info-bar"
       aria-label="Character Info Bar"
     >
-      <span className="mb-1 font-bold text-primary-text-color-light">
+      <span className="mb-1 leading-4 font-bold text-primary-text-color-light">
         {name}: lvl {level}
       </span>
       <div className="flex flex-row items-center w-full">

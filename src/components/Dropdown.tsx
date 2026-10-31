@@ -103,7 +103,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 installTouchThroughBlocker();
                 setIsOpen(false);
               }}
-              className={`p-2 my-0 text-small sm:text-small-sm cursor-pointer ${
+              className={`min-h-11 p-2 my-0 flex items-center text-small sm:text-small-sm cursor-pointer ${
                 isHoverable
                   ? "hover:bg-secondary-hover-color-light dark:hover:bg-secondary-hover-color"
                   : ""
