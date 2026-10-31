@@ -53,7 +53,7 @@ const Header: React.FC = () => {
       document.removeEventListener("uiMenuClose", handleUiMenuClose);
       document.removeEventListener(
         "manualRevealHeader",
-        handleManualRevealHeader
+        handleManualRevealHeader,
       );
     };
   }, []);
@@ -76,11 +76,7 @@ const Header: React.FC = () => {
       // header is used in games and other app-like experiences.
       className={`z-50 app-mode pointer-events-none flex justify-between items-center ${
         isButtonVisible ? "" : "hidden"
-      } ${
-        isGamesPath
-          ? "fixed top-4 left-4"
-          : "p-common-p sm:p-common-p-sm"
-      }`}
+      } ${isGamesPath ? "fixed top-4 left-4" : "p-common-p sm:p-common-p-sm"}`}
       id="header"
       aria-label="Header"
     >
