@@ -105,6 +105,10 @@ export class Generic2DGameScene extends Phaser.Scene {
     /* eslint-disable no-restricted-syntax */
     window.addEventListener("resize", this.handleWindowResize);
     window.addEventListener("orientationchange", this.handleWindowResize);
+    window.visualViewport?.addEventListener(
+      "resize",
+      this.handleWindowResize
+    );
     /* eslint-enable no-restricted-syntax */
   }
 
@@ -128,6 +132,10 @@ export class Generic2DGameScene extends Phaser.Scene {
     /* eslint-disable no-restricted-syntax */
     window.removeEventListener("resize", this.handleWindowResize);
     window.removeEventListener("orientationchange", this.handleWindowResize);
+    window.visualViewport?.removeEventListener(
+      "resize",
+      this.handleWindowResize
+    );
     /* eslint-enable no-restricted-syntax */
   }
 
