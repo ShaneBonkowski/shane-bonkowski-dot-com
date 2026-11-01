@@ -66,7 +66,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
     <button
       className={
         (whiteBackground ? "bg-white " : "") +
-        `app-mode p-[8px] z-20 pointer-events-auto flex items-center justify-center cursor-pointer 
+        `app-mode game-control-button p-[8px] z-20 pointer-events-auto flex items-center justify-center cursor-pointer
         disabled:cursor-not-allowed 
         ${lightModeClass} ${darkModeClass} ${className}
         ${blackShadow ? "drop-shadow-black" : ""}`

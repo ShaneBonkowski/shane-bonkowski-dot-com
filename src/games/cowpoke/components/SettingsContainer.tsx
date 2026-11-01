@@ -30,8 +30,8 @@ const UpgradeButton = ({
   <button
     onPointerDown={onPointerDown}
     disabled={upgradePoints <= 0}
-    className={`
-        min-w-32 min-h-20 border-2 bg-black bg-opacity-50 
+    className={`game-control-button
+        min-w-36 min-h-24 border-2 bg-black bg-opacity-50
         ${
           upgradePoints > 0
             ? `${borderColor} hover:bg-opacity-40 cursor-pointer`
@@ -81,7 +81,7 @@ const SettingsContainer: React.FC = () => {
       document.dispatchEvent(
         new CustomEvent("playerEquipmentChanged", {
           detail: { type: "hat", id: hatId },
-        })
+        }),
       );
     }
   };
@@ -92,7 +92,7 @@ const SettingsContainer: React.FC = () => {
       document.dispatchEvent(
         new CustomEvent("playerEquipmentChanged", {
           detail: { type: "gun", id: gunId },
-        })
+        }),
       );
     }
   };
@@ -136,7 +136,7 @@ const SettingsContainer: React.FC = () => {
       setAutoMode(false);
     }
 
-    // Prevent touch-through on mobile devices when window is toggled.
+    // Prevent touch-through on mobile devices when the window opens.
     installTouchThroughBlocker();
     setIsVisible(true);
     dispatchMenuEvent("Settings", "open");
@@ -152,10 +152,10 @@ const SettingsContainer: React.FC = () => {
 
   const getNewItemsCount = () => {
     const newHats = playerOwnedHatIds.filter(
-      (hatId) => !settingsSeenHatIds.includes(hatId)
+      (hatId) => !settingsSeenHatIds.includes(hatId),
     ).length;
     const newGuns = playerOwnedGunIds.filter(
-      (gunId) => !settingsSeenGunIds.includes(gunId)
+      (gunId) => !settingsSeenGunIds.includes(gunId),
     ).length;
     return newHats + newGuns;
   };
@@ -172,7 +172,7 @@ const SettingsContainer: React.FC = () => {
           detail: {
             type: "health",
           },
-        })
+        }),
       );
     }
   };
@@ -185,7 +185,7 @@ const SettingsContainer: React.FC = () => {
           detail: {
             type: "damage",
           },
-        })
+        }),
       );
     }
   };
@@ -198,7 +198,7 @@ const SettingsContainer: React.FC = () => {
           detail: {
             type: "combat",
           },
-        })
+        }),
       );
     }
   };
@@ -211,7 +211,7 @@ const SettingsContainer: React.FC = () => {
           detail: {
             type: "element",
           },
-        })
+        }),
       );
     }
   };
@@ -223,7 +223,7 @@ const SettingsContainer: React.FC = () => {
           onPointerDown={openWindow}
           icon={<FaCog size={30} />}
           ariaLabel="Settings"
-          className={`${isButtonVisible ? "" : "hidden"}`}
+          className={`min-w-14 min-h-14 ${isButtonVisible ? "" : "hidden"}`}
           darkModeLight={true}
           whiteBackground={true}
           title="Settings"
@@ -252,7 +252,7 @@ const SettingsContainer: React.FC = () => {
             ) : (
               <p className="text-center">Level up to earn upgrade points!</p>
             )}
-            <div className="flex flex-row gap-4 justify-center">
+            <div className="flex flex-row flex-wrap gap-4 justify-center">
               <UpgradeButton
                 type="Health"
                 icon={<FaHeart size={30} />}

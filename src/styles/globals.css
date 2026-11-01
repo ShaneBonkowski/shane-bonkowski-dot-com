@@ -37,6 +37,12 @@
   pointer-events: auto;
 }
 
+.game-control-button {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
 body {
   margin: 0;
   padding: 0;
