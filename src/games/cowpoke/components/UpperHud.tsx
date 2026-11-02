@@ -75,7 +75,7 @@ export default function UpperHud() {
     <>
       <div
         id="upper-hud"
-        className={`cowpoke-upper-hud w-full max-w-[85vw] flex flex-row items-end justify-between p-2 gap-4 ${
+        className={`cowpoke-upper-hud interactive-control w-full max-w-[85vw] flex flex-row items-end justify-between p-2 gap-4 ${
           isVisible ? "" : "hidden"
         }`}
         aria-label="Game upper HUD"

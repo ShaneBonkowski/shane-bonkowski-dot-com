@@ -30,7 +30,7 @@ const UpgradeButton = ({
   <button
     onPointerDown={onPointerDown}
     disabled={upgradePoints <= 0}
-    className={`game-control-button
+    className={`
         min-w-36 min-h-24 border-2 bg-black bg-opacity-50
         ${
           upgradePoints > 0

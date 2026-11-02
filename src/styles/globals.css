@@ -37,12 +37,6 @@
   pointer-events: auto;
 }
 
-.game-control-button {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -66,6 +60,37 @@ body,
 }
 
 @layer base {
+  button,
+  button *,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="range"],
+  input[type="color"],
+  select,
+  [role="button"],
+  [role="button"] *,
+  [role="option"],
+  [role="option"] *,
+  label[for],
+  summary,
+  .interactive-control,
+  .interactive-control * {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button img,
+  [role="button"] img,
+  .interactive-control img,
+  .interactive-control svg {
+    -webkit-user-drag: none;
+  }
+
   input[type="checkbox"],
   input[type="radio"] {
     width: 24px;

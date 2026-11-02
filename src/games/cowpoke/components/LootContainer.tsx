@@ -50,7 +50,7 @@ const LootContainer: React.FC<LootContainerProps> = ({
         max-w-48 max-h-48
         relative border-2 ${borderColorClass} bg-black bg-opacity-50
         ${isEquipped ? "" : "hover:bg-opacity-40"} 
-        ${isClickable ? "cursor-pointer" : "cursor-not-allowed"}
+        ${isClickable ? "interactive-control cursor-pointer" : "cursor-not-allowed"}
         flex flex-col items-center justify-center p-2
       `}
       onPointerDown={isClickable ? onPointerDown : undefined}

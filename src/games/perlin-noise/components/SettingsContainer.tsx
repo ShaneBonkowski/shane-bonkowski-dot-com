@@ -36,7 +36,10 @@ const QualitySettings: React.FC = () => {
       <div className="flex gap-4 justify-center">
         {qualityOptions.map((option) => (
           // Use 'label' to make clickable area larger
-          <label key={option.value} className="flex items-center p-4 gap-2">
+          <label
+            key={option.value}
+            className="interactive-control flex items-center p-4 gap-2"
+          >
             <input
               type="checkbox"
               checked={qualityLevel === option.value}
@@ -96,7 +99,7 @@ const GenerationPresetSettings: React.FC = () => {
   const handleUpdateThreshold = (
     index: number,
     tileType: TileType,
-    threshold: number
+    threshold: number,
   ) => {
     const updatedPreset = {
       ...customGenerationPresets[index],
@@ -113,7 +116,7 @@ const GenerationPresetSettings: React.FC = () => {
       console.warn(
         `Reset failed: index ${index} out of bounds (0-${
           DEFAULT_GENERATION_PRESETS.length - 1
-        })`
+        })`,
       );
       return;
     }
@@ -175,7 +178,7 @@ const GenerationPresetSettings: React.FC = () => {
             handleUpdateThreshold(
               currentGenerationPresetIndex,
               tileType,
-              threshold
+              threshold,
             )
           }
           onReset={() => handleReset(currentGenerationPresetIndex)}
@@ -222,7 +225,7 @@ const ColorPresetSettings: React.FC = () => {
   const handleUpdateColor = (
     index: number,
     tileType: TileType,
-    color: number
+    color: number,
   ) => {
     const updatedPreset = {
       ...customColorPresets[index],
@@ -239,7 +242,7 @@ const ColorPresetSettings: React.FC = () => {
       console.warn(
         `Reset failed: index ${index} out of bounds (0-${
           DEFAULT_COLOR_PRESETS.length - 1
-        })`
+        })`,
       );
       return;
     }
