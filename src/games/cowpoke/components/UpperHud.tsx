@@ -75,7 +75,7 @@ export default function UpperHud() {
     <>
       <div
         id="upper-hud"
-        className={`cowpoke-upper-hud interactive-control w-full max-w-[85vw] flex flex-row items-end justify-between p-2 gap-4 ${
+        className={`cowpoke-upper-hud interactive-control game-interactive-control w-full max-w-[85vw] flex flex-row items-end justify-between p-2 gap-4 ${
           isVisible ? "" : "hidden"
         }`}
         aria-label="Game upper HUD"
@@ -139,6 +139,7 @@ export default function UpperHud() {
           onYes={onYesGameOver}
           onNo={onNoGameOver}
           id="select-end-game"
+          gameOnly
         >
           <p className="text-left py-2 my-0">
             Are you sure you want to bite the dust?

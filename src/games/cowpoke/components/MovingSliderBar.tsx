@@ -162,7 +162,7 @@ export default function MovingSliderBar({
   const targetLeft = `calc(${targetPos * 100}% - 2px)`;
 
   return (
-    <div className="interactive-control relative w-full h-full cowpoke-panel-white border border-black overflow-hidden">
+    <div className="interactive-control game-interactive-control relative w-full h-full cowpoke-panel-white border border-black overflow-hidden">
       {/* Green target bar */}
       <div
         className="absolute top-0 h-full w-1 bg-green-500"

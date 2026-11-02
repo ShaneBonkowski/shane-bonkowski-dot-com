@@ -38,7 +38,7 @@ const QualitySettings: React.FC = () => {
           // Use 'label' to make clickable area larger
           <label
             key={option.value}
-            className="interactive-control flex items-center p-4 gap-2"
+            className="interactive-control game-interactive-control flex items-center p-4 gap-2"
           >
             <input
               type="checkbox"

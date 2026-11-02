@@ -170,7 +170,7 @@ const UiOverlay: React.FC = () => {
                 step={1}
                 value={zSliceSliderValue}
                 onChange={handleZSliceChange}
-                className="z-20 w-full pointer-events-auto"
+                className="game-interactive-control z-20 w-full pointer-events-auto"
               />
             </div>
             {/* Have the icon emulate a button so that it has the same padding etc. */}
@@ -194,7 +194,7 @@ const UiOverlay: React.FC = () => {
                 step={1}
                 value={walkSpeedSliderValue}
                 onChange={handleWalkSpeedChange}
-                className="z-20 w-full pointer-events-auto"
+                className="game-interactive-control z-20 w-full pointer-events-auto"
               />
             </div>
             {/* Have the icon emulate a button so that it has the same padding etc. */}
@@ -218,7 +218,7 @@ const UiOverlay: React.FC = () => {
                 step={1}
                 value={zoomSliderValue}
                 onChange={handleZoomChange}
-                className="z-20 w-full pointer-events-auto"
+                className="game-interactive-control z-20 w-full pointer-events-auto"
               />
             </div>
             {/* Have the icon emulate a button so that it has the same padding etc. */}

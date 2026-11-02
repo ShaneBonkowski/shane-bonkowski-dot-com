@@ -31,7 +31,7 @@ const UpgradeButton = ({
     onPointerDown={onPointerDown}
     disabled={upgradePoints <= 0}
     className={`
-        min-w-36 min-h-24 border-2 bg-black bg-opacity-50
+        game-interactive-control min-w-36 min-h-24 border-2 bg-black bg-opacity-50
         ${
           upgradePoints > 0
             ? `${borderColor} hover:bg-opacity-40 cursor-pointer`

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { FaPlay, FaRedo } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
+import GameTextInput from "@/src/components/GameTextInput";
 import GameUiWindow from "@/src/components/GameUiWindow";
 import { dispatchMenuEvent } from "@/src/events/game-events";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
@@ -24,7 +25,6 @@ const StartEndMenu: React.FC = () => {
     setAutoRestart,
     resetPermanentData,
   } = UseGameData();
-  const inputRef = useRef<HTMLInputElement>(null);
   const [localPlayerName, setLocalPlayerName] = useState(playerName);
   const [isVisible, setIsVisible] = useState(false);
   const [resetStatsVisible, setResetStatsVisible] = useState(false);
@@ -201,27 +201,13 @@ const StartEndMenu: React.FC = () => {
           </p>
           {/* Player name input only shows on start screen */}
           {menuType === "start" && (
-            // eslint-disable-next-line no-restricted-syntax
-            <input
-              type="text"
-              ref={inputRef}
+            <GameTextInput
+              label="What's your name, partner?"
               placeholder="Yer name here..."
               value={localPlayerName}
-              onChange={(e) => setLocalPlayerName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  // On mobile, we want to prevent the default behavior of the Enter
-                  // key which may submit a form or cause unwanted side effects.
-                  if (isMobileDevice()) {
-                    e.preventDefault();
-                    inputRef.current?.blur(); // Hide keyboard
-                  }
-                }
-              }}
+              onChange={setLocalPlayerName}
               maxLength={10}
               className="p-2 flex-grow bg-white dark:bg-white border-2 border-black text-primary-text-color-light focus:outline-none placeholder:text-secondary-text-color-light"
-              style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
-              aria-label="Player name input"
             />
           )}
           {/* Cowpoke stats etc. only show on end screen */}
@@ -315,6 +301,7 @@ const StartEndMenu: React.FC = () => {
           onYes={onYesReset}
           onNo={onNoReset}
           id="reset-lifetime-stats"
+          gameOnly
         >
           <p className="text-left py-2 my-0">
             Are you sure you want to reset your lifetime stats, perma upgrades

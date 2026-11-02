@@ -12,7 +12,12 @@ const useIsGamesPath = () => {
     if (typeof window === "undefined") return;
 
     const handleRouteChange = (url: string) => {
-      setIsGamesPath(url.startsWith("/games"));
+      const isGameRoute = url.startsWith("/games");
+      setIsGamesPath(isGameRoute);
+      document.documentElement.classList.toggle(
+        "game-page-active",
+        isGameRoute,
+      );
     };
 
     // Initial check
