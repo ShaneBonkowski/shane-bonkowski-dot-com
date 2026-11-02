@@ -26,11 +26,11 @@ const GameInfoContainer: React.FC<{
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [showTutorialText, setShowTutorialText] = useState(true);
-  const [animatedTutorialText, setAnimatedTutorialText] = useState("");
   const tutorialText = "Instructions";
+  const tutorialTypingDuration = tutorialText.length * 80;
+  const [isTutorialTextVisible, setIsTutorialTextVisible] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const fadeOutDuration = 500;
 
@@ -71,8 +71,7 @@ const GameInfoContainer: React.FC<{
   useEffect(() => {
     if (!showTutorialText) return;
 
-    let i = 0;
-    setAnimatedTutorialText("");
+    setIsTutorialTextVisible(false);
     setFadeOut(false);
 
     // Start showing the tutorial text only if the button is visible, which occurs
@@ -80,57 +79,37 @@ const GameInfoContainer: React.FC<{
     if (isButtonVisible) {
       // Wait a bit before starting the animation
       animationTimeoutRef.current = setTimeout(() => {
-        // Start typing animation for the tutorial text
-        intervalRef.current = setInterval(() => {
-          setAnimatedTutorialText(tutorialText.slice(0, i + 1));
-          i++;
-
-          // Once the full text is shown...
-          if (i === tutorialText.length) {
-            // Turn off the typing animation
-            clearInterval(intervalRef.current!);
-            intervalRef.current = null;
-
-            // Wait some time to show the full text, then trigger fade out
-            animationTimeoutRef.current = setTimeout(() => {
-              setFadeOut(true);
-            }, 2500);
-          }
-        }, 80);
+        setIsTutorialTextVisible(true);
+        animationTimeoutRef.current = setTimeout(() => {
+          setFadeOut(true);
+        }, tutorialTypingDuration + 2500);
       }, 1000);
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-
       if (animationTimeoutRef.current) {
         clearTimeout(animationTimeoutRef.current);
         animationTimeoutRef.current = null;
       }
     };
-  }, [showTutorialText, isButtonVisible]);
+  }, [showTutorialText, isButtonVisible, tutorialTypingDuration]);
 
   return (
     <>
       <div className="app-mode z-20 fixed bottom-3 right-3 flex flex-row items-center gap-2">
         {/* Tutorial text */}
-        {showTutorialText &&
-          isButtonVisible &&
-          animatedTutorialText.length > 0 && (
-            <Fade
-              isFading={fadeOut}
-              fadeType="out"
-              duration={fadeOutDuration}
-              onFadeComplete={() => setShowTutorialText(false)}
-              className="bg-green-500 text-white text-sm font-bold px-2 py-1 rounded-full pointer-events-none"
-              aria-live="polite"
-            >
-              {animatedTutorialText}
-            </Fade>
-          )}
+        {showTutorialText && isButtonVisible && isTutorialTextVisible && (
+          <Fade
+            isFading={fadeOut}
+            fadeType="out"
+            duration={fadeOutDuration}
+            onFadeComplete={() => setShowTutorialText(false)}
+            className="game-instructions-banner bg-green-500 text-white text-sm font-bold px-2 py-1 rounded-full pointer-events-none"
+            aria-live="polite"
+          >
+            {tutorialText}
+          </Fade>
+        )}
 
         {/* Info button */}
         <GameIconButton

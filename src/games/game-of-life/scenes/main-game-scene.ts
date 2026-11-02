@@ -219,9 +219,13 @@ export class MainGameScene extends Generic2DGameScene {
       }
 
       // "render" pass to update all visuals
-      if (time - this.lastRenderUpdateTime >= this.renderUpdateInterval) {
+      if (
+        this.gestureManager.hasVisualChanges ||
+        time - this.lastRenderUpdateTime >= this.renderUpdateInterval
+      ) {
         this.lastRenderUpdateTime = time;
         this.renderPass();
+        this.gestureManager.hasVisualChanges = false;
       }
     }
 
@@ -246,7 +250,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     // Only update the background color if it has changed
     const newBackgroundColor = this.hexToCssColor(
-      tileAndBackgroundColors[this.colorTheme][2]
+      tileAndBackgroundColors[this.colorTheme][2],
     );
 
     if (
@@ -262,7 +266,7 @@ export class MainGameScene extends Generic2DGameScene {
     // Run the life iteration
     const toCheckTileGridSpaceLocs = this.checkForNeighborTiles(
       this.diagonalNeighbors,
-      this.infiniteEdges
+      this.infiniteEdges,
     );
 
     if (this.gameOfLifeType == gameOfLifeTypes.CONWAY) {
@@ -303,7 +307,7 @@ export class MainGameScene extends Generic2DGameScene {
 
   checkForNeighborTiles(
     countCorners: boolean,
-    countTorusNeighbors: boolean
+    countTorusNeighbors: boolean,
   ): [number, number][] {
     // Check all living tiles and their surrounding neighbors to see how many living
     // neighbors they have. This is the optimal way of checking, since vast spans of
@@ -322,7 +326,7 @@ export class MainGameScene extends Generic2DGameScene {
       const neighborTiles = this.tiles[x][y].getNeighbors(
         this.tiles,
         countCorners,
-        countTorusNeighbors
+        countTorusNeighbors,
       );
 
       for (const neighborTile of neighborTiles) {
@@ -337,7 +341,7 @@ export class MainGameScene extends Generic2DGameScene {
       this.tiles[x][y].getQtyLivingNeighbors(
         this.tiles,
         countCorners,
-        countTorusNeighbors
+        countTorusNeighbors,
       );
     }
 
@@ -441,7 +445,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.tiles = instantiateTiles(
       this,
       this.tileGridWidth,
-      this.tileGridHeight
+      this.tileGridHeight,
     );
   }
 
@@ -458,7 +462,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.tiles = instantiateTiles(
       this,
       this.tileGridWidth,
-      this.tileGridHeight
+      this.tileGridHeight,
     );
   }
 
@@ -495,10 +499,10 @@ export class MainGameScene extends Generic2DGameScene {
     >;
     const randomShapeIndex = unseededRandom.getRandomInt(
       0,
-      cgolTileShapeKeys.length
+      cgolTileShapeKeys.length,
     );
     const randomShape = new gameOfLifeShape(
-      cgolTileShapeKeys[randomShapeIndex]
+      cgolTileShapeKeys[randomShapeIndex],
     );
 
     // console.log(cgolTileShapeKeys[randomShapeIndex]);
@@ -530,7 +534,7 @@ export class MainGameScene extends Generic2DGameScene {
     }
     const randomY = unseededRandom.getRandomInt(
       lowerBoundY - 1,
-      tileSpaceHeight
+      tileSpaceHeight,
     );
 
     // Spawn in the shape from the randomX and randomY location!
@@ -543,7 +547,7 @@ export class MainGameScene extends Generic2DGameScene {
         console.error(
           "Shape placement out of bounds. Cannot place at",
           tileSpawnLocX,
-          tileSpawnLocY
+          tileSpawnLocY,
         );
         console.log("Debug info about the shape:");
         console.log("Top left coordinate x, y: ", randomX, randomY);
@@ -551,7 +555,7 @@ export class MainGameScene extends Generic2DGameScene {
         console.log(
           "Tile Gridspace Width, height",
           tileSpaceWidth,
-          tileSpaceHeight
+          tileSpaceHeight,
         );
         return;
       }

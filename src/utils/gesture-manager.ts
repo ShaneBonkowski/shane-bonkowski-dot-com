@@ -16,8 +16,8 @@ export class GestureManager {
   public dragStartY: number = 0;
   public initialPinchDistance: number | null = null;
   private rafId: number | null = null;
-  private lastFrameTime: number = 0;
-  private minInterval: number = 50; // ~20 FPS
+  private lastZoomUpdateTime: number = 0;
+  public hasVisualChanges: boolean = false;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor(dragRate = 0.75, zoomRate = 0.05) {
@@ -37,6 +37,7 @@ export class GestureManager {
     this.dragBlocked = false;
     this.dragStartX = 0;
     this.dragStartY = 0;
+    this.hasVisualChanges = false;
 
     // init zoom
     this.zoomOffset = 1;
@@ -44,6 +45,7 @@ export class GestureManager {
     this.isZooming = false;
     this.zoomBlocked = false;
     this.initialPinchDistance = null;
+    this.lastZoomUpdateTime = 0;
 
     this.subscribeToEvents();
   }
@@ -59,6 +61,7 @@ export class GestureManager {
   resetDrag() {
     this.dragOffsetX = 0;
     this.dragOffsetY = 0;
+    this.hasVisualChanges = true;
 
     this.isDragging = false;
     this.dragBlocked = false;
@@ -68,10 +71,12 @@ export class GestureManager {
 
   resetZoom() {
     this.zoomOffset = 1;
+    this.hasVisualChanges = true;
 
     this.isZooming = false;
     this.zoomBlocked = false;
     this.initialPinchDistance = null;
+    this.lastZoomUpdateTime = 0;
   }
 
   subscribeToEvents() {
@@ -118,18 +123,15 @@ export class GestureManager {
       this.activePointers[event.pointerId].x = event.clientX;
       this.activePointers[event.pointerId].y = event.clientY;
 
-      // Only try to handle zoom/drag if not already scheduled and enough
-      // time has passed since the last frame
-      const now = performance.now();
-      if (this.rafId === null && now - this.lastFrameTime > this.minInterval) {
-        this.lastFrameTime = performance.now();
+      // Process the latest pointer position once per display frame.
+      if (this.rafId === null) {
         this.rafId = requestAnimationFrame(() => {
+          this.rafId = null;
           if (this.isZooming) {
             this.handleZoom();
           } else if (this.isDragging) {
             this.handleDrag();
           }
-          this.rafId = null;
         });
       }
     }
@@ -172,6 +174,9 @@ export class GestureManager {
 
     this.dragOffsetX += deltaX;
     this.dragOffsetY += deltaY;
+    if (deltaX !== 0 || deltaY !== 0) {
+      this.hasVisualChanges = true;
+    }
 
     // Update the drag start position
     this.dragStartX = clientX;
@@ -206,6 +211,7 @@ export class GestureManager {
 
     this.isZooming = true;
     this.initialPinchDistance = this.getPinchDistance();
+    this.lastZoomUpdateTime = performance.now();
   }
 
   handleWheel = (event: WheelEvent) => {
@@ -235,7 +241,10 @@ export class GestureManager {
     // If the pinch distance changes above some threshold, update zoom
     if (Math.abs(deltaDistance) > 2) {
       const zoomDelta = deltaDistance > 0 ? 1 : -1;
-      this.updateZoom(zoomDelta * this.zoomRate);
+      const now = performance.now();
+      const elapsed = Math.min(now - this.lastZoomUpdateTime, 50);
+      this.updateZoom(zoomDelta * this.zoomRate * (elapsed / 50));
+      this.lastZoomUpdateTime = now;
       this.initialPinchDistance = currentDistance; // Update initial pinch distance
     }
   };
@@ -243,8 +252,11 @@ export class GestureManager {
   updateZoom(delta: number) {
     if (this.zoomBlocked) return;
 
-    this.zoomOffset += delta;
-    this.zoomOffset = MoreMath.clamp(this.zoomOffset, 0.1, 5);
+    const nextZoomOffset = MoreMath.clamp(this.zoomOffset + delta, 0.1, 5);
+    if (nextZoomOffset !== this.zoomOffset) {
+      this.zoomOffset = nextZoomOffset;
+      this.hasVisualChanges = true;
+    }
 
     // console.log(`Zoom Offset: ${this.zoomOffset}`);
   }
@@ -252,6 +264,7 @@ export class GestureManager {
   stopZoom() {
     this.isZooming = false;
     this.initialPinchDistance = null;
+    this.lastZoomUpdateTime = 0;
   }
 
   getPinchDistance(): number {
@@ -271,6 +284,10 @@ export class GestureManager {
 
   destroy() {
     this.unsubscribeFromEvents();
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
     this.activePointers = {};
     this.resetDrag();
     this.resetZoom();

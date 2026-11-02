@@ -115,6 +115,24 @@ body,
     touch-action: pan-y;
   }
 
+  .game-instructions-banner {
+    clip-path: inset(0 100% 0 0 round 9999px);
+    animation: game-instructions-reveal 0.88s steps(12, end) 80ms both;
+  }
+
+  @keyframes game-instructions-reveal {
+    to {
+      clip-path: inset(0 0 0 0 round 9999px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .game-instructions-banner {
+      clip-path: none;
+      animation: none;
+    }
+  }
+
   .game-virtual-entry-screen {
     position: fixed;
     inset: 0;
