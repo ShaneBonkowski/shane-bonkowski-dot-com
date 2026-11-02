@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { FaUndo } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import { GenerationPreset } from "@/src/games/perlin-noise/generation-presets";
 import { TILE_TYPES, TileType } from "@/src/games/perlin-noise/tile-utils";
-import { isMobileDevice } from "@/src/utils/heuristics";
+import GameTextInput from "@/src/components/GameTextInput";
 import GameFakeIconButton from "@/src/components/GameFakeIconButton";
 
 interface GenerationPresetBoxProps {
@@ -23,8 +23,6 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
   onUpdateThreshold,
   onReset,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   // Get ordered tile types for proper threshold constraints
   const orderedTileTypes = [
     TILE_TYPES.DEEP_WATER,
@@ -61,27 +59,13 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
       <div className="mb-4 gap-2 flex items-center justify-between">
         {/* Use a fake button as a spacer to allow the text to be centered properly */}
         <GameFakeIconButton sizeFallback={30} invisible={true} />
-        {/* eslint-disable-next-line no-restricted-syntax */}
-        <input
-          type="text"
-          ref={inputRef}
+        <GameTextInput
+          label="Generation preset name"
           placeholder="Preset name here..."
           value={preset.name}
-          onChange={(e) => onUpdateName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              // On mobile, we want to prevent the default behavior of the Enter
-              // key which may submit a form or cause unwanted side effects.
-              if (isMobileDevice()) {
-                e.preventDefault();
-                inputRef.current?.blur(); // Hide keyboard
-              }
-            }
-          }}
+          onChange={onUpdateName}
           maxLength={16}
           className="w-full p-2 text-center bg-transparent border-b border-transparent focus:border-gray-500 outline-none"
-          style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
-          aria-label="Preset name input"
         />
         <GameIconButton
           onPointerDown={onReset}
@@ -103,7 +87,7 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
             step="1"
             value={preset.octaves}
             onChange={(e) => onUpdateOctaves(parseInt(e.target.value))}
-            className="w-full"
+            className="game-interactive-control w-full"
           />
         </div>
       </div>
@@ -130,7 +114,7 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
                   onChange={(e) =>
                     onUpdateThreshold(tileType, parseFloat(e.target.value))
                   }
-                  className="w-full"
+                  className="game-interactive-control w-full"
                   // Disable if no valid range, or if this is the last
                   // tile type since it has no next tile to constrain against.
                   disabled={min >= max || tileType === TILE_TYPES.SNOW}

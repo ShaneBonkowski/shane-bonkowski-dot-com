@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { FaUndo } from "react-icons/fa";
 import { ColorPreset } from "@/src/games/perlin-noise/color-presets";
 import { TileType } from "@/src/games/perlin-noise/tile-utils";
 import GameIconButton from "@/src/components/GameIconButton";
-import { isMobileDevice } from "@/src/utils/heuristics";
+import GameTextInput from "@/src/components/GameTextInput";
 import GameFakeIconButton from "@/src/components/GameFakeIconButton";
 
 interface ColorPresetBoxProps {
@@ -21,8 +21,6 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
   onUpdateColor,
   onReset,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const handleColorChange = (tileType: TileType, hexColor: string) => {
     const color = parseInt(hexColor.slice(1), 16);
     onUpdateColor(tileType, color);
@@ -38,27 +36,13 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
       <div className="mb-4 gap-2 flex items-center justify-between">
         {/* Use a fake button as a spacer to allow the text to be centered properly */}
         <GameFakeIconButton sizeFallback={30} invisible={true} />
-        {/* eslint-disable-next-line no-restricted-syntax */}
-        <input
-          type="text"
-          ref={inputRef}
+        <GameTextInput
+          label="Color preset name"
           placeholder="Preset name here..."
           value={preset.name}
-          onChange={(e) => onUpdateName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              // On mobile, we want to prevent the default behavior of the Enter
-              // key which may submit a form or cause unwanted side effects.
-              if (isMobileDevice()) {
-                e.preventDefault();
-                inputRef.current?.blur(); // Hide keyboard
-              }
-            }
-          }}
+          onChange={onUpdateName}
           maxLength={16}
           className="w-full p-2 text-center bg-transparent border-b border-transparent focus:border-gray-500 outline-none"
-          style={{ fontSize: "16px" }} // Font size >= 16px on mobile prevents zooming
-          aria-label="Preset name input"
         />
         <GameIconButton
           onPointerDown={onReset}
@@ -77,7 +61,7 @@ const ColorPresetBox: React.FC<ColorPresetBoxProps> = ({
               type="color"
               value={formatHexColor(color)}
               onChange={(e) => handleColorChange(tileType, e.target.value)}
-              className="w-full border border-gray-300 rounded cursor-pointer"
+              className="game-interactive-control w-full border border-gray-300 rounded cursor-pointer"
               aria-label={`${tileType.replace("_", " ").toLowerCase()} color`}
               title={tileType.replace("_", " ").toLowerCase()}
               key={tileType}

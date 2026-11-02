@@ -55,7 +55,7 @@ export default function MovingSliderBar({
       document.dispatchEvent(
         new CustomEvent("movingSliderResult", {
           detail: { sliderId, distance },
-        })
+        }),
       );
     };
 
@@ -91,7 +91,7 @@ export default function MovingSliderBar({
     return () => {
       document.removeEventListener(
         "startMovingSlider",
-        handleStartMovingSlider
+        handleStartMovingSlider,
       );
       document.removeEventListener("stopMovingSlider", handleStopMovingSlider);
     };
@@ -162,7 +162,7 @@ export default function MovingSliderBar({
   const targetLeft = `calc(${targetPos * 100}% - 2px)`;
 
   return (
-    <div className="relative w-full h-full cowpoke-panel-white border border-black overflow-hidden">
+    <div className="interactive-control game-interactive-control relative w-full h-full cowpoke-panel-white border border-black overflow-hidden">
       {/* Green target bar */}
       <div
         className="absolute top-0 h-full w-1 bg-green-500"

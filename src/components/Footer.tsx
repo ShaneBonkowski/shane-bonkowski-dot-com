@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
             href="https://www.linkedin.com/in/shanebonkowski/"
             target="_blank"
             rel="noopener noreferrer"
-            className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
+            className={`interactive-control px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
             href="https://github.com/ShaneBonkowski"
             target="_blank"
             rel="noopener noreferrer"
-            className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
+            className={`interactive-control px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
@@ -77,7 +77,7 @@ const Footer: React.FC = () => {
           </a>
           <Link
             href="/"
-            className="link"
+            className="link interactive-control"
             aria-label="Shane's Games Home"
             title="Shane's Games Home"
           >

@@ -219,7 +219,7 @@ const SettingsContainer: React.FC = () => {
                           onChange={(e) =>
                             handleSliderChange(key, parseFloat(e.target.value))
                           }
-                          className="w-full"
+                          className="game-interactive-control w-full"
                         />
                       </div>
                     </div>

@@ -54,14 +54,19 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (() => {
-                const setViewportHeight = () => {
+                if (window.location.pathname.startsWith('/games')) {
+                  document.documentElement.classList.add('game-page-active');
+                }
+
+                const setViewportBounds = () => {
+                  const visualViewport = window.visualViewport;
                   const viewportHeight =
-                    window.visualViewport?.height ||
+                    visualViewport?.height ||
                     window.innerHeight ||
                     document.documentElement.clientHeight ||
                     0;
                   const viewportWidth =
-                    window.visualViewport?.width ||
+                    visualViewport?.width ||
                     window.innerWidth ||
                     document.documentElement.clientWidth ||
                     0;
@@ -76,12 +81,12 @@ export default function RootLayout({
                   );
                 };
 
-                setViewportHeight();
-                window.visualViewport?.addEventListener('resize', setViewportHeight, {
+                setViewportBounds();
+                window.visualViewport?.addEventListener('resize', setViewportBounds, {
                   passive: true,
                 });
-                window.addEventListener('resize', setViewportHeight, { passive: true });
-                window.addEventListener('orientationchange', setViewportHeight, {
+                window.addEventListener('resize', setViewportBounds, { passive: true });
+                window.addEventListener('orientationchange', setViewportBounds, {
                   passive: true,
                 });
               })();

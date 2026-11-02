@@ -10,6 +10,7 @@ interface YesNoBoxProps {
   onNo: () => void;
   id?: string;
   bottomRight?: boolean;
+  gameOnly?: boolean;
   children: React.ReactNode;
 }
 
@@ -20,6 +21,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
   onNo,
   id = "yes-no-box",
   bottomRight = false,
+  gameOnly = false,
   children,
 }) => {
   /* Only allow hover on hover-supported devices */
@@ -39,11 +41,13 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
         bottomRight ? "bottom-0 right-0" : "bottom-0 left-0 right-0"
       } z-40 bg-info-banner-bkg-color-light dark:bg-info-banner-bkg-color text-body text-primary-text-color-light dark:text-primary-text-color p-common-p sm:p-common-p-sm ${
         bottomRight ? "w-full sm:w-auto" : "w-full"
-      } pointer-events-none`}
+      } pointer-events-none ${gameOnly ? "game-interactive-control" : ""}`}
       id={id}
     >
       <div
-        className={`flex flex-col gap-x-4 sm:flex-row justify-between items-center pointer-events-auto`}
+        className={`flex flex-col gap-x-4 sm:flex-row justify-between items-center pointer-events-auto ${
+          gameOnly ? "game-interactive-control" : ""
+        }`}
       >
         <div>{children}</div>
         <div className="flex justify-center sm:justify-end space-x-2">

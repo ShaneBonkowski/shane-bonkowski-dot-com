@@ -238,7 +238,7 @@ const SettingsContainer: React.FC = () => {
                                 parseFloat(e.target.value),
                               )
                             }
-                            className="w-full"
+                            className="game-interactive-control w-full"
                           />
                         </div>
                       </>

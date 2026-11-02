@@ -8,6 +8,7 @@ body.flip-tile-game-background {
 
 .flip-tile-pulse {
   animation: flip-tile-pulse 0.5s ease-in-out;
+  will-change: transform;
 }
 
 @keyframes flip-tile-pulse {
@@ -19,5 +20,11 @@ body.flip-tile-game-background {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-tile-pulse {
+    animation: none;
   }
 }

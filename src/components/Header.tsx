@@ -86,7 +86,7 @@ const Header: React.FC = () => {
         passHref
         className={`link pointer-events-auto no-underline ${
           isHoverable ? "hover:no-underline" : ""
-        } active:no-underline`}
+        } interactive-control active:no-underline`}
         aria-label="Shane's Games Home"
         title="Shane's Games Home"
       >
@@ -101,7 +101,7 @@ const Header: React.FC = () => {
             alt="Logo"
             width={120}
             height={120}
-            className={`${
+            className={`interactive-control ${
               isGamesPath ? "w-7 h-7 sm:w-9 sm:h-9" : "w-9 h-9 sm:w-14 sm:h-14"
             }`}
           />
@@ -149,7 +149,7 @@ const Header: React.FC = () => {
 
           <Link
             href="/main/about"
-            className="link"
+            className="link interactive-control"
             aria-label="About"
             title="About"
           >
@@ -168,7 +168,7 @@ const Header: React.FC = () => {
             href="https://github.com/ShaneBonkowski"
             target="_blank"
             rel="noopener noreferrer"
-            className={`px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
+            className={`interactive-control px-[6px] py-[10px] text-primary-text-color-light dark:text-primary-text-color ${
               isHoverable
                 ? "hover:text-secondary-text-color-light dark:hover:text-secondary-text-color"
                 : ""
@@ -181,7 +181,7 @@ const Header: React.FC = () => {
 
           <Link
             href="/"
-            className="link"
+            className="link interactive-control"
             aria-label="Shane's Games Home"
             title="Shane's Games Home"
           >
