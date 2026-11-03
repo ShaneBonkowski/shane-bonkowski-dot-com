@@ -5,6 +5,7 @@ import "@/src/styles/globals.css";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import CookieAgreement from "@/src/components/CookieAgreement";
+import GameZoomLock from "@/src/components/GameZoomLock";
 import Script from "next/script";
 import Head from "next/head";
 
@@ -113,6 +114,7 @@ export default function RootLayout({
                 `,
           }}
         />
+        <GameZoomLock />
         <Header />
         <main
           className="flex flex-col flex-grow relative"
