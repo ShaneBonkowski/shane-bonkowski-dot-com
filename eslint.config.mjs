@@ -107,11 +107,12 @@ const tsxRestrictedSyntaxRulesNotAppDir = [
   {
     selector:
       "Program:not(:has(ExpressionStatement:first-child > Literal[value='use client']))",
-    message: `[Custom eslint.config.mjs rule] This is a static site. All .tsx 
-files should have "use client" directive at the top for proper client-side 
-rendering. NOTE: This does not apply to files in the '/app' directory, since SSR 
-is required for things like metadata injection. Add eslint-disable comment if 
-already protected upstream, or if dispositioned.`,
+    message: `[Custom eslint.config.mjs rule] This file has no "use client" 
+directive, so it renders as a Server Component. That is fine (and preferred) for 
+purely presentational files. If this file uses hooks, event handlers, or browser 
+APIs, add "use client" at the top. Otherwise, if you are confident it does not 
+need it, add "/* eslint-disable no-restricted-syntax -- <reason> */" as the first 
+line of the file. NOTE: This does not apply to files in the '/app' directory.`,
   },
 ];
 

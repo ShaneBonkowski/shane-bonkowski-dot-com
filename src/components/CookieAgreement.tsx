@@ -2,9 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import YesNoBox from "@/src/components/YesNoBox";
+import dynamic from "next/dynamic";
 import useIsGamesPath from "@/src/hooks/useIsGamesPath";
 import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
+
+// Only returning visitors without a saved choice ever render the banner, so
+// keep its UI out of the initial bundle.
+const YesNoBox = dynamic(() => import("@/src/components/YesNoBox"));
 
 const CookieAgreement: React.FC = () => {
   const isGamesPath = useIsGamesPath();

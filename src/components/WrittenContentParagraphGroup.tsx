@@ -1,5 +1,4 @@
-"use client";
-
+/* eslint-disable no-restricted-syntax -- presentational only, no client features needed */
 import React from "react";
 import { WrittenContentParagraphElementProps } from "@/src/components/WrittenContentParagraphElement";
 
