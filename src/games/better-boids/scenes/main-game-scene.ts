@@ -16,6 +16,7 @@ let holdTimeout: NodeJS.Timeout | null = null;
 
 export class MainGameScene extends Generic2DGameScene {
   public boids: Boid[] = [];
+  public isInteracting: boolean = false;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {

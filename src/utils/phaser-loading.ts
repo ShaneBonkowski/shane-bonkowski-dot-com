@@ -1,29 +1,12 @@
-export const loadPhaserScriptThenGame = (loadPhaserGame: () => void): void => {
-  // Check if Phaser script is already loaded
-  const existingScript = document.querySelector(
-    'script[src="/js/phaser.min.js"]'
-  ) as HTMLScriptElement;
+import type Phaser from "phaser";
 
-  if (existingScript) {
-    console.log("Phaser script already loaded.");
-    loadPhaserGame();
-    return;
-  }
+export type PhaserModule = typeof Phaser;
 
-  // Load the script, then the game afterwards
-  const script = document.createElement("script");
-  script.src = "/js/phaser.min.js";
-
-  script.onload = () => {
-    console.log("Phaser script loaded successfully.");
-    loadPhaserGame();
-  };
-
-  script.onerror = () => {
-    console.error("Failed to load Phaser script");
-  };
-
-  document.head.appendChild(script);
+export const loadPhaserModuleThenGame = async (
+  loadPhaserGame: (phaser: PhaserModule) => Promise<void>
+): Promise<void> => {
+  const { default: phaser } = await import("phaser");
+  await loadPhaserGame(phaser);
 };
 
 export const cleanupPhaserGame = (game: Phaser.Game | null): null => {
@@ -32,14 +15,6 @@ export const cleanupPhaserGame = (game: Phaser.Game | null): null => {
     game.destroy(true);
     game = null;
     console.log("Phaser game instance destroyed.");
-  }
-
-  const script = document.querySelector(
-    'script[src="/js/phaser.min.js"]'
-  ) as HTMLScriptElement;
-  if (script && document.head.contains(script)) {
-    document.head.removeChild(script);
-    console.log("Phaser script removed.");
   }
 
   // Remove all classes containing "game-background". This is because a common

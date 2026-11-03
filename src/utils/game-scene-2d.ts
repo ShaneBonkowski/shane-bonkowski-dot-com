@@ -1,4 +1,4 @@
-import Phaser from "@/public/js/phaser.min.js";
+import Phaser from "phaser";
 import { resizeCanvasToParent } from "@/src/utils/phaser-canvas";
 import { Vec2 } from "@/src/utils/vector";
 import { mobileVirtualKeyboardLikelyOpen } from "@/src/utils/heuristics";
