@@ -245,9 +245,11 @@ const GameComponent: React.FC = () => {
         </div>
       </GameInfoContainer>
       <UpperHud />
-      <div className="relative z-20 p-5 pt-4 flex flex-col gap-4 justify-center items-center">
+      <div className="relative z-20 p-5 pt-4 flex flex-col gap-4 justify-center items-center pointer-events-none">
         <div className="h-14 w-full" aria-hidden="true" />
-        <GameControls />
+        <div className="w-full flex justify-center pointer-events-auto">
+          <GameControls />
+        </div>
       </div>
 
       {/* Phaser Game Container */}
