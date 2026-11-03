@@ -5,8 +5,9 @@ import "@/src/games/better-boids/styles/game.css";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/better-boids/components/SettingsContainer";
 import {
-  loadPhaserScriptThenGame,
+  loadPhaserModuleThenGame,
   cleanupPhaserGame,
+  type PhaserModule,
 } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 
@@ -28,13 +29,7 @@ const GameComponent: React.FC = () => {
 
     document.body.classList.add("better-boids-game-background");
 
-    const loadPhaserGame = async () => {
-      // eslint-disable-next-line no-restricted-syntax
-      if (!window.Phaser) {
-        console.error("Phaser module is not loaded yet, cannot load game.");
-        return;
-      }
-
+    const loadPhaserGame = async (phaser: PhaserModule) => {
       if (isLoadingPhaser.current) {
         console.warn("Phaser module already loading. Skipping duplicate call.");
         return;
@@ -52,20 +47,19 @@ const GameComponent: React.FC = () => {
         );
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
-          type: Phaser.AUTO,
+          type: phaser.AUTO,
           width: "100%",
           height: "100%",
           transparent: true,
           scale: {
-            mode: Phaser.Scale.NONE, // see phaser-canvas.ts resizeCanvasToParent() for manual resizing
-            autoCenter: Phaser.Scale.NO_CENTER,
+            mode: phaser.Scale.NONE, // see phaser-canvas.ts resizeCanvasToParent() for manual resizing
+            autoCenter: phaser.Scale.NO_CENTER,
           },
           scene: MainGameScene,
           parent: "phaser-game",
         };
 
-        // eslint-disable-next-line no-restricted-syntax
-        game = new window.Phaser.Game(gameConfig);
+        game = new phaser.Game(gameConfig);
         console.log(`Phaser game created successfully.`);
       } catch (error) {
         console.error("Failed to load Game Scene:", error);
@@ -74,7 +68,9 @@ const GameComponent: React.FC = () => {
       }
     };
 
-    loadPhaserScriptThenGame(loadPhaserGame);
+    loadPhaserModuleThenGame(loadPhaserGame).catch((error) => {
+      console.error("Failed to load Phaser module:", error);
+    });
 
     return () => {
       game = cleanupPhaserGame(game);
