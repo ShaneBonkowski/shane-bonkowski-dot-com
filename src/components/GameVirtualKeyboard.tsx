@@ -25,6 +25,7 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
   const [isShifted, setIsShifted] = useState(false);
   const [isCapsLocked, setIsCapsLocked] = useState(false);
   const [isShowingSymbols, setIsShowingSymbols] = useState(false);
+  const keyboardRef = useRef<HTMLDivElement>(null);
   const lastShiftTapRef = useRef(0);
   const onBackspaceRef = useRef(onBackspace);
   const backspaceDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -58,11 +59,29 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
     [],
   );
 
+  useEffect(() => {
+    const keyboard = keyboardRef.current;
+    if (!keyboard) return;
+
+    const preventTouchSelection = (event: TouchEvent) => {
+      event.preventDefault();
+    };
+
+    keyboard.addEventListener("touchstart", preventTouchSelection, {
+      passive: false,
+    });
+
+    return () => {
+      keyboard.removeEventListener("touchstart", preventTouchSelection);
+    };
+  }, []);
+
   const startBackspaceRepeat = (
     event: React.PointerEvent<HTMLButtonElement>,
   ) => {
     if (event.button !== 0) return;
 
+    event.preventDefault();
     stopBackspaceRepeat();
     event.currentTarget.setPointerCapture(event.pointerId);
     onBackspaceRef.current();
@@ -72,6 +91,23 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
         80,
       );
     }, 400);
+  };
+
+  const pressOnPointerDown = (
+    event: React.PointerEvent<HTMLButtonElement>,
+    action: () => void,
+  ) => {
+    if (event.button !== 0) return;
+
+    event.preventDefault();
+    action();
+  };
+
+  const pressOnKeyboardClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    action: () => void,
+  ) => {
+    if (event.detail === 0) action();
   };
 
   const toggleShift = () => {
@@ -108,7 +144,12 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
         key={`${rowIndex}-${characterIndex}`}
         type="button"
         className="game-virtual-key"
-        onClick={() => pressCharacter(character)}
+        onPointerDown={(event) =>
+          pressOnPointerDown(event, () => pressCharacter(character))
+        }
+        onClick={(event) =>
+          pressOnKeyboardClick(event, () => pressCharacter(character))
+        }
       >
         {!isShowingSymbols && (isShifted || isCapsLocked)
           ? character.toUpperCase()
@@ -118,6 +159,7 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
 
   return (
     <div
+      ref={keyboardRef}
       className="game-virtual-keyboard bg-button-color-light dark:bg-button-color"
       style={{ width, ...(height ? { height } : {}) }}
       role="group"
@@ -138,7 +180,8 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
               aria-label={isCapsLocked ? "Caps lock" : "Shift"}
               aria-pressed={isShifted || isCapsLocked}
               title={isCapsLocked ? "Caps lock" : "Shift"}
-              onClick={toggleShift}
+              onPointerDown={(event) => pressOnPointerDown(event, toggleShift)}
+              onClick={(event) => pressOnKeyboardClick(event, toggleShift)}
             >
               <FaArrowUp className="game-virtual-key-icon" aria-hidden="true" />
             </button>
@@ -155,9 +198,9 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
               onPointerCancel={stopBackspaceRepeat}
               onLostPointerCapture={stopBackspaceRepeat}
               onBlur={stopBackspaceRepeat}
-              onClick={(event) => {
-                if (event.detail === 0) onBackspaceRef.current();
-              }}
+              onClick={(event) =>
+                pressOnKeyboardClick(event, () => onBackspaceRef.current())
+              }
             >
               <FaBackspace
                 className="game-virtual-key-icon"
@@ -172,18 +215,32 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
         <button
           type="button"
           className="game-virtual-key game-virtual-key-modifier"
-          onClick={() => {
-            setIsShowingSymbols(!isShowingSymbols);
-            setIsShifted(false);
-            lastShiftTapRef.current = 0;
-          }}
+          onPointerDown={(event) =>
+            pressOnPointerDown(event, () => {
+              setIsShowingSymbols((showingSymbols) => !showingSymbols);
+              setIsShifted(false);
+              lastShiftTapRef.current = 0;
+            })
+          }
+          onClick={(event) =>
+            pressOnKeyboardClick(event, () => {
+              setIsShowingSymbols((showingSymbols) => !showingSymbols);
+              setIsShifted(false);
+              lastShiftTapRef.current = 0;
+            })
+          }
         >
           {isShowingSymbols ? "ABC" : "?123"}
         </button>
         <button
           type="button"
           className="game-virtual-key game-virtual-key-modifier"
-          onClick={() => pressCharacter(",")}
+          onPointerDown={(event) =>
+            pressOnPointerDown(event, () => pressCharacter(","))
+          }
+          onClick={(event) =>
+            pressOnKeyboardClick(event, () => pressCharacter(","))
+          }
         >
           ,
         </button>
@@ -191,21 +248,32 @@ const GameVirtualKeyboard: React.FC<GameVirtualKeyboardProps> = ({
           type="button"
           className="game-virtual-key game-virtual-key-space"
           aria-label="Space"
-          onClick={() => onCharacter(" ")}
+          onPointerDown={(event) =>
+            pressOnPointerDown(event, () => onCharacter(" "))
+          }
+          onClick={(event) =>
+            pressOnKeyboardClick(event, () => onCharacter(" "))
+          }
         >
           space
         </button>
         <button
           type="button"
           className="game-virtual-key game-virtual-key-modifier"
-          onClick={() => pressCharacter(".")}
+          onPointerDown={(event) =>
+            pressOnPointerDown(event, () => pressCharacter("."))
+          }
+          onClick={(event) =>
+            pressOnKeyboardClick(event, () => pressCharacter("."))
+          }
         >
           .
         </button>
         <button
           type="button"
           className="game-virtual-key game-virtual-key-done"
-          onClick={onDone}
+          onPointerDown={(event) => pressOnPointerDown(event, onDone)}
+          onClick={(event) => pressOnKeyboardClick(event, onDone)}
         >
           Done
         </button>

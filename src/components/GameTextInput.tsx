@@ -32,6 +32,8 @@ const GameTextInput: React.FC<GameTextInputProps> = ({
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const keyboardInputRef = useRef<HTMLInputElement>(null);
   const selectionRef = useRef({ start: value.length, end: value.length });
+  const valueRef = useRef(value);
+  valueRef.current = value;
 
   useEffect(() => {
     setIsTouchDevice(isMobileDevice());
@@ -40,9 +42,13 @@ const GameTextInput: React.FC<GameTextInputProps> = ({
   useEffect(() => {
     if (!isKeyboardOpen || !keyboardInputRef.current) return;
 
-    const input = keyboardInputRef.current;
-    input.focus({ preventScroll: true });
-    input.setSelectionRange(
+    keyboardInputRef.current.focus({ preventScroll: true });
+  }, [isKeyboardOpen]);
+
+  useEffect(() => {
+    if (!isKeyboardOpen || !keyboardInputRef.current) return;
+
+    keyboardInputRef.current.setSelectionRange(
       selectionRef.current.start,
       selectionRef.current.end,
     );
@@ -68,14 +74,18 @@ const GameTextInput: React.FC<GameTextInputProps> = ({
 
   const replaceSelection = (insertedText: string) => {
     const { start, end } = selectionRef.current;
+    const currentValue = valueRef.current;
     const availableLength = Math.max(
       0,
-      maxLength - (value.length - (end - start)),
+      maxLength - (currentValue.length - (end - start)),
     );
     const inserted = insertedText.slice(0, availableLength);
-    const nextValue = `${value.slice(0, start)}${inserted}${value.slice(end)}`;
+    const nextValue = `${currentValue.slice(0, start)}${inserted}${currentValue.slice(
+      end,
+    )}`;
     const nextCursor = start + inserted.length;
 
+    valueRef.current = nextValue;
     selectionRef.current = { start: nextCursor, end: nextCursor };
     onChange(nextValue);
   };
@@ -84,8 +94,12 @@ const GameTextInput: React.FC<GameTextInputProps> = ({
     const { start, end } = selectionRef.current;
     if (start === 0 && end === 0) return;
 
+    const currentValue = valueRef.current;
     const deleteStart = start === end ? Math.max(0, start - 1) : start;
-    const nextValue = `${value.slice(0, deleteStart)}${value.slice(end)}`;
+    const nextValue = `${currentValue.slice(0, deleteStart)}${currentValue.slice(
+      end,
+    )}`;
+    valueRef.current = nextValue;
     selectionRef.current = { start: deleteStart, end: deleteStart };
     onChange(nextValue);
   };
