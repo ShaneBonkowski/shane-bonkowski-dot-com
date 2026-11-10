@@ -14,7 +14,12 @@ import {
   FaForward,
   FaStepForward,
 } from "react-icons/fa";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import {
+  getComicSeenStorageKey,
+  hasSeenContent,
+  markContentAsSeen,
+} from "@/src/utils/content-seen";
 
 const random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
 
@@ -70,6 +75,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
 
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
   const urlComicNum = searchParams.get("comic");
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -107,11 +113,9 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
       const firstComicNum = Math.min(
         ...childrenComicsData.map((c) => c.comicNum)
       );
-      /* eslint-disable no-restricted-syntax */
-      const seenFirstComic =
-        localStorage.getItem(`${comicMetadata.title}-${firstComicNum}-seen`) ==
-        "true";
-      /* eslint-enable no-restricted-syntax */
+      const seenFirstComic = hasSeenContent(
+        getComicSeenStorageKey(pathname, firstComicNum)
+      );
 
       switch (comicMetadata.firstComicShown) {
         case "FIRST":
@@ -142,6 +146,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     sortedComics,
     initialized,
     urlComicNum,
+    pathname,
   ]);
 
   useEffect(() => {
@@ -157,11 +162,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     const currentComicNum = sortedComics[currentIndex]?.comicNum;
     if (currentComicNum == null) return;
 
-    // eslint-disable-next-line no-restricted-syntax
-    localStorage.setItem(
-      `${comicMetadata.title}-${currentComicNum}-seen`,
-      "true"
-    );
+    markContentAsSeen(getComicSeenStorageKey(pathname, currentComicNum));
 
     // Update the url to reflect the current comic shown
     // eslint-disable-next-line no-restricted-syntax
@@ -169,7 +170,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     if (currentParams.get("comic") !== String(currentComicNum)) {
       router.replace(`?comic=${currentComicNum}`, { scroll: false });
     }
-  }, [currentIndex, sortedComics, comicMetadata.title, initialized, router]);
+  }, [currentIndex, sortedComics, pathname, initialized, router]);
 
   const currentChildComicData = useMemo(
     () => sortedComics[currentIndex],

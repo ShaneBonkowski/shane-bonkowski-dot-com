@@ -9,7 +9,31 @@ import {
   FaPaintBrush,
   FaRegNewspaper,
 } from "react-icons/fa";
-import { ContentBoxProps } from "@/src/types/content-props";
+import { ComicDataProps, ContentBoxProps } from "@/src/types/content-props";
+import { comicData } from "@/src/data/comic-data";
+import {
+  getComicSeenStorageKey,
+  getPageSeenStorageKey,
+  hasSeenContent,
+  isContentRecentlyCreated,
+} from "@/src/utils/content-seen";
+
+const getNewestComic = (comics: ComicDataProps[] = []): ComicDataProps | null =>
+  comics.reduce<ComicDataProps | null>((newestComic, comic) => {
+    if (!newestComic) return comic;
+
+    const comicDate = new Date(comic.dateISO).getTime();
+    const newestComicDate = new Date(newestComic.dateISO).getTime();
+
+    if (
+      comicDate > newestComicDate ||
+      (comicDate === newestComicDate && comic.comicNum > newestComic.comicNum)
+    ) {
+      return comic;
+    }
+
+    return newestComic;
+  }, null);
 
 const getIcon = (contentType: string) => {
   switch (contentType) {
@@ -42,10 +66,20 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   description,
   contentType,
   openInNewTab,
+  childDataKey,
 }) => {
   /* Only allow hover on hover-supported devices */
   const [isHovered, setIsHovered] = useState(false);
   const [isHoverable, setIsHoverable] = useState(false);
+  const [hasSeen, setHasSeen] = useState<boolean | null>(null);
+
+  const newestComic =
+    childDataKey === null
+      ? null
+      : getNewestComic(comicData[childDataKey] ?? []);
+  const seenStorageKey = newestComic
+    ? getComicSeenStorageKey(linkUrl, newestComic.comicNum)
+    : getPageSeenStorageKey(linkUrl);
 
   useEffect(() => {
     // Return early during SSR/static generation
@@ -55,13 +89,29 @@ const ContentBox: React.FC<ContentBoxProps> = ({
     setIsHoverable(window.matchMedia("(hover: hover)").matches);
   }, []);
 
-  // Consider this a new piece of content if its within ~30 days of it being made
-  const isNew = (() => {
-    const comicDate = new Date(dateISO).getTime();
-    const now = Date.now();
-    const oneMonthMs = 30 * 24 * 60 * 60 * 1000; // 30 days in ms
-    return now - comicDate <= oneMonthMs;
-  })();
+  useEffect(() => {
+    const updateSeenStatus = () => setHasSeen(hasSeenContent(seenStorageKey));
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === seenStorageKey) updateSeenStatus();
+    };
+
+    if (typeof window === "undefined") return;
+
+    updateSeenStatus();
+    // eslint-disable-next-line no-restricted-syntax
+    window.addEventListener("storage", handleStorage);
+    // eslint-disable-next-line no-restricted-syntax
+    window.addEventListener("pageshow", updateSeenStatus);
+
+    return () => {
+      // eslint-disable-next-line no-restricted-syntax
+      window.removeEventListener("storage", handleStorage);
+      // eslint-disable-next-line no-restricted-syntax
+      window.removeEventListener("pageshow", updateSeenStatus);
+    };
+  }, [seenStorageKey]);
+
+  const isNew = isContentRecentlyCreated(dateISO) && hasSeen === false;
 
   return (
     <div
