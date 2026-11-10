@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import WrittenContentLoader from "@/src/components/WrittenContentLoader";
 import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
 import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagraphGroup";
@@ -13,6 +13,8 @@ import {
   FaRandom,
   FaForward,
   FaStepForward,
+  FaRobot,
+  FaHandPointer,
 } from "react-icons/fa";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
@@ -22,6 +24,8 @@ import {
 } from "@/src/utils/content-seen";
 
 const random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
+
+const AUTO_MODE_INTERVAL_SECONDS = 8;
 
 const ComicIconButton: React.FC<{
   onClick: () => void;
@@ -70,7 +74,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
   // Sort comics first to last (which is the same as oldest to newest, but it keeps order even if two comics share the same date)
   const sortedComics = useMemo(
     () => [...childrenComicsData].sort((a, b) => a.comicNum - b.comicNum),
-    [childrenComicsData]
+    [childrenComicsData],
   );
 
   const searchParams = useSearchParams();
@@ -99,7 +103,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
       console.log("Using '?comic=' to determine which comic to view");
 
       const urlIndex = sortedComics.findIndex(
-        (c) => c.comicNum === Number(urlComicNum)
+        (c) => c.comicNum === Number(urlComicNum),
       );
       if (urlIndex >= 0) {
         newIndex = urlIndex;
@@ -107,14 +111,14 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     } else {
       // Otherwise, determine it based on user local storage and the comic preferences
       console.log(
-        "Using local storage + comic preferences to determine which comic to view"
+        "Using local storage + comic preferences to determine which comic to view",
       );
 
       const firstComicNum = Math.min(
-        ...childrenComicsData.map((c) => c.comicNum)
+        ...childrenComicsData.map((c) => c.comicNum),
       );
       const seenFirstComic = hasSeenContent(
-        getComicSeenStorageKey(pathname, firstComicNum)
+        getComicSeenStorageKey(pathname, firstComicNum),
       );
 
       switch (comicMetadata.firstComicShown) {
@@ -132,7 +136,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
           break;
         default:
           console.error(
-            `Unexpected firstComicShown value: ${comicMetadata.firstComicShown}`
+            `Unexpected firstComicShown value: ${comicMetadata.firstComicShown}`,
           );
       }
     }
@@ -174,23 +178,57 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
 
   const currentChildComicData = useMemo(
     () => sortedComics[currentIndex],
-    [sortedComics, currentIndex]
+    [sortedComics, currentIndex],
   );
   const hasMultiple = sortedComics.length > 1;
+
+  const [autoMode, setAutoMode] = useState(false);
+  const [autoModeCountdown, setAutoModeCountdown] = useState(
+    AUTO_MODE_INTERVAL_SECONDS,
+  );
+
+  const pickRandomComic = useCallback(() => {
+    if (sortedComics.length <= 1) return;
+    setCurrentIndex((prev) => {
+      let randomIndex = prev;
+      while (randomIndex === prev) {
+        randomIndex = random.getRandomInt(0, sortedComics.length);
+      }
+      return randomIndex;
+    });
+  }, [sortedComics.length]);
+
+  // Restart the countdown every time the comic changes while in auto mode
+  useEffect(() => {
+    if (!autoMode) return;
+
+    setAutoModeCountdown(AUTO_MODE_INTERVAL_SECONDS);
+    const intervalId = setInterval(() => {
+      setAutoModeCountdown((prev) => Math.max(prev - 1, 0));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [autoMode, currentIndex]);
+
+  useEffect(() => {
+    if (autoMode && autoModeCountdown === 0) {
+      pickRandomComic();
+    }
+  }, [autoMode, autoModeCountdown, pickRandomComic]);
+
+  // Manual navigation turns off auto mode
+  const withAutoModeOff = (action: () => void) => () => {
+    setAutoMode(false);
+    action();
+  };
 
   const goOldest = () => setCurrentIndex(0);
   const goNewest = () => setCurrentIndex(sortedComics.length - 1);
   const goPrevious = () => setCurrentIndex((prev) => Math.max(prev - 1, 0));
   const goNext = () =>
     setCurrentIndex((prev) => Math.min(prev + 1, sortedComics.length - 1));
-  const goRandom = () => {
-    if (sortedComics.length <= 1) return;
-    let randomIndex = currentIndex;
-    while (randomIndex === currentIndex) {
-      randomIndex = random.getRandomInt(0, sortedComics.length);
-    }
-    setCurrentIndex(randomIndex);
-  };
+  const goRandom = () => pickRandomComic();
+  const goAutoMode = () => setAutoMode((prev) => !prev);
 
   return (
     <WrittenContentLoader
@@ -198,7 +236,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
       subtitle={comicMetadata.subtitle}
       date={new Date(currentChildComicData.dateISO).toLocaleDateString(
         "en-US",
-        { year: "numeric", month: "long", day: "numeric" }
+        { year: "numeric", month: "long", day: "numeric" },
       )}
       contentImageUrl={currentChildComicData.imageUrl}
       contentImageWidth={currentChildComicData.contentImageWidth}
@@ -214,41 +252,58 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
       {hasMultiple && (
         <div className="flex gap-2 justify-center mt-4">
           <ComicIconButton
-            onClick={goOldest}
+            onClick={withAutoModeOff(goOldest)}
             icon={<FaStepBackward size={24} />}
             disabled={currentIndex === 0}
             ariaLabel="Oldest"
             isHoverable={isHoverable}
           />
           <ComicIconButton
-            onClick={goPrevious}
+            onClick={withAutoModeOff(goPrevious)}
             icon={<FaBackward size={24} />}
             disabled={currentIndex === 0}
             ariaLabel="Previous"
             isHoverable={isHoverable}
           />
           <ComicIconButton
-            onClick={goRandom}
+            onClick={withAutoModeOff(goRandom)}
             icon={<FaRandom size={24} />}
             disabled={false}
             ariaLabel="Random"
             isHoverable={isHoverable}
           />
           <ComicIconButton
-            onClick={goNext}
+            onClick={goAutoMode}
+            icon={
+              autoMode ? <FaHandPointer size={24} /> : <FaRobot size={24} />
+            }
+            disabled={false}
+            ariaLabel="Toggle Auto Mode"
+            isHoverable={isHoverable}
+          />
+          <ComicIconButton
+            onClick={withAutoModeOff(goNext)}
             icon={<FaForward size={24} />}
             disabled={currentIndex === sortedComics.length - 1}
             ariaLabel="Next"
             isHoverable={isHoverable}
           />
           <ComicIconButton
-            onClick={goNewest}
+            onClick={withAutoModeOff(goNewest)}
             icon={<FaStepForward size={24} />}
             disabled={currentIndex === sortedComics.length - 1}
             ariaLabel="Newest"
             isHoverable={isHoverable}
           />
         </div>
+      )}
+      {hasMultiple && autoMode && (
+        <p
+          className="text-center text-secondary-text-color-light dark:text-secondary-text-color mt-2"
+          aria-live="polite"
+        >
+          Next comic in {autoModeCountdown}...
+        </p>
       )}
     </WrittenContentLoader>
   );
