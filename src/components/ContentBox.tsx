@@ -78,7 +78,7 @@ const ContentBox: React.FC<ContentBoxProps> = ({
       ? null
       : getNewestComic(comicData[childDataKey] ?? []);
   const seenStorageKey = newestComic
-    ? getComicSeenStorageKey(title, newestComic.comicNum)
+    ? getComicSeenStorageKey(linkUrl, newestComic.comicNum)
     : getPageSeenStorageKey(linkUrl);
 
   useEffect(() => {
