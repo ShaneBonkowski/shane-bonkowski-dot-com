@@ -15,6 +15,10 @@ import {
   FaStepForward,
 } from "react-icons/fa";
 import { useSearchParams, useRouter } from "next/navigation";
+import {
+  getComicSeenStorageKey,
+  markContentAsSeen,
+} from "@/src/utils/content-seen";
 
 const random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
 
@@ -109,8 +113,9 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
       );
       /* eslint-disable no-restricted-syntax */
       const seenFirstComic =
-        localStorage.getItem(`${comicMetadata.title}-${firstComicNum}-seen`) ==
-        "true";
+        localStorage.getItem(
+          getComicSeenStorageKey(comicMetadata.title, firstComicNum)
+        ) === "true";
       /* eslint-enable no-restricted-syntax */
 
       switch (comicMetadata.firstComicShown) {
@@ -157,10 +162,8 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
     const currentComicNum = sortedComics[currentIndex]?.comicNum;
     if (currentComicNum == null) return;
 
-    // eslint-disable-next-line no-restricted-syntax
-    localStorage.setItem(
-      `${comicMetadata.title}-${currentComicNum}-seen`,
-      "true"
+    markContentAsSeen(
+      getComicSeenStorageKey(comicMetadata.title, currentComicNum)
     );
 
     // Update the url to reflect the current comic shown
