@@ -125,7 +125,7 @@ const GenerationPresetBox: React.FC<GenerationPresetBoxProps> = ({
                   }
                 />
               </div>
-              <div className="flex justify-between text-xs text-gray-500">
+              <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
                 <span>{min.toFixed(2)}</span>
                 <span>{max.toFixed(2)}</span>
               </div>

@@ -14,6 +14,10 @@ export const UseSettings = () => {
     ...settings,
     // Actions
     setAutoPlay: settingsStore.setAutoPlay.bind(settingsStore),
+    setDiscoMode: settingsStore.setDiscoMode.bind(settingsStore),
+    setTrippyMode: settingsStore.setTrippyMode.bind(settingsStore),
+    setRandomGenMode: settingsStore.setRandomGenMode.bind(settingsStore),
+    setShowSpaceship: settingsStore.setShowSpaceship.bind(settingsStore),
     setZSliceSliderValue:
       settingsStore.setZSliceSliderValue.bind(settingsStore),
     setWalkSpeedSliderValue:

@@ -51,6 +51,7 @@ export class MainGameScene extends Generic2DGameScene {
   public gameRound: number = 0;
   public playerGoesFirst: boolean = true;
   public random: SeededRandom = new SeededRandom(randomType.UNSEEDED_RANDOM);
+  private unsubscribeGameData: (() => void) | null = null;
 
   public moving: boolean = false;
   private movingStartTime: number = 0;
@@ -187,7 +188,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     this.setGameDataFromStore(gameData);
 
-    gameDataStore.subscribe(() => {
+    this.unsubscribeGameData = gameDataStore.subscribe(() => {
       const newGameData = gameDataStore.getSnapshot();
       this.handleGameDataChange(newGameData);
     });
@@ -1303,7 +1304,9 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
-    this.resetGameData();
+    this.unsubscribeGameData?.();
+    this.unsubscribeGameData = null;
     this.destroyGameObjects();
+    this.resetGameData();
   }
 }

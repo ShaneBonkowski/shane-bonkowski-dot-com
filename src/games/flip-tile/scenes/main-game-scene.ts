@@ -25,6 +25,7 @@ export class MainGameScene extends Generic2DGameScene {
   public disableClickID: number = 0;
   public revealedAtLeastOnceThisLevel: boolean = false;
   private solvedTimeoutID: NodeJS.Timeout | null = null;
+  private unsubscribeGameData: (() => void) | null = null;
 
   public score: number = 0;
   public solutionRevealed: boolean = false;
@@ -72,7 +73,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     this.setGameDataFromStore(gameData);
 
-    gameDataStore.subscribe(() => {
+    this.unsubscribeGameData = gameDataStore.subscribe(() => {
       const newGameData = gameDataStore.getSnapshot();
       this.handleGameDataChange(newGameData);
     });
@@ -370,6 +371,9 @@ export class MainGameScene extends Generic2DGameScene {
    */
   shutdown() {
     super.shutdown();
+
+    this.unsubscribeGameData?.();
+    this.unsubscribeGameData = null;
 
     // reset the store
     gameDataStore.resetData();

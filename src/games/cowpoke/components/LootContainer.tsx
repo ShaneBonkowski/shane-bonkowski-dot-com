@@ -8,6 +8,7 @@ import {
   RARITY,
 } from "@/src/games/cowpoke/loot";
 import ImageCropper from "@/src/components/ImageCropper";
+import SelectedIndicator from "@/src/components/SelectedIndicator";
 
 interface LootContainerProps {
   lootId: number;
@@ -74,9 +75,7 @@ const LootContainer: React.FC<LootContainerProps> = ({
 
           {/* Equipped Indicator */}
           {isEquipped && (
-            <div className="absolute top-0 left-0 bg-green-500 text-white text-xs px-1 rounded-br">
-              ✓
-            </div>
+            <SelectedIndicator className="top-0 left-0 rounded-br px-1 text-xs" />
           )}
 
           {/* New Item Indicator */}

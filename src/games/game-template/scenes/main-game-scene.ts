@@ -14,6 +14,7 @@ export class MainGameScene extends Generic2DGameScene {
   private balls: Ball[] = [];
   public maxBalls: number = 10;
   private score: number = 0;
+  private unsubscribeGameData: (() => void) | null = null;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -65,7 +66,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     this.setGameDataFromStore(gameData);
 
-    gameDataStore.subscribe(() => {
+    this.unsubscribeGameData = gameDataStore.subscribe(() => {
       const newGameData = gameDataStore.getSnapshot();
       this.handleGameDataChange(newGameData);
     });
@@ -191,6 +192,9 @@ export class MainGameScene extends Generic2DGameScene {
    */
   shutdown() {
     super.shutdown();
+
+    this.unsubscribeGameData?.();
+    this.unsubscribeGameData = null;
 
     // reset the store
     gameDataStore.resetData();

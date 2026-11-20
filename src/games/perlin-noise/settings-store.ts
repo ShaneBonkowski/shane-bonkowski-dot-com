@@ -13,8 +13,15 @@ import {
   QUALITY_LEVELS,
 } from "@/src/games/perlin-noise/tile-utils";
 
+export const ZOOM_SLIDER_MIN = -50;
+export const ZOOM_SLIDER_MAX = -1;
+
 export interface Settings {
   autoPlay: boolean;
+  discoMode: boolean;
+  trippyMode: boolean;
+  randomGenMode: boolean;
+  showSpaceship: boolean;
   zSliceSliderValue: number;
   walkSpeedSliderValue: number;
   zoomSliderValue: number;
@@ -28,6 +35,10 @@ export interface Settings {
 class SettingsStore extends SyncedStore<Settings> {
   private defaultData: Settings = {
     autoPlay: true,
+    discoMode: false,
+    trippyMode: false,
+    randomGenMode: false,
+    showSpaceship: true,
     zSliceSliderValue: 50,
     walkSpeedSliderValue: 50,
     zoomSliderValue: -25,
@@ -151,6 +162,10 @@ class SettingsStore extends SyncedStore<Settings> {
       "perlinNoiseQualityLevel",
       this.defaultData.qualityLevel
     );
+    const savedShowSpaceship = this.getLocalStorage(
+      "perlinNoiseShowSpaceship",
+      this.defaultData.showSpaceship
+    );
 
     this.setLocalStorageFields(
       savedCurrentColorPresetIndex,
@@ -165,7 +180,8 @@ class SettingsStore extends SyncedStore<Settings> {
       savedCustomGenerationPreset3,
       savedCustomGenerationPreset4,
       savedCustomGenerationPreset5,
-      savedQualityLevel
+      savedQualityLevel,
+      savedShowSpaceship
     );
   }
 
@@ -182,7 +198,8 @@ class SettingsStore extends SyncedStore<Settings> {
     customGenerationPreset3: GenerationPreset,
     customGenerationPreset4: GenerationPreset,
     customGenerationPreset5: GenerationPreset,
-    qualityLevel: QualityLevel
+    qualityLevel: QualityLevel,
+    showSpaceship: boolean
   ) {
     this.setCurrentColorPresetIndex(currentColorPresetIndex);
     this.setCustomColorPreset(0, customColorPreset1);
@@ -197,6 +214,7 @@ class SettingsStore extends SyncedStore<Settings> {
     this.setCustomGenerationPreset(3, customGenerationPreset4);
     this.setCustomGenerationPreset(4, customGenerationPreset5);
     this.setQualityLevel(qualityLevel);
+    this.setShowSpaceship(showSpaceship);
   }
 
   protected getData(): Settings {
@@ -210,7 +228,29 @@ class SettingsStore extends SyncedStore<Settings> {
     return value;
   }
 
-  public setZSliceSliderValue(value: number): number {
+  public setDiscoMode(value: boolean): void {
+    this.data.discoMode = value;
+    this.notify();
+  }
+
+  public setTrippyMode(value: boolean): void {
+    this.data.trippyMode = value;
+    this.notify();
+  }
+
+  public setRandomGenMode(value: boolean): void {
+    this.data.randomGenMode = value;
+    this.notify();
+  }
+
+  public setShowSpaceship(value: boolean): void {
+    this.data.showSpaceship = value;
+    this.setLocalStorage("perlinNoiseShowSpaceship", value);
+    this.notify();
+  }
+
+  public setZSliceSliderValue(value: number, automatic = false): number {
+    if (!automatic) this.data.trippyMode = false;
     this.data.zSliceSliderValue = value;
     this.notify();
 
@@ -237,6 +277,7 @@ class SettingsStore extends SyncedStore<Settings> {
       throw new Error("Index out of bounds for custom color presets");
     }
 
+    this.data.discoMode = false;
     this.data.customColorPresets[index] = value;
     this.setLocalStorage(`perlinNoiseCustomColorPreset${index + 1}`, value);
     this.notify();
@@ -244,7 +285,8 @@ class SettingsStore extends SyncedStore<Settings> {
     return value;
   }
 
-  setCurrentColorPresetIndex(value: number): number {
+  setCurrentColorPresetIndex(value: number, automatic = false): number {
+    if (!automatic) this.data.discoMode = false;
     this.data.currentColorPresetIndex = value;
     this.setLocalStorage("perlinNoiseCurrentColorPresetIndex", value);
     this.notify();
@@ -269,6 +311,7 @@ class SettingsStore extends SyncedStore<Settings> {
       value.generation[TILE_TYPES.SNOW] = 1;
     }
 
+    this.data.randomGenMode = false;
     this.data.customGenerationPresets[index] = value;
     this.setLocalStorage(
       `perlinNoiseCustomGenerationPreset${index + 1}`,
@@ -279,7 +322,8 @@ class SettingsStore extends SyncedStore<Settings> {
     return value;
   }
 
-  setCurrentGenerationPresetIndex(value: number): number {
+  setCurrentGenerationPresetIndex(value: number, automatic = false): number {
+    if (!automatic) this.data.randomGenMode = false;
     this.data.currentGenerationPresetIndex = value;
     this.setLocalStorage("perlinNoiseCurrentGenerationPresetIndex", value);
     this.notify();
@@ -316,6 +360,7 @@ class SettingsStore extends SyncedStore<Settings> {
       ],
       currentGenerationPresetIndex: this.data.currentGenerationPresetIndex,
       qualityLevel: this.data.qualityLevel,
+      showSpaceship: this.data.showSpaceship,
     };
 
     this.notify();
@@ -341,7 +386,8 @@ class SettingsStore extends SyncedStore<Settings> {
       this.defaultData.customGenerationPresets[2],
       this.defaultData.customGenerationPresets[3],
       this.defaultData.customGenerationPresets[4],
-      this.defaultData.qualityLevel
+      this.defaultData.qualityLevel,
+      this.defaultData.showSpaceship
     );
 
     this.notify();

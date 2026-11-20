@@ -16,6 +16,7 @@ import {
 
 export class Character extends GameObject {
   private scene: MainGameScene | null = null;
+  private unsubscribeGameData: (() => void) | null = null;
   public type: number = CHARACTER_TYPES.UNASSIGNED;
 
   public name: string = "Character";
@@ -123,7 +124,7 @@ export class Character extends GameObject {
 
     this.setGameDataFromStore(gameData);
 
-    gameDataStore.subscribe(() => {
+    this.unsubscribeGameData = gameDataStore.subscribe(() => {
       const newGameData = gameDataStore.getSnapshot();
       this.handleGameDataChange(newGameData);
     });
@@ -1149,6 +1150,8 @@ export class Character extends GameObject {
   }
 
   destroy() {
+    this.unsubscribeGameData?.();
+    this.unsubscribeGameData = null;
     super.destroy();
 
     // Unsubscribe from events
