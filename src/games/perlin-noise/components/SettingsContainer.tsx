@@ -13,6 +13,22 @@ import ColorPresetBox from "@/src/games/perlin-noise/components/ColorPresetBox";
 import { DEFAULT_GENERATION_PRESETS } from "@/src/games/perlin-noise/generation-presets";
 import GenerationPresetBox from "@/src/games/perlin-noise/components/GenerationPresetBox";
 
+const stopModeOnPresetInteraction = (
+  event: React.SyntheticEvent<HTMLDivElement>,
+  isActive: boolean,
+  setMode: (value: boolean) => void,
+) => {
+  const target = event.target;
+  if (
+    isActive &&
+    "closest" in target &&
+    typeof target.closest === "function" &&
+    target.closest("button, input")
+  ) {
+    setMode(false);
+  }
+};
+
 const QualitySettings: React.FC = () => {
   const { qualityLevel, setQualityLevel } = UseSettings();
 
@@ -31,7 +47,6 @@ const QualitySettings: React.FC = () => {
           Higher quality increases grid resolution but may impact performance.
         </p>
       </div>
-
       {/* Quality Checkboxes */}
       <div className="flex gap-4 justify-center">
         {qualityOptions.map((option) => (
@@ -60,6 +75,8 @@ const GenerationPresetSettings: React.FC = () => {
     currentGenerationPresetIndex,
     setCustomGenerationPreset,
     setCurrentGenerationPresetIndex,
+    randomGenMode,
+    setRandomGenMode,
   } = UseSettings();
 
   const currentPreset = customGenerationPresets[currentGenerationPresetIndex];
@@ -131,7 +148,11 @@ const GenerationPresetSettings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 mb-4 max-w-xl">
+    <div
+      className="flex flex-col items-center gap-4 mb-4 max-w-xl"
+      onFocusCapture={(event) => stopModeOnPresetInteraction(event, randomGenMode, setRandomGenMode)}
+      onPointerDownCapture={(event) => stopModeOnPresetInteraction(event, randomGenMode, setRandomGenMode)}
+    >
       {/* Title and Description */}
       <div id="perlin-noise-generation-preset-header">
         <h2 className="text-center">Generation Presets</h2>
@@ -150,7 +171,7 @@ const GenerationPresetSettings: React.FC = () => {
           title="Previous preset"
         />
         <div className="flex-1 text-center">
-          <span className="text-gray-500">
+          <span className="text-gray-600 dark:text-gray-400">
             {currentGenerationPresetIndex + 1} of{" "}
             {customGenerationPresets.length}
           </span>
@@ -194,6 +215,8 @@ const ColorPresetSettings: React.FC = () => {
     currentColorPresetIndex,
     setCustomColorPreset,
     setCurrentColorPresetIndex,
+    discoMode,
+    setDiscoMode,
   } = UseSettings();
 
   const currentPreset = customColorPresets[currentColorPresetIndex];
@@ -257,7 +280,11 @@ const ColorPresetSettings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 mb-4 max-w-xl">
+    <div
+      className="flex flex-col items-center gap-4 mb-4 max-w-xl"
+      onFocusCapture={(event) => stopModeOnPresetInteraction(event, discoMode, setDiscoMode)}
+      onPointerDownCapture={(event) => stopModeOnPresetInteraction(event, discoMode, setDiscoMode)}
+    >
       {/* Title and Description */}
       <div id="perlin-noise-color-preset-header">
         <h2 className="text-center">Color Presets</h2>
@@ -283,7 +310,7 @@ const ColorPresetSettings: React.FC = () => {
           title="Previous preset"
         />
         <div className="flex-1 text-center">
-          <span className="text-gray-500">
+          <span className="text-gray-600 dark:text-gray-400">
             {currentColorPresetIndex + 1} of {customColorPresets.length}
           </span>
         </div>
@@ -316,6 +343,7 @@ const ColorPresetSettings: React.FC = () => {
 const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
+  const { showSpaceship, setShowSpaceship } = UseSettings();
 
   const openWindow = () => {
     // Prevent touch-through on mobile devices when window is toggled.
@@ -367,6 +395,14 @@ const SettingsContainer: React.FC = () => {
             id="perlin-noise-settings-description"
           >
             <h1 className="text-center">Settings</h1>
+            <label className="interactive-control game-interactive-control flex items-center p-4 gap-2">
+              <input
+                type="checkbox"
+                checked={showSpaceship}
+                onChange={(e) => setShowSpaceship(e.target.checked)}
+              />
+              <span>Show spaceship</span>
+            </label>
             <QualitySettings />
             <GenerationPresetSettings />
             <ColorPresetSettings />

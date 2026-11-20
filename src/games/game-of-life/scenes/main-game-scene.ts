@@ -43,6 +43,8 @@ export class MainGameScene extends Generic2DGameScene {
   private currentBackgroundColor: string | null = null;
   private requestSetComputerLayout: boolean = false;
   private requestSetPhoneLayout: boolean = false;
+  private unsubscribeSettings: (() => void) | null = null;
+  private unsubscribeGameData: (() => void) | null = null;
 
   // Intervals
   public discoModeUpdateInterval: number = 0;
@@ -127,7 +129,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     this.setSettingsFromStore(settings);
 
-    settingsStore.subscribe(() => {
+    this.unsubscribeSettings = settingsStore.subscribe(() => {
       const newSettings = settingsStore.getSnapshot();
       this.handleSettingsChange(newSettings);
     });
@@ -154,7 +156,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     this.setGameDataFromStore(gameData);
 
-    gameDataStore.subscribe(() => {
+    this.unsubscribeGameData = gameDataStore.subscribe(() => {
       const newGameData = gameDataStore.getSnapshot();
       this.handleGameDataChange(newGameData);
     });
@@ -611,6 +613,10 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
+    this.unsubscribeSettings?.();
+    this.unsubscribeSettings = null;
+    this.unsubscribeGameData?.();
+    this.unsubscribeGameData = null;
     settingsStore.resetData();
     gameDataStore.resetData();
     this.destroyTiles();

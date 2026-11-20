@@ -8,10 +8,10 @@ import {
   FaPlay,
   FaGreaterThan,
   FaRedo,
-  FaBan,
   FaMagic,
 } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
+import GameToggleIcon from "@/src/components/GameToggleIcon";
 import "@/src/games/flip-tile/styles/game.css";
 import { UseGameData } from "@/src/games/game-of-life/components/UseGameData";
 
@@ -111,8 +111,9 @@ const UiOverlay: React.FC = () => {
         {/* Disco Button */}
         <GameIconButton
           onPointerDown={handleToggleDisco}
-          icon={discoMode ? <FaBan size={30} /> : <FaMagic size={30} />}
+          icon={<GameToggleIcon icon={<FaMagic size={30} />} isActive={discoMode} />}
           ariaLabel="Toggle Disco Mode"
+          ariaPressed={discoMode}
           lightModeDark={true} // Use dark mode colors even in light mode since it looks better on the bkg
           blackShadow={true} // Use a black shadow for the button
           title="Toggle Disco Mode"

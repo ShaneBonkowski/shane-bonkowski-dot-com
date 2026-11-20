@@ -19,6 +19,8 @@ import { createNoise3D } from "simplex-noise";
 import {
   settingsStore,
   Settings,
+  ZOOM_SLIDER_MIN,
+  ZOOM_SLIDER_MAX,
 } from "@/src/games/perlin-noise/settings-store";
 import { GenerationPreset } from "@/src/games/perlin-noise/generation-presets";
 import {
@@ -43,7 +45,15 @@ export class MainGameScene extends Generic2DGameScene {
   private walkSpeed: number = 0;
   private speedScale: number = 0.0005;
   private zSliceScale: number = 0.01; // Scale for the z-slice value
-  private lastWalkDirection: Vec3 = new Vec3(1, 0, 0); // right
+  private lastWalkDirection: Vec3 = new Vec3(1, 0, 0); // left
+  private spaceship: Phaser.GameObjects.Container | null = null;
+  private spaceshipImage: Phaser.GameObjects.Image | null = null;
+  private spaceshipShadow: Phaser.GameObjects.Image | null = null;
+  private unsubscribeSettings: (() => void) | null = null;
+  private discoElapsed = 0;
+  private generationElapsed = 0;
+  private trippyElapsed = 0;
+  private trippyDirection = 1;
 
   public autoPlay: boolean = true;
   private customColorPresets: ColorPreset[] = [];
@@ -68,8 +78,14 @@ export class MainGameScene extends Generic2DGameScene {
   preload() {
     super.preload();
 
-    // Do preload logic for this scene
-    // ...
+    this.load.image(
+      "perlin-spaceship",
+      "/webps/games/perlin-noise-spaceship.webp",
+    );
+    this.load.image(
+      "perlin-spaceship-shadow",
+      "/webps/games/perlin-noise-spaceship-shadow.webp",
+    );
   }
 
   create() {
@@ -84,6 +100,7 @@ export class MainGameScene extends Generic2DGameScene {
       this.setLayoutForComputer();
     }
 
+    this.createSpaceship();
     this.gameStarted = true;
     dispatchCloseLoadingScreenEvent("Perlin Noise");
     dispatchGameStartedEvent("Perlin Noise");
@@ -95,7 +112,7 @@ export class MainGameScene extends Generic2DGameScene {
 
     this.setSettingsFromStore(settings);
 
-    settingsStore.subscribe(() => {
+    this.unsubscribeSettings = settingsStore.subscribe(() => {
       const newSettings = settingsStore.getSnapshot();
       this.handleSettingsChange(newSettings);
     });
@@ -111,6 +128,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.currentColorPresetIndex = settings.currentColorPresetIndex;
     this.customGenerationPresets = settings.customGenerationPresets;
     this.currentGenerationPresetIndex = settings.currentGenerationPresetIndex;
+    this.spaceship?.setVisible(settings.showSpaceship);
 
     // Only update quality level if it changes, and in that case request a layout change
     if (this.qualityLevel !== settings.qualityLevel) {
@@ -126,13 +144,23 @@ export class MainGameScene extends Generic2DGameScene {
     // Update derived values based on settings
     this.walkSpeed = settings.walkSpeedSliderValue * this.speedScale;
     this.perlinCoordinates.z = settings.zSliceSliderValue * this.zSliceScale;
-    this.perlinZoom = settings.zoomSliderValue * this.zoomScale;
+    const newZoom = settings.zoomSliderValue * this.zoomScale;
+    if (this.tileGridWidth > 0 && this.tileGridHeight > 0) {
+      // Preserve the noise coordinates at the center between the middle pixels.
+      this.perlinCoordinates.x +=
+        ((this.perlinZoom - newZoom) * (this.tileGridWidth - 1)) / 2;
+      this.perlinCoordinates.y +=
+        ((this.perlinZoom - newZoom) * (this.tileGridHeight - 1)) / 2;
+    }
+    this.perlinZoom = newZoom;
+    this.updateSpaceshipSize(settings.zoomSliderValue);
   }
 
   update(time: number, delta: number) {
     super.update(time, delta);
 
     if (this.gameStarted) {
+      this.updateModes(delta);
       if (this.autoPlay) {
         // Continue walking in the last direction if in auto mode
         this.walk(this.lastWalkDirection);
@@ -143,7 +171,7 @@ export class MainGameScene extends Generic2DGameScene {
         for (let col = 0; col < this.tiles[row].length; col++) {
           this.tiles[row][col].updatePerlinValue(
             this.computePerlin(row, col),
-            this.customGenerationPresets[this.currentGenerationPresetIndex]
+            this.customGenerationPresets[this.currentGenerationPresetIndex],
           );
         }
       }
@@ -163,6 +191,94 @@ export class MainGameScene extends Generic2DGameScene {
     }
   }
 
+  private updateModes(delta: number) {
+    const settings = settingsStore.getSnapshot();
+
+    this.discoElapsed = settings.discoMode ? this.discoElapsed + delta : 0;
+    if (this.discoElapsed >= 1500) {
+      const steps = Math.floor(this.discoElapsed / 1500);
+      this.discoElapsed %= 1500;
+      this.currentColorPresetIndex = settingsStore.setCurrentColorPresetIndex(
+        (settings.currentColorPresetIndex + steps) %
+          settings.customColorPresets.length,
+        true,
+      );
+    }
+
+    this.generationElapsed = settings.randomGenMode
+      ? this.generationElapsed + delta
+      : 0;
+    if (this.generationElapsed >= 1500) {
+      const steps = Math.floor(this.generationElapsed / 1500);
+      this.generationElapsed %= 1500;
+      this.currentGenerationPresetIndex =
+        settingsStore.setCurrentGenerationPresetIndex(
+          (settings.currentGenerationPresetIndex + steps) %
+            settings.customGenerationPresets.length,
+          true,
+        );
+    }
+
+    this.trippyElapsed = settings.trippyMode ? this.trippyElapsed + delta : 0;
+    if (this.trippyElapsed >= 75) {
+      const steps = Math.floor(this.trippyElapsed / 75);
+      this.trippyElapsed %= 75;
+      const phase =
+        ((this.trippyDirection > 0
+          ? settings.zSliceSliderValue
+          : 200 - settings.zSliceSliderValue) +
+          steps) %
+        200;
+      this.trippyDirection = phase < 100 ? 1 : -1;
+      this.perlinCoordinates.z =
+        settingsStore.setZSliceSliderValue(
+          phase <= 100 ? phase : 200 - phase,
+          true,
+        ) * this.zSliceScale;
+    }
+  }
+
+  private createSpaceship() {
+    const shadow = this.add.image(0, 0, "perlin-spaceship-shadow");
+    const ship = this.add.image(0, 0, "perlin-spaceship");
+    this.spaceshipShadow = shadow;
+    this.spaceshipImage = ship;
+    this.spaceship = this.add
+      .container(this.screenInfo.width / 2, this.screenInfo.height / 2, [
+        shadow,
+        ship,
+      ])
+      .setDepth(1)
+      .setVisible(settingsStore.getSnapshot().showSpaceship);
+    this.updateSpaceshipSize(settingsStore.getSnapshot().zoomSliderValue);
+    this.updateSpaceshipDirection();
+  }
+
+  private updateSpaceshipSize(zoom: number) {
+    const zoomFraction =
+      (zoom - ZOOM_SLIDER_MIN) / (ZOOM_SLIDER_MAX - ZOOM_SLIDER_MIN);
+    const size = 24 + zoomFraction * 48;
+    this.spaceshipImage?.setDisplaySize(size, size);
+    this.spaceshipShadow?.setDisplaySize(size, size);
+  }
+
+  private updateSpaceshipDirection() {
+    if (!this.spaceship || !this.spaceshipShadow) return;
+
+    const angle = Math.atan2(
+      -this.lastWalkDirection.x,
+      this.lastWalkDirection.y,
+    );
+    this.spaceship.setRotation(angle);
+    // Keep the shadow offset fixed on screen while the child rotates with the ship.
+    const offsetX = 64;
+    const offsetY = 64;
+    this.spaceshipShadow.setPosition(
+      offsetX * Math.cos(angle) + offsetY * Math.sin(angle),
+      -offsetX * Math.sin(angle) + offsetY * Math.cos(angle),
+    );
+  }
+
   renderPass() {
     for (let row = 0; row < this.tiles.length; row++) {
       for (let col = 0; col < this.tiles[row].length; col++) {
@@ -171,7 +287,7 @@ export class MainGameScene extends Generic2DGameScene {
           col,
           this.customColorPresets[this.currentColorPresetIndex].colors[
             this.tiles[row][col].tileType
-          ]
+          ],
         );
       }
     }
@@ -198,7 +314,7 @@ export class MainGameScene extends Generic2DGameScene {
         this.noise3D(
           (this.perlinCoordinates.x + row * this.perlinZoom) * frequency,
           (this.perlinCoordinates.y + col * this.perlinZoom) * frequency,
-          this.perlinCoordinates.z * frequency
+          this.perlinCoordinates.z * frequency,
         ) * amplitude;
 
       maxValue += amplitude;
@@ -258,6 +374,7 @@ export class MainGameScene extends Generic2DGameScene {
     const scaledDirection = Vec3.scale(walkDirection, this.walkSpeed);
     this.perlinCoordinates = Vec3.add(this.perlinCoordinates, scaledDirection);
     this.lastWalkDirection = walkDirection;
+    this.updateSpaceshipDirection();
   };
 
   // Override the parent class's handleWindowResizeHook to add custom logic.
@@ -271,10 +388,14 @@ export class MainGameScene extends Generic2DGameScene {
       this.lastKnownWindowSize.y == null
     ) {
       console.warn(
-        "lastKnownWindowSize is not properly initialized. Skipping resize handling."
+        "lastKnownWindowSize is not properly initialized. Skipping resize handling.",
       );
       return;
     } else {
+      this.spaceship?.setPosition(
+        this.screenInfo.width / 2,
+        this.screenInfo.height / 2,
+      );
       // Do not update if screen size has not changed
       if (
         this.lastKnownWindowSize.x === this.screenInfo.width &&
@@ -339,7 +460,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.tileGridTexture = new TileGridTexture(
       this,
       this.tileGridWidth,
-      this.tileGridHeight
+      this.tileGridHeight,
     );
   }
 
@@ -357,7 +478,7 @@ export class MainGameScene extends Generic2DGameScene {
     this.tileGridTexture = new TileGridTexture(
       this,
       this.tileGridWidth,
-      this.tileGridHeight
+      this.tileGridHeight,
     );
   }
 
@@ -386,6 +507,8 @@ export class MainGameScene extends Generic2DGameScene {
     super.shutdown();
 
     // Shutdown logic for this scene
+    this.unsubscribeSettings?.();
+    this.unsubscribeSettings = null;
     settingsStore.resetData();
     this.destroyTiles();
     this.destroyTileGridTexture();

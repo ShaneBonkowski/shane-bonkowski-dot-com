@@ -13,6 +13,7 @@ interface GameIconButtonProps {
   blackShadow?: boolean;
   disabled?: boolean;
   title?: string;
+  ariaPressed?: boolean;
 }
 
 const GameIconButton: React.FC<GameIconButtonProps> = ({
@@ -26,6 +27,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
   blackShadow = false, // true -> use a black shadow for the button
   disabled = false, // Whether the button is disabled
   title = undefined, // Optional tooltip text
+  ariaPressed,
 }) => {
   const [isHoverable, setIsHoverable] = useState(false);
 
@@ -72,7 +74,11 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
         ${blackShadow ? "drop-shadow-black" : ""}`
       }
       onPointerDown={disabled ? undefined : onPointerDown}
+      onClick={(event) => {
+        if (event.detail === 0 && !disabled) onPointerDown();
+      }}
       aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
       disabled={disabled}
       title={title}
     >
