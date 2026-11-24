@@ -38,6 +38,18 @@ type SettingConfig =
     };
 
 const settingsConfig: Record<string, SettingConfig> = {
+  collisionsEnabled: {
+    title: "Collisions",
+    desc: "Enables or disables collision detection between boids and obstacles.",
+    image: "/webps/games/better-boids-hitbox-graphic.webp",
+    type: "checkbox" as const,
+  },
+  showHitboxes: {
+    title: "Show Hitboxes",
+    desc: "Show the collision hitboxes as red boxes.",
+    image: "/webps/games/better-boids-hitbox-graphic.webp",
+    type: "checkbox" as const,
+  },
   alignmentFactor: {
     title: "Alignment",
     desc: "Determines how much boids align with their neighbors.",
@@ -92,18 +104,6 @@ const settingsConfig: Record<string, SettingConfig> = {
     lowerBound: -100,
     upperBound: 100,
     step: 1,
-  },
-  collisionsEnabled: {
-    title: "Collisions",
-    desc: "Enables or disables collision detection between boids and obstacles.",
-    image: "/webps/games/better-boids-hitbox-graphic.webp",
-    type: "checkbox" as const,
-  },
-  showHitboxes: {
-    title: "Show Hitboxes",
-    desc: "Show the collision hitboxes as red boxes.",
-    image: "/webps/games/better-boids-hitbox-graphic.webp",
-    type: "checkbox" as const,
   },
   goodBoidCount: {
     title: "Boid Mix",
@@ -359,27 +359,23 @@ const SettingsContainer: React.FC = () => {
                   }
 
                   return (
-                    <div key={key} onPointerDown={() => setSelectedSetting(key)} onFocusCapture={() => setSelectedSetting(key)}>
+                    <div key={key} className={key === "alignmentFactor" ? "pt-4" : ""} onPointerDown={() => setSelectedSetting(key)} onFocusCapture={() => setSelectedSetting(key)}>
                       {config.type === "checkbox" ? (
-                        <div className="flex items-center">
-                          <label
-                            htmlFor={`boids-setting-${key}`}
-                            className="text-sm font-medium"
-                          >
-                            {config.title}
-                          </label>
+                        <label
+                          htmlFor={`boids-setting-${key}`}
+                          className="inline-flex items-center gap-4 py-4 text-sm font-medium"
+                        >
+                          {config.title}
                           {/* Make clickable area larger */}
-                          <div className="px-4">
-                            <input
-                              id={`boids-setting-${key}`}
-                              type="checkbox"
-                              checked={currentValue as boolean}
-                              onChange={(e) => {
-                                handleCheckboxChange(key, e.target.checked);
-                              }}
-                            />
-                          </div>
-                        </div>
+                          <input
+                            id={`boids-setting-${key}`}
+                            type="checkbox"
+                            checked={currentValue as boolean}
+                            onChange={(e) => {
+                              handleCheckboxChange(key, e.target.checked);
+                            }}
+                          />
+                        </label>
                       ) : (
                         <>
                           <label
