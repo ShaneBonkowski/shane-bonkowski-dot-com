@@ -130,29 +130,14 @@ const GameComponent: React.FC = () => {
               <b>Bad Boids:</b> These boids chase good boids.
             </li>
             <li>
-              <b>Obstacle Boids:</b> Static obstacles that all boids will avoid.
-              You can click and drag obstacles to reposition them on the canvas.
+              <b>Obstacle Boids:</b> These boids act as static obstacles that
+              all other boids will avoid. You can click and drag to reposition
+              them on the canvas.
             </li>
             <li>
               <b>Leader Boid:</b> This boid follows your mouse when you click
               and hold on the game canvas. Its influence on good and bad boids
               is determined by the leader strength setting.
-            </li>
-          </ul>
-
-          <h2>Gameplay</h2>
-          <ul>
-            <li>
-              Click and hold anywhere on the game canvas to reveal the leader
-              boid, which follows your mouse.
-            </li>
-            <li>
-              Drag obstacle boids around the screen to create new layouts and
-              challenge the flocking behavior.
-            </li>
-            <li>
-              Adjust the settings to control boid behavior, collision physics,
-              the composition of your boid mix, and whether hitboxes are shown.
             </li>
           </ul>
         </div>
