@@ -7,7 +7,7 @@ import {
   dispatchCloseLoadingScreenEvent,
   dispatchGameStartedEvent,
 } from "@/src/events/game-events";
-import { settingsStore } from "@/src/games/better-boids/settings-store";
+import { settingsStore, type Settings } from "@/src/games/better-boids/settings-store";
 
 // Used to determine if pointer is held down
 const holdThreshold: number = 0.1; // seconds
@@ -20,7 +20,7 @@ export class MainGameScene extends Generic2DGameScene {
   public draggingObstacle: Boid | null = null;
   private dragPointer: Phaser.Input.Pointer | null = null;
   private hitboxGraphics: Phaser.GameObjects.Graphics | null = null;
-  private lastSettingsSnapshot: any = null;
+  private lastSettingsSnapshot: Settings | null = null;
   private settingsUnsubscribe: (() => void) | null = null;
 
   // eslint-disable-next-line no-restricted-syntax
