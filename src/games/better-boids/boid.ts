@@ -4,6 +4,7 @@ import { MoreMath } from "@/src/utils/more-math";
 import { SeededRandom } from "@/src/utils/seedable-random";
 import { MainGameScene } from "@/src/games/better-boids/scenes/main-game-scene";
 import { settingsStore } from "@/src/games/better-boids/settings-store";
+import { Physics } from "@/src/utils/physics";
 
 const seededRandom = new SeededRandom(1234);
 
@@ -14,19 +15,21 @@ const BoidConstants = {
   boidProtectedRadius: 20,
 };
 
+type BoidType = "Good" | "Bad" | "Leader" | "Obstacle";
+
 export class Boid extends GameObject {
   public scene: MainGameScene | null = null;
-  public mainBoid: boolean = false;
-  public boidNumber: number = 0;
-  public boidType: string = "";
+  public boidType: BoidType = "Good";
+  public isDragging: boolean = false;
+  public dragOffsetX: number = 0;
+  public dragOffsetY: number = 0;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor(
     scene: MainGameScene,
     spawnX: number,
     spawnY: number,
-    leaderBoid: boolean,
-    boidNumber: number
+    boidType?: BoidType,
   ) {
     // Set up GameObject with physics and rigid body.
     // init scale just so its set, will reset to something else later
@@ -36,20 +39,14 @@ export class Boid extends GameObject {
     if (typeof window === "undefined") return;
 
     this.scene = scene;
-    this.mainBoid = leaderBoid;
-    this.boidNumber = boidNumber;
+    this.boidType = boidType ??
+      (seededRandom.getRandomFloat(0, 1) < 0.8 ? "Good" : "Bad");
 
-    if (this.mainBoid == true) {
-      this.boidType = "Leader";
+    if (this.boidType === "Obstacle") {
+      this.physicsBody2D!.velocity = new Vec2(0, 0);
     } else {
-      if (seededRandom.getRandomFloat(0, 1) < 0.8) {
-        this.boidType = "Good";
-      } else {
-        this.boidType = "Bad";
-      }
+      this.physicsBody2D!.velocity = this.initVelocity();
     }
-
-    this.physicsBody2D!.velocity = this.initVelocity();
 
     // Create a graphics object for the boid
     this.graphic = null;
@@ -60,7 +57,7 @@ export class Boid extends GameObject {
     this.physicsBody2D!.position.y = spawnY;
 
     // Leader is disabled to start
-    if (this.mainBoid == true) {
+    if (this.boidType === "Leader") {
       this.disable();
     } else {
       this.enable();
@@ -73,27 +70,21 @@ export class Boid extends GameObject {
     this.updateBoidScale();
 
     // Init the graphics
-    let boidAnimName = "";
-    if (this.boidType == "Good") {
-      boidAnimName = "Good Boid Anim";
-    } else if (this.boidType == "Bad") {
-      boidAnimName = "Bad Boid Anim";
-    } else {
-      boidAnimName = "Leader Boid Anim";
-    }
+    const spriteName = `${this.boidType} Boid Anim`;
 
     this.graphic = this.scene!.add.sprite(
       0,
       0,
-      boidAnimName
+      spriteName,
     ) as Phaser.GameObjects.Sprite;
     this.graphic.setOrigin(0.5, 0.5);
+    this.updateBoidScale();
 
     // Define an animation for the sprite
     if ("anims" in this.graphic) {
       this.graphic.anims.create({
         key: "boidAnimation",
-        frames: this.graphic.anims.generateFrameNumbers(boidAnimName, {
+        frames: this.graphic.anims.generateFrameNumbers(spriteName, {
           start: 0,
           end: -1,
         }), // -1 to use all frames
@@ -104,33 +95,104 @@ export class Boid extends GameObject {
     }
   }
 
-  handlePointerDown = (pointer: Phaser.Input.Pointer) => {
-    this.physicsBody2D!.position.x = pointer.worldX;
-    this.physicsBody2D!.position.y = pointer.worldY;
-  };
+  isPointInHitbox(worldX: number, worldY: number): boolean {
+    const obstacleX = this.physicsBody2D!.position.x;
+    const obstacleY = this.physicsBody2D!.position.y;
+    const halfWidth = this.rigidBody2D!.hitboxSize.x / 2;
+    const halfHeight = this.rigidBody2D!.hitboxSize.y / 2;
+
+    return (
+      worldX >= obstacleX - halfWidth &&
+      worldX <= obstacleX + halfWidth &&
+      worldY >= obstacleY - halfHeight &&
+      worldY <= obstacleY + halfHeight
+    );
+  }
+
+  startDragging(pointer: Phaser.Input.Pointer) {
+    this.isDragging = true;
+    const obstacleX = this.physicsBody2D!.position.x;
+    const obstacleY = this.physicsBody2D!.position.y;
+    this.dragOffsetX = pointer.worldX - obstacleX;
+    this.dragOffsetY = pointer.worldY - obstacleY;
+    this.scene!.setDraggingObstacle(this);
+
+    // Hide the leader boid when dragging obstacle
+    const leaderBoid = this.scene!.boids.find((b) => b.boidType === "Leader");
+    if (leaderBoid) {
+      leaderBoid.disable();
+    }
+  }
+
+  updateDragPosition(pointer: Phaser.Input.Pointer) {
+    if (!this.isDragging) return;
+
+    const newX = pointer.worldX - this.dragOffsetX;
+    const newY = pointer.worldY - this.dragOffsetY;
+
+    // Lock position within screen bounds + object width
+    const halfWidth = this.rigidBody2D!.hitboxSize.x / 2;
+    const halfHeight = this.rigidBody2D!.hitboxSize.y / 2;
+
+    const clampedX = Math.max(
+      halfWidth,
+      Math.min(newX, this.scene!.screenInfo.width - halfWidth),
+    );
+    const clampedY = Math.max(
+      halfHeight,
+      Math.min(newY, this.scene!.screenInfo.height - halfHeight),
+    );
+
+    this.physicsBody2D!.position.x = clampedX;
+    this.physicsBody2D!.position.y = clampedY;
+  }
+
+  stopDragging() {
+    if (this.isDragging) {
+      this.isDragging = false;
+      this.scene!.setDraggingObstacle(null);
+    }
+  }
 
   handlePointerMove = (pointer: Phaser.Input.Pointer) => {
-    this.physicsBody2D!.position.x = pointer.worldX;
-    this.physicsBody2D!.position.y = pointer.worldY;
+    if (this.boidType === "Leader") {
+      if (!this.scene!.isInteracting) {
+        return;
+      }
+      this.physicsBody2D!.position.x = pointer.worldX;
+      this.physicsBody2D!.position.y = pointer.worldY;
+      return;
+    }
   };
 
   handlePointerHoldClick = () => {
     const settings = settingsStore.getSnapshot();
 
-    if (settings.leaderBoidEnabled == true && this.scene!.uiMenuOpen == false) {
+    // Only enable leader if leaderStrength is not 0, menu is closed, and no obstacle is being dragged
+    if (
+      settings.leaderStrength !== 0 &&
+      this.scene!.uiMenuOpen == false &&
+      !this.scene!.isDraggingObstacle()
+    ) {
       this.enable();
+
+      // Snap leader to current mouse position immediately
+      const pointer = this.scene!.input.activePointer;
+      if (pointer) {
+        this.physicsBody2D!.position.x = pointer.worldX;
+        this.physicsBody2D!.position.y = pointer.worldY;
+      }
     }
   };
 
   subscribeToEvents() {
-    if (this.mainBoid) {
-      this.scene!.input.on("pointerdown", this.handlePointerDown, this);
+    if (this.boidType === "Leader") {
       this.scene!.input.on("pointermove", this.handlePointerMove, this);
 
       document.addEventListener(
         "pointerholdclick",
         this.handlePointerHoldClick,
-        { capture: true }
+        { capture: true },
       );
 
       document.addEventListener("pointerup", this.handleDisable, {
@@ -143,14 +205,13 @@ export class Boid extends GameObject {
   }
 
   unsubscribeFromEvents() {
-    if (this.mainBoid) {
-      this.scene!.input.off("pointerdown", this.handlePointerDown, this);
+    if (this.boidType === "Leader") {
       this.scene!.input.off("pointermove", this.handlePointerMove, this);
 
       document.removeEventListener(
         "pointerholdclick",
         this.handlePointerHoldClick,
-        { capture: true }
+        { capture: true },
       );
 
       document.removeEventListener("pointerup", this.handleDisable, {
@@ -167,15 +228,20 @@ export class Boid extends GameObject {
   };
 
   calculateBoidScale(): Vec2 {
-    // Calculate the boid scale based on the screen width
+    // Calculate the boid scale based on the screen height
     let boidScale = (this.scene!.screenInfo.height * 0.15) / 200;
 
-    // Phone screen has larger boids
+    // Phone screen has smaller boids
     if (
       this.scene!.screenInfo.width <= 600 ||
       this.scene!.screenInfo.isPortrait
     ) {
       boidScale = (this.scene!.screenInfo.height * 0.08) / 200;
+    }
+
+    // Obstacle boids should be larger
+    if (this.boidType === "Obstacle") {
+      boidScale *= 1.5;
     }
 
     return new Vec2(boidScale, boidScale);
@@ -184,7 +250,7 @@ export class Boid extends GameObject {
   handleWindowResize(newX: number, newY: number) {
     if (newX == null || newY == null) {
       console.warn(
-        "obj.handleWindowResize: newX or newY is null. Skipping resize handling."
+        "obj.handleWindowResize: newX or newY is null. Skipping resize handling.",
       );
       return;
     }
@@ -200,7 +266,7 @@ export class Boid extends GameObject {
     // Set velocity in a random direction
     let velocityDesired = new Vec2(
       seededRandom.getRandomFloat(0.1, 1),
-      seededRandom.getRandomFloat(0.1, 1)
+      seededRandom.getRandomFloat(0.1, 1),
     );
 
     velocityDesired = this.clampVelocity(velocityDesired);
@@ -212,20 +278,12 @@ export class Boid extends GameObject {
 
     if (this.graphic) {
       this.rigidBody2D!.hitboxSize = new Vec2(
-        // Visible portion of the graphic is about 33% of the total graphic size
-        this.graphic!.displayWidth * 0.33,
-        this.graphic!.displayHeight * 0.33
+        // Use x% of the graphic size for hitbox
+        this.graphic.width * this.scale.x * 0.55,
+        this.graphic.height * this.scale.y * 0.55,
       );
     }
   }
-
-  handleUpdateBoidSpeed = () => {
-    // Update's boid speed (mostly used so that when the "speed" value is changed by the slider, each boid can adjust their velocity to be
-    // capped at the new speed)
-    this.physicsBody2D!.velocity = this.clampVelocity(
-      this.physicsBody2D!.velocity
-    );
-  };
 
   clampVelocity(velocityDesired: Vec2): Vec2 {
     const settings = settingsStore.getSnapshot();
@@ -246,20 +304,20 @@ export class Boid extends GameObject {
 
   // Physics for boid
   handlePhysics(boids: Boid[]) {
-    // Skip physics calculation if the boid is disabled
-    if (this.disabled) {
+    // Skip physics calculation if the boid is disabled or is an obstacle
+    if (this.disabled || this.boidType === "Obstacle") {
       return;
     }
 
-    if (!this.mainBoid) {
+    if (this.boidType !== "Leader") {
       // Boid Behavior
       const desiredVelocity = this.handleBoidFlocking(boids);
 
-      // Handle collisions
+      // Handle collisions with screen edges
       this.rigidBody2D!.checkCollideScreenEdge(
         this.scene!.screenInfo.width,
         this.scene!.screenInfo.height,
-        0
+        0,
       );
 
       // Lerp toward desired velocity
@@ -267,22 +325,137 @@ export class Boid extends GameObject {
       this.physicsBody2D!.velocity.x = MoreMath.lerp(
         this.physicsBody2D!.velocity.x,
         desiredVelocity.x,
-        lerpFactor
+        lerpFactor,
       );
       this.physicsBody2D!.velocity.y = MoreMath.lerp(
         this.physicsBody2D!.velocity.y,
         desiredVelocity.y,
-        lerpFactor
+        lerpFactor,
       );
 
       // We can lerp, but never exceed speed limits
       this.physicsBody2D!.velocity = this.clampVelocity(
-        this.physicsBody2D!.velocity
+        this.physicsBody2D!.velocity,
       );
 
-      // Position update
-      this.physicsBody2D!.updatePosition();
+      if (settingsStore.getSnapshot().collisionsEnabled) {
+        this.moveWithObstacleCollisions(boids);
+      } else {
+        this.physicsBody2D!.updatePosition();
+      }
     }
+  }
+
+  moveWithObstacleCollisions(boids: Boid[]) {
+    const body = this.physicsBody2D!;
+    const obstacles = boids.filter((boid) => boid.boidType === "Obstacle" && !boid.disabled);
+
+    const overlapsObstacle = (x: number, y: number) =>
+      obstacles.some((obstacle) => {
+        const position = obstacle.physicsBody2D!.position;
+        const halfWidth =
+          (this.rigidBody2D!.hitboxSize.x +
+            obstacle.rigidBody2D!.hitboxSize.x) /
+          2;
+        const halfHeight =
+          (this.rigidBody2D!.hitboxSize.y +
+            obstacle.rigidBody2D!.hitboxSize.y) /
+          2;
+        return (
+          Math.abs(x - position.x) < halfWidth &&
+          Math.abs(y - position.y) < halfHeight
+        );
+      });
+
+    // Find the closest free edge when dragged or overlapping obstacles cover a boid.
+    if (overlapsObstacle(body.position.x, body.position.y)) {
+      let bestDistance = Infinity;
+      let bestX = body.position.x;
+      let bestY = body.position.y;
+      for (const obstacle of obstacles) {
+        const position = obstacle.physicsBody2D!.position;
+        const halfWidth =
+          (this.rigidBody2D!.hitboxSize.x +
+            obstacle.rigidBody2D!.hitboxSize.x) /
+          2;
+        const halfHeight =
+          (this.rigidBody2D!.hitboxSize.y +
+            obstacle.rigidBody2D!.hitboxSize.y) /
+          2;
+        for (const x of [position.x - halfWidth, position.x + halfWidth]) {
+          const distance = Math.abs(x - body.position.x);
+          if (
+            distance < bestDistance &&
+            !overlapsObstacle(x, body.position.y)
+          ) {
+            bestDistance = distance;
+            bestX = x;
+            bestY = body.position.y;
+          }
+        }
+        for (const y of [position.y - halfHeight, position.y + halfHeight]) {
+          const distance = Math.abs(y - body.position.y);
+          if (
+            distance < bestDistance &&
+            !overlapsObstacle(body.position.x, y)
+          ) {
+            bestDistance = distance;
+            bestX = body.position.x;
+            bestY = y;
+          }
+        }
+      }
+      if (bestX !== body.position.x) {
+        body.velocity.x =
+          Math.sign(bestX - body.position.x) * Math.abs(body.velocity.x);
+      } else {
+        body.velocity.y =
+          Math.sign(bestY - body.position.y) * Math.abs(body.velocity.y);
+      }
+      body.position.x = bestX;
+      body.position.y = bestY;
+    }
+
+    // Sweep the boid's center against obstacles expanded by the boid's half-size.
+    const moveX = body.velocity.x * Physics.physicsUpdateInterval;
+    const moveY = body.velocity.y * Physics.physicsUpdateInterval;
+    let firstHit = 1;
+    let hitAxis: "x" | "y" | null = null;
+    for (const obstacle of obstacles) {
+      const position = obstacle.physicsBody2D!.position;
+      const halfWidth =
+        (this.rigidBody2D!.hitboxSize.x + obstacle.rigidBody2D!.hitboxSize.x) /
+        2;
+      const halfHeight =
+        (this.rigidBody2D!.hitboxSize.y + obstacle.rigidBody2D!.hitboxSize.y) /
+        2;
+      const minX = position.x - halfWidth;
+      const maxX = position.x + halfWidth;
+      const minY = position.y - halfHeight;
+      const maxY = position.y + halfHeight;
+      if (
+        (moveX === 0 && (body.position.x <= minX || body.position.x >= maxX)) ||
+        (moveY === 0 && (body.position.y <= minY || body.position.y >= maxY))
+      ) {
+        continue;
+      }
+      const x1 = moveX === 0 ? -Infinity : (minX - body.position.x) / moveX;
+      const x2 = moveX === 0 ? Infinity : (maxX - body.position.x) / moveX;
+      const y1 = moveY === 0 ? -Infinity : (minY - body.position.y) / moveY;
+      const y2 = moveY === 0 ? Infinity : (maxY - body.position.y) / moveY;
+      const entryX = Math.min(x1, x2);
+      const entryY = Math.min(y1, y2);
+      const entry = Math.max(entryX, entryY);
+      const exit = Math.min(Math.max(x1, x2), Math.max(y1, y2));
+      if (entry >= 0 && entry < firstHit && entry < exit) {
+        firstHit = entry;
+        hitAxis = entryX > entryY ? "x" : "y";
+      }
+    }
+    body.position.x += moveX * firstHit;
+    body.position.y += moveY * firstHit;
+    if (hitAxis === "x") body.velocity.x *= -1;
+    if (hitAxis === "y") body.velocity.y *= -1;
   }
 
   handleBoidFlocking(boids: Boid[]): Vec2 {
@@ -293,11 +466,14 @@ export class Boid extends GameObject {
     let positionSum = new Vec2(0, 0);
     let separation = new Vec2(0, 0); // how far apart all boids are on avg (try to stay a certain distance apart)
     let opposingPositionSum = new Vec2(0, 0); // avg pos of opposing neighbors
+    let obstacleRepulsion = new Vec2(0, 0); // repulsion from obstacles
     let similarNeighborsCount = 0;
     let opposingNeighborsCount = 0;
 
     let followLeader = false;
     let leaderPos = new Vec2(0, 0);
+
+    const obstacleRepulsionRadius = 150; // Distance at which obstacles start repelling boids
 
     // Loop through all other boids in the scene
     for (const otherBoid of boids) {
@@ -308,8 +484,35 @@ export class Boid extends GameObject {
         const dy = distObj.dy;
         const distanceSquared = distObj.distanceSquared;
 
+        // Handle obstacle repulsion
+        if (otherBoid.boidType === "Obstacle") {
+          if (
+            distanceSquared <
+            obstacleRepulsionRadius * obstacleRepulsionRadius
+          ) {
+            const distance = Math.sqrt(distanceSquared);
+            if (distance > 0) {
+              // Create repulsion force away from the obstacle
+              const repulsionStrength = 1 - distance / obstacleRepulsionRadius;
+              obstacleRepulsion = Vec2.add(
+                obstacleRepulsion,
+                Vec2.scale(
+                  Vec2.normalize(
+                    Vec2.subtract(
+                      this.physicsBody2D!.position,
+                      otherBoid.physicsBody2D!.position,
+                    ),
+                  ),
+                  repulsionStrength * 2,
+                ),
+              );
+            }
+          }
+          continue; // Skip other logic for obstacles
+        }
+
         // If otherBoid is the main boid and the player is interacting (aka pointer is down), have this boid follow the leader if within leader follow radius!
-        if (otherBoid.mainBoid == true && this.scene!.isInteracting) {
+        if (otherBoid.boidType === "Leader" && this.scene!.isInteracting) {
           if (
             distanceSquared <
             BoidConstants.leaderFollowRadius * BoidConstants.leaderFollowRadius
@@ -317,7 +520,7 @@ export class Boid extends GameObject {
             followLeader = true;
             leaderPos = new Vec2(
               otherBoid.physicsBody2D!.position.x,
-              otherBoid.physicsBody2D!.position.y
+              otherBoid.physicsBody2D!.position.y,
             );
           }
         }
@@ -339,8 +542,8 @@ export class Boid extends GameObject {
                 positionSum,
                 new Vec2(
                   otherBoid.physicsBody2D!.position.x,
-                  otherBoid.physicsBody2D!.position.y
-                )
+                  otherBoid.physicsBody2D!.position.y,
+                ),
               );
 
               // If any boids are within the protected radius of a boid, steer away from them
@@ -348,7 +551,7 @@ export class Boid extends GameObject {
                 // By doing 0 - distance, this allows us to have this boid move away from other boid
                 separation = Vec2.add(
                   separation,
-                  Vec2.subtract(new Vec2(0, 0), new Vec2(dx, dy))
+                  Vec2.subtract(new Vec2(0, 0), new Vec2(dx, dy)),
                 );
               }
             }
@@ -367,8 +570,8 @@ export class Boid extends GameObject {
               opposingPositionSum,
               new Vec2(
                 otherBoid.physicsBody2D!.position.x,
-                otherBoid.physicsBody2D!.position.y
-              )
+                otherBoid.physicsBody2D!.position.y,
+              ),
             );
           }
         }
@@ -386,7 +589,7 @@ export class Boid extends GameObject {
       let avgVeloc = new Vec2(0, 0);
       avgVeloc = new Vec2(
         velocSum.x / similarNeighborsCount,
-        velocSum.y / similarNeighborsCount
+        velocSum.y / similarNeighborsCount,
       );
       desiredVelocity.x +=
         (avgVeloc.x - this.physicsBody2D!.velocity.x) *
@@ -399,12 +602,12 @@ export class Boid extends GameObject {
       let avgPos = new Vec2(0, 0);
       avgPos = new Vec2(
         positionSum.x / similarNeighborsCount,
-        positionSum.y / similarNeighborsCount
+        positionSum.y / similarNeighborsCount,
       );
 
       const directionObj = this.getMovementDirectionVectorThroughTorus(
         this.physicsBody2D!.position,
-        avgPos
+        avgPos,
       );
       desiredVelocity.x +=
         Math.abs(avgPos.x - this.physicsBody2D!.position.x) *
@@ -422,19 +625,26 @@ export class Boid extends GameObject {
 
     // Follow the leader if told to do so!
     if (followLeader) {
-      // Follow Leader
+      // Follow Leader (positive = attract, negative = repel)
       const directionObj = this.getMovementDirectionVectorThroughTorus(
         this.physicsBody2D!.position,
-        leaderPos
+        leaderPos,
       );
+      const leaderFollowStrength =
+        (Math.abs(settings.leaderStrength) / 100) *
+        BoidConstants.leaderFollowFactor;
+      const directionMultiplier = settings.leaderStrength < 0 ? -1 : 1;
+
       desiredVelocity.x +=
         Math.abs(leaderPos.x - this.physicsBody2D!.position.x) *
         directionObj.directionX *
-        BoidConstants.leaderFollowFactor;
+        leaderFollowStrength *
+        directionMultiplier;
       desiredVelocity.y +=
         Math.abs(leaderPos.y - this.physicsBody2D!.position.y) *
         directionObj.directionY *
-        BoidConstants.leaderFollowFactor;
+        leaderFollowStrength *
+        directionMultiplier;
     }
 
     // Perform opposing boid velocity updates
@@ -443,12 +653,12 @@ export class Boid extends GameObject {
       let opposingAvgPos = new Vec2(0, 0);
       opposingAvgPos = new Vec2(
         opposingPositionSum.x / opposingNeighborsCount,
-        opposingPositionSum.y / opposingNeighborsCount
+        opposingPositionSum.y / opposingNeighborsCount,
       );
 
       const directionObj = this.getMovementDirectionVectorThroughTorus(
         this.physicsBody2D!.position,
-        opposingAvgPos
+        opposingAvgPos,
       );
 
       // Bad boid chases
@@ -475,6 +685,12 @@ export class Boid extends GameObject {
           directionObj.directionY *
           BoidConstants.predatorPreyFactor;
       }
+    }
+
+    // Apply obstacle repulsion
+    if (obstacleRepulsion.x !== 0 || obstacleRepulsion.y !== 0) {
+      desiredVelocity.x += obstacleRepulsion.x;
+      desiredVelocity.y += obstacleRepulsion.y;
     }
 
     // Cleanup veloc so we dont exceed speed limit
@@ -528,7 +744,7 @@ export class Boid extends GameObject {
 
   getMovementDirectionVectorThroughTorus(
     positionA: Vec2,
-    positionB: Vec2
+    positionB: Vec2,
   ): { directionX: number; directionY: number } {
     // Get the movement direction vector to go from point a to point b
     // taking into account the fact that boids live on a torus, so sometimes

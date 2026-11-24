@@ -5,3 +5,19 @@ body.better-boids-game-background {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+#boids-settings-scroll {
+  --settings-header-height: 0px;
+  --settings-mask-left: 0px;
+  --settings-mask-width: 100%;
+  --settings-mask-right: 0px;
+  /* Mask only the controls' content area, leaving the scrollbar unmasked. */
+  -webkit-mask-image: linear-gradient(black, black), linear-gradient(to bottom, transparent var(--settings-header-height), black var(--settings-header-height)), linear-gradient(black, black);
+  mask-image: linear-gradient(black, black), linear-gradient(to bottom, transparent var(--settings-header-height), black var(--settings-header-height)), linear-gradient(black, black);
+  -webkit-mask-size: var(--settings-mask-left) 100%, var(--settings-mask-width) 100%, var(--settings-mask-right) 100%;
+  mask-size: var(--settings-mask-left) 100%, var(--settings-mask-width) 100%, var(--settings-mask-right) 100%;
+  -webkit-mask-position: left top, var(--settings-mask-left) top, right top;
+  mask-position: left top, var(--settings-mask-left) top, right top;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}

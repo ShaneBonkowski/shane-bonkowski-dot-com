@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { usePointerHover } from "@/src/components/PointerInputProvider";
 
 interface GameIconButtonProps {
   onPointerDown: () => void;
@@ -29,15 +30,7 @@ const GameIconButton: React.FC<GameIconButtonProps> = ({
   title = undefined, // Optional tooltip text
   ariaPressed,
 }) => {
-  const [isHoverable, setIsHoverable] = useState(false);
-
-  useEffect(() => {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
-    // eslint-disable-next-line no-restricted-syntax
-    setIsHoverable(window.matchMedia("(hover: hover)").matches);
-  }, []);
+  const isHoverable = usePointerHover();
 
   // Conditionally build class names
   const lightModeClass = lightModeDark

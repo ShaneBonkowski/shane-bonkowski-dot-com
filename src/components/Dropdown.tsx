@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
+import { usePointerHover } from "@/src/components/PointerInputProvider";
 
 interface DropdownProps {
   options: { value: string; label: string }[];
@@ -19,16 +20,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  /* Only allow hover on hover-supported devices */
-  const [isHoverable, setIsHoverable] = useState(false);
-
-  useEffect(() => {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
-    // eslint-disable-next-line no-restricted-syntax
-    setIsHoverable(window.matchMedia("(hover: hover)").matches);
-  }, []);
+  const isHoverable = usePointerHover();
 
   // Close dropdown when clicking outside
   useEffect(() => {

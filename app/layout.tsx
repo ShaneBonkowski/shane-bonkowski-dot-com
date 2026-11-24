@@ -7,6 +7,7 @@ import Footer from "@/src/components/Footer";
 import CookieAgreement from "@/src/components/CookieAgreement";
 import GameZoomLock from "@/src/components/GameZoomLock";
 import PageVisitTracker from "@/src/components/PageVisitTracker";
+import PointerInputProvider from "@/src/components/PointerInputProvider";
 import Script from "next/script";
 import Head from "next/head";
 
@@ -44,7 +45,7 @@ export default function RootLayout({
 }) {
   return (
     // Add the dark class to the html so we can toggle light and dark mode
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" data-touch-input="">
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
@@ -115,17 +116,19 @@ export default function RootLayout({
                 `,
           }}
         />
-        <GameZoomLock />
-        <PageVisitTracker />
-        <Header />
-        <main
-          className="flex flex-col flex-grow relative"
-          id="website-main-content"
-        >
-          {children}
-        </main>
-        <CookieAgreement />
-        <Footer />
+        <PointerInputProvider>
+          <GameZoomLock />
+          <PageVisitTracker />
+          <Header />
+          <main
+            className="flex flex-col flex-grow relative"
+            id="website-main-content"
+          >
+            {children}
+          </main>
+          <CookieAgreement />
+          <Footer />
+        </PointerInputProvider>
       </body>
     </html>
   );

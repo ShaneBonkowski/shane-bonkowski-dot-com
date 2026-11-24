@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useEffect, useState } from "react";
+import { usePointerHover } from "@/src/components/PointerInputProvider";
 
 interface YesNoBoxProps {
   yesButtonText: string;
@@ -24,16 +24,7 @@ const YesNoBox: React.FC<YesNoBoxProps> = ({
   gameOnly = false,
   children,
 }) => {
-  /* Only allow hover on hover-supported devices */
-  const [isHoverable, setIsHoverable] = useState(false);
-
-  useEffect(() => {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
-    // eslint-disable-next-line no-restricted-syntax
-    setIsHoverable(window.matchMedia("(hover: hover)").matches);
-  }, []);
+  const isHoverable = usePointerHover();
 
   return (
     <div

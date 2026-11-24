@@ -5,11 +5,11 @@ import Image from "next/image";
 import { FaHome, FaGithub, FaInfoCircle, FaMoon, FaSun } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import useIsGamesPath from "@/src/hooks/useIsGamesPath";
+import { usePointerHover } from "@/src/components/PointerInputProvider";
 
 const Header: React.FC = () => {
-  /* Only allow hover on hover-supported devices */
   const isGamesPath = useIsGamesPath();
-  const [isHoverable, setIsHoverable] = useState(false);
+  const isHoverable = usePointerHover();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
 
@@ -20,7 +20,6 @@ const Header: React.FC = () => {
     if (typeof window === "undefined") return;
 
     /* eslint-disable no-restricted-syntax */
-    setIsHoverable(window.matchMedia("(hover: hover)").matches);
     const theme = localStorage.getItem("theme");
     /* eslint-enable no-restricted-syntax */
 
