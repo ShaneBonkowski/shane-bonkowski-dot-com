@@ -18,12 +18,12 @@ function getMinBoidDistance(boid1Size: number): number {
 function isTooCloseToOtherBoid(
   position: Vec2,
   boidSize: number,
-  otherBoids: Array<{ position: Vec2 }>
+  otherBoids: Boid[]
 ): boolean {
   for (const other of otherBoids) {
     const minDist = getMinBoidDistance(boidSize);
-    const dx = position.x - other.position.x;
-    const dy = position.y - other.position.y;
+    const dx = position.x - other.physicsBody2D!.position.x;
+    const dy = position.y - other.physicsBody2D!.position.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance < minDist) {
       return true;
@@ -68,20 +68,12 @@ export function instantiateBoids(
 ): Boid[] {
   const settings = settingsStore.getSnapshot();
   const boids: Boid[] = [];
-  const tempBoids: Array<{ position: Vec2 }> = [];
 
   // Spawn in the main boid (leader) at the middle of the screen, it will follow pointer
   const spawnX = scene.screenInfo.width / 2;
   const spawnY = scene.screenInfo.height / 2;
   const mainBoid = new Boid(scene, spawnX, spawnY, "Leader");
   boids.push(mainBoid);
-
-  tempBoids.push({
-    position: new Vec2(
-      mainBoid.physicsBody2D!.position.x,
-      mainBoid.physicsBody2D!.position.y
-    ),
-  });
 
   // Spawn good and bad boids
   for (const { type, count } of [
@@ -100,11 +92,8 @@ export function instantiateBoids(
         const tempBoid = new Boid(scene, randomX, randomY, type);
         const boidSize = tempBoid.rigidBody2D!.hitboxSize.x;
 
-        if (!isTooCloseToOtherBoid(testPosition, boidSize, tempBoids) || attempt === MIN_BOID_SPAWN_ATTEMPTS - 1) {
+        if (!isTooCloseToOtherBoid(testPosition, boidSize, boids) || attempt === MIN_BOID_SPAWN_ATTEMPTS - 1) {
           // Keep the last candidate if there is no uncrowded position.
-          tempBoids.push({
-            position: testPosition,
-          });
           boids.push(tempBoid);
           break;
         } else {
