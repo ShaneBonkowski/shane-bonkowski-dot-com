@@ -8,6 +8,7 @@ interface GameUiWindowProps {
   onClose: (() => void) | null;
   overrideBgColor?: string;
   overrideTextColor?: string;
+  scrollable?: boolean;
   children: React.ReactNode;
 }
 
@@ -16,12 +17,13 @@ const GameUiWindow: React.FC<GameUiWindowProps> = ({
   onClose,
   overrideBgColor,
   overrideTextColor,
+  scrollable = true,
   children,
 }) => {
   return (
     <div
       className={`
-        app-mode game-ui-window z-30 overflow-y-auto p-4 fixed h-[var(--app-vh)] w-full ${
+        app-mode game-ui-window z-30 ${scrollable ? "overflow-y-auto" : "overflow-hidden"} p-4 fixed h-[var(--app-vh)] w-full ${
           isVisible ? "" : "hidden"
         }
         ${

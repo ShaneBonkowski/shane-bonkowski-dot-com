@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import { ComicDataProps, ContentBoxProps } from "@/src/types/content-props";
 import { comicData } from "@/src/data/comic-data";
+import { usePointerHover } from "@/src/components/PointerInputProvider";
 import {
   getComicSeenStorageKey,
   getPageSeenStorageKey,
@@ -68,9 +69,8 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   openInNewTab,
   childDataKey,
 }) => {
-  /* Only allow hover on hover-supported devices */
   const [isHovered, setIsHovered] = useState(false);
-  const [isHoverable, setIsHoverable] = useState(false);
+  const isHoverable = usePointerHover();
   const [hasSeen, setHasSeen] = useState<boolean | null>(null);
 
   const newestComic =
@@ -80,14 +80,6 @@ const ContentBox: React.FC<ContentBoxProps> = ({
   const seenStorageKey = newestComic
     ? getComicSeenStorageKey(linkUrl, newestComic.comicNum)
     : getPageSeenStorageKey(linkUrl);
-
-  useEffect(() => {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
-    // eslint-disable-next-line no-restricted-syntax
-    setIsHoverable(window.matchMedia("(hover: hover)").matches);
-  }, []);
 
   useEffect(() => {
     const updateSeenStatus = () => setHasSeen(hasSeenContent(seenStorageKey));
@@ -146,8 +138,11 @@ const ContentBox: React.FC<ContentBoxProps> = ({
             className={`w-full h-full object-cover transform transition-transform duration-0 ${
               isHoverable && isHovered ? "scale-105" : "scale-100"
             } cursor-pointer`}
-            onPointerEnter={() => isHoverable && setIsHovered(true)}
-            onPointerLeave={() => isHoverable && setIsHovered(false)}
+            onPointerEnter={(event) => setIsHovered(event.pointerType !== "touch")}
+            onPointerMove={(event) => {
+              if (event.pointerType !== "touch") setIsHovered(true);
+            }}
+            onPointerLeave={() => setIsHovered(false)}
           />
         </Link>
 
@@ -175,8 +170,11 @@ const ContentBox: React.FC<ContentBoxProps> = ({
             target={openInNewTab ? "_blank" : "_self"}
             rel="noopener noreferrer"
             className="link"
-            onPointerEnter={() => isHoverable && setIsHovered(true)}
-            onPointerLeave={() => isHoverable && setIsHovered(false)}
+            onPointerEnter={(event) => setIsHovered(event.pointerType !== "touch")}
+            onPointerMove={(event) => {
+              if (event.pointerType !== "touch") setIsHovered(true);
+            }}
+            onPointerLeave={() => setIsHovered(false)}
             aria-labelledby={`content-box-title-${title
               .replace(/\s+/g, "-")
               .toLowerCase()}`}

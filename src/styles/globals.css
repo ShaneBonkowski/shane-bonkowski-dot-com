@@ -404,14 +404,11 @@ body,
     text-decoration-color: currentColor;
   }
 
-  /* Only allow hover on hover-supported devices */
-  @media (hover: hover) {
-    a:hover,
-    .link:hover {
-      text-decoration: underline;
-      cursor: pointer;
-      text-decoration-color: currentColor;
-    }
+  :where(html:not([data-touch-input])) a:hover,
+  :where(html:not([data-touch-input])) .link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    text-decoration-color: currentColor;
   }
 
   h1 {
@@ -540,11 +537,8 @@ body,
     @apply flex items-center space-x-4 transition-transform duration-0 active:scale-105;
   }
 
-  /* Only allow hover on hover-supported devices */
-  @media (hover: hover) {
-    .shanes-games-logo:hover {
-      @apply hover:scale-105;
-    }
+  :where(html:not([data-touch-input])) .shanes-games-logo:hover {
+    @apply scale-105;
   }
 
   .written-content-container {

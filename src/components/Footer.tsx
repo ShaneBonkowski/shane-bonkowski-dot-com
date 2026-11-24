@@ -3,23 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import { FaHome, FaGithub, FaLinkedin } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useIsGamesPath from "@/src/hooks/useIsGamesPath";
+import { usePointerHover } from "@/src/components/PointerInputProvider";
 
 const Footer: React.FC = () => {
   const isGamesPath = useIsGamesPath();
 
-  /* Only allow hover on hover-supported devices */
   const [isHovered, setIsHovered] = useState(false);
-  const [isHoverable, setIsHoverable] = useState(false);
-
-  useEffect(() => {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
-    // eslint-disable-next-line no-restricted-syntax
-    setIsHoverable(window.matchMedia("(hover: hover)").matches);
-  }, []);
+  const isHoverable = usePointerHover();
 
   return (
     !isGamesPath && (
@@ -101,8 +93,11 @@ const Footer: React.FC = () => {
               ? "underline decoration-inherit"
               : "no-underline"
           } active:underline active:decoration-inherit`}
-          onPointerEnter={() => isHoverable && setIsHovered(true)}
-          onPointerLeave={() => isHoverable && setIsHovered(false)}
+          onPointerEnter={(event) => setIsHovered(event.pointerType !== "touch")}
+          onPointerMove={(event) => {
+            if (event.pointerType !== "touch") setIsHovered(true);
+          }}
+          onPointerLeave={() => setIsHovered(false)}
           aria-label="Privacy Policy"
           title="Privacy Policy"
         >

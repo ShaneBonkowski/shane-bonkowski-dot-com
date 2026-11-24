@@ -1,12 +1,19 @@
 import { SyncedStore } from "@/src/utils/synced-store";
 
+export const MAX_BOIDS_PER_TYPE = 25;
+
 export interface Settings {
   alignmentFactor: number;
   cohesionFactor: number;
   separationFactor: number;
   speed: number;
   flockSearchRadius: number;
-  leaderBoidEnabled: boolean;
+  leaderStrength: number;
+  collisionsEnabled: boolean;
+  showHitboxes: boolean;
+  goodBoidCount: number;
+  badBoidCount: number;
+  obstacleCount: number;
 }
 
 class SettingsStore extends SyncedStore<Settings> {
@@ -16,7 +23,12 @@ class SettingsStore extends SyncedStore<Settings> {
     separationFactor: 0.935,
     speed: 0.6,
     flockSearchRadius: 90,
-    leaderBoidEnabled: true,
+    leaderStrength: 50,
+    collisionsEnabled: true,
+    showHitboxes: false,
+    goodBoidCount: 15,
+    badBoidCount: 15,
+    obstacleCount: 10,
   };
 
   private data: Settings = { ...this.defaultData };
@@ -68,11 +80,42 @@ class SettingsStore extends SyncedStore<Settings> {
     return value;
   }
 
-  public setLeaderBoidEnabled(value: boolean): boolean {
-    this.data.leaderBoidEnabled = value;
+  public setLeaderStrength(value: number): number {
+    this.data.leaderStrength = Math.max(-100, Math.min(value, 100));
+    this.notify();
+
+    return this.data.leaderStrength;
+  }
+
+  public setCollisionsEnabled(value: boolean): boolean {
+    this.data.collisionsEnabled = value;
     this.notify();
 
     return value;
+  }
+
+  public setShowHitboxes(value: boolean): boolean {
+    this.data.showHitboxes = value;
+    this.notify();
+    return value;
+  }
+
+  public setGoodBoidCount(value: number): number {
+    this.data.goodBoidCount = Math.max(0, Math.min(value, MAX_BOIDS_PER_TYPE));
+    this.notify();
+    return this.data.goodBoidCount;
+  }
+
+  public setBadBoidCount(value: number): number {
+    this.data.badBoidCount = Math.max(0, Math.min(value, MAX_BOIDS_PER_TYPE));
+    this.notify();
+    return this.data.badBoidCount;
+  }
+
+  public setObstacleCount(value: number): number {
+    this.data.obstacleCount = Math.max(0, Math.min(value, MAX_BOIDS_PER_TYPE));
+    this.notify();
+    return this.data.obstacleCount;
   }
 
   public resetData() {

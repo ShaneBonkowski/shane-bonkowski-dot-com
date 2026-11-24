@@ -19,8 +19,14 @@ export const UseSettings = () => {
     setSpeed: settingsStore.setSpeed.bind(settingsStore),
     setFlockSearchRadius:
       settingsStore.setFlockSearchRadius.bind(settingsStore),
-    setLeaderBoidEnabled:
-      settingsStore.setLeaderBoidEnabled.bind(settingsStore),
+    setLeaderStrength:
+      settingsStore.setLeaderStrength.bind(settingsStore),
+    setCollisionsEnabled:
+      settingsStore.setCollisionsEnabled.bind(settingsStore),
+    setShowHitboxes: settingsStore.setShowHitboxes.bind(settingsStore),
+    setGoodBoidCount: settingsStore.setGoodBoidCount.bind(settingsStore),
+    setBadBoidCount: settingsStore.setBadBoidCount.bind(settingsStore),
+    setObstacleCount: settingsStore.setObstacleCount.bind(settingsStore),
     resetData: settingsStore.resetData.bind(settingsStore),
   };
 };

@@ -42,9 +42,8 @@ const GameComponent: React.FC = () => {
       }
 
       try {
-        const { MainGameScene } = await import(
-          "@/src/games/better-boids/scenes/main-game-scene"
-        );
+        const { MainGameScene } =
+          await import("@/src/games/better-boids/scenes/main-game-scene");
 
         const gameConfig: Phaser.Types.Core.GameConfig = {
           type: phaser.AUTO,
@@ -120,6 +119,27 @@ const GameComponent: React.FC = () => {
             display the beauty in the Boids algorithm, while expanding on it
             with novel concepts where applicable.
           </p>
+
+          <h2>Boid Types</h2>
+          <p>This simulation features four types of boids:</p>
+          <ul>
+            <li>
+              <b>Good Boids:</b> These boids flee from bad boids.
+            </li>
+            <li>
+              <b>Bad Boids:</b> These boids chase good boids.
+            </li>
+            <li>
+              <b>Obstacle Boids:</b> These boids act as static obstacles that
+              all other boids will avoid. You can click and drag to reposition
+              them on the canvas.
+            </li>
+            <li>
+              <b>Leader Boid:</b> This boid follows your mouse when you click
+              and hold on the game canvas. Its influence on good and bad boids
+              is determined by the leader strength setting.
+            </li>
+          </ul>
         </div>
       </GameInfoContainer>
       {/* Phaser Game Container */}

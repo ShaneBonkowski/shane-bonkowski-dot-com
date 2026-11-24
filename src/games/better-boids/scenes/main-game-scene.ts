@@ -17,6 +17,11 @@ let holdTimeout: NodeJS.Timeout | null = null;
 export class MainGameScene extends Generic2DGameScene {
   public boids: Boid[] = [];
   public isInteracting: boolean = false;
+  public draggingObstacle: Boid | null = null;
+  private dragPointer: Phaser.Input.Pointer | null = null;
+  private hitboxGraphics: Phaser.GameObjects.Graphics | null = null;
+  private lastSettingsSnapshot: any = null;
+  private settingsUnsubscribe: (() => void) | null = null;
 
   // eslint-disable-next-line no-restricted-syntax
   constructor() {
@@ -30,13 +35,6 @@ export class MainGameScene extends Generic2DGameScene {
 
   preload() {
     super.preload();
-
-    this.load.image("Bad Boid", "/webps/games/better-boids-bad-boid.webp");
-    this.load.image("Good Boid", "/webps/games/better-boids-good-boid.webp");
-    this.load.image(
-      "Leader Boid",
-      "/webps/games/better-boids-leader-boid.webp"
-    );
 
     this.load.spritesheet(
       "Bad Boid Anim",
@@ -53,12 +51,20 @@ export class MainGameScene extends Generic2DGameScene {
       "/webps/games/better-boids-leader-boid-anim-spritesheet.webp",
       { frameWidth: 200, frameHeight: 200 }
     );
+
+    // Load obstacle boid sprite
+    this.load.spritesheet(
+      "Obstacle Boid Anim",
+      "/webps/games/better-boids-obstacle-boid-anim-spritesheet.webp",
+      { frameWidth: 200, frameHeight: 200 }
+    );
   }
 
   create() {
     super.create();
 
-    this.boids = instantiateBoids(this, 40);
+    this.boids = instantiateBoids(this);
+    this.hitboxGraphics = this.add.graphics().setDepth(100);
 
     this.gameStarted = true;
     dispatchCloseLoadingScreenEvent("Better Boids");
@@ -69,6 +75,8 @@ export class MainGameScene extends Generic2DGameScene {
     super.update(time, delta);
 
     if (this.gameStarted) {
+      this.handleObstacleInteraction();
+
       // Physics update at a slower rate
       if (
         time - Physics.lastPhysicsUpdateTime >=
@@ -86,8 +94,66 @@ export class MainGameScene extends Generic2DGameScene {
       for (const boid of this.boids) {
         boid.updateGraphic();
       }
+
+      this.drawHitboxes();
     }
   }
+
+  private handleObstacleInteraction() {
+    const pointer = this.input.activePointer;
+    if (this.draggingObstacle && this.dragPointer) {
+      this.draggingObstacle.updateDragPosition(this.dragPointer);
+    }
+
+    const isHoveringObstacle = !this.uiMenuOpen && this.boids.some(
+      (boid) => boid.boidType === "Obstacle" && !boid.disabled &&
+        boid.isPointInHitbox(pointer.worldX, pointer.worldY)
+    );
+    this.game.canvas.style.cursor = this.draggingObstacle || isHoveringObstacle ? "pointer" : "default";
+  }
+
+  private handleObstaclePointerDown = (pointer: Phaser.Input.Pointer) => {
+    if (this.uiMenuOpen || this.draggingObstacle) return;
+    const obstacle = this.boids.find(
+      (boid) => boid.boidType === "Obstacle" && !boid.disabled &&
+        boid.isPointInHitbox(pointer.worldX, pointer.worldY)
+    );
+    if (obstacle) {
+      this.dragPointer = pointer;
+      obstacle.startDragging(pointer);
+    }
+  };
+
+  private handleObstaclePointerMove = (pointer: Phaser.Input.Pointer) => {
+    if (pointer === this.dragPointer && this.draggingObstacle) {
+      this.draggingObstacle.updateDragPosition(pointer);
+    }
+  };
+
+  private drawHitboxes() {
+    const graphics = this.hitboxGraphics;
+    if (!graphics) return;
+    graphics.clear();
+    if (!settingsStore.getSnapshot().showHitboxes) return;
+    graphics.lineStyle(2, 0xff0000);
+    for (const boid of this.boids) {
+      if (boid.disabled) continue;
+      const position = boid.physicsBody2D!.position;
+      const size = boid.rigidBody2D!.hitboxSize;
+      graphics.strokeRect(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y);
+    }
+  }
+
+  private handlePointerUp = () => {
+    if (this.draggingObstacle) {
+      this.draggingObstacle.stopDragging();
+    }
+    this.dragPointer = null;
+  };
+
+  private handleRefreshLayout = () => {
+    this.regenerateBoids();
+  };
 
   /*
    * Note that this function is called in the create() method for GameScene2D,
@@ -95,6 +161,12 @@ export class MainGameScene extends Generic2DGameScene {
    */
   subscribeToEvents() {
     super.subscribeToEvents();
+
+    // Subscribe to settings changes to regenerate boids
+    this.lastSettingsSnapshot = settingsStore.getSnapshot();
+    this.settingsUnsubscribe = settingsStore.subscribe(() => {
+      this.handleSettingsChange();
+    });
 
     // Subscribe to events for this scene
     document.addEventListener(
@@ -118,6 +190,19 @@ export class MainGameScene extends Generic2DGameScene {
     document.addEventListener("pointerdown", this.handleProlongedHoldCheck, {
       capture: true,
     });
+
+    // Handle obstacle dragging
+    document.addEventListener("pointerup", this.handlePointerUp, {
+      capture: true,
+    });
+    document.addEventListener("pointercancel", this.handlePointerUp, {
+      capture: true,
+    });
+    this.input.on("pointerdown", this.handleObstaclePointerDown);
+    this.input.on("pointermove", this.handleObstaclePointerMove);
+
+    // Handle refresh layout
+    document.addEventListener("refreshGameLayout", this.handleRefreshLayout as EventListener);
   }
 
   /*
@@ -127,18 +212,29 @@ export class MainGameScene extends Generic2DGameScene {
   unsubscribeFromEvents() {
     super.unsubscribeFromEvents();
 
+    // Unsubscribe from settings changes
+    if (this.settingsUnsubscribe) {
+      this.settingsUnsubscribe();
+    }
+
     // Unsubscribe from events for this scene
     document.removeEventListener(
       "screenEdgeCollision",
       this.handleScreenEdgeCollision as EventListener
     );
-    document.removeEventListener("pointerdown", this.handleIsInteracting);
-    document.removeEventListener("pointerup", this.handleIsNotInteracting);
-    document.removeEventListener("pointercancel", this.handleIsNotInteracting);
-    document.removeEventListener("pointerdown", this.handleProlongedHoldCheck);
+    document.removeEventListener("pointerdown", this.handleIsInteracting, true);
+    document.removeEventListener("pointerup", this.handleIsNotInteracting, true);
+    document.removeEventListener("pointercancel", this.handleIsNotInteracting, true);
+    document.removeEventListener("pointerdown", this.handleProlongedHoldCheck, true);
+    document.removeEventListener("pointerup", this.handlePointerUp, true);
+    document.removeEventListener("pointercancel", this.handlePointerUp, true);
+    this.input.off("pointerdown", this.handleObstaclePointerDown);
+    this.input.off("pointermove", this.handleObstaclePointerMove);
+    document.removeEventListener("refreshGameLayout", this.handleRefreshLayout as EventListener);
   }
 
-  handleProlongedHoldCheck = () => {
+  handleProlongedHoldCheck = (event: PointerEvent) => {
+    if (event.target !== this.game.canvas) return;
     // Define holdTimeout if it is not already (note that it gets cleared on pointerup below)
     pointerDownTime = Date.now();
     if (!holdTimeout) {
@@ -184,6 +280,24 @@ export class MainGameScene extends Generic2DGameScene {
     this.isInteracting = false;
   };
 
+  handleSettingsChange = () => {
+    if (!this.lastSettingsSnapshot) return;
+
+    const currentSettings = settingsStore.getSnapshot();
+
+    // Check if boid or obstacle counts have changed
+    const boidCountsChanged =
+      currentSettings.goodBoidCount !== this.lastSettingsSnapshot.goodBoidCount ||
+      currentSettings.badBoidCount !== this.lastSettingsSnapshot.badBoidCount ||
+      currentSettings.obstacleCount !== this.lastSettingsSnapshot.obstacleCount;
+
+    if (boidCountsChanged) {
+      this.regenerateBoids();
+    }
+
+    this.lastSettingsSnapshot = currentSettings;
+  };
+
   handleScreenEdgeCollision = (event: CustomEvent) => {
     const { gameObjectId, direction } = event.detail;
 
@@ -195,6 +309,29 @@ export class MainGameScene extends Generic2DGameScene {
       (collidedObject as Boid).onCollideScreenEdge(direction);
     }
   };
+
+  public setDraggingObstacle(obstacle: Boid | null) {
+    this.draggingObstacle = obstacle;
+  }
+
+  public isDraggingObstacle(): boolean {
+    return this.draggingObstacle !== null;
+  }
+
+  public regenerateBoids() {
+    // Destroy all existing boids
+    for (const boid of this.boids) {
+      boid.destroy();
+    }
+    this.boids = [];
+
+    // Clear dragging state
+    this.draggingObstacle = null;
+    this.dragPointer = null;
+
+    // Instantiate new boids
+    this.boids = instantiateBoids(this);
+  }
 
   // Override the parent class's handleWindowResizeHook to add custom logic.
   // This will get called automatically by the parent class's handleWindowResize()
@@ -223,7 +360,7 @@ export class MainGameScene extends Generic2DGameScene {
       // retain the general location of the boid, so we try to position it the
       // same screen % it was before on the new screen.
       for (const boid of this.boids) {
-        if (boid.mainBoid == false) {
+        if (boid.boidType !== "Leader") {
           // Calculate new position based on percentage of old position
           const newX =
             (boid.physicsBody2D!.position.x / this.lastKnownWindowSize.x) *
@@ -252,6 +389,12 @@ export class MainGameScene extends Generic2DGameScene {
    */
   shutdown() {
     super.shutdown();
+    if (holdTimeout) {
+      clearTimeout(holdTimeout);
+      holdTimeout = null;
+    }
+    this.handlePointerUp();
+    this.game.canvas.style.cursor = "default";
 
     // Shutdown logic for this scene
     settingsStore.resetData();

@@ -17,6 +17,7 @@ import {
   FaHandPointer,
 } from "react-icons/fa";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { usePointerHover } from "@/src/components/PointerInputProvider";
 import {
   getComicSeenStorageKey,
   hasSeenContent,
@@ -61,15 +62,7 @@ const ComicContentLoader: React.FC<ComicContentLoaderProps> = ({
   comicMetadata,
   childrenComicsData,
 }) => {
-  const [isHoverable, setIsHoverable] = useState(false);
-
-  useEffect(() => {
-    // Return early during SSR/static generation
-    if (typeof window === "undefined") return;
-
-    // eslint-disable-next-line no-restricted-syntax
-    setIsHoverable(window.matchMedia("(hover: hover)").matches);
-  }, []);
+  const isHoverable = usePointerHover();
 
   // Sort comics first to last (which is the same as oldest to newest, but it keeps order even if two comics share the same date)
   const sortedComics = useMemo(
