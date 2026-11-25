@@ -155,9 +155,6 @@ export class MainGameScene extends Generic2DGameScene {
     // Make sure no tiles exist to start
     this.destroyAllTiles();
 
-    // Do not change these parameters!! hence why they equals themselves
-    tilePatternAttrs.tileCount = tilePatternAttrs.tileCount;
-    tilePatternAttrs.seed = tilePatternAttrs.seed;
     tiles = instantiateTiles(this);
     console.log("reset");
 

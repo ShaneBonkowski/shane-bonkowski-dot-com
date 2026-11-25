@@ -1,4 +1,5 @@
 import WrittenContentLoader from "@/src/components/WrittenContentLoader";
+import { createContentMetadata } from "@/src/utils/content-metadata";
 import { WrittenContentMetadataProps } from "@/src/types/data-props";
 import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
 import WrittenContentParagraphGroup from "@/src/components/WrittenContentParagraphGroup";
@@ -15,30 +16,7 @@ const imageMetadata: WrittenContentMetadataProps = {
   artContent: true,
 };
 
-export const metadata = {
-  title: imageMetadata.title,
-  description: imageMetadata.description,
-  openGraph: {
-    title: imageMetadata.title,
-    description: imageMetadata.description,
-    url: "https://shanebonkowski.com",
-    images: [
-      {
-        url: `https://shanebonkowski.com${imageMetadata.coverImageUrl}`,
-        alt: imageMetadata.description,
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@ShaneBonkowski",
-    title: imageMetadata.title,
-    description: imageMetadata.description,
-    image: `https://shanebonkowski.com${imageMetadata.coverImageUrl}`,
-    imageAlt: imageMetadata.description,
-  },
-};
+export const metadata = createContentMetadata(imageMetadata, "/art/quite-the-leap/");
 
 export default function Page() {
   return (

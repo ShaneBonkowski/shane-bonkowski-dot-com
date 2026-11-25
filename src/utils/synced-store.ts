@@ -67,11 +67,11 @@ export abstract class SyncedStore<T = Record<string, unknown>> {
   }
 
   /**
-   * Get data from localStorage with a fallback to a default value.
-   * If the data is not found or cannot be parsed, the default value is returned.
+   * Get data from localStorage with a fallback when no value is stored.
+   * String values are stored directly; other values are stored as JSON.
    *
    * @param key - The key to retrieve from localStorage.
-   * @param defaultValue - The default value to return if the key is not found or parsing fails.
+   * @param defaultValue - The default value to return if the key is not found.
    * @returns The parsed value from localStorage or the default value.
    */
   protected getLocalStorage<U = unknown>(key: string, defaultValue: U): U {
@@ -84,10 +84,8 @@ export abstract class SyncedStore<T = Record<string, unknown>> {
     const stored = localStorage.getItem(key);
     if (!stored) return defaultValue;
 
-    try {
-      return JSON.parse(stored) as U;
-    } catch {
-      return stored as U; // Return as string if not JSON
-    }
+    if (typeof defaultValue === "string") return stored as U;
+
+    return JSON.parse(stored) as U;
   }
 }

@@ -9,6 +9,47 @@ export const loadPhaserModuleThenGame = async (
   await loadPhaserGame(phaser);
 };
 
+export const startPhaserGame = (
+  loadScene: () => Promise<{ MainGameScene: Phaser.Types.Scenes.SceneType }>
+): (() => void) => {
+  let cancelled = false;
+  let game: Phaser.Game | null = null;
+
+  loadPhaserModuleThenGame(async (phaser) => {
+    if (cancelled) return;
+
+    try {
+      const { MainGameScene } = await loadScene();
+      if (cancelled) return;
+
+      const gameConfig: Phaser.Types.Core.GameConfig = {
+        type: phaser.AUTO,
+        width: "100%",
+        height: "100%",
+        transparent: true,
+        scale: {
+          mode: phaser.Scale.NONE, // see phaser-canvas.ts resizeCanvasToParent() for manual resizing
+          autoCenter: phaser.Scale.NO_CENTER,
+        },
+        scene: MainGameScene,
+        parent: "phaser-game",
+      };
+
+      game = new phaser.Game(gameConfig);
+      console.log(`Phaser game created successfully.`);
+    } catch (error) {
+      console.error("Failed to load Game Scene:", error);
+    }
+  }).catch((error) => {
+    console.error("Failed to load Phaser module:", error);
+  });
+
+  return () => {
+    cancelled = true;
+    game = cleanupPhaserGame(game);
+  };
+};
+
 export const cleanupPhaserGame = (game: Phaser.Game | null): null => {
   if (game) {
     console.log("Destroying Phaser game instance.");

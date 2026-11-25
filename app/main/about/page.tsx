@@ -1,3 +1,12 @@
+import { metadata as rootMetadata } from "@/app/layout";
+
+export const metadata = {
+  openGraph: {
+    ...rootMetadata.openGraph,
+    url: "https://shanebonkowski.com/main/about/",
+  },
+};
+
 export default function Page() {
   return (
     <div

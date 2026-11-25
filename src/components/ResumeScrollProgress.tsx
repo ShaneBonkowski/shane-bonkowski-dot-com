@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import YesNoBox from "@/src/components/YesNoBox";
 import { debounce } from "@/src/utils/debounce";
 import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
@@ -16,8 +16,6 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const currentPageName = useRef(pageName);
-
   useEffect(() => {
     // Return early during SSR/static generation.
     // This is needed to prevent errors when using localStorage in a server-side
@@ -44,24 +42,18 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
       }
     }
 
-    // Set up handler to save scroll progress to localStorage on scroll
-    const handleScroll = debounce(() => {
-      // Only save position if user is ON this specific page.
-      // Prevents the debouncing from causing the scroll position to be saved
-      // on other pages if a user clicks out before the debounce is complete.
-      if (
-        document.visibilityState === "visible" &&
-        currentPageName.current === pageName
-      ) {
-        /* eslint-disable no-restricted-syntax */
-        const scrollPosition = window.scrollY;
-        localStorage.setItem(
-          `${pageName}-scrollProgress`,
-          scrollPosition.toString()
-        );
-        /* eslint-enable no-restricted-syntax */
-      }
+    let scrollPosition = 0;
+    const saveScrollProgress = debounce(() => {
+      // eslint-disable-next-line no-restricted-syntax
+      localStorage.setItem(`${pageName}-scrollProgress`, scrollPosition.toString());
     }, 200);
+    const handleScroll = () => {
+      if (document.visibilityState !== "visible") return;
+      // Capture the position before navigation so cleanup cannot save the next page's scroll.
+      // eslint-disable-next-line no-restricted-syntax
+      scrollPosition = window.scrollY;
+      saveScrollProgress();
+    };
     // eslint-disable-next-line no-restricted-syntax
     window.addEventListener("scroll", handleScroll);
 
@@ -69,6 +61,7 @@ const ResumeScrollProgress: React.FC<ResumeScrollProgressProps> = ({
     return () => {
       // eslint-disable-next-line no-restricted-syntax
       window.removeEventListener("scroll", handleScroll);
+      saveScrollProgress.flush();
     };
   }, [pageName, threshold]);
 

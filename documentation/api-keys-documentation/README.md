@@ -20,7 +20,7 @@ This documentation outlines how API keys are utilized for Shane's Games, and whe
 
 **Uses/description:**
 
-- Interacting with GitHub, specifically during the deployment process.
+- Not used by the current deployment workflow. Check for other integrations before removing this secret.
 
 **How to generate/find:**
 
@@ -34,7 +34,7 @@ This documentation outlines how API keys are utilized for Shane's Games, and whe
 
 **Uses/description:**
 
-- Interacting with Google Firebase when deploying the website.
+- Not used by the current deployment workflow. Check for other integrations before removing this secret.
 
 **How to generate/find:**
 

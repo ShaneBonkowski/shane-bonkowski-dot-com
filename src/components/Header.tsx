@@ -130,7 +130,7 @@ const Header: React.FC = () => {
       {/* Right Section: Navigation Buttons */}
       {!isGamesPath && (
         <nav
-          className="pointer-events-auto flex space-x-1 sm:space-x-2 h-header-btn-h"
+          className="pointer-events-auto flex space-x-1 sm:space-x-2"
           aria-label="Navigation"
         >
           <button

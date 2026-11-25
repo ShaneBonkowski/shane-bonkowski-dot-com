@@ -1,4 +1,5 @@
 import WrittenContentLoader from "@/src/components/WrittenContentLoader";
+import { createContentMetadata } from "@/src/utils/content-metadata";
 import { WrittenContentMetadataProps } from "@/src/types/data-props";
 import ResumeScrollProgress from "@/src/components/ResumeScrollProgress";
 import WrittenContentParagraphElement from "@/src/components/WrittenContentParagraphElement";
@@ -15,30 +16,7 @@ const storyMetadata: WrittenContentMetadataProps = {
   contentImageHeight: 422,
 };
 
-export const metadata = {
-  title: storyMetadata.title,
-  description: storyMetadata.description,
-  openGraph: {
-    title: storyMetadata.title,
-    description: storyMetadata.description,
-    url: "https://shanebonkowski.com",
-    images: [
-      {
-        url: `https://shanebonkowski.com${storyMetadata.coverImageUrl}`,
-        alt: storyMetadata.description,
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@ShaneBonkowski",
-    title: storyMetadata.title,
-    description: storyMetadata.description,
-    image: `https://shanebonkowski.com${storyMetadata.coverImageUrl}`,
-    imageAlt: storyMetadata.description,
-  },
-};
+export const metadata = createContentMetadata(storyMetadata, "/writing/the-devil/");
 
 export default function Page() {
   return (

@@ -40,19 +40,19 @@ const getIcon = (contentType: string) => {
   switch (contentType) {
     case "games":
       return (
-        <FaGamepad className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
+        <FaGamepad className="text-primary-text-color-light dark:text-primary-text-color text-base sm:text-2xl" />
       );
     case "writing":
       return (
-        <FaPenNib className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
+        <FaPenNib className="text-primary-text-color-light dark:text-primary-text-color text-base sm:text-2xl" />
       );
     case "art":
       return (
-        <FaPaintBrush className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
+        <FaPaintBrush className="text-primary-text-color-light dark:text-primary-text-color text-base sm:text-2xl" />
       );
     case "comics":
       return (
-        <FaRegNewspaper className="text-primary-text-color-light dark:text-primary-text-color text-1xl sm:text-2xl" />
+        <FaRegNewspaper className="text-primary-text-color-light dark:text-primary-text-color text-base sm:text-2xl" />
       );
     default:
       return null;

@@ -38,9 +38,6 @@ export default {
         "flip-tile-med-mb": "calc(var(--app-vh) * 0.23)",
         "flip-tile-high-mb": "calc(var(--app-vh) * 0.3)",
       },
-      width: {
-        "header-btn-h": "7rem",
-      },
       fontSize: {
         // Mobile font sizes
         "header-1": "1.9rem",
