@@ -14,6 +14,7 @@ const contentTypeOptions = [
 ];
 
 interface ContentSearchBarProps {
+  // Content is already ordered newest first by the caller.
   contentData: ContentBoxProps[];
   setFilteredContent: (content: ContentBoxProps[]) => void;
 }
@@ -40,12 +41,6 @@ const ContentSearchBar: React.FC<ContentSearchBarProps> = ({
           box.searchTags.toLowerCase().includes(searchTerm.toLowerCase());
 
         return matchesType && matchesQuery;
-      })
-      .sort((a, b) => {
-        // Sort by date, newest first
-        const dateA = new Date(a.dateISO);
-        const dateB = new Date(b.dateISO);
-        return dateB.getTime() - dateA.getTime();
       });
 
     setFilteredContent(filteredResults);

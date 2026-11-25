@@ -27,7 +27,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the dev web page.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the linter with:
+
+```bash
+npm run lint
+```
+
+The default sans-serif stack prefers Inter when it is installed, falling back to the system sans-serif font.
 
 ## Deployment
 

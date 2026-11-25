@@ -65,7 +65,7 @@ const UiOverlay: React.FC = () => {
       >
         <p
           id="score-display"
-          className={`mt-4 pointer-events-auto font-bold text-5xl sm:6xl ${
+          className={`mt-4 pointer-events-auto font-bold text-5xl sm:text-6xl ${
             // FIXME: UPDATE "game-template-pulse" to the actual game styling if necc.
             isPulsing ? "game-template-pulse" : ""
           }`}

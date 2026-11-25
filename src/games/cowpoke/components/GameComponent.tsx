@@ -1,13 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "@/src/games/cowpoke/styles/game.css";
-import {
-  loadPhaserModuleThenGame,
-  cleanupPhaserGame,
-  type PhaserModule,
-} from "@/src/utils/phaser-loading";
+import { startPhaserGame } from "@/src/utils/phaser-loading";
 import GameLoadingScreen from "@/src/components/GameLoadingScreen";
 import GameInfoContainer from "@/src/components/GameInfoContainer";
 import SettingsContainer from "@/src/games/cowpoke/components/SettingsContainer";
@@ -17,12 +13,8 @@ import StartEndMenu from "@/src/games/cowpoke/components/StartEndMenu";
 import GamePreventPortraitOrLandscapeMode from "@/src/components/GamePreventPortraitOrLandscapeMode";
 import { UseGameData } from "@/src/games/cowpoke/components/UseGameData";
 
-// Singleton Phaser game instance
-let game: Phaser.Game | null = null;
-
 const GameComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const isLoadingPhaser = useRef(false);
   const { autoMode, setAutoMode } = UseGameData();
 
   const handleFadeOutComplete = () => {
@@ -36,52 +28,9 @@ const GameComponent: React.FC = () => {
 
     document.body.classList.add("cowpoke-game-background");
 
-    const loadPhaserGame = async (phaser: PhaserModule) => {
-      if (isLoadingPhaser.current) {
-        console.warn("Phaser module already loading. Skipping duplicate call.");
-        return;
-      }
-      isLoadingPhaser.current = true;
-
-      if (game) {
-        console.warn("Game already exists. Skipping duplicate creation.");
-        return;
-      }
-
-      try {
-        const { MainGameScene } =
-          await import("@/src/games/cowpoke/scenes/main-game-scene");
-
-        const gameConfig: Phaser.Types.Core.GameConfig = {
-          type: phaser.AUTO,
-          width: "100%",
-          height: "100%",
-          transparent: true,
-          scale: {
-            mode: phaser.Scale.NONE, // see phaser-canvas.ts resizeCanvasToParent() for manual resizing
-            autoCenter: phaser.Scale.NO_CENTER,
-          },
-          scene: MainGameScene,
-          parent: "phaser-game",
-        };
-
-        game = new phaser.Game(gameConfig);
-        console.log(`Phaser game created successfully.`);
-      } catch (error) {
-        console.error("Failed to load Game Scene:", error);
-      } finally {
-        isLoadingPhaser.current = false; // Reset the loading flag
-      }
-    };
-
-    loadPhaserModuleThenGame(loadPhaserGame).catch((error) => {
-      console.error("Failed to load Phaser module:", error);
-    });
-
-    return () => {
-      game = cleanupPhaserGame(game);
-      isLoadingPhaser.current = false; // Reset the loading flag
-    };
+    return startPhaserGame(
+      () => import("@/src/games/cowpoke/scenes/main-game-scene")
+    );
   }, []);
 
   return (
