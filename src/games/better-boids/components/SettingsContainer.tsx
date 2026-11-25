@@ -239,7 +239,7 @@ const SettingsContainer: React.FC = () => {
         >
           {/* Settings Info */}
           <div
-            className="flex min-h-0 min-w-0 flex-1 basis-0 flex-col overflow-y-auto overscroll-contain"
+            className="flex min-h-0 min-w-0 flex-1 basis-0 flex-col overflow-y-auto overscroll-contain touch-pan-y"
             role="region"
             tabIndex={0}
             aria-label="Settings information"
@@ -279,7 +279,7 @@ const SettingsContainer: React.FC = () => {
             </div>
           </div>
           <div
-            className="min-h-0 min-w-0 flex-1 basis-0 overflow-y-auto overscroll-contain"
+            className="min-h-0 min-w-0 flex-1 basis-0 overflow-y-auto overscroll-contain touch-pan-y"
             id="boids-settings-scroll"
             role="region"
             tabIndex={0}
