@@ -132,12 +132,12 @@ const GameComponent: React.FC = () => {
             <li>
               <b>Obstacle Boids:</b> These boids act as static obstacles that
               all other boids will avoid. You can click and drag to reposition
-              them on the canvas.
+              them.
             </li>
             <li>
               <b>Leader Boid:</b> This boid follows your mouse when you click
-              and hold on the game canvas. Its influence on good and bad boids
-              is determined by the leader strength setting.
+              and hold. Its influence on good and bad boids is determined by the
+              leader strength setting.
             </li>
           </ul>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCog, FaSync } from "react-icons/fa";
 import GameIconButton from "@/src/components/GameIconButton";
 import GameUiWindow from "@/src/components/GameUiWindow";
@@ -10,7 +10,7 @@ import Image from "next/image";
 import { installTouchThroughBlocker } from "@/src/utils/touch-through-blocker";
 import { MAX_BOIDS_PER_TYPE } from "@/src/games/better-boids/settings-store";
 
-type SettingConfig = 
+type SettingConfig =
   | {
       title: string;
       desc: string;
@@ -117,23 +117,21 @@ const SettingsContainer: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [selectedSetting, setSelectedSetting] = useState<string | null>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const controlsRef = useRef<HTMLDivElement>(null);
-
   const settings = UseSettings();
 
   const getSettingImage = (key: string | null): string => {
     const defaultImage = "/webps/games/better-boids-alignment-graphic.webp";
-    
+
     if (!key) return defaultImage;
-    
+
     const config = settingsConfig[key];
     if (!config) return defaultImage;
 
     // Handle leader strength image switching based on value
     if (key === "leaderStrength" && "attractImage" in config) {
-      return settings.leaderStrength < 0 ? config.repelImage : config.attractImage;
+      return settings.leaderStrength < 0
+        ? config.repelImage
+        : config.attractImage;
     }
 
     if ("image" in config) {
@@ -214,32 +212,6 @@ const SettingsContainer: React.FC = () => {
     };
   }, []);
 
-  useLayoutEffect(() => {
-    if (!isVisible) return;
-    const header = headerRef.current;
-    const scroll = scrollRef.current;
-    const controls = controlsRef.current;
-    if (!header || !scroll || !controls) return;
-
-    const updateMaskBounds = () => {
-      const scrollBounds = scroll.getBoundingClientRect();
-      const controlBounds = controls.getBoundingClientRect();
-      const controlStyle = getComputedStyle(controls);
-      const left = controlBounds.left - scrollBounds.left + parseFloat(controlStyle.paddingLeft);
-      const width = controlBounds.width - parseFloat(controlStyle.paddingLeft) - parseFloat(controlStyle.paddingRight);
-      scroll.style.setProperty("--settings-header-height", `${header.offsetHeight}px`);
-      scroll.style.setProperty("--settings-mask-left", `${left}px`);
-      scroll.style.setProperty("--settings-mask-width", `${width}px`);
-      scroll.style.setProperty("--settings-mask-right", `${Math.max(0, scrollBounds.width - left - width)}px`);
-    };
-    updateMaskBounds();
-    const observer = new ResizeObserver(updateMaskBounds);
-    observer.observe(header);
-    observer.observe(scroll);
-    observer.observe(controls);
-    return () => observer.disconnect();
-  }, [isVisible]);
-
   return (
     <>
       <GameIconButton
@@ -256,26 +228,66 @@ const SettingsContainer: React.FC = () => {
         className={`fixed bottom-3 left-16 ${isButtonVisible ? "" : "hidden"}`}
         title="Refresh Layout"
       />
-      <GameUiWindow isVisible={isVisible} onClose={closeWindow} scrollable={false}>
-        <div className="relative z-0 -m-4 h-[calc(100%+2rem)] w-[calc(100%+2rem)]" id="boids-settings-container">
+      <GameUiWindow
+        isVisible={isVisible}
+        onClose={closeWindow}
+        scrollable={false}
+      >
+        <div
+          className="relative z-0 -m-4 flex h-[calc(100%+2rem)] w-[calc(100%+2rem)] flex-col landscape:flex-row"
+          id="boids-settings-container"
+        >
+          {/* Settings Info */}
           <div
-            ref={scrollRef}
-            className="h-full w-full overflow-y-auto overscroll-none scroll-pt-[var(--settings-header-height)]"
+            className="flex min-h-0 min-w-0 flex-1 basis-0 flex-col overflow-y-auto overscroll-contain"
+            role="region"
+            tabIndex={0}
+            aria-label="Settings information"
+          >
+            <div
+              className="shrink-0 px-12 py-2 text-center landscape:px-4"
+              id="boids-settings-description"
+            >
+              <h1>
+                {selectedSetting ? settingsConfig[selectedSetting].title : "Settings"}
+              </h1>
+              <p>
+                {selectedSetting
+                  ? settingsConfig[selectedSetting].desc
+                  : "Select a setting to view its description."}
+              </p>
+            </div>
+            {/* Image */}
+            <div
+              className="relative min-h-16 min-w-0 flex-1"
+              id="boids-settings-image"
+            >
+              <div className="absolute inset-2 landscape:inset-2">
+                <Image
+                  src={getSettingImage(selectedSetting)}
+                  alt={
+                    selectedSetting
+                      ? settingsConfig[selectedSetting].title
+                      : "Settings illustration"
+                  }
+                  width={600}
+                  height={600}
+                  sizes="(orientation: landscape) 50vw, 100vw"
+                  className="mx-auto h-full w-full max-w-[600px] object-contain object-top landscape:object-center"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className="min-h-0 min-w-0 flex-1 basis-0 overflow-y-auto overscroll-contain"
             id="boids-settings-scroll"
+            role="region"
             tabIndex={0}
             aria-label="Settings controls"
           >
-            {/* Keep gestures over the fixed header in the native scroll area. */}
-            <div aria-hidden="true" className="sticky top-0 z-10 h-[var(--settings-header-height)]">
-              <div className="hidden landscape:sm:block landscape:sm:absolute landscape:sm:top-full landscape:sm:left-0 landscape:sm:h-[calc(var(--app-vh)*0.65)] landscape:sm:w-1/2 md:block md:absolute md:top-full md:left-0 md:h-[calc(var(--app-vh)*0.65)] md:w-1/2" />
-            </div>
-
-            {/* Settings Controls */}
-            <div id="boids-settings-content">
               {/* Controls */}
               <div
-                ref={controlsRef}
-                className="w-full p-4 landscape:sm:ml-auto landscape:sm:w-1/2 landscape:sm:p-8 md:ml-auto md:w-1/2 md:p-8"
+                className="w-full p-4 landscape:p-8 landscape:pt-20"
                 id="boids-settings-controls"
               >
                 {Object.entries(settingsConfig).map(([key, config]) => {
@@ -284,7 +296,12 @@ const SettingsContainer: React.FC = () => {
                   // Handle Boid Mix section rendering
                   if (config.type === "section") {
                     return (
-                      <div key={key} className="space-y-4" onPointerDown={() => setSelectedSetting(key)} onFocusCapture={() => setSelectedSetting(key)}>
+                      <div
+                        key={key}
+                        className="space-y-4"
+                        onPointerDown={() => setSelectedSetting(key)}
+                        onFocusCapture={() => setSelectedSetting(key)}
+                      >
                         {/* Good Boids */}
                         <div>
                           <label
@@ -301,7 +318,9 @@ const SettingsContainer: React.FC = () => {
                             step={1}
                             value={settings.goodBoidCount}
                             onChange={(e) => {
-                              settings.setGoodBoidCount(parseFloat(e.target.value));
+                              settings.setGoodBoidCount(
+                                parseFloat(e.target.value),
+                              );
                             }}
                             className="game-interactive-control w-full"
                           />
@@ -323,7 +342,9 @@ const SettingsContainer: React.FC = () => {
                             step={1}
                             value={settings.badBoidCount}
                             onChange={(e) => {
-                              settings.setBadBoidCount(parseFloat(e.target.value));
+                              settings.setBadBoidCount(
+                                parseFloat(e.target.value),
+                              );
                             }}
                             className="game-interactive-control w-full"
                           />
@@ -345,21 +366,32 @@ const SettingsContainer: React.FC = () => {
                             step={1}
                             value={settings.obstacleCount}
                             onChange={(e) => {
-                              settings.setObstacleCount(parseFloat(e.target.value));
+                              settings.setObstacleCount(
+                                parseFloat(e.target.value),
+                              );
                             }}
                             className="game-interactive-control w-full"
                           />
                         </div>
 
                         <div className="text-xs text-gray-600 mt-2">
-                          Total: {settings.goodBoidCount + settings.badBoidCount + settings.obstacleCount} / {MAX_BOIDS_PER_TYPE * 3}
+                          Total:{" "}
+                          {settings.goodBoidCount +
+                            settings.badBoidCount +
+                            settings.obstacleCount}{" "}
+                          / {MAX_BOIDS_PER_TYPE * 3}
                         </div>
                       </div>
                     );
                   }
 
                   return (
-                    <div key={key} className={key === "alignmentFactor" ? "pt-4" : ""} onPointerDown={() => setSelectedSetting(key)} onFocusCapture={() => setSelectedSetting(key)}>
+                    <div
+                      key={key}
+                      className={key === "alignmentFactor" ? "pt-4" : ""}
+                      onPointerDown={() => setSelectedSetting(key)}
+                      onFocusCapture={() => setSelectedSetting(key)}
+                    >
                       {config.type === "checkbox" ? (
                         <label
                           htmlFor={`boids-setting-${key}`}
@@ -410,40 +442,6 @@ const SettingsContainer: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Top Section: Settings Info */}
-          <div ref={headerRef} className="pointer-events-none absolute inset-x-0 top-0">
-            <div
-              className="px-12 py-2 flex flex-col items-center"
-              id="boids-settings-description"
-            >
-              <h1 className="text-center">
-                {settingsConfig[selectedSetting as keyof typeof settingsConfig]
-                  ?.title || "Settings"}
-              </h1>
-              <p className="text-center">
-                {settingsConfig[selectedSetting as keyof typeof settingsConfig]
-                  ?.desc || "Select a setting to view its description."}
-              </p>
-            </div>
-
-            {/* Image */}
-            <div
-              className="h-[calc(var(--app-vh)*0.2)] w-full flex items-center justify-center px-4 landscape:sm:absolute landscape:sm:top-full landscape:sm:left-0 landscape:sm:h-[calc(var(--app-vh)*0.65)] landscape:sm:w-1/2 landscape:sm:items-start landscape:sm:px-12 md:absolute md:top-full md:left-0 md:h-[calc(var(--app-vh)*0.65)] md:w-1/2 md:items-start md:px-12"
-              id="boids-settings-image"
-            >
-              <Image
-                src={getSettingImage(selectedSetting)}
-                alt={selectedSetting ? settingsConfig[selectedSetting].title : "Settings illustration"}
-                width={600}
-                height={600}
-                sizes="(min-width: 640px) 40vw, 80vw"
-                className="h-full w-full max-h-full max-w-full object-contain landscape:sm:h-auto md:h-auto"
-              />
-            </div>
-          </div>
-
-        </div>
       </GameUiWindow>
     </>
   );
